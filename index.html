@@ -825,6 +825,47 @@
             <div class="swiper-pagination"></div>
         </div>
     </section>
+     <section class="captain-section">
+        <div class="section-header">
+            <span class="section-subtitle">CAPTAINS</span>
+            <h2 class="section-title">CAPTAINS OF EBFC IN COMMUNITIES</h2>
+        </div>
+
+        <div class="swiper adminSwiper">
+            <div class="swiper-wrapper">
+                
+                <!-- Admin Feature Slide 1 -->
+                <div class="swiper-slide">
+                    <div class="admin-swiper-card">
+                        <div class="admin-content">
+                            <h2>Automated Tournament Brackets</h2>
+                            <p>Generate Knockout and League schedules instantly. Supports single/double elimination with automatic winner branch routing.</p>
+                            <div class="admin-info-badge">
+                                <i class="fa-solid fa-code"></i> Powered by C# EF Core Database Logic
+                            </div>
+                            <a href="#" class="btn-main">View Module</a>
+                        </div>
+                        <div class="admin-img-wrapper">
+                            <img src="images/admin-bracket.jpg" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000'" alt="Bracket System">
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="admin-swiper-card">
+                        <div class="admin-content">
+                            <h2>Live Scorecard & Stats Sync</h2>
+                            <p>Real-time match data insertion. Updates player rating, win %, goal difference, and standings table immediately after match confirmation.</p>
+                            <div class="admin-info-badge">
+                                <i class="fa-solid fa-database"></i> SQL Server Stored Procedures
+                            </div>
+                            <a href="#" class="btn-main">View Module</a>
+                        </div>
+                        <div class="admin-img-wrapper">
+                            <img src="images/admin-stats.jpg" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000'" alt="Stats Panel">
+                        </div>
+                    </div>
+                </div>
+
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -895,6 +936,19 @@
             },
             pagination: {
                 el: ".admin-section .swiper-pagination",
+                clickable: true,
+            },
+        });
+                var adminSwiper = new Swiper(".adminSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".captain-section .swiper-pagination",
                 clickable: true,
             },
         });
