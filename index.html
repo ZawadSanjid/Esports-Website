@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>East Bengal eFootball Club | EBFC Official</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* BASE STYLES & RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* HEADER & NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-logo .logo-badge {
+                background: linear-gradient(135deg, var(--primary-red), #500);
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Teko', sans-serif;
+                font-size: 24px;
+                font-weight: 700;
+                border-radius: 6px;
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 28px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+            .nav-links a {
+                font-weight: 600;
+                font-size: 16px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: 0.3s ease;
+            }
+
+                .nav-links a:hover, .nav-links a.active {
+                    color: var(--primary-red);
+                }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-main {
+            background: var(--primary-red);
+            color: #fff;
+            padding: 10px 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .btn-main:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 5% 60px 5%;
+            background: linear-gradient(to right, rgba(10, 10, 12, 0.95), rgba(10, 10, 12, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920') no-repeat center center/cover;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .badge-tag {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .hero-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 72px;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+            .hero-title span {
+                color: var(--primary-red);
+                text-shadow: 0 0 20px var(--glow-red);
+            }
+
+        .hero-description {
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            padding: 10px 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .btn-outline:hover {
+                border-color: var(--text-light);
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+        /* STATS BAR SECTION */
+        .stats-section {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 30px 5%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-card {
+            border-right: 1px solid var(--border-color);
+            padding: 10px;
+        }
+
+            .stat-card:last-child {
+                border-right: none;
+            }
+
+        .stat-number {
+            font-family: 'Teko', sans-serif;
+            font-size: 48px;
+            color: var(--accent-gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* FEATURED MATCH CARD ON HERO */
+        .featured-match-preview {
+            position: absolute;
+            right: 5%;
+            top: 55%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--primary-red);
+            padding: 25px;
+            width: 380px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .live-tag {
+            color: var(--primary-red);
+            font-weight: 700;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .team {
+            text-align: center;
+        }
+
+        .team-icon {
+            width: 50px;
+            height: 50px;
+            background: #1e2029;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-weight: 700;
+        }
+
+        .vs-badge {
+            font-family: 'Teko', sans-serif;
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .featured-match-preview {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin-top: 40px;
+                width: 100%;
+            }
+
+            .stat-card {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand-logo">
+            <div class="logo-badge">EB</div>
+            <div class="brand-name">East Bengal <span>eFootball</span></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Players</a></li>
+            <li><a href="#">Clubs</a></li>
+            <li><a href="#">Rankings</a></li>
+            <li><a href="#">Tournaments</a></li>
+            <li><a href="#">Matches</a></li>
+            <li><a href="#">News</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-main">Join Club</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge-tag"><i class="fa-solid fa-trophy"></i> Official Esports Portal</span>
+            <h1 class="hero-title">East Bengal<br><span>eFootball Club</span></h1>
+            <p class="hero-description">
+                The premier competitive eFootball community of Bangladesh. Dominating tournaments, building esports legends, and elevating virtual football to new heights.
+            </p>
+            <div class="hero-buttons">
+                <button class="btn-main">Explore Tournaments</button>
+                <button class="btn-outline">View Rankings</button>
+            </div>
+        </div>
+
+        <!-- FEATURED LIVE / UPCOMING MATCH CARD -->
+        <div class="featured-match-preview">
+            <div class="match-header">
+                <span>Genesis Cup 2026</span>
+                <span class="live-tag"><i class="fa-solid fa-circle"></i> LIVE MATCH</span>
+            </div>
+            <div class="match-teams">
+                <div class="team">
+                    <div class="team-icon">EBFC</div>
+                    <p>Raihan_EBFC</p>
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="team">
+                    <div class="team-icon" style="background: #330000;">RVP</div>
+                    <p>Siam_Pro</p>
+                </div>
+            </div>
+            <button class="btn-outline" style="width: 100%; text-align: center;">Watch Live Stream</button>
+        </div>
+    </section>
+
+    <!-- STATS COUNTER BAR -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">120+</div>
+                <div class="stat-label">Active Players</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">16</div>
+                <div class="stat-label">Affiliated Clubs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">450+</div>
+                <div class="stat-label">Matches Played</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">৳ 250K+</div>
+                <div class="stat-label">Prize Distributed</div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
