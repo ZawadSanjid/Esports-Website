@@ -14,6 +14,83 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <style>
+        /* MOBILE RESPONSIVE OPTIMIZATION */
+@media (max-width: 768px) {
+    /* Navbar & Logo Adjustments */
+    .brand-logo .brand-name {
+        font-size: 20px;
+    }
+    .brand-logo .logo-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+    
+    /* Hero Section Fonts & Buttons */
+    .hero {
+        padding: 100px 4% 40px 4%;
+    }
+    .hero-title {
+        font-size: 42px; /* টাইটেল ফন্ট ছোট করা হয়েছে */
+    }
+    .hero-description {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .hero-buttons {
+        gap: 10px;
+    }
+    .btn-main, .btn-outline {
+        padding: 8px 16px; /* বাটন সাইজ ছোট করা হয়েছে */
+        font-size: 13px;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 32px;
+    }
+    .section-subtitle {
+        font-size: 12px;
+    }
+
+    /* Player Card Adjustments */
+    .player-gamertag {
+        font-size: 22px;
+    }
+    .rating-badge {
+        font-size: 16px;
+        padding: 1px 6px;
+    }
+    .player-match-details {
+        padding: 8px;
+    }
+    .stat-box .val {
+        font-size: 13px;
+    }
+    .stat-box .lbl {
+        font-size: 9px;
+    }
+
+    /* Admin Section */
+    .admin-swiper-card {
+        padding: 20px;
+    }
+    .admin-content h2 {
+        font-size: 28px;
+    }
+    .admin-content p {
+        font-size: 14px;
+    }
+
+    /* Footer Buttons Mobile Optimization */
+    .footer-links {
+        gap: 10px;
+    }
+    .footer-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
         /* BASE STYLES & RESET */
         * {
             margin: 0;
