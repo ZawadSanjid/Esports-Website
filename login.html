@@ -228,19 +228,19 @@
 
         <!-- ROLE SELECTION BUTTONS -->
         <div class="role-switch-container">
-            <button type="button" class="role-btn active" onclick="switchRole('player')">
+            <button type="button" class="role-btn active" onclick="switchRole('player', event)">
                 <i class="fa-solid fa-gamepad"></i> Player
             </button>
-            <button type="button" class="role-btn" onclick="switchRole('captain')">
+            <button type="button" class="role-btn" onclick="switchRole('captain', event)">
                 <i class="fa-solid fa-user-ninja"></i> Captain
             </button>
-            <button type="button" class="role-btn" onclick="switchRole('admin')">
+            <button type="button" class="role-btn" onclick="switchRole('admin', event)">
                 <i class="fa-solid fa-user-shield"></i> Admin
             </button>
         </div>
 
         <!-- LOGIN FORM -->
-        <form id="loginForm" action="player-profile.html" method="GET">
+        <form id="loginForm">
             <div class="form-group">
                 <label><i class="fa-solid fa-envelope"></i> Email / User ID</label>
                 <input type="email" class="form-control" placeholder="Enter your email" required>
@@ -265,12 +265,15 @@
             Don't have an account? <a href="register.html">Register Here</a>
         </div>
 
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
-    <!-- JAVASCRIPT FOR SWITCHING ROLES -->
+    <!-- JAVASCRIPT FOR SWITCHING ROLES & SAVING SESSION -->
     <script>
-        function switchRole(role) {
+        let currentRole = 'player';
+        let redirectUrl = 'player-profile.html';
+
+        function switchRole(role, event) {
             // Remove active class from all buttons
             const buttons = document.querySelectorAll('.role-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -279,7 +282,8 @@
             const loginTitle = document.getElementById('loginTitle');
             const loginSubtitle = document.getElementById('loginSubtitle');
             const submitBtn = document.getElementById('submitBtn');
-            const loginForm = document.getElementById('loginForm');
+
+            currentRole = role;
 
             // Update details based on selected role
             if (role === 'player') {
@@ -287,21 +291,39 @@
                 loginTitle.innerText = "Player Login";
                 loginSubtitle.innerText = "Welcome back! Access your eFootball profile dashboard.";
                 submitBtn.innerText = "Login To Player Dashboard";
-                loginForm.action = "player-profile.html";
+                redirectUrl = "player-profile.html";
             } else if (role === 'captain') {
                 event.currentTarget.classList.add('active');
                 loginTitle.innerText = "Captain Login";
                 loginSubtitle.innerText = "Manage your squad, lineups, and match strategy.";
                 submitBtn.innerText = "Login To Captain Portal";
-                loginForm.action = "captain-dashboard.html";
+                redirectUrl = "captain-dashboard.html";
             } else if (role === 'admin') {
                 event.currentTarget.classList.add('active');
                 loginTitle.innerText = "Admin Portal Login";
                 loginSubtitle.innerText = "Access EBFC administrative controls and rankings.";
                 submitBtn.innerText = "Login To Admin Panel";
-                loginForm.action = "admin-dashboard.html";
+                redirectUrl = "admin-dashboard.html";
             }
         }
+
+        // Handle Login Submission & Save Session
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Store User Login Info in LocalStorage
+            const userData = {
+                isLoggedIn: true,
+                name: "Tawshik Ahammad Ayon",
+                role: currentRole,
+                avatar: "Image/player1.webp" // Default image path for logged in user
+            };
+
+            localStorage.setItem('ebfc_user', JSON.stringify(userData));
+
+            // Redirect to appropriate page
+            window.location.href = redirectUrl;
+        });
     </script>
 
 </body>
