@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>East Bengal Efootball Club - Welcome</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0d0f12;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+            /* Ambient Glow Effects */
+            body::before {
+                content: '';
+                position: absolute;
+                top: -10%;
+                left: -10%;
+                width: 40%;
+                height: 40%;
+                background: radial-gradient(circle, rgba(235, 30, 41, 0.25) 0%, rgba(0,0,0,0) 70%);
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            body::after {
+                content: '';
+                position: absolute;
+                bottom: -10%;
+                right: -10%;
+                width: 40%;
+                height: 40%;
+                background: radial-gradient(circle, rgba(255, 204, 0, 0.2) 0%, rgba(0,0,0,0) 70%);
+                z-index: 0;
+                pointer-events: none;
+            }
+
+        /* Header Styling */
+        header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 50px;
+            background: rgba(13, 15, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .header-logo {
+            width: 50px !important;
+            height: 50px !important;
+            object-fit: contain;
+            border-radius: 6px;
+            filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.4));
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #eb1e29, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Welcome Container */
+        .welcome-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .badge-tag {
+            background: rgba(235, 30, 41, 0.15);
+            border: 1px solid rgba(235, 30, 41, 0.4);
+            color: #eb1e29;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(235, 30, 41, 0.2);
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            max-width: 900px;
+        }
+
+            .welcome-title span {
+                color: #ffcc00;
+                text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+            }
+
+        .welcome-subtitle {
+            color: #a0a5b5;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 45px;
+            line-height: 1.6;
+        }
+
+        /* Navigation Action Buttons */
+        .btn-group {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 38px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Community Button */
+        .btn-community {
+            background: linear-gradient(135deg, #1e232a, #14171d);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+            .btn-community:hover {
+                border-color: #ffcc00;
+                color: #ffcc00;
+                transform: translateY(-4px);
+                box-shadow: 0 15px 30px rgba(255, 204, 0, 0.25);
+            }
+
+        /* EBFC Main Hub Button */
+        .btn-ebfc {
+            background: linear-gradient(135deg, #eb1e29, #b3121b);
+            color: #ffffff;
+            border: 2px solid #eb1e29;
+            box-shadow: 0 10px 25px rgba(235, 30, 41, 0.4);
+        }
+
+            .btn-ebfc:hover {
+                background: linear-gradient(135deg, #ff2a36, #eb1e29);
+                transform: translateY(-4px);
+                box-shadow: 0 15px 35px rgba(235, 30, 41, 0.6);
+            }
+
+        /* Footer Accent */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            color: #5a6072;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                justify-content: center;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <a href="welcome.html" class="header-brand">
+            <!-- লোগো ফাইল পাথ (Image ফোল্ডারে থাকলে Image/ যুক্ত থাকবে) -->
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="header-logo" onerror="this.src='image1.jpg.jpg'">
+            <div class="header-title">East Bengal Efootball Club</div>
+        </a>
+    </header>
+
+    <!-- Main Welcome Content -->
+    <main class="welcome-container">
+        <div class="badge-tag">Official Portal</div>
+        <h1 class="welcome-title">Welcome to <span>East Bengal Efootball Club</span></h1>
+        <p class="welcome-subtitle">
+            আপনার পছন্দের সেকশনে প্রবেশ করতে নিচের বাটনগুলোর যেকোনো একটি নির্বাচন করুন।
+        </p>
+
+        <!-- Navigation Buttons -->
+        <div class="btn-group">
+            <!-- Community Button -->
+            <a href="login.html" class="btn btn-community">
+                <i class="fa-solid fa-users"></i> Community
+            </a>
+
+            <!-- EBFC Main Homepage Button -->
+            <a href="index.html" class="btn btn-ebfc">
+                <i class="fa-solid fa-gamepad"></i> EBFC
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 East Bengal Esports Club. All Rights Reserved.
+    </footer>
+
+</body>
+</html>
