@@ -129,6 +129,7 @@
 
         .nav-actions {
             display: flex;
+            align-items: center;
             gap: 10px;
         }
 
@@ -148,6 +149,31 @@
             .btn-main:hover {
                 background: var(--primary-red-hover);
                 box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        /* LOGGED IN USER CIRCLE AVATAR */
+        .user-profile-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-red);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+            .user-profile-circle:hover {
+                transform: scale(1.08);
+                border-color: var(--accent-gold);
+                box-shadow: 0 0 18px rgba(255, 183, 3, 0.7);
+            }
+
+            .user-profile-circle img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
 
         /* HERO SECTION */
@@ -574,7 +600,7 @@
             font-size: 14px;
         }
 
-        /* RESPONSIVE DESIGN (DESKTOP & MOBILE INTEGRATION) */
+        /* RESPONSIVE DESIGN */
         @media (max-width: 992px) {
             .nav-links {
                 display: none;
@@ -668,7 +694,7 @@
             }
 
             .admin-img-wrapper {
-                height: 250px;
+                height: 300px;
             }
 
             .footer-links {
@@ -697,7 +723,9 @@
             <li><a href="#">Tournaments</a></li>
             <li><a href="#">About Us</a></li>
         </ul>
-        <div class="nav-actions">
+
+        <!-- DYNAMIC USER AREA: SHOWS REGISTER/LOGIN OR USER CIRCLE IMAGE -->
+        <div class="nav-actions" id="navAuthArea">
             <a href="register.html" class="btn-main">Register</a>
             <a href="login.html" class="btn-main">Login</a>
         </div>
@@ -873,7 +901,6 @@
                             <a href="https://www.facebook.com/zawadsanju" class="btn-main">FACEBOOK</a>
                         </div>
                         <div class="admin-img-wrapper">
-                            <!-- multiple image sources handled automatically -->
                             <img src="Image/zawad.jpg" onerror="this.onerror=null; this.src='zawad.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000';" alt="Zawadullah Bhuiyan">
                         </div>
                     </div>
@@ -903,7 +930,7 @@
                             <h2>ARNOB AHMED</h2>
                             <p>ADMIN OF EBFC</p>
                             <div class="admin-info-badge">
-                                <i class="fa-solid fa-shield-halved"></i> ADMIN AND FOUNDING MEMBER
+                                <i class="fa-solid fa-shield-halved"></i> ADMIN AND CAPTAIN
                             </div>
                             <a href="https://www.facebook.com/Arnob.ahmed.0707" class="btn-main">FACEBOOK</a>
                         </div>
@@ -937,7 +964,7 @@
                         </div>
                         <div class="captain-info">
                             <div class="captain-name">MUHAMMAD ZAHID IMAM</div>
-                            <div class="captain-role">COBEG MAIN TEAM CAPTAIN</div>
+                            <div class="captain-role">COBEG MAIN TEAM</div>
                         </div>
                     </div>
                 </div>
@@ -1106,8 +1133,24 @@
     <!-- Swiper JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- Initialize Swiper Slideshows -->
+    <!-- Swiper and Persistent Login Script -->
     <script>
+        // Check if player is logged in from LocalStorage
+        document.addEventListener("DOMContentLoaded", function () {
+            const userData = JSON.parse(localStorage.getItem('ebfc_user'));
+            const navAuthArea = document.getElementById('navAuthArea');
+
+            if (userData && userData.isLoggedIn) {
+                // Replace Login/Register buttons with Circle Profile Image
+                navAuthArea.innerHTML = `
+                        <a href="player-profile.html" class="user-profile-circle" title="Go to ${userData.name}'s Dashboard">
+                            <img src="${userData.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="${userData.name}">
+                        </a>
+                    `;
+            }
+        });
+
+        // Initialize Swiper Slideshows
         var playersSwiper = new Swiper(".playersSwiper", {
             slidesPerView: 1,
             spaceBetween: 20,
