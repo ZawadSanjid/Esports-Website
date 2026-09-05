@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -64,17 +64,12 @@
             gap: 12px;
         }
 
-            .brand-logo .logo-badge {
-                background: linear-gradient(135deg, var(--primary-red), #500);
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: 'Teko', sans-serif;
-                font-size: 22px;
-                font-weight: 700;
+            .brand-logo .logo-img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
                 border-radius: 6px;
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
             }
 
             .brand-logo .brand-name {
@@ -155,7 +150,7 @@
         .meta-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             margin-top: 10px;
         }
 
@@ -177,17 +172,29 @@
                 color: var(--text-light);
             }
 
-        .rank-badge-box {
+        /* DUAL RANKINGS CONTAINER */
+        .rankings-dual-wrapper {
             margin-left: auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        .rank-badge-box {
             text-align: center;
             background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(0,0,0,0.4));
             border: 1px solid var(--primary-red);
-            padding: 15px 25px;
+            padding: 12px 20px;
             border-radius: 10px;
+            min-width: 110px;
         }
 
+            .rank-badge-box.domestic {
+                background: linear-gradient(135deg, rgba(255, 183, 3, 0.15), rgba(0,0,0,0.4));
+                border-color: var(--accent-gold);
+            }
+
             .rank-badge-box .title {
-                font-size: 12px;
+                font-size: 11px;
                 color: var(--text-muted);
                 text-transform: uppercase;
                 font-weight: 700;
@@ -196,9 +203,13 @@
 
             .rank-badge-box .number {
                 font-family: 'Teko', sans-serif;
-                font-size: 48px;
-                color: var(--accent-gold);
+                font-size: 40px;
+                color: var(--primary-red);
                 line-height: 1;
+            }
+
+            .rank-badge-box.domestic .number {
+                color: var(--accent-gold);
             }
 
         /* SECTION TITLES */
@@ -216,19 +227,39 @@
                 color: var(--primary-red);
             }
 
+        .sub-stat-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+            .sub-stat-title.official {
+                color: var(--primary-red);
+            }
+
+            .sub-stat-title.domestic {
+                color: var(--accent-gold);
+            }
+
         /* STATISTICS GRID */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 18px;
+            padding: 15px;
             text-align: center;
             transition: 0.3s ease;
         }
@@ -238,20 +269,24 @@
                 transform: translateY(-3px);
             }
 
+            .stat-card.domestic-card:hover {
+                border-color: var(--accent-gold);
+            }
+
             .stat-card .value {
                 font-family: 'Teko', sans-serif;
-                font-size: 36px;
+                font-size: 34px;
                 line-height: 1;
                 font-weight: 700;
-                margin-bottom: 4px;
+                margin-bottom: 2px;
             }
 
             .stat-card .label {
-                font-size: 13px;
+                font-size: 12px;
                 color: var(--text-muted);
                 text-transform: uppercase;
                 font-weight: 600;
-                letter-spacing: 1px;
+                letter-spacing: 0.5px;
             }
 
         /* BOTTOM SECTION GRID (HISTORY & ACHIEVEMENTS) */
@@ -358,9 +393,10 @@
                 gap: 20px;
             }
 
-            .rank-badge-box {
+            .rankings-dual-wrapper {
                 margin-left: 0;
                 width: 100%;
+                justify-content: center;
             }
 
             .meta-tags {
@@ -375,11 +411,11 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR WITH OFFICIAL LOGO -->
     <nav class="navbar">
         <div class="brand-logo">
-            <div class="logo-badge">EB</div>
-            <div class="brand-name">East Bengal <span>eFootball</span></div>
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
+            <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <div>
             <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
@@ -393,8 +429,7 @@
         <!-- PLAYER PROFILE HERO CARD -->
         <div class="player-hero-card">
             <div class="player-avatar-box">
-                <!-- Fallback image provided -->
-                <img src="images/player1.webp" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="Player Avatar">
+                <img src="Image/player1.webp" onerror="this.onerror=null; this.src='player1.webp'; if(!this.src) this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600';" alt="Player Avatar">
             </div>
 
             <div class="player-main-info">
@@ -406,19 +441,30 @@
                 </div>
             </div>
 
-            <!-- RANKING BADGE -->
-            <div class="rank-badge-box">
-                <div class="title">Official Rank</div>
-                <div class="number">#1</div>
+            <!-- DUAL RANKING BADGES (OFFICIAL & DOMESTIC) -->
+            <div class="rankings-dual-wrapper">
+                <div class="rank-badge-box">
+                    <div class="title">Official Rank</div>
+                    <div class="number">#1</div>
+                </div>
+                <div class="rank-badge-box domestic">
+                    <div class="title">Domestic Rank</div>
+                    <div class="number">#1</div>
+                </div>
             </div>
         </div>
 
-        <!-- STATISTICS SECTION -->
+        <!-- CAREER STATISTICS SECTION -->
         <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Career Statistics</h2>
+
+        <!-- 1. OFFICIAL STATISTICS -->
+        <div class="sub-stat-title official">
+            <i class="fa-solid fa-trophy"></i> Official Statistics
+        </div>
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="value" style="color: var(--text-light);">24</div>
-                <div class="label">Matches Played</div>
+                <div class="label">Matches</div>
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--accent-green);">20</div>
@@ -434,15 +480,15 @@
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--text-light);">54</div>
-                <div class="label">Goals For (GF)</div>
+                <div class="label">Goals For</div>
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--text-light);">16</div>
-                <div class="label">Goals Against (GA)</div>
+                <div class="label">Goals Against</div>
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--accent-green);">+38</div>
-                <div class="label">Goal Difference</div>
+                <div class="label">Goal Diff</div>
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--accent-gold);">83.3%</div>
@@ -450,7 +496,50 @@
             </div>
             <div class="stat-card">
                 <div class="value" style="color: var(--primary-red);">62</div>
-                <div class="label">Total Points</div>
+                <div class="label">Points</div>
+            </div>
+        </div>
+
+        <!-- 2. DOMESTIC STATISTICS -->
+        <div class="sub-stat-title domestic">
+            <i class="fa-solid fa-shield"></i> Domestic Statistics
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--text-light);">18</div>
+                <div class="label">Matches</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--accent-green);">15</div>
+                <div class="label">Wins</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--accent-gold);">2</div>
+                <div class="label">Draws</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--primary-red);">1</div>
+                <div class="label">Losses</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--text-light);">41</div>
+                <div class="label">Goals For</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--text-light);">12</div>
+                <div class="label">Goals Against</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--accent-green);">+29</div>
+                <div class="label">Goal Diff</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--accent-gold);">83.3%</div>
+                <div class="label">Win Rate</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" style="color: var(--accent-gold);">47</div>
+                <div class="label">Points</div>
             </div>
         </div>
 
@@ -464,7 +553,7 @@
                     <li class="history-item">
                         <div>
                             <div class="t-name">Genesis Cup 2026</div>
-                            <div class="t-date">February 2026 • Esports Division 1</div>
+                            <div class="t-date">February 2026 • Official Division 1</div>
                         </div>
                         <span class="badge-status status-champion">Champion</span>
                     </li>
@@ -477,8 +566,8 @@
                     </li>
                     <li class="history-item">
                         <div>
-                            <div class="t-name">EBFC New Year League</div>
-                            <div class="t-date">January 2026 • Group Stage</div>
+                            <div class="t-name">EBFC Domestic League</div>
+                            <div class="t-date">January 2026 • Domestic Circuit</div>
                         </div>
                         <span class="badge-status status-champion">Champion</span>
                     </li>
