@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player Profile Dashboard | East Bengal eFootball Club</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -411,22 +409,19 @@
 </head>
 <body>
 
-    <!-- NAVBAR WITH OFFICIAL LOGO -->
     <nav class="navbar">
         <div class="brand-logo">
             <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
             <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <div>
-            <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            <a href="home.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="home.html" onclick="logoutUser()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         </div>
     </nav>
 
-    <!-- MAIN DASHBOARD CONTENT -->
     <div class="dashboard-container">
 
-        <!-- PLAYER PROFILE HERO CARD -->
         <div class="player-hero-card">
             <div class="player-avatar-box">
                 <img src="Image/player1.webp" onerror="this.onerror=null; this.src='player1.webp'; if(!this.src) this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600';" alt="Player Avatar">
@@ -441,7 +436,6 @@
                 </div>
             </div>
 
-            <!-- DUAL RANKING BADGES (OFFICIAL & DOMESTIC) -->
             <div class="rankings-dual-wrapper">
                 <div class="rank-badge-box">
                     <div class="title">Official Rank</div>
@@ -454,10 +448,8 @@
             </div>
         </div>
 
-        <!-- CAREER STATISTICS SECTION -->
         <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Career Statistics</h2>
 
-        <!-- 1. OFFICIAL STATISTICS -->
         <div class="sub-stat-title official">
             <i class="fa-solid fa-trophy"></i> Official Statistics
         </div>
@@ -500,7 +492,6 @@
             </div>
         </div>
 
-        <!-- 2. DOMESTIC STATISTICS -->
         <div class="sub-stat-title domestic">
             <i class="fa-solid fa-shield"></i> Domestic Statistics
         </div>
@@ -543,10 +534,8 @@
             </div>
         </div>
 
-        <!-- ADDITIONAL SECTIONS (HISTORY & ACHIEVEMENTS) -->
         <div class="bottom-grid">
 
-            <!-- TOURNAMENT HISTORY -->
             <div class="data-card-box">
                 <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Tournament History</h2>
                 <ul class="history-list">
@@ -574,7 +563,6 @@
                 </ul>
             </div>
 
-            <!-- ACHIEVEMENTS -->
             <div class="data-card-box">
                 <h2 class="section-title"><i class="fa-solid fa-medal"></i> Achievements</h2>
                 <ul class="achievement-list">
@@ -605,6 +593,13 @@
         </div>
 
     </div>
+
+    <script>
+        function logoutUser() {
+            // Clears player login state from LocalStorage
+            localStorage.removeItem('ebfc_user');
+        }
+    </script>
 
 </body>
 </html>
