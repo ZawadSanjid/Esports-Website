@@ -1,0 +1,521 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile Dashboard | East Bengal eFootball Club</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --bg-card-hover: #1a1c24;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
+            --accent-green: #4caf50;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding-bottom: 60px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-logo .logo-badge {
+                background: linear-gradient(135deg, var(--primary-red), #500);
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Teko', sans-serif;
+                font-size: 22px;
+                font-weight: 700;
+                border-radius: 6px;
+            }
+
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
+
+        .btn-outline-sm {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            padding: 6px 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 13px;
+        }
+
+            .btn-outline-sm:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
+
+        /* DASHBOARD CONTAINER */
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* PLAYER HERO CARD */
+        .player-hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary-red);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        .player-avatar-box {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-red);
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px var(--glow-red);
+        }
+
+            .player-avatar-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .player-main-info h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 42px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .meta-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .meta-item {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+            .meta-item i {
+                color: var(--primary-red);
+                margin-right: 6px;
+            }
+
+            .meta-item strong {
+                color: var(--text-light);
+            }
+
+        .rank-badge-box {
+            margin-left: auto;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(0,0,0,0.4));
+            border: 1px solid var(--primary-red);
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+
+            .rank-badge-box .title {
+                font-size: 12px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+            .rank-badge-box .number {
+                font-family: 'Teko', sans-serif;
+                font-size: 48px;
+                color: var(--accent-gold);
+                line-height: 1;
+            }
+
+        /* SECTION TITLES */
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .section-title i {
+                color: var(--primary-red);
+            }
+
+        /* STATISTICS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            transition: 0.3s ease;
+        }
+
+            .stat-card:hover {
+                border-color: var(--primary-red);
+                transform: translateY(-3px);
+            }
+
+            .stat-card .value {
+                font-family: 'Teko', sans-serif;
+                font-size: 36px;
+                line-height: 1;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .stat-card .label {
+                font-size: 13px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+
+        /* BOTTOM SECTION GRID (HISTORY & ACHIEVEMENTS) */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .data-card-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+        }
+
+        .history-list, .achievement-list {
+            list-style: none;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+            .history-item:last-child {
+                border-bottom: none;
+            }
+
+            .history-item .t-name {
+                font-weight: 700;
+                font-size: 16px;
+            }
+
+            .history-item .t-date {
+                font-size: 12px;
+                color: var(--text-muted);
+            }
+
+        .badge-status {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-champion {
+            background: rgba(255, 183, 3, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .status-runnerup {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: 1px solid var(--text-muted);
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+            .achievement-item:last-child {
+                border-bottom: none;
+            }
+
+        .achievement-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(229, 9, 20, 0.1);
+            border: 1px solid var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .achievement-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .achievement-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .player-hero-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .rank-badge-box {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .meta-tags {
+                justify-content: center;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand-logo">
+            <div class="logo-badge">EB</div>
+            <div class="brand-name">East Bengal <span>eFootball</span></div>
+        </div>
+        <div>
+            <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </nav>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div class="dashboard-container">
+
+        <!-- PLAYER PROFILE HERO CARD -->
+        <div class="player-hero-card">
+            <div class="player-avatar-box">
+                <!-- Fallback image provided -->
+                <img src="images/player1.webp" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="Player Avatar">
+            </div>
+
+            <div class="player-main-info">
+                <h1>Tawshik Ahammad Ayon</h1>
+                <div class="meta-tags">
+                    <div class="meta-item"><i class="fa-solid fa-gamepad"></i> Game ID: <strong>ASEZ-334-526-988</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong>Redmi Note 10</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-shield-halved"></i> Club: <strong>East Bengal Main</strong></div>
+                </div>
+            </div>
+
+            <!-- RANKING BADGE -->
+            <div class="rank-badge-box">
+                <div class="title">Official Rank</div>
+                <div class="number">#1</div>
+            </div>
+        </div>
+
+        <!-- STATISTICS SECTION -->
+        <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Career Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value" style="color: var(--text-light);">24</div>
+                <div class="label">Matches Played</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--accent-green);">20</div>
+                <div class="label">Wins</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--accent-gold);">2</div>
+                <div class="label">Draws</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--primary-red);">2</div>
+                <div class="label">Losses</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--text-light);">54</div>
+                <div class="label">Goals For (GF)</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--text-light);">16</div>
+                <div class="label">Goals Against (GA)</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--accent-green);">+38</div>
+                <div class="label">Goal Difference</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--accent-gold);">83.3%</div>
+                <div class="label">Win Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" style="color: var(--primary-red);">62</div>
+                <div class="label">Total Points</div>
+            </div>
+        </div>
+
+        <!-- ADDITIONAL SECTIONS (HISTORY & ACHIEVEMENTS) -->
+        <div class="bottom-grid">
+
+            <!-- TOURNAMENT HISTORY -->
+            <div class="data-card-box">
+                <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Tournament History</h2>
+                <ul class="history-list">
+                    <li class="history-item">
+                        <div>
+                            <div class="t-name">Genesis Cup 2026</div>
+                            <div class="t-date">February 2026 • Esports Division 1</div>
+                        </div>
+                        <span class="badge-status status-champion">Champion</span>
+                    </li>
+                    <li class="history-item">
+                        <div>
+                            <div class="t-name">Independence Cup BD</div>
+                            <div class="t-date">March 2026 • Knockout Tournament</div>
+                        </div>
+                        <span class="badge-status status-runnerup">Runner-Up</span>
+                    </li>
+                    <li class="history-item">
+                        <div>
+                            <div class="t-name">EBFC New Year League</div>
+                            <div class="t-date">January 2026 • Group Stage</div>
+                        </div>
+                        <span class="badge-status status-champion">Champion</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+            <div class="data-card-box">
+                <h2 class="section-title"><i class="fa-solid fa-medal"></i> Achievements</h2>
+                <ul class="achievement-list">
+                    <li class="achievement-item">
+                        <div class="achievement-icon"><i class="fa-solid fa-star"></i></div>
+                        <div class="achievement-info">
+                            <h4>Player of the Week (ECOB)</h4>
+                            <p>Awarded for outstanding performance and top goal count.</p>
+                        </div>
+                    </li>
+                    <li class="achievement-item">
+                        <div class="achievement-icon"><i class="fa-solid fa-fire"></i></div>
+                        <div class="achievement-info">
+                            <h4>Unbeaten Streak Badge</h4>
+                            <p>Won 10 consecutive official matches in Genesis Cup.</p>
+                        </div>
+                    </li>
+                    <li class="achievement-item">
+                        <div class="achievement-icon"><i class="fa-solid fa-crown"></i></div>
+                        <div class="achievement-info">
+                            <h4>Golden Boot Winner</h4>
+                            <p>Scored highest goals (54 goals) in 2026 season.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

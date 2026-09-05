@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Registration | East Bengal eFootball Club</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .reg-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--primary-red);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .reg-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+            .reg-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: 36px;
+                text-transform: uppercase;
+            }
+
+            .reg-header p {
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+
+        /* IMAGE UPLOAD STYLES */
+        .image-upload-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px dashed var(--primary-red);
+            background: #090a0c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .image-preview:hover {
+                border-style: solid;
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+            .image-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: none;
+            }
+
+            .image-preview i {
+                font-size: 28px;
+                color: var(--primary-red);
+                margin-bottom: 4px;
+            }
+
+            .image-preview span {
+                font-size: 11px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-weight: 600;
+            }
+
+        #player-photo {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                font-size: 14px;
+                margin-bottom: 6px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+            }
+
+        .form-control {
+            width: 100%;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            color: var(--text-light);
+            border-radius: 4px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-red);
+                box-shadow: 0 0 10px var(--glow-red);
+            }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-red);
+            color: #fff;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
+
+            .btn-submit:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+            .back-link:hover {
+                color: var(--primary-red);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="reg-card">
+        <div class="reg-header">
+            <h1>Join East Bengal eFootball Club</h1>
+            <p>Register your account to participate in eFootball tournaments</p>
+        </div>
+
+        <form action="player-profile.html" method="get" enctype="multipart/form-data">
+
+            <!-- IMAGE UPLOAD FIELD -->
+            <div class="image-upload-wrapper">
+                <label for="player-photo" class="image-preview">
+                    <i class="fa-solid fa-camera" id="upload-icon"></i>
+                    <span id="upload-text">Upload Photo</span>
+                    <img id="preview-img" src="" alt="Player Photo Preview">
+                </label>
+                <input type="file" id="player-photo" name="playerPhoto" accept="image/*" onchange="previewFile()" required>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-control" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label>eFootball Game ID / User ID</label>
+                <input type="text" class="form-control" placeholder="e.g. ASEZ-334-526-988" required>
+            </div>
+            <div class="form-group">
+                <label>Device Model</label>
+                <input type="text" class="form-control" placeholder="e.g. Redmi Note 10" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" class="form-control" placeholder="Enter Your Email Address" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" placeholder="Create password" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Complete Registration</button>
+        </form>
+
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+    </div>
+
+    <!-- JAVASCRIPT FOR IMAGE PREVIEW -->
+    <script>
+        function previewFile() {
+            const preview = document.getElementById('preview-img');
+            const file = document.getElementById('player-photo').files[0];
+            const icon = document.getElementById('upload-icon');
+            const text = document.getElementById('upload-text');
+
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                preview.style.display = "block";
+                icon.style.display = "none";
+                text.style.display = "none";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+                preview.style.display = "none";
+                icon.style.display = "block";
+                text.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,919 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>East Bengal eFootball Club | EBFC Official</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Swiper CSS for Slideshow -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        /* BASE STYLES & RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --bg-card-hover: #1a1c24;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* SECTION HEADERS */
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-subtitle {
+            color: var(--primary-red);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 38px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-logo .logo-badge {
+                background: linear-gradient(135deg, var(--primary-red), #500);
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Teko', sans-serif;
+                font-size: 24px;
+                font-weight: 700;
+                border-radius: 6px;
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 28px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+            .nav-links a {
+                font-weight: 600;
+                font-size: 16px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: 0.3s ease;
+            }
+
+                .nav-links a:hover, .nav-links a.active {
+                    color: var(--primary-red);
+                }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-main {
+            background: var(--primary-red);
+            color: #fff;
+            padding: 10px 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            cursor: pointer;
+            transition: 0.3s ease;
+            display: inline-block;
+        }
+
+            .btn-main:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 5% 60px 5%;
+            background: linear-gradient(to right, rgba(10, 10, 12, 0.95), rgba(10, 10, 12, 0.7)), url('image1.jpg.jpg') no-repeat center center/cover;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .badge-tag {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .hero-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 72px;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+            .hero-title span {
+                color: var(--primary-red);
+                text-shadow: 0 0 20px var(--glow-red);
+            }
+
+        .hero-description {
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            padding: 10px 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s ease;
+            display: inline-block;
+        }
+
+            .btn-outline:hover {
+                border-color: var(--text-light);
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+        /* FEATURED PLAYERS SLIDESHOW SECTION */
+        .players-section {
+            padding: 80px 5%;
+            background: var(--bg-dark);
+            position: relative;
+        }
+
+        .player-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: 0.3s ease;
+            margin-bottom: 40px;
+        }
+
+            .player-card:hover {
+                border-color: var(--primary-red);
+                box-shadow: 0 10px 25px rgba(229, 9, 20, 0.25);
+            }
+
+        .player-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+            background: #181a20;
+        }
+
+            .player-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: grayscale(20%);
+                transition: 0.3s ease;
+            }
+
+        .player-card:hover .player-img-wrapper img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-red);
+            color: #fff;
+            font-family: 'Teko', sans-serif;
+            font-size: 22px;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .player-info {
+            padding: 20px;
+        }
+
+        .player-gamertag {
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            line-height: 1;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .player-realname {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .player-match-details {
+            background: #0b0c0f;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .match-detail-title {
+            font-size: 12px;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stats-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            padding: 6px 4px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+            .stat-box .val {
+                font-weight: 700;
+                color: var(--text-light);
+                font-size: 15px;
+            }
+
+            .stat-box .lbl {
+                font-size: 10px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+            }
+
+        /* SWIPER CUSTOMIZATION */
+        .swiper-pagination-bullet {
+            background: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--primary-red) !important;
+            opacity: 1;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .swiper-button-next, .swiper-button-prev {
+            color: var(--primary-red) !important;
+        }
+
+        /* ADMIN PANEL SLIDESHOW SECTION */
+        .admin-section {
+            padding: 80px 5%;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-swiper-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 40px;
+        }
+
+        .admin-content h2 {
+            font-family: 'Teko', sans-serif;
+            font-size: 38px;
+            line-height: 1;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .admin-content p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .admin-info-badge {
+            background: rgba(229, 9, 20, 0.15);
+            border-left: 3px solid var(--primary-red);
+            padding: 10px 15px;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .admin-img-wrapper {
+            position: relative;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-height: 320px;
+        }
+
+            .admin-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        /* FOOTER */
+        .footer {
+            background: #060608;
+            padding: 60px 5% 30px 5%;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            margin-bottom: 25px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .footer-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 15px;
+            transition: 0.3s ease;
+        }
+
+            .footer-btn:hover {
+                background: var(--primary-red);
+                border-color: var(--primary-red);
+                box-shadow: 0 0 15px var(--glow-red);
+                transform: translateY(-3px);
+            }
+
+        .footer-socials {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s ease;
+        }
+
+            .social-icon:hover {
+                color: var(--primary-red);
+                border-color: var(--primary-red);
+            }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE DESIGN (ALWAYS AT THE END OF CSS) */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                text-align: center;
+                justify-content: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .admin-swiper-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .brand-logo .brand-name {
+                font-size: 20px;
+            }
+
+            .brand-logo .logo-badge {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .hero {
+                padding: 100px 4% 40px 4%;
+            }
+
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .hero-buttons {
+                gap: 10px;
+            }
+
+            .btn-main, .btn-outline {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .section-subtitle {
+                font-size: 12px;
+            }
+
+            .player-gamertag {
+                font-size: 22px;
+            }
+
+            .rating-badge {
+                font-size: 16px;
+                padding: 1px 6px;
+            }
+
+            .player-match-details {
+                padding: 8px;
+            }
+
+            .stat-box .val {
+                font-size: 13px;
+            }
+
+            .stat-box .lbl {
+                font-size: 9px;
+            }
+
+            .admin-swiper-card {
+                padding: 20px;
+            }
+
+            .admin-content h2 {
+                font-size: 28px;
+            }
+
+            .admin-content p {
+                font-size: 14px;
+            }
+
+            .footer-links {
+                gap: 10px;
+            }
+
+            .footer-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand-logo">
+            <div class="logo-badge">EB</div>
+            <div class="brand-name">East Bengal <span>eFootball</span></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="#">Players</a></li>
+            <li><a href="#">Clubs</a></li>
+            <li><a href="#">Rankings</a></li>
+            <li><a href="#">Tournaments</a></li>
+            <li><a href="#">Matches</a></li>
+            <li><a href="#">News</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="register.html" class="btn-main">Register</a>
+            <a href="login.html" class="btn-main">Login</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge-tag"><i class="fa-solid fa-trophy"></i> EBFC OFFICIAL </span>
+            <h1 class="hero-title">East Bengal<br><span>eFootball Club</span></h1>
+            <p class="hero-description">
+                The premier competitive eFootball community of Bangladesh. Dominating tournaments, building esports legends, and elevating virtual football to new heights.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-main">Explore Tournaments</a>
+                <a href="#" class="btn-outline">View Rankings</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PLAYERS SLIDESHOW SECTION -->
+    <section class="players-section">
+        <div class="section-header">
+            <span class="section-subtitle">Top Performers</span>
+            <h2 class="section-title">Featured Pro Players</h2>
+        </div>
+
+        <div class="swiper playersSwiper">
+            <div class="swiper-wrapper">
+
+                <!-- Player Slide 1 -->
+                <div class="swiper-slide">
+                    <div class="player-card">
+                        <div class="player-img-wrapper">
+                            <span class="rating-badge">96 OVR</span>
+                            <img src="images/player1.webp" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="Raihan">
+                        </div>
+                        <div class="player-info">
+                            <div class="player-gamertag">Raihan_EBFC</div>
+                            <div class="player-realname">Tawshik Ahammad Ayon</div>
+
+                            <div class="player-match-details">
+                                <div class="match-detail-title">
+                                    <span>Career Performance</span>
+                                    <span style="color: var(--accent-gold);">Rank #1</span>
+                                </div>
+                                <div class="stats-grid-mini">
+                                    <div class="stat-box"><div class="val">24</div><div class="lbl">Matches</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #4caf50;">20</div><div class="lbl">Wins</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #f44336;">2</div><div class="lbl">Losses</div></div>
+                                    <div class="stat-box"><div class="val">54</div><div class="lbl">Goals</div></div>
+                                    <div class="stat-box"><div class="val">+38</div><div class="lbl">GD</div></div>
+                                    <div class="stat-box"><div class="val" style="color: var(--accent-gold);">83%</div><div class="lbl">Win Rate</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Slide 2 -->
+                <div class="swiper-slide">
+                    <div class="player-card">
+                        <div class="player-img-wrapper">
+                            <span class="rating-badge">94 OVR</span>
+                            <img src="images/player2.webp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=600'" alt="Rakib">
+                        </div>
+                        <div class="player-info">
+                            <div class="player-gamertag">Rakib_EBFC</div>
+                            <div class="player-realname">AS Rakib</div>
+
+                            <div class="player-match-details">
+                                <div class="match-detail-title">
+                                    <span>Career Performance</span>
+                                    <span style="color: var(--accent-gold);">Rank #2</span>
+                                </div>
+                                <div class="stats-grid-mini">
+                                    <div class="stat-box"><div class="val">22</div><div class="lbl">Matches</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #4caf50;">17</div><div class="lbl">Wins</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #f44336;">3</div><div class="lbl">Losses</div></div>
+                                    <div class="stat-box"><div class="val">42</div><div class="lbl">Goals</div></div>
+                                    <div class="stat-box"><div class="val">+26</div><div class="lbl">GD</div></div>
+                                    <div class="stat-box"><div class="val" style="color: var(--accent-gold);">78%</div><div class="lbl">Win Rate</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Slide 3 -->
+                <div class="swiper-slide">
+                    <div class="player-card">
+                        <div class="player-img-wrapper">
+                            <span class="rating-badge">92 OVR</span>
+                            <img src="images/player3.webp" onerror="this.src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=600'" alt="Siam">
+                        </div>
+                        <div class="player-info">
+                            <div class="player-gamertag">Siam_eFoot</div>
+                            <div class="player-realname">Siam Ahmed</div>
+
+                            <div class="player-match-details">
+                                <div class="match-detail-title">
+                                    <span>Career Performance</span>
+                                    <span style="color: var(--accent-gold);">Rank #3</span>
+                                </div>
+                                <div class="stats-grid-mini">
+                                    <div class="stat-box"><div class="val">20</div><div class="lbl">Matches</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #4caf50;">15</div><div class="lbl">Wins</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #f44336;">4</div><div class="lbl">Losses</div></div>
+                                    <div class="stat-box"><div class="val">38</div><div class="lbl">Goals</div></div>
+                                    <div class="stat-box"><div class="val">+18</div><div class="lbl">GD</div></div>
+                                    <div class="stat-box"><div class="val" style="color: var(--accent-gold);">75%</div><div class="lbl">Win Rate</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Slide 4 -->
+                <div class="swiper-slide">
+                    <div class="player-card">
+                        <div class="player-img-wrapper">
+                            <span class="rating-badge">90 OVR</span>
+                            <img src="images/player4.webp" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600'" alt="Tanvir">
+                        </div>
+                        <div class="player-info">
+                            <div class="player-gamertag">Tanvir_Pro</div>
+                            <div class="player-realname">Tanvir Hossain</div>
+
+                            <div class="player-match-details">
+                                <div class="match-detail-title">
+                                    <span>Career Performance</span>
+                                    <span style="color: var(--accent-gold);">Rank #4</span>
+                                </div>
+                                <div class="stats-grid-mini">
+                                    <div class="stat-box"><div class="val">18</div><div class="lbl">Matches</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #4caf50;">12</div><div class="lbl">Wins</div></div>
+                                    <div class="stat-box"><div class="val" style="color: #f44336;">4</div><div class="lbl">Losses</div></div>
+                                    <div class="stat-box"><div class="val">31</div><div class="lbl">Goals</div></div>
+                                    <div class="stat-box"><div class="val">+12</div><div class="lbl">GD</div></div>
+                                    <div class="stat-box"><div class="val" style="color: var(--accent-gold);">66%</div><div class="lbl">Win Rate</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+
+    <!-- ADMIN PANEL SLIDESHOW SECTION -->
+    <section class="admin-section">
+        <div class="section-header">
+            <span class="section-subtitle">PANEL</span>
+            <h2 class="section-title">ADMIN PANEL OF EBFC</h2>
+        </div>
+
+        <div class="swiper adminSwiper">
+            <div class="swiper-wrapper">
+
+                <!-- Admin Feature Slide 1 -->
+                <div class="swiper-slide">
+                    <div class="admin-swiper-card">
+                        <div class="admin-content">
+                            <h2>Automated Tournament Brackets</h2>
+                            <p>Generate Knockout and League schedules instantly. Supports single/double elimination with automatic winner branch routing.</p>
+                            <div class="admin-info-badge">
+                                <i class="fa-solid fa-code"></i> Powered by C# EF Core Database Logic
+                            </div>
+                            <a href="#" class="btn-main">View Module</a>
+                        </div>
+                        <div class="admin-img-wrapper">
+                            <img src="images/admin-bracket.jpg" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000'" alt="Bracket System">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Feature Slide 2 -->
+                <div class="swiper-slide">
+                    <div class="admin-swiper-card">
+                        <div class="admin-content">
+                            <h2>Live Scorecard & Stats Sync</h2>
+                            <p>Real-time match data insertion. Updates player rating, win %, goal difference, and standings table immediately after match confirmation.</p>
+                            <div class="admin-info-badge">
+                                <i class="fa-solid fa-database"></i> SQL Server Stored Procedures
+                            </div>
+                            <a href="#" class="btn-main">View Module</a>
+                        </div>
+                        <div class="admin-img-wrapper">
+                            <img src="images/admin-stats.jpg" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000'" alt="Stats Panel">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Feature Slide 3 -->
+                <div class="swiper-slide">
+                    <div class="admin-swiper-card">
+                        <div class="admin-content">
+                            <h2>Player & Club Verifications</h2>
+                            <p>Full control over player registrations, transfer approvals between clubs, and esports division allocations.</p>
+                            <div class="admin-info-badge">
+                                <i class="fa-solid fa-shield-halved"></i> Role-Based Identity Access
+                            </div>
+                            <a href="#" class="btn-main">View Module</a>
+                        </div>
+                        <div class="admin-img-wrapper">
+                            <img src="images/admin-users.jpg" onerror="this.src='https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000'" alt="User System">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="brand-logo footer-brand">
+                <div class="logo-badge">EB</div>
+                <div class="brand-name">East Bengal <span>eFootball</span></div>
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="index.html" class="footer-btn">Home</a></li>
+                <li><a href="#" class="footer-btn">Players</a></li>
+                <li><a href="#" class="footer-btn">Clubs</a></li>
+                <li><a href="#" class="footer-btn">Rankings</a></li>
+                <li><a href="#" class="footer-btn">Tournaments</a></li>
+                <li><a href="#" class="footer-btn">Matches</a></li>
+            </ul>
+
+            <div class="footer-socials">
+                <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" class="social-icon"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 East Bengal eFootball Club (EBFC). All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Swiper JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper Slideshows -->
+    <script>
+        var playersSwiper = new Swiper(".playersSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".players-section .swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".players-section .swiper-button-next",
+                prevEl: ".players-section .swiper-button-prev",
+            },
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 30 },
+            },
+        });
+
+        var adminSwiper = new Swiper(".adminSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".admin-section .swiper-pagination",
+                clickable: true,
+            },
+        });
+    </script>
+</body>
+</html>

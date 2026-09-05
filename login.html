@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Login | East Bengal eFootball Club</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--primary-red);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 420px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--primary-red), #500);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            border-radius: 8px;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 0 15px var(--glow-red);
+        }
+
+        .login-header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 36px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                font-size: 14px;
+                margin-bottom: 6px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+            }
+
+        .form-control {
+            width: 100%;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            color: var(--text-light);
+            border-radius: 4px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-red);
+                box-shadow: 0 0 10px var(--glow-red);
+            }
+
+        .form-actions-extra {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+            .form-actions-extra a {
+                color: var(--primary-red);
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+                .form-actions-extra a:hover {
+                    text-decoration: underline;
+                }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-red);
+            color: #fff;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        .bottom-register-prompt {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+            .bottom-register-prompt a {
+                color: var(--primary-red);
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+            .back-link:hover {
+                color: var(--primary-red);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="login-header">
+            <div class="brand-badge">EB</div>
+            <h1>Player Login</h1>
+            <p>Welcome back! Access your eFootball profile dashboard.</p>
+        </div>
+
+        <!-- FORM DIRECTS TO PLAYER PROFILE ON LOGIN -->
+        <form action="player-profile.html" method="GET">
+            <div class="form-group">
+                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                <input type="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <input type="password" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <div class="form-actions-extra">
+                <label style="cursor: pointer;">
+                    <input type="checkbox"> Remember me
+                </label>
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit">Login To Dashboard</button>
+        </form>
+
+        <div class="bottom-register-prompt">
+            Don't have an account? <a href="register.html">Register Here</a>
+        </div>
+
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+    </div>
+
+</body>
+</html>
