@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Login | East Bengal eFootball Club</title>
+    <title>Portal Login | East Bengal eFootball Club</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -22,6 +22,7 @@
             --bg-card: #121318;
             --primary-red: #e50914;
             --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
             --text-light: #ffffff;
             --text-muted: #9a9caf;
             --border-color: #22242d;
@@ -44,29 +45,26 @@
             border-top: 3px solid var(--primary-red);
             border-radius: 8px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             padding: 35px 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .brand-badge {
-            background: linear-gradient(135deg, var(--primary-red), #500);
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Teko', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
+        /* CLUB LOGO STYLING */
+        .brand-logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
             border-radius: 8px;
             margin: 0 auto 12px auto;
-            box-shadow: 0 0 15px var(--glow-red);
+            display: block;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+            border: 1px solid rgba(255, 183, 3, 0.3);
         }
 
         .login-header h1 {
@@ -81,6 +79,45 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
+        /* LOGIN ROLE SWITCHER BUTTONS */
+        .role-switch-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            background: #090a0c;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px 5px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+            .role-btn:hover {
+                color: var(--text-light);
+            }
+
+            .role-btn.active {
+                background: var(--primary-red);
+                color: #fff;
+                box-shadow: 0 0 10px var(--glow-red);
+            }
 
         .form-group {
             margin-bottom: 20px;
@@ -183,15 +220,29 @@
 
     <div class="login-card">
         <div class="login-header">
-            <div class="brand-badge">EB</div>
-            <h1>Player Login</h1>
-            <p>Welcome back! Access your eFootball profile dashboard.</p>
+            <!-- OFFICIAL CLUB LOGO -->
+            <img src="Image/image1.jpg.jpg" alt="East Bengal eFootball Club Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
+            <h1 id="loginTitle">Player Login</h1>
+            <p id="loginSubtitle">Welcome back! Access your eFootball profile dashboard.</p>
         </div>
 
-        <!-- FORM DIRECTS TO PLAYER PROFILE ON LOGIN -->
-        <form action="player-profile.html" method="GET">
+        <!-- ROLE SELECTION BUTTONS -->
+        <div class="role-switch-container">
+            <button type="button" class="role-btn active" onclick="switchRole('player')">
+                <i class="fa-solid fa-gamepad"></i> Player
+            </button>
+            <button type="button" class="role-btn" onclick="switchRole('captain')">
+                <i class="fa-solid fa-user-ninja"></i> Captain
+            </button>
+            <button type="button" class="role-btn" onclick="switchRole('admin')">
+                <i class="fa-solid fa-user-shield"></i> Admin
+            </button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" action="player-profile.html" method="GET">
             <div class="form-group">
-                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                <label><i class="fa-solid fa-envelope"></i> Email / User ID</label>
                 <input type="email" class="form-control" placeholder="Enter your email" required>
             </div>
 
@@ -207,15 +258,51 @@
                 <a href="#">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn-submit">Login To Dashboard</button>
+            <button type="submit" id="submitBtn" class="btn-submit">Login To Player Dashboard</button>
         </form>
 
         <div class="bottom-register-prompt">
             Don't have an account? <a href="register.html">Register Here</a>
         </div>
 
-        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
+
+    <!-- JAVASCRIPT FOR SWITCHING ROLES -->
+    <script>
+        function switchRole(role) {
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.role-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Elements to update dynamically
+            const loginTitle = document.getElementById('loginTitle');
+            const loginSubtitle = document.getElementById('loginSubtitle');
+            const submitBtn = document.getElementById('submitBtn');
+            const loginForm = document.getElementById('loginForm');
+
+            // Update details based on selected role
+            if (role === 'player') {
+                event.currentTarget.classList.add('active');
+                loginTitle.innerText = "Player Login";
+                loginSubtitle.innerText = "Welcome back! Access your eFootball profile dashboard.";
+                submitBtn.innerText = "Login To Player Dashboard";
+                loginForm.action = "player-profile.html";
+            } else if (role === 'captain') {
+                event.currentTarget.classList.add('active');
+                loginTitle.innerText = "Captain Login";
+                loginSubtitle.innerText = "Manage your squad, lineups, and match strategy.";
+                submitBtn.innerText = "Login To Captain Portal";
+                loginForm.action = "captain-dashboard.html";
+            } else if (role === 'admin') {
+                event.currentTarget.classList.add('active');
+                loginTitle.innerText = "Admin Portal Login";
+                loginSubtitle.innerText = "Access EBFC administrative controls and rankings.";
+                submitBtn.innerText = "Login To Admin Panel";
+                loginForm.action = "admin-dashboard.html";
+            }
+        }
+    </script>
 
 </body>
 </html>
