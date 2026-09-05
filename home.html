@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,18 +90,12 @@
             gap: 12px;
         }
 
-            .brand-logo .logo-badge {
-                background: linear-gradient(135deg, var(--primary-red), #500);
-                width: 45px;
-                height: 45px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: 'Teko', sans-serif;
-                font-size: 24px;
-                font-weight: 700;
+            .brand-logo .logo-img {
+                width: 50px;
+                height: 50px;
+                object-fit: contain;
                 border-radius: 6px;
-                box-shadow: 0 0 15px var(--glow-red);
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
             }
 
             .brand-logo .brand-name {
@@ -163,7 +157,7 @@
             display: flex;
             align-items: center;
             padding: 120px 5% 60px 5%;
-            background: linear-gradient(to right, rgba(10, 10, 12, 0.95), rgba(10, 10, 12, 0.7)), url('image1.jpg.jpg') no-repeat center center/cover;
+            background: linear-gradient(to right, rgba(10, 10, 12, 0.95), rgba(10, 10, 12, 0.7)), url('Image/image1.jpg.jpg') no-repeat center center/cover;
             border-bottom: 2px solid var(--border-color);
         }
 
@@ -415,7 +409,8 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-height: 320px;
+            height: 320px;
+            background: #14151a;
         }
 
             .admin-img-wrapper img {
@@ -424,6 +419,82 @@
                 object-fit: cover;
                 display: block;
             }
+
+        /* CAPTAINS SLIDESHOW SECTION */
+        .captains-section {
+            padding: 80px 5%;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .captain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: 0.3s ease;
+            margin-bottom: 45px;
+        }
+
+            .captain-card:hover {
+                border-color: var(--accent-gold);
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(255, 183, 3, 0.2);
+            }
+
+        .captain-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #14151a;
+        }
+
+            .captain-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: 0.3s ease;
+            }
+
+        .captain-card:hover .captain-img-wrapper img {
+            transform: scale(1.06);
+        }
+
+        .captain-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent-gold);
+            color: #000;
+            font-family: 'Teko', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .captain-info {
+            padding: 20px 15px;
+        }
+
+        .captain-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            color: var(--text-light);
+            line-height: 1;
+        }
+
+        .captain-role {
+            color: var(--accent-gold);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
 
         /* FOOTER */
         .footer {
@@ -503,7 +574,7 @@
             font-size: 14px;
         }
 
-        /* RESPONSIVE DESIGN (ALWAYS AT THE END OF CSS) */
+        /* RESPONSIVE DESIGN (DESKTOP & MOBILE INTEGRATION) */
         @media (max-width: 992px) {
             .nav-links {
                 display: none;
@@ -528,10 +599,9 @@
                 font-size: 20px;
             }
 
-            .brand-logo .logo-badge {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
+            .brand-logo .logo-img {
+                width: 40px;
+                height: 40px;
             }
 
             .hero {
@@ -597,6 +667,10 @@
                 font-size: 14px;
             }
 
+            .admin-img-wrapper {
+                height: 250px;
+            }
+
             .footer-links {
                 gap: 10px;
             }
@@ -613,17 +687,15 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="brand-logo">
-            <div class="logo-badge">EB</div>
-            <div class="brand-name">East Bengal <span>eFootball</span></div>
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.src='image1.jpg.jpg'">
+            <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="home.html" class="active">Home</a></li>
             <li><a href="#">Players</a></li>
-            <li><a href="#">Clubs</a></li>
             <li><a href="#">Rankings</a></li>
             <li><a href="#">Tournaments</a></li>
-            <li><a href="#">Matches</a></li>
-            <li><a href="#">News</a></li>
+            <li><a href="#">About Us</a></li>
         </ul>
         <div class="nav-actions">
             <a href="register.html" class="btn-main">Register</a>
@@ -640,7 +712,7 @@
                 The premier competitive eFootball community of Bangladesh. Dominating tournaments, building esports legends, and elevating virtual football to new heights.
             </p>
             <div class="hero-buttons">
-                <a href="#" class="btn-main">Explore Tournaments</a>
+                <a href="#" class="btn-main">About Us</a>
                 <a href="#" class="btn-outline">View Rankings</a>
             </div>
         </div>
@@ -661,7 +733,7 @@
                     <div class="player-card">
                         <div class="player-img-wrapper">
                             <span class="rating-badge">96 OVR</span>
-                            <img src="images/player1.webp" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="Raihan">
+                            <img src="Image/player1.webp" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="Raihan">
                         </div>
                         <div class="player-info">
                             <div class="player-gamertag">Raihan_EBFC</div>
@@ -690,7 +762,7 @@
                     <div class="player-card">
                         <div class="player-img-wrapper">
                             <span class="rating-badge">94 OVR</span>
-                            <img src="images/player2.webp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=600'" alt="Rakib">
+                            <img src="Image/player2.webp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=600'" alt="Rakib">
                         </div>
                         <div class="player-info">
                             <div class="player-gamertag">Rakib_EBFC</div>
@@ -719,7 +791,7 @@
                     <div class="player-card">
                         <div class="player-img-wrapper">
                             <span class="rating-badge">92 OVR</span>
-                            <img src="images/player3.webp" onerror="this.src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=600'" alt="Siam">
+                            <img src="Image/player3.webp" onerror="this.src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=600'" alt="Siam">
                         </div>
                         <div class="player-info">
                             <div class="player-gamertag">Siam_eFoot</div>
@@ -748,7 +820,7 @@
                     <div class="player-card">
                         <div class="player-img-wrapper">
                             <span class="rating-badge">90 OVR</span>
-                            <img src="images/player4.webp" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600'" alt="Tanvir">
+                            <img src="Image/player4.webp" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600'" alt="Tanvir">
                         </div>
                         <div class="player-info">
                             <div class="player-gamertag">Tanvir_Pro</div>
@@ -793,15 +865,16 @@
                 <div class="swiper-slide">
                     <div class="admin-swiper-card">
                         <div class="admin-content">
-                            <h2>Automated Tournament Brackets</h2>
-                            <p>Generate Knockout and League schedules instantly. Supports single/double elimination with automatic winner branch routing.</p>
+                            <h2>ZAWADULLAH BHUIYAN</h2>
+                            <p>THE CREATIVE MIND OF EBFC.</p>
                             <div class="admin-info-badge">
-                                <i class="fa-solid fa-code"></i> Powered by C# EF Core Database Logic
+                                <i class="fa-solid fa-code"></i> ADMIN & CREATIVE PANEL HEAD
                             </div>
                             <a href="#" class="btn-main">View Module</a>
                         </div>
                         <div class="admin-img-wrapper">
-                            <img src="images/admin-bracket.jpg" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000'" alt="Bracket System">
+                            <!-- multiple image sources handled automatically -->
+                            <img src="Image/zawad.jpg" onerror="this.onerror=null; this.src='zawad.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000';" alt="Zawadullah Bhuiyan">
                         </div>
                     </div>
                 </div>
@@ -810,15 +883,15 @@
                 <div class="swiper-slide">
                     <div class="admin-swiper-card">
                         <div class="admin-content">
-                            <h2>Live Scorecard & Stats Sync</h2>
-                            <p>Real-time match data insertion. Updates player rating, win %, goal difference, and standings table immediately after match confirmation.</p>
+                            <h2>KHALIDUR RAHMAN DIPTO</h2>
+                            <p>FOUNDER AND HEAD ADMIN OF EBFC.</p>
                             <div class="admin-info-badge">
-                                <i class="fa-solid fa-database"></i> SQL Server Stored Procedures
+                                <i class="fa-solid fa-database"></i> MASTERMIND BEHIND THE EBFC
                             </div>
                             <a href="#" class="btn-main">View Module</a>
                         </div>
                         <div class="admin-img-wrapper">
-                            <img src="images/admin-stats.jpg" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000'" alt="Stats Panel">
+                            <img src="Image/dipto.jpg" onerror="this.onerror=null; this.src='dipto.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000';" alt="Khalidur Rahman Dipto">
                         </div>
                     </div>
                 </div>
@@ -827,15 +900,15 @@
                 <div class="swiper-slide">
                     <div class="admin-swiper-card">
                         <div class="admin-content">
-                            <h2>Player & Club Verifications</h2>
-                            <p>Full control over player registrations, transfer approvals between clubs, and esports division allocations.</p>
+                            <h2>ARNOB AHMED</h2>
+                            <p>ADMIN OF EBFC</p>
                             <div class="admin-info-badge">
-                                <i class="fa-solid fa-shield-halved"></i> Role-Based Identity Access
+                                <i class="fa-solid fa-shield-halved"></i> ADMIN AND CAPTAIN
                             </div>
                             <a href="#" class="btn-main">View Module</a>
                         </div>
                         <div class="admin-img-wrapper">
-                            <img src="images/admin-users.jpg" onerror="this.src='https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000'" alt="User System">
+                            <img src="Image/arnob.jpg" onerror="this.onerror=null; this.src='arnob.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000';" alt="Arnob Ahmed">
                         </div>
                     </div>
                 </div>
@@ -845,21 +918,177 @@
         </div>
     </section>
 
+    <!-- COMMUNITY CAPTAINS SLIDESHOW SECTION -->
+    <section class="captains-section">
+        <div class="section-header">
+            <span class="section-subtitle">Leadership</span>
+            <h2 class="section-title">COMMUNITY CAPTAINS OF EBFC</h2>
+        </div>
+
+        <div class="swiper captainsSwiper">
+            <div class="swiper-wrapper">
+
+                <!-- Captain Slide 1 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Captain</span>
+                            <img src="Image/captain1.jpg" onerror="this.onerror=null; this.src='captain1.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600';" alt="Captain 1">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Zawadullah Bhuiyan</div>
+                            <div class="captain-role">Community Leader</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 2 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Co-Captain</span>
+                            <img src="Image/captain2.jpg" onerror="this.onerror=null; this.src='captain2.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600';" alt="Captain 2">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Tawshik Ahammad Ayon</div>
+                            <div class="captain-role">Tactical Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 3 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Captain</span>
+                            <img src="Image/captain3.jpg" onerror="this.onerror=null; this.src='captain3.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600';" alt="Captain 3">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">AS Rakib</div>
+                            <div class="captain-role">eSports Strategist</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 4 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Squad Lead</span>
+                            <img src="Image/captain4.jpg" onerror="this.onerror=null; this.src='captain4.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=600';" alt="Captain 4">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Tanvir Ahmed</div>
+                            <div class="captain-role">Division Leader</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 5 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Captain</span>
+                            <img src="Image/captain5.jpg" onerror="this.onerror=null; this.src='captain5.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=600';" alt="Captain 5">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Siam Ahmed</div>
+                            <div class="captain-role">Tournament Host</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 6 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Co-Captain</span>
+                            <img src="Image/captain6.jpg" onerror="this.onerror=null; this.src='captain6.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600';" alt="Captain 6">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Ayman Rahman</div>
+                            <div class="captain-role">Community Moderator</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 7 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Squad Lead</span>
+                            <img src="Image/captain7.jpg" onerror="this.onerror=null; this.src='captain7.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600';" alt="Captain 7">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Nabil Chowdhury</div>
+                            <div class="captain-role">Operations Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 8 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Captain</span>
+                            <img src="Image/captain8.jpg" onerror="this.onerror=null; this.src='captain8.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600';" alt="Captain 8">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Fahim Shahriar</div>
+                            <div class="captain-role">Scouting Lead</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 9 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Co-Captain</span>
+                            <img src="Image/captain9.jpg" onerror="this.onerror=null; this.src='captain9.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600';" alt="Captain 9">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Shahriar Hasan</div>
+                            <div class="captain-role">Media Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captain Slide 10 -->
+                <div class="swiper-slide">
+                    <div class="captain-card">
+                        <div class="captain-img-wrapper">
+                            <span class="captain-badge">Captain</span>
+                            <img src="Image/captain10.jpg" onerror="this.onerror=null; this.src='captain10.jpg'; if(!this.src) this.src='https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=600';" alt="Captain 10">
+                        </div>
+                        <div class="captain-info">
+                            <div class="captain-name">Mahir Karim</div>
+                            <div class="captain-role">Event Coordinator</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-top">
             <div class="brand-logo footer-brand">
-                <div class="logo-badge">EB</div>
-                <div class="brand-name">East Bengal <span>eFootball</span></div>
+                <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.src='image1.jpg.jpg'">
+                <div class="brand-name">East Bengal <span>eFootball Club</span></div>
             </div>
 
             <ul class="footer-links">
                 <li><a href="index.html" class="footer-btn">Home</a></li>
                 <li><a href="#" class="footer-btn">Players</a></li>
-                <li><a href="#" class="footer-btn">Clubs</a></li>
                 <li><a href="#" class="footer-btn">Rankings</a></li>
                 <li><a href="#" class="footer-btn">Tournaments</a></li>
-                <li><a href="#" class="footer-btn">Matches</a></li>
+                <li><a href="#" class="footer-btn">About Us</a></li>
             </ul>
 
             <div class="footer-socials">
@@ -870,7 +1099,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2026 East Bengal eFootball Club (EBFC). All Rights Reserved.</p>
+            <p>&copy; 2026 East Bengal eFootball Club (EBFC). All Rights Reserved. Developed By Zawadullah Bhuiyan</p>
         </div>
     </footer>
 
@@ -912,6 +1141,28 @@
             pagination: {
                 el: ".admin-section .swiper-pagination",
                 clickable: true,
+            },
+        });
+
+        var captainsSwiper = new Swiper(".captainsSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".captains-section .swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".captains-section .swiper-button-next",
+                prevEl: ".captains-section .swiper-button-prev",
+            },
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 4, spaceBetween: 25 },
             },
         });
     </script>
