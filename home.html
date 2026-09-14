@@ -72,7 +72,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 5%;
+            padding: 12px 5%;
             background: rgba(10, 10, 12, 0.95);
             border-bottom: 1px solid var(--border-color);
             position: fixed;
@@ -85,12 +85,12 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .brand-logo .logo-img {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             object-fit: contain;
             border-radius: 6px;
             box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
@@ -98,7 +98,7 @@
 
         .brand-logo .brand-name {
             font-family: 'Teko', sans-serif;
-            font-size: 28px;
+            font-size: 26px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -128,13 +128,13 @@
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-main {
             background: var(--primary-red);
             color: #fff;
-            padding: 10px 22px;
+            padding: 9px 18px;
             font-weight: 700;
             text-transform: uppercase;
             border: none;
@@ -142,6 +142,7 @@
             cursor: pointer;
             transition: 0.3s ease;
             display: inline-block;
+            font-size: 14px;
         }
 
         .btn-main:hover {
@@ -150,8 +151,8 @@
         }
 
         .user-profile-circle {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             border: 2px solid var(--primary-red);
             overflow: hidden;
@@ -193,7 +194,7 @@
             border: 1px solid var(--primary-red);
             color: var(--primary-red);
             padding: 6px 14px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -224,19 +225,20 @@
 
         .hero-buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
 
         .btn-outline {
             border: 2px solid var(--border-color);
             background: transparent;
             color: var(--text-light);
-            padding: 10px 24px;
+            padding: 9px 20px;
             font-weight: 700;
             text-transform: uppercase;
             cursor: pointer;
             transition: 0.3s ease;
             display: inline-block;
+            font-size: 14px;
         }
 
         .btn-outline:hover {
@@ -376,12 +378,12 @@
         .admin-swiper-card {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 30px;
             align-items: center;
             background: var(--bg-dark);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 35px;
+            padding: 30px;
             margin-bottom: 40px;
         }
 
@@ -542,7 +544,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             list-style: none;
             margin-bottom: 30px;
         }
@@ -551,12 +553,12 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-light);
-            padding: 12px 28px;
+            padding: 10px 20px;
             border-radius: 6px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-size: 15px;
+            font-size: 14px;
             transition: 0.3s ease;
         }
 
@@ -597,15 +599,102 @@
             font-size: 14px;
         }
 
+        /* 📱 PERFECT MOBILE & TABLET RESPONSIVE STYLES */
         @media (max-width: 992px) {
             .nav-links { display: none; }
-            .hero { text-align: center; justify-content: center; }
-            .hero-buttons { justify-content: center; }
-            .admin-swiper-card { grid-template-columns: 1fr; }
+            
+            .hero { 
+                text-align: center; 
+                justify-content: center; 
+                padding-top: 100px;
+                min-height: 75vh;
+            }
+
+            .hero-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-buttons { 
+                justify-content: center; 
+            }
+
+            .admin-swiper-card { 
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .admin-img-wrapper {
+                height: 260px;
+                order: -1; /* Shows image on top in mobile */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 10px 4%;
+            }
+
+            .brand-logo .logo-img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-logo .brand-name {
+                font-size: 22px;
+            }
+
+            .btn-main {
+                padding: 7px 14px;
+                font-size: 12px;
+            }
+
+            .hero-title {
+                font-size: 44px;
+                margin-bottom: 15px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+                margin-bottom: 25px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .hero-buttons a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 30px;
+            }
+
+            .players-section, .admin-section, .captains-section {
+                padding: 50px 4%;
+            }
+
+            .admin-content h2 {
+                font-size: 30px;
+            }
+
+            .admin-content p {
+                font-size: 14px;
+            }
+
+            .swiper-button-next, .swiper-button-prev {
+                display: none !important; /* Hide arrows on mobile for clean UI */
+            }
         }
     </style>
 
-    <!-- FIREBASE COMPAT SDKs -->
+    <!-- SYSTEM AUTHENTICATION LIBRARIES -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
