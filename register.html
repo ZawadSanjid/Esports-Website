@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,7 +34,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .reg-card {
@@ -43,7 +43,7 @@
             border-top: 3px solid var(--primary-red);
             border-radius: 8px;
             width: 100%;
-            max-width: 480px;
+            max-width: 560px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
@@ -117,14 +117,24 @@
             display: none;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 15px;
+        }
+
         .form-group {
             margin-bottom: 18px;
         }
 
+            .form-group.full-width {
+                grid-column: 1 / -1;
+            }
+
             .form-group label {
                 display: block;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: 13px;
                 margin-bottom: 6px;
                 text-transform: uppercase;
                 color: var(--text-muted);
@@ -137,7 +147,7 @@
             padding: 12px;
             color: var(--text-light);
             border-radius: 4px;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: 0.3s ease;
         }
@@ -186,10 +196,10 @@
     <div class="reg-card">
         <div class="reg-header">
             <h1>Join East Bengal eFootball Club</h1>
-            <p>Register your account to participate in eFootball tournaments</p>
+            <p>Complete official registration form for EBFC squad entry</p>
         </div>
 
-        <form action="player-profile.html" method="get" enctype="multipart/form-data">
+        <form id="registrationForm">
 
             <!-- IMAGE UPLOAD FIELD -->
             <div class="image-upload-wrapper">
@@ -198,38 +208,88 @@
                     <span id="upload-text">Upload Photo</span>
                     <img id="preview-img" src="" alt="Player Photo Preview">
                 </label>
-                <input type="file" id="player-photo" name="playerPhoto" accept="image/*" onchange="previewFile()" required>
+                <input type="file" id="player-photo" accept="image/*" onchange="previewFile()">
             </div>
 
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" class="form-control" placeholder="Enter your full name" required>
-            </div>
-            <div class="form-group">
-                <label>eFootball Game ID / User ID</label>
-                <input type="text" class="form-control" placeholder="e.g. ASEZ-334-526-988" required>
-            </div>
-            <div class="form-group">
-                <label>Device Model</label>
-                <input type="text" class="form-control" placeholder="e.g. Redmi Note 10" required>
-            </div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" class="form-control" placeholder="Enter Your Email Address" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" placeholder="Create password" required>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>eFootball Game ID / User ID</label>
+                    <input type="text" id="regGameId" class="form-control" placeholder="e.g. ASEZ-334-526-988" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Facebook Profile Link</label>
+                    <input type="url" id="regFbLink" class="form-control" placeholder="https://facebook.com/yourprofile" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Device Model</label>
+                    <input type="text" id="regDevice" class="form-control" placeholder="e.g. Redmi Note 10" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Activity Time (Comfortable Match Slot)</label>
+                    <select id="regActivityTime" class="form-control" required>
+                        <option value="10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)">10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)</option>
+                        <option value="11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)">11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)</option>
+                        <option value="12 am - 1 am (রাত ১২ টা থেকে ১টা)">12 am - 1 am (রাত ১২ টা থেকে ১টা)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>VPN Needed?</label>
+                    <select id="regVpn" class="form-control" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="regDob" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Occupation</label>
+                    <input type="text" id="regOccupation" class="form-control" placeholder="e.g. Student / Service" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Permanent Address</label>
+                    <input type="text" id="regAddress" class="form-control" placeholder="Enter your permanent address" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>আগে অন্য কোনো ক্লাবে ছিলেন? (নাম অথবা N/A)</label>
+                    <input type="text" id="regPreviousClub" class="form-control" placeholder="পূর্ববর্তী ক্লাবের নাম লিখুন (না থাকলে N/A)" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="Enter Your Email Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Create password" required>
+                </div>
             </div>
 
             <button type="submit" class="btn-submit">Complete Registration</button>
         </form>
 
-        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
-    <!-- JAVASCRIPT FOR IMAGE PREVIEW -->
+    <!-- JAVASCRIPT FOR IMAGE PREVIEW & DATA SAVING -->
     <script>
+        let uploadedAvatarData = 'Image/player1.webp';
+
         function previewFile() {
             const preview = document.getElementById('preview-img');
             const file = document.getElementById('player-photo').files[0];
@@ -240,6 +300,7 @@
 
             reader.onloadend = function () {
                 preview.src = reader.result;
+                uploadedAvatarData = reader.result;
                 preview.style.display = "block";
                 icon.style.display = "none";
                 text.style.display = "none";
@@ -254,6 +315,40 @@
                 text.style.display = "block";
             }
         }
+
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let newUser = {
+                id: Date.now(),
+                name: document.getElementById('regName').value,
+                gameId: document.getElementById('regGameId').value,
+                fbLink: document.getElementById('regFbLink').value,
+                device: document.getElementById('regDevice').value,
+                activityTime: document.getElementById('regActivityTime').value,
+                vpn: document.getElementById('regVpn').value,
+                dob: document.getElementById('regDob').value,
+                occupation: document.getElementById('regOccupation').value,
+                address: document.getElementById('regAddress').value,
+                previousClub: document.getElementById('regPreviousClub').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                club: "East Bengal Main",
+                avatar: uploadedAvatarData,
+                role: "player"
+            };
+
+            // Save active session
+            localStorage.setItem('ebfc_user', JSON.stringify(newUser));
+
+            // Save to global list
+            let players = JSON.parse(localStorage.getItem('ebfc_all_players')) || [];
+            players.push(newUser);
+            localStorage.setItem('ebfc_all_players', JSON.stringify(players));
+
+            alert("Registration Completed Successfully!");
+            window.location.href = "player-profile.html";
+        });
     </script>
 </body>
 </html>
