@@ -344,7 +344,7 @@
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerText = "Registering with Firebase...";
+            submitBtn.innerText = "Registering...";
 
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value.trim();
@@ -386,7 +386,7 @@
                 window.location.href = "login.html";
 
             } catch (error) {
-                console.error("Firebase Registration Error: ", error);
+                console.error("Registration Error: ", error);
                 alert("Error: " + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Complete Registration";
