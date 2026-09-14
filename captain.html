@@ -1,14 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captain Squad Score Portal | East Bengal eFootball Club</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -43,7 +41,6 @@
             color: inherit;
         }
 
-        /* NAVBAR */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -179,7 +176,6 @@
                 border-color: var(--primary-red);
             }
 
-        /* SQUAD SLOTS DYNAMIC STYLING */
         .squad-slot-card {
             background: #090a0c;
             border: 1px solid var(--border-color);
@@ -217,7 +213,6 @@
                 box-shadow: 0 0 15px var(--glow-red);
             }
 
-        /* STATUS BADGE */
         .status-badge {
             font-size: 11px;
             padding: 3px 8px;
@@ -246,14 +241,13 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="brand-logo">
             <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
             <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <div>
-            <a href="home.html" onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</a>
+            <a href="login.html" onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</a>
         </div>
     </nav>
 
@@ -304,7 +298,6 @@
                     </div>
                 </div>
 
-                <!-- DYNAMIC PLAYER SQUAD SLOTS CONTAINER -->
                 <div class="section-title" style="font-size: 24px; margin-top: 20px;">
                     <span><i class="fa-solid fa-list-ol"></i> Input Player Performance</span>
                 </div>
@@ -315,7 +308,6 @@
             </form>
         </div>
 
-        <!-- MY SUBMISSION LOGS -->
         <div class="section-card">
             <div class="section-title">
                 <span><i class="fa-solid fa-list-check"></i> Pending Approvals Queue</span>
@@ -326,6 +318,12 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const user = JSON.parse(localStorage.getItem('ebfc_user'));
+            if (!user || user.role !== 'captain') {
+                alert("Access Denied! Captain Access Required.");
+                window.location.href = "login.html";
+                return;
+            }
             generateSquadSlots();
             renderPendingLogs();
         });
@@ -337,7 +335,6 @@
             return saved ? JSON.parse(saved) : [];
         }
 
-        // GENERATE 6/8/10/12 MAN SQUAD SLOTS DYNAMICALLY
         function generateSquadSlots() {
             let count = parseInt(document.getElementById('squadFormatSelect').value);
             let players = getAllPlayers();
@@ -348,7 +345,7 @@
                 let optionsHtml = '<option value="">-- Select Player --</option>';
                 players.forEach((p, idx) => {
                     let selected = (idx % players.length) === (i % players.length) ? 'selected' : '';
-                    optionsHtml += `<option value="${p.id}" ${selected}>${p.name} (${p.club})</option>`;
+                    optionsHtml += `<option value="${p.id}" ${selected}>${p.name} (${p.club || 'EBFC'})</option>`;
                 });
 
                 container.innerHTML += `
@@ -372,12 +369,10 @@
                                     <option value="yes">Yes</option>
                                 </select>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
             }
         }
 
-        // SUBMIT FULL SQUAD SCORES TO PENDING QUEUE
         document.getElementById('captainScoreForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -421,7 +416,6 @@
             renderPendingLogs();
         });
 
-        // RENDER LOGS
         function renderPendingLogs() {
             let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
             let container = document.getElementById('pendingLogsContainer');
@@ -441,8 +435,7 @@
                                 <div style="font-size: 12px; color: var(--text-muted);">GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp}</div>
                             </div>
                             <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                        </div>
-                    `;
+                        </div>`;
             });
         }
     </script>
