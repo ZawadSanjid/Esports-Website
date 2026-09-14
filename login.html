@@ -212,13 +212,12 @@
         }
     </style>
 
-    <!-- FIREBASE COMPAT SDKs -->
+    <!-- SYSTEM AUTHENTICATION LIBRARIES -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // ⚡ SAVED FIREBASE CONFIGURATION (EBFC PORTAL)
         const firebaseConfig = {
             apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
             authDomain: "ebfc-portal.firebaseapp.com",
@@ -278,7 +277,7 @@
             Don't have an account? <a href="register.html">Register Here</a>
         </div>
 
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
     <script>
@@ -316,7 +315,6 @@
             }
         }
 
-        // FIREBASE AUTHENTICATION LOGIC
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -328,19 +326,17 @@
             submitBtn.disabled = true;
 
             try {
-                // Set persistence mode if rememberMe is checked
                 const persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
                 await auth.setPersistence(persistence);
 
-                // 1. SIGN IN WITH FIREBASE AUTH
                 const userCredential = await auth.signInWithEmailAndPassword(inputEmail, inputPassword);
                 const uid = userCredential.user.uid;
 
-                // 2. CHECK USER ROLE IN FIRESTORE DATABASE
                 const userDoc = await db.collection('users').doc(uid).get();
 
                 if (!userDoc.exists) {
-                    alert("User profile record not found in database!");
+                    alert("Wrong credentials");
+                    await auth.signOut();
                     submitBtn.disabled = false;
                     return;
                 }
@@ -348,7 +344,6 @@
                 const userData = userDoc.data();
                 const userRole = userData.role || 'player';
 
-                // 3. ROLE PERMISSION CHECK
                 if (currentRole === 'admin' && userRole !== 'admin') {
                     alert("Access Denied! You do not have Admin privileges.");
                     await auth.signOut();
@@ -363,23 +358,21 @@
                     return;
                 }
 
-                // Redirect based on selected role tab or assigned role
                 window.location.href = redirectUrl;
 
             } catch (error) {
-                console.error("Wrong Email Or Password ", error);
-                alert("Login Failed: " + error.message);
+                console.error("Login Error: ", error);
+                alert("Wrong credentials");
                 submitBtn.disabled = false;
             }
         });
 
-        // FORGOT PASSWORD HANDLER
         function handleForgotPassword() {
             const email = prompt("Please enter your registered Email address for password reset:");
             if (email) {
                 auth.sendPasswordResetEmail(email.trim())
                     .then(() => alert("Password reset link sent to your email!"))
-                    .catch(err => alert("Error: " + err.message));
+                    .catch(() => alert("Wrong credentials"));
             }
         }
     </script>
