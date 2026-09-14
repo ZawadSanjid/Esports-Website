@@ -105,28 +105,28 @@
             gap: 6px;
         }
 
-            .role-btn:hover {
-                color: var(--text-light);
-            }
+        .role-btn:hover {
+            color: var(--text-light);
+        }
 
-            .role-btn.active {
-                background: var(--primary-red);
-                color: #fff;
-                box-shadow: 0 0 10px var(--glow-red);
-            }
+        .role-btn.active {
+            background: var(--primary-red);
+            color: #fff;
+            box-shadow: 0 0 10px var(--glow-red);
+        }
 
         .form-group {
             margin-bottom: 20px;
         }
 
-            .form-group label {
-                display: block;
-                font-weight: 600;
-                font-size: 14px;
-                margin-bottom: 6px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-            }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
 
         .form-control {
             width: 100%;
@@ -140,10 +140,10 @@
             transition: 0.3s ease;
         }
 
-            .form-control:focus {
-                border-color: var(--primary-red);
-                box-shadow: 0 0 10px var(--glow-red);
-            }
+        .form-control:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 10px var(--glow-red);
+        }
 
         .form-actions-extra {
             display: flex;
@@ -154,15 +154,15 @@
             color: var(--text-muted);
         }
 
-            .form-actions-extra a {
-                color: var(--primary-red);
-                text-decoration: none;
-                font-weight: 600;
-            }
+        .form-actions-extra a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-                .form-actions-extra a:hover {
-                    text-decoration: underline;
-                }
+        .form-actions-extra a:hover {
+            text-decoration: underline;
+        }
 
         .btn-submit {
             width: 100%;
@@ -178,10 +178,10 @@
             transition: 0.3s ease;
         }
 
-            .btn-submit:hover {
-                background: var(--primary-red-hover);
-                box-shadow: 0 0 15px var(--glow-red);
-            }
+        .btn-submit:hover {
+            background: var(--primary-red-hover);
+            box-shadow: 0 0 15px var(--glow-red);
+        }
 
         .bottom-register-prompt {
             text-align: center;
@@ -192,11 +192,11 @@
             font-size: 14px;
         }
 
-            .bottom-register-prompt a {
-                color: var(--primary-red);
-                font-weight: 700;
-                text-decoration: none;
-            }
+        .bottom-register-prompt a {
+            color: var(--primary-red);
+            font-weight: 700;
+            text-decoration: none;
+        }
 
         .back-link {
             display: block;
@@ -207,10 +207,32 @@
             font-size: 14px;
         }
 
-            .back-link:hover {
-                color: var(--primary-red);
-            }
+        .back-link:hover {
+            color: var(--primary-red);
+        }
     </style>
+
+    <!-- FIREBASE COMPAT SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // ⚡ SAVED FIREBASE CONFIGURATION (EBFC PORTAL)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 </head>
 <body>
 
@@ -235,7 +257,7 @@
 
         <form id="loginForm">
             <div class="form-group">
-                <label><i class="fa-solid fa-envelope"></i> Email / User ID</label>
+                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
                 <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
             </div>
 
@@ -245,8 +267,8 @@
             </div>
 
             <div class="form-actions-extra">
-                <label style="cursor: pointer;"><input type="checkbox"> Remember me</label>
-                <a href="#">Forgot Password?</a>
+                <label style="cursor: pointer;"><input type="checkbox" id="rememberMe"> Remember me</label>
+                <a href="#" onclick="handleForgotPassword()">Forgot Password?</a>
             </div>
 
             <button type="submit" id="submitBtn" class="btn-submit">Login To Player Dashboard</button>
@@ -256,7 +278,7 @@
             Don't have an account? <a href="register.html">Register Here</a>
         </div>
 
-        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
     <script>
@@ -294,68 +316,72 @@
             }
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        // FIREBASE AUTHENTICATION LOGIC
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            const submitBtn = document.getElementById('submitBtn');
             const inputEmail = document.getElementById('loginEmail').value.trim();
             const inputPassword = document.getElementById('loginPassword').value.trim();
+            const rememberMe = document.getElementById('rememberMe').checked;
 
-            // 1. ADMIN AUTHENTICATION
-            if (currentRole === 'admin') {
-                if (inputEmail === 'eastbengalefootballclub@gmail.com' && inputPassword === 'ebfc24nov24') {
-                    let adminUser = {
-                        isLoggedIn: true,
-                        name: "System Admin",
-                        role: "admin",
-                        email: inputEmail,
-                        avatar: "Image/image1.jpg.jpg"
-                    };
-                    localStorage.setItem('ebfc_user', JSON.stringify(adminUser));
-                    window.location.href = redirectUrl; // Redirects to admin.html
-                    return;
-                } else {
-                    alert("Invalid Admin Credentials!");
-                    return;
-                }
-            }
+            submitBtn.disabled = true;
 
-            let players = JSON.parse(localStorage.getItem('ebfc_all_players')) || [];
-            let foundUser = players.find(p => p.email && p.email.toLowerCase() === inputEmail.toLowerCase() && p.password === inputPassword);
+            try {
+                // Set persistence mode if rememberMe is checked
+                const persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
+                await auth.setPersistence(persistence);
 
-            // 2. CAPTAIN AUTHENTICATION
-            if (currentRole === 'captain') {
-                if (!foundUser) {
-                    alert("No registered account found with these credentials!");
+                // 1. SIGN IN WITH FIREBASE AUTH
+                const userCredential = await auth.signInWithEmailAndPassword(inputEmail, inputPassword);
+                const uid = userCredential.user.uid;
+
+                // 2. CHECK USER ROLE IN FIRESTORE DATABASE
+                const userDoc = await db.collection('users').doc(uid).get();
+
+                if (!userDoc.exists) {
+                    alert("User profile record not found in database!");
+                    submitBtn.disabled = false;
                     return;
                 }
-                if (foundUser.role !== 'captain') {
-                    alert("Access Denied! Your account does not have Captain privileges granted by Admin.");
+
+                const userData = userDoc.data();
+                const userRole = userData.role || 'player';
+
+                // 3. ROLE PERMISSION CHECK
+                if (currentRole === 'admin' && userRole !== 'admin') {
+                    alert("Access Denied! You do not have Admin privileges.");
+                    await auth.signOut();
+                    submitBtn.disabled = false;
                     return;
                 }
-                foundUser.isLoggedIn = true;
-                localStorage.setItem('ebfc_user', JSON.stringify(foundUser));
-                window.location.href = redirectUrl; // Redirects to captain.html
-                return;
-            }
 
-            // 3. PLAYER AUTHENTICATION
-            if (currentRole === 'player') {
-                if (foundUser) {
-                    foundUser.isLoggedIn = true;
-                    localStorage.setItem('ebfc_user', JSON.stringify(foundUser));
-                } else {
-                    let fallbackUser = {
-                        isLoggedIn: true,
-                        name: "Tawshik Ahammad Ayon",
-                        email: inputEmail,
-                        role: "player",
-                        avatar: "Image/player1.webp"
-                    };
-                    localStorage.setItem('ebfc_user', JSON.stringify(fallbackUser));
+                if (currentRole === 'captain' && userRole !== 'captain' && userRole !== 'admin') {
+                    alert("Access Denied! Your account does not have Captain privileges.");
+                    await auth.signOut();
+                    submitBtn.disabled = false;
+                    return;
                 }
-                window.location.href = redirectUrl; // Redirects to player-profile.html
+
+                // Redirect based on selected role tab or assigned role
+                window.location.href = redirectUrl;
+
+            } catch (error) {
+                console.error("Firebase Login Error: ", error);
+                alert("Login Failed: " + error.message);
+                submitBtn.disabled = false;
             }
         });
+
+        // FORGOT PASSWORD HANDLER
+        function handleForgotPassword() {
+            const email = prompt("Please enter your registered Email address for password reset:");
+            if (email) {
+                auth.sendPasswordResetEmail(email.trim())
+                    .then(() => alert("Password reset link sent to your email!"))
+                    .catch(err => alert("Error: " + err.message));
+            }
+        }
     </script>
 </body>
 </html>
