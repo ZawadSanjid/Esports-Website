@@ -147,7 +147,7 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -182,6 +182,35 @@
 
         .form-control:focus {
             border-color: var(--primary-red);
+        }
+
+        .search-results-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #121318;
+            border: 1px solid var(--primary-red);
+            border-radius: 0 0 6px 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+        }
+
+        .search-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: 0.2s ease;
+        }
+
+        .search-item:hover {
+            background: var(--primary-red);
+            color: #fff;
         }
 
         .btn-action {
@@ -286,7 +315,7 @@
         }
     </style>
 
-    <!-- FIREBASE COMPAT LIBRARIES -->
+    <!-- FIREBASE COMPAT SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -322,10 +351,10 @@
 
         <div class="page-header">
             <h1>Master Admin Control Panel</h1>
-            <p>Full Database Player Editor, Photo Downloader, History & Achievements Manager</p>
+            <p>Full Database Player Management, Photo Downloader, History & Achievements Engine</p>
         </div>
 
-        <!-- SECTION 1: ALL REGISTERED PLAYERS LIST & PHOTO DOWNLOAD -->
+        <!-- SECTION 0: REGISTERED PLAYERS LIST & PHOTO DOWNLOAD -->
         <div class="section-card" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
                 <span><i class="fa-solid fa-users"></i> Registered Player Database & Image Download</span>
@@ -348,10 +377,10 @@
             </div>
         </div>
 
-        <!-- SECTION 2: EDIT FULL PLAYER DATABASE PROFILE -->
+        <!-- SECTION 1: EDIT FULL PLAYER DATABASE PROFILE -->
         <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span><i class="fa-solid fa-user-pen"></i> Edit Player Full Database Information</span>
+                <span><i class="fa-solid fa-user-pen"></i> Edit Player Database Profile</span>
             </div>
 
             <div class="form-group" style="margin-bottom: 20px;">
@@ -422,7 +451,7 @@
             </form>
         </div>
 
-        <!-- SECTION 3: TOURNAMENT HISTORY MANAGER -->
+        <!-- SECTION 2: TOURNAMENT HISTORY MANAGER -->
         <div class="section-card" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
                 <span><i class="fa-solid fa-trophy"></i> Add Tournament History Entry</span>
@@ -456,7 +485,7 @@
             </form>
         </div>
 
-        <!-- SECTION 4: ACHIEVEMENTS MANAGER -->
+        <!-- SECTION 3: ACHIEVEMENTS MANAGER -->
         <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-award"></i> Add Special Achievement Badge</span>
@@ -490,6 +519,80 @@
             </form>
         </div>
 
+        <!-- SECTION 4: CAPTAIN PENDING APPROVALS QUEUE -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
+                <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Player Name</th>
+                            <th>Community</th>
+                            <th>Squad Format</th>
+                            <th>GF - GA</th>
+                            <th>Type</th>
+                            <th>MOTM?</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="captainQueueBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 5: STANDALONE SCORE SUBMISSION -->
+        <div class="section-card">
+            <div class="section-title">
+                <span><i class="fa-solid fa-pen-to-square"></i> Direct Admin Match Score Input</span>
+            </div>
+
+            <form id="singlePlayerScoreForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-magnifying-glass"></i> Search Player Name</label>
+                        <input type="text" id="playerSearchInput" class="form-control" placeholder="Type name to search..." autocomplete="off">
+                        <div id="searchResultsList" class="search-results-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Selected Player</label>
+                        <select id="ebfcPlayerSelect" class="form-control" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>EBFC Player Goals (GF)</label>
+                        <input type="number" id="ebfcGoals" class="form-control" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Opponent Goals (GA)</label>
+                        <input type="number" id="opponentGoals" class="form-control" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Match Type</label>
+                        <select id="directMatchTypeSelect" class="form-control">
+                            <option value="domestic" selected>Domestic League Match</option>
+                            <option value="official">Official Match</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Award MOTM?</label>
+                        <select id="awardMotmSelect" class="form-control">
+                            <option value="no">No</option>
+                            <option value="yes">Yes (Award MOTM to EBFC Player)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Submit Direct Result</button>
+            </form>
+        </div>
+
     </div>
 
     <script>
@@ -517,6 +620,7 @@
             }
 
             listenToRealtimeData();
+            setupPlayerSearchEngine();
         });
 
         function logoutUser() {
@@ -526,7 +630,12 @@
             });
         }
 
+        function initStats() {
+            return { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
+        }
+
         function listenToRealtimeData() {
+            // Realtime Sync All Users
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
@@ -534,6 +643,15 @@
                 });
                 renderAllPlayersTable();
                 populateDropdowns();
+            });
+
+            // Realtime Sync Captain Pending Scores Queue
+            db.collection('pending_scores').onSnapshot(snapshot => {
+                let pendingList = [];
+                snapshot.forEach(doc => {
+                    pendingList.push({ id: doc.id, ...doc.data() });
+                });
+                renderCaptainQueue(pendingList);
             });
         }
 
@@ -559,7 +677,7 @@
             });
         }
 
-        // IMAGE DOWNLOAD FUNCTION
+        // DOWNLOAD PLAYER IMAGE FUNCTION
         function downloadImage(url, playerName) {
             const a = document.createElement('a');
             a.href = url;
@@ -574,16 +692,19 @@
             const editSelect = document.getElementById('editPlayerSelect');
             const historySelect = document.getElementById('historyPlayerSelect');
             const achSelect = document.getElementById('achPlayerSelect');
+            const directSelect = document.getElementById('ebfcPlayerSelect');
 
             editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             historySelect.innerHTML = '';
             achSelect.innerHTML = '';
+            directSelect.innerHTML = '';
 
             cachedPlayers.forEach(p => {
                 const opt = `<option value="${p.uid}">${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
                 editSelect.innerHTML += opt;
                 historySelect.innerHTML += opt;
                 achSelect.innerHTML += opt;
+                directSelect.innerHTML += opt;
             });
         }
 
@@ -696,6 +817,195 @@
             } catch (err) {
                 console.error(err);
                 alert("Failed to add achievement.");
+            }
+        });
+
+        // 6. CAPTAIN APPROVAL QUEUE SYSTEM
+        function renderCaptainQueue(pendingList) {
+            let tbody = document.getElementById('captainQueueBody');
+            let badge = document.getElementById('queueBadge');
+            tbody.innerHTML = '';
+            badge.innerText = `${pendingList.length} Requests Pending`;
+
+            if (pendingList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No pending captain submissions available.</td></tr>`;
+                return;
+            }
+
+            pendingList.forEach(req => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${req.playerName}</strong></td>
+                        <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
+                        <td>${req.squadFormat}</td>
+                        <td><strong>${req.gf} - ${req.ga}</strong></td>
+                        <td>${req.matchType}</td>
+                        <td>${req.awardMotm ? 'Yes' : 'No'}</td>
+                        <td>
+                            <button onclick="approveCaptainScore('${req.id}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
+                            <button onclick="rejectCaptainScore('${req.id}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        async function approveCaptainScore(docId) {
+            try {
+                const pendingDoc = await db.collection('pending_scores').doc(docId).get();
+                if (!pendingDoc.exists) return;
+
+                const req = pendingDoc.data();
+                const playerRef = db.collection('users').doc(req.playerId);
+                const playerDoc = await playerRef.get();
+
+                if (playerDoc.exists) {
+                    let player = playerDoc.data();
+
+                    let isWin = req.gf > req.ga;
+                    let isDraw = req.gf === req.ga;
+                    let isLoss = req.gf < req.ga;
+
+                    function updateStatGroup(group) {
+                        if (!group) group = initStats();
+                        group.mp = (group.mp || 0) + 1;
+                        group.gf = (group.gf || 0) + req.gf;
+                        group.ga = (group.ga || 0) + req.ga;
+                        group.gd = group.gf - group.ga;
+
+                        if (isWin) group.w = (group.w || 0) + 1;
+                        else if (isDraw) group.d = (group.d || 0) + 1;
+                        else if (isLoss) group.l = (group.l || 0) + 1;
+
+                        group.pts = ((group.w || 0) * 3) + (group.d || 0);
+                        group.winRate = group.mp > 0 ? (((group.w || 0) / group.mp) * 100).toFixed(1) : "0.0";
+                        if (req.awardMotm) group.motm = (group.motm || 0) + 1;
+                        return group;
+                    }
+
+                    let officialStats = updateStatGroup(player.official);
+                    let domesticStats = req.matchType === 'domestic' ? updateStatGroup(player.domestic) : (player.domestic || initStats());
+                    let potmStats = updateStatGroup(player.potm);
+
+                    await playerRef.update({
+                        official: officialStats,
+                        domestic: domesticStats,
+                        potm: potmStats
+                    });
+
+                    await db.collection('pending_scores').doc(docId).delete();
+                    alert(`Approved! Match result recorded for ${req.playerName}.`);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error approving score.");
+            }
+        }
+
+        async function rejectCaptainScore(docId) {
+            try {
+                await db.collection('pending_scores').doc(docId).delete();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // 7. DIRECT ADMIN MATCH SCORE INPUT & SEARCH ENGINE
+        function setupPlayerSearchEngine() {
+            let searchInput = document.getElementById('playerSearchInput');
+            let resultsList = document.getElementById('searchResultsList');
+            let selectDropdown = document.getElementById('ebfcPlayerSelect');
+
+            searchInput.addEventListener('input', function () {
+                let query = this.value.toLowerCase().trim();
+                resultsList.innerHTML = '';
+
+                if (!query) {
+                    resultsList.style.display = 'none';
+                    return;
+                }
+
+                let filtered = cachedPlayers.filter(p => (p.name && p.name.toLowerCase().includes(query)) || (p.club && p.club.toLowerCase().includes(query)));
+
+                if (filtered.length > 0) {
+                    resultsList.style.display = 'block';
+                    filtered.forEach(p => {
+                        let item = document.createElement('div');
+                        item.className = 'search-item';
+                        item.innerHTML = `<strong>${p.name}</strong> <span style="font-size:11px; color:var(--accent-gold);">(${p.club || 'EBFC'})</span>`;
+                        item.onclick = function () {
+                            selectDropdown.value = p.uid;
+                            searchInput.value = p.name;
+                            resultsList.style.display = 'none';
+                        };
+                        resultsList.appendChild(item);
+                    });
+                } else {
+                    resultsList.style.display = 'block';
+                    resultsList.innerHTML = `<div class="search-item" style="color:var(--text-muted);">No player found...</div>`;
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !resultsList.contains(e.target)) {
+                    resultsList.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('singlePlayerScoreForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            let playerId = document.getElementById('ebfcPlayerSelect').value;
+            let gf = parseInt(document.getElementById('ebfcGoals').value);
+            let ga = parseInt(document.getElementById('opponentGoals').value);
+            let matchType = document.getElementById('directMatchTypeSelect').value;
+            let awardMotm = document.getElementById('awardMotmSelect').value === 'yes';
+
+            const playerRef = db.collection('users').doc(playerId);
+            const playerDoc = await playerRef.get();
+
+            if (!playerDoc.exists) return alert("Player not found!");
+
+            try {
+                let player = playerDoc.data();
+
+                let isWin = gf > ga;
+                let isDraw = gf === ga;
+                let isLoss = gf < ga;
+
+                function updateStatGroup(group) {
+                    if (!group) group = initStats();
+                    group.mp = (group.mp || 0) + 1;
+                    group.gf = (group.gf || 0) + gf;
+                    group.ga = (group.ga || 0) + ga;
+                    group.gd = group.gf - group.ga;
+
+                    if (isWin) group.w = (group.w || 0) + 1;
+                    else if (isDraw) group.d = (group.d || 0) + 1;
+                    else if (isLoss) group.l = (group.l || 0) + 1;
+
+                    group.pts = ((group.w || 0) * 3) + (group.d || 0);
+                    group.winRate = group.mp > 0 ? (((group.w || 0) / group.mp) * 100).toFixed(1) : "0.0";
+                    if (awardMotm) group.motm = (group.motm || 0) + 1;
+                    return group;
+                }
+
+                let officialStats = updateStatGroup(player.official);
+                let domesticStats = matchType === 'domestic' ? updateStatGroup(player.domestic) : (player.domestic || initStats());
+                let potmStats = updateStatGroup(player.potm);
+
+                await playerRef.update({
+                    official: officialStats,
+                    domestic: domesticStats,
+                    potm: potmStats
+                });
+
+                alert(`Result recorded for ${player.name}!`);
+                document.getElementById('playerSearchInput').value = '';
+
+            } catch (err) {
+                console.error(err);
+                alert("Error updating score.");
             }
         });
     </script>
