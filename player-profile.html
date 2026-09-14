@@ -606,7 +606,7 @@
     <nav class="navbar">
         <div class="brand-logo">
             <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
-            <div class="brand-name">East Bengal <span>eFootball Club</span></div>
+            <div class="brand-name">EB <span>FC</span></div>
         </div>
         <div>
             <a href="index.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
@@ -997,8 +997,7 @@
 
             const saveBtn = document.getElementById('saveBtn');
             saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Firebase...';
-
+            
             const updatedFields = {
                 name: document.getElementById('editName').value.trim(),
                 gameId: document.getElementById('editGameId').value.trim(),
@@ -1028,7 +1027,7 @@
                 alert("Error updating profile: " + error.message);
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Profile Changes';
+                
             }
         });
     </script>
