@@ -21,6 +21,7 @@
             --bg-card: #121318;
             --primary-red: #e50914;
             --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
             --text-light: #ffffff;
             --text-muted: #9a9caf;
             --border-color: #22242d;
@@ -62,6 +63,11 @@
         .reg-header p {
             color: var(--text-muted);
             font-size: 14px;
+        }
+
+        .required-star {
+            color: var(--primary-red);
+            font-weight: 700;
         }
 
         /* IMAGE UPLOAD STYLES */
@@ -189,29 +195,39 @@
         .back-link:hover {
             color: var(--primary-red);
         }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 20px 10px;
+            }
+            .reg-card {
+                padding: 20px 15px;
+            }
+            .reg-header h1 {
+                font-size: 28px;
+            }
+        }
     </style>
 
     <!-- FIREBASE COMPAT SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-<script>
-    // ⚡ SAVED FIREBASE CONFIGURATION (EBFC PORTAL)
-    const firebaseConfig = {
-        apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
-        authDomain: "ebfc-portal.firebaseapp.com",
-        projectId: "ebfc-portal",
-        storageBucket: "ebfc-portal.firebasestorage.app",
-        messagingSenderId: "93840741420",
-        appId: "1:93840741420:web:05d574c95368be68e62d89",
-        measurementId: "G-VBHEWLE64S"
-    };
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
+        };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
     </script>
 </head>
 <body>
@@ -228,36 +244,38 @@
             <div class="image-upload-wrapper">
                 <label for="player-photo" class="image-preview">
                     <i class="fa-solid fa-camera" id="upload-icon"></i>
-                    <span id="upload-text">Upload Photo</span>
+                    <span id="upload-text">Upload Photo <span class="required-star">*</span></span>
                     <img id="preview-img" src="" alt="Player Photo Preview">
                 </label>
-                <input type="file" id="player-photo" accept="image/*" onchange="previewFile()">
+                <input type="file" id="player-photo" accept="image/*" onchange="previewFile()" required>
+                <small style="color: var(--accent-gold); font-size: 12px; margin-top: 6px; font-weight: 600;">* Image size must be up to 5 MB</small>
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Full Name</label>
+                    <label>Full Name <span class="required-star">*</span></label>
                     <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="form-group">
-                    <label>eFootball Game ID / User ID</label>
+                    <label>eFootball Game ID / User ID <span class="required-star">*</span></label>
                     <input type="text" id="regGameId" class="form-control" placeholder="e.g. ASEZ-334-526-988" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Facebook Profile Link</label>
+                    <label>Facebook Profile Link <span class="required-star">*</span></label>
                     <input type="url" id="regFbLink" class="form-control" placeholder="https://facebook.com/yourprofile" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Device Model</label>
+                    <label>Device Model <span class="required-star">*</span></label>
                     <input type="text" id="regDevice" class="form-control" placeholder="e.g. Redmi Note 10" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Activity Time (Comfortable Match Slot)</label>
+                    <label>Activity Time (Comfortable Match Slot) <span class="required-star">*</span></label>
                     <select id="regActivityTime" class="form-control" required>
+                        <option value="" disabled selected>-- Select Match Slot --</option>
                         <option value="10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)">10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)</option>
                         <option value="11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)">11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)</option>
                         <option value="12 am - 1 am (রাত ১২ টা থেকে ১টা)">12 am - 1 am (রাত ১২ টা থেকে ১টা)</option>
@@ -265,40 +283,41 @@
                 </div>
 
                 <div class="form-group">
-                    <label>VPN Needed?</label>
+                    <label>VPN Needed? <span class="required-star">*</span></label>
                     <select id="regVpn" class="form-control" required>
+                        <option value="" disabled selected>-- Select VPN Status --</option>
                         <option value="No">No</option>
                         <option value="Yes">Yes</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Date of Birth</label>
+                    <label>Date of Birth <span class="required-star">*</span></label>
                     <input type="date" id="regDob" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Occupation</label>
+                    <label>Occupation <span class="required-star">*</span></label>
                     <input type="text" id="regOccupation" class="form-control" placeholder="e.g. Student / Service" required>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>Permanent Address</label>
+                    <label>Permanent Address <span class="required-star">*</span></label>
                     <input type="text" id="regAddress" class="form-control" placeholder="Enter your permanent address" required>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>আগে অন্য কোনো ক্লাবে ছিলেন? (নাম অথবা N/A)</label>
+                    <label>আগে অন্য কোনো ক্লাবে ছিলেন? (নাম অথবা N/A) <span class="required-star">*</span></label>
                     <input type="text" id="regPreviousClub" class="form-control" placeholder="পূর্ববর্তী ক্লাবের নাম লিখুন (না থাকলে N/A)" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label>Email Address <span class="required-star">*</span></label>
                     <input type="email" id="regEmail" class="form-control" placeholder="Enter Your Email Address" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
+                    <label>Password <span class="required-star">*</span></label>
                     <input type="password" id="regPassword" class="form-control" placeholder="Create password (min 6 characters)" minlength="6" required>
                 </div>
             </div>
@@ -306,41 +325,95 @@
             <button type="submit" id="submitBtn" class="btn-submit">Complete Registration</button>
         </form>
 
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
-    <!-- JAVASCRIPT FOR IMAGE PREVIEW & FIREBASE DATA SAVING -->
+    <!-- JAVASCRIPT VALIDATION AND IMAGE PROCESSING -->
     <script>
-        let uploadedAvatarData = 'Image/player1.webp';
+        let uploadedAvatarData = null;
 
         function previewFile() {
             const preview = document.getElementById('preview-img');
-            const file = document.getElementById('player-photo').files[0];
+            const fileInput = document.getElementById('player-photo');
+            const file = fileInput.files[0];
             const icon = document.getElementById('upload-icon');
             const text = document.getElementById('upload-text');
 
-            const reader = new FileReader();
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-                uploadedAvatarData = reader.result;
-                preview.style.display = "block";
-                icon.style.display = "none";
-                text.style.display = "none";
-            }
-
             if (file) {
+                // 1. CHECK FILE SIZE (MUST BE UP TO 5 MB)
+                const fileSizeMB = file.size / (1024 * 1024);
+                if (fileSizeMB > 5) {
+                    alert("ছবিটির সাইজ ৫ MB এর চেয়ে বেশি! রেজিস্ট্রেশন সম্পন্ন করতে ৫ MB এর চেয়ে ছোট ছবি আপলোড করুন।");
+                    fileInput.value = "";
+                    resetPreview();
+                    return;
+                }
+
+                // 2. COMPRESS IMAGE BEFORE SAVING TO FIRESTORE
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        const MAX_WIDTH = 400;
+                        const MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                        preview.src = compressedBase64;
+                        uploadedAvatarData = compressedBase64;
+                        preview.style.display = "block";
+                        icon.style.display = "none";
+                        text.style.display = "none";
+                    };
+                };
                 reader.readAsDataURL(file);
             } else {
-                preview.src = "";
-                preview.style.display = "none";
-                icon.style.display = "block";
-                text.style.display = "block";
+                resetPreview();
             }
+        }
+
+        function resetPreview() {
+            const preview = document.getElementById('preview-img');
+            const icon = document.getElementById('upload-icon');
+            const text = document.getElementById('upload-text');
+            preview.src = "";
+            preview.style.display = "none";
+            icon.style.display = "block";
+            text.style.display = "block";
+            uploadedAvatarData = null;
         }
 
         document.getElementById('registrationForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            // CHECK IF PHOTO IS UPLOADED
+            if (!uploadedAvatarData) {
+                alert("অনুগ্রহ করে আপনার একটি ছবি আপলোড করুন (ছবি বাধ্যতামূলক)।");
+                document.getElementById('player-photo').focus();
+                return;
+            }
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
