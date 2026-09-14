@@ -6,30 +6,189 @@
     <title>Player Registration | East Bengal eFootball Club</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        :root {
-            --bg-dark: #0a0a0c; --bg-card: #121318; --primary-red: #e50914;
-            --primary-red-hover: #b80710; --accent-gold: #ffb703; --text-light: #ffffff;
-            --text-muted: #9a9caf; --border-color: #22242d; --glow-red: rgba(229, 9, 20, 0.4);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
         }
-        body { background-color: var(--bg-dark); color: var(--text-light); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 20px; }
-        .reg-card { background: var(--bg-card); border: 1px solid var(--border-color); border-top: 3px solid var(--primary-red); border-radius: 8px; width: 100%; max-width: 500px; padding: 35px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .reg-header { text-align: center; margin-bottom: 25px; }
-        .brand-logo-img { width: 60px; height: 60px; object-fit: contain; border-radius: 8px; margin: 0 auto 12px auto; display: block; box-shadow: 0 0 15px rgba(255, 183, 3, 0.4); border: 1px solid rgba(255, 183, 3, 0.3); }
-        .reg-header h1 { font-family: 'Teko', sans-serif; font-size: 36px; text-transform: uppercase; line-height: 1; }
-        .reg-header p { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; text-transform: uppercase; color: var(--text-muted); }
-        .form-control { width: 100%; background: #090a0c; border: 1px solid var(--border-color); padding: 11px 14px; color: var(--text-light); border-radius: 4px; font-size: 14px; outline: none; transition: 0.3s ease; }
-        .form-control:focus { border-color: var(--primary-red); box-shadow: 0 0 10px var(--glow-red); }
-        .btn-submit { width: 100%; background: var(--primary-red); color: #fff; padding: 12px; font-size: 16px; font-weight: 700; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: 0.3s ease; margin-top: 10px; }
-        .btn-submit:hover { background: var(--primary-red-hover); box-shadow: 0 0 15px var(--glow-red); }
-        .bottom-prompt { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; }
-        .bottom-prompt a { color: var(--primary-red); font-weight: 700; text-decoration: none; }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .reg-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--primary-red);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 560px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .reg-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .reg-header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 36px;
+            text-transform: uppercase;
+        }
+
+        .reg-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* IMAGE UPLOAD STYLES */
+        .image-upload-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px dashed var(--primary-red);
+            background: #090a0c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .image-preview:hover {
+            border-style: solid;
+            box-shadow: 0 0 15px var(--glow-red);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .image-preview i {
+            font-size: 28px;
+            color: var(--primary-red);
+            margin-bottom: 4px;
+        }
+
+        .image-preview span {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        #player-photo {
+            display: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            color: var(--text-light);
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 10px var(--glow-red);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-red);
+            color: #fff;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-red-hover);
+            box-shadow: 0 0 15px var(--glow-red);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: var(--primary-red);
+        }
     </style>
 
     <!-- FIREBASE COMPAT SDKs -->
@@ -58,81 +217,160 @@
 
     <div class="reg-card">
         <div class="reg-header">
-            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
-            <h1>Player Registration</h1>
-            <p>Join East Bengal eFootball Club Official Roster</p>
+            <h1>Join East Bengal eFootball Club</h1>
+            <p>Complete official registration form for EBFC squad entry</p>
         </div>
 
-        <form id="registerForm">
-            <div class="form-group">
-                <label><i class="fa-solid fa-user"></i> Full Name</label>
-                <input type="text" id="regName" class="form-control" placeholder="e.g. Tawshik Ahammad Ayon" required>
+        <form id="registrationForm">
+
+            <!-- IMAGE UPLOAD FIELD -->
+            <div class="image-upload-wrapper">
+                <label for="player-photo" class="image-preview">
+                    <i class="fa-solid fa-camera" id="upload-icon"></i>
+                    <span id="upload-text">Upload Photo</span>
+                    <img id="preview-img" src="" alt="Player Photo Preview">
+                </label>
+                <input type="file" id="player-photo" accept="image/*" onchange="previewFile()">
             </div>
 
-            <div class="form-group">
-                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
-                <input type="email" id="regEmail" class="form-control" placeholder="Enter valid email" required>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>eFootball Game ID / User ID</label>
+                    <input type="text" id="regGameId" class="form-control" placeholder="e.g. ASEZ-334-526-988" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Facebook Profile Link</label>
+                    <input type="url" id="regFbLink" class="form-control" placeholder="https://facebook.com/yourprofile" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Device Model</label>
+                    <input type="text" id="regDevice" class="form-control" placeholder="e.g. Redmi Note 10" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Activity Time (Comfortable Match Slot)</label>
+                    <select id="regActivityTime" class="form-control" required>
+                        <option value="10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)">10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)</option>
+                        <option value="11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)">11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)</option>
+                        <option value="12 am - 1 am (রাত ১২ টা থেকে ১টা)">12 am - 1 am (রাত ১২ টা থেকে ১টা)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>VPN Needed?</label>
+                    <select id="regVpn" class="form-control" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="regDob" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Occupation</label>
+                    <input type="text" id="regOccupation" class="form-control" placeholder="e.g. Student / Service" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Permanent Address</label>
+                    <input type="text" id="regAddress" class="form-control" placeholder="Enter your permanent address" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>আগে অন্য কোনো ক্লাবে ছিলেন? (নাম অথবা N/A)</label>
+                    <input type="text" id="regPreviousClub" class="form-control" placeholder="পূর্ববর্তী ক্লাবের নাম লিখুন (না থাকলে N/A)" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="Enter Your Email Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Create password (min 6 characters)" minlength="6" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label><i class="fa-solid fa-lock"></i> Password</label>
-                <input type="password" id="regPassword" class="form-control" placeholder="Create strong password (min 6 chars)" minlength="6" required>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fa-solid fa-gamepad"></i> eFootball Game ID / Username</label>
-                <input type="text" id="regGameId" class="form-control" placeholder="e.g. ASEZ-334-526" required>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fa-solid fa-mobile-screen-button"></i> Gaming Device</label>
-                <input type="text" id="regDevice" class="form-control" placeholder="e.g. Redmi Note 12 Pro / iPhone 13" required>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fa-brands fa-facebook"></i> Facebook Profile URL</label>
-                <input type="url" id="regFb" class="form-control" placeholder="https://facebook.com/your.profile" required>
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-submit">Register Profile</button>
+            <button type="submit" id="submitBtn" class="btn-submit">Complete Registration</button>
         </form>
 
-        <div class="bottom-prompt">
-            Already registered? <a href="login.html">Login Here</a>
-        </div>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
+    <!-- JAVASCRIPT FOR IMAGE PREVIEW & FIREBASE DATA SAVING -->
     <script>
-        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        let uploadedAvatarData = 'Image/player1.webp';
+
+        function previewFile() {
+            const preview = document.getElementById('preview-img');
+            const file = document.getElementById('player-photo').files[0];
+            const icon = document.getElementById('upload-icon');
+            const text = document.getElementById('upload-text');
+
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                uploadedAvatarData = reader.result;
+                preview.style.display = "block";
+                icon.style.display = "none";
+                text.style.display = "none";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+                preview.style.display = "none";
+                icon.style.display = "block";
+                text.style.display = "block";
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.innerText = "Registering with Firebase...";
 
-            const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value.trim();
-            const gameId = document.getElementById('regGameId').value.trim();
-            const device = document.getElementById('regDevice').value.trim();
-            const fbLink = document.getElementById('regFb').value.trim();
 
             try {
                 // 1. CREATE USER IN FIREBASE AUTHENTICATION
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCredential.user.uid;
 
-                // 2. STORE COMPLETE PLAYER PROFILE IN FIRESTORE DATABASE
-                const playerProfile = {
+                // 2. CONSTRUCT PLAYER PROFILE DATA
+                const newUser = {
                     uid: uid,
-                    id: Date.now(), // Unique Numeric ID for tournament compatibility
-                    name: name,
+                    id: Date.now(),
+                    name: document.getElementById('regName').value.trim(),
+                    gameId: document.getElementById('regGameId').value.trim(),
+                    fbLink: document.getElementById('regFbLink').value.trim(),
+                    device: document.getElementById('regDevice').value.trim(),
+                    activityTime: document.getElementById('regActivityTime').value,
+                    vpn: document.getElementById('regVpn').value,
+                    dob: document.getElementById('regDob').value,
+                    occupation: document.getElementById('regOccupation').value.trim(),
+                    address: document.getElementById('regAddress').value.trim(),
+                    previousClub: document.getElementById('regPreviousClub').value.trim(),
                     email: email,
-                    gameId: gameId,
-                    device: device,
-                    fbLink: fbLink,
-                    role: 'player', // Default role on registration
-                    avatar: 'Image/player1.webp',
+                    club: "East Bengal Main",
+                    avatar: uploadedAvatarData,
+                    role: "player",
                     recentForm: ['W', 'W', 'W', 'D', 'W'],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     official: { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 },
@@ -140,16 +378,17 @@
                     potm: { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 }
                 };
 
-                await db.collection('users').doc(uid).set(playerProfile);
+                // 3. SAVE COMPLETE DATA IN FIRESTORE DATABASE 'users' COLLECTION
+                await db.collection('users').doc(uid).set(newUser);
 
-                alert("Registration Successful! Redirecting to login page...");
+                alert("Registration Completed Successfully!");
                 window.location.href = "login.html";
 
             } catch (error) {
                 console.error("Firebase Registration Error: ", error);
                 alert("Error: " + error.message);
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Register Profile";
+                submitBtn.innerText = "Complete Registration";
             }
         });
     </script>
