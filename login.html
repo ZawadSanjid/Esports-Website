@@ -367,7 +367,7 @@
                 window.location.href = redirectUrl;
 
             } catch (error) {
-                console.error("Firebase Login Error: ", error);
+                console.error("Wrong Email Or Password ", error);
                 alert("Login Failed: " + error.message);
                 submitBtn.disabled = false;
             }
