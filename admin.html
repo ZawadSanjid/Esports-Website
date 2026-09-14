@@ -147,13 +147,17 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
 
         .form-group {
             position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         .form-group label {
@@ -178,35 +182,6 @@
 
         .form-control:focus {
             border-color: var(--primary-red);
-        }
-
-        .search-results-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #121318;
-            border: 1px solid var(--primary-red);
-            border-radius: 0 0 6px 6px;
-            max-height: 180px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
-        }
-
-        .search-item {
-            padding: 10px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-light);
-            transition: 0.2s ease;
-        }
-
-        .search-item:hover {
-            background: var(--primary-red);
-            color: #fff;
         }
 
         .btn-action {
@@ -283,113 +258,35 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .round-box {
-            background: #090a0c;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .round-header {
-            font-family: 'Teko', sans-serif;
-            font-size: 28px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .match-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .player-vs-box {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            gap: 10px;
-        }
-
-        .player-profile-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .player-profile-item img {
+        .player-img-table {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--primary-red);
+            border: 1px solid var(--primary-red);
         }
 
-        .player-profile-item.winner-active img {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
-        }
-
-        .player-vs-box span.vs {
-            color: var(--primary-red);
-            font-size: 16px;
-            font-family: 'Teko', sans-serif;
-            font-weight: 700;
-        }
-
-        .score-inputs {
+        .preview-box {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .score-input {
-            width: 42px;
-            text-align: center;
+            gap: 15px;
+            margin-bottom: 15px;
             background: #090a0c;
+            padding: 10px 15px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 6px;
-            font-weight: 700;
-            border-radius: 4px;
         }
 
-        .leg-tag {
-            font-size: 11px;
-            background: rgba(255, 183, 3, 0.2);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .btn-submit-score {
-            background: var(--accent-green);
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border-radius: 4px;
-            cursor: pointer;
+        .preview-box img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
         }
     </style>
 
-    <!-- FIREBASE SYSTEM BACKEND LIBRARIES -->
+    <!-- FIREBASE COMPAT LIBRARIES -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -425,202 +322,180 @@
 
         <div class="page-header">
             <h1>Master Admin Control Panel</h1>
-            <p>Captain Approvals, Fast Live Search Score Input & Persistent Tournament Engine</p>
+            <p>Full Database Player Editor, Photo Downloader, History & Achievements Manager</p>
         </div>
 
-        <!-- SECTION 0: CAPTAIN PENDING APPROVALS QUEUE -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+        <!-- SECTION 1: ALL REGISTERED PLAYERS LIST & PHOTO DOWNLOAD -->
+        <div class="section-card" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
-                <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
-                <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
+                <span><i class="fa-solid fa-users"></i> Registered Player Database & Image Download</span>
             </div>
 
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Player Name</th>
-                            <th>Community</th>
-                            <th>Squad Format</th>
-                            <th>GF - GA</th>
-                            <th>Type</th>
-                            <th>MOTM?</th>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Game ID</th>
+                            <th>Club</th>
+                            <th>Role</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="captainQueueBody"></tbody>
+                    <tbody id="allPlayersTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SECTION 1: CAPTAIN ROLE ASSIGNMENT SYSTEM -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-green);">
+        <!-- SECTION 2: EDIT FULL PLAYER DATABASE PROFILE -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span><i class="fa-solid fa-user-shield"></i> Manage Captain Access Roles</span>
+                <span><i class="fa-solid fa-user-pen"></i> Edit Player Full Database Information</span>
             </div>
 
-            <form id="grantCaptainForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Select Player To Grant Captain Access</label>
-                        <select id="captainPlayerSelect" class="form-control" required></select>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Select Player To Edit Profile</label>
+                <select id="editPlayerSelect" class="form-control" onchange="loadPlayerToEditor()">
+                    <option value="">-- Choose Player --</option>
+                </select>
+            </div>
+
+            <form id="editPlayerForm">
+                <input type="hidden" id="editUid">
+
+                <div id="playerPreviewArea" class="preview-box" style="display: none;">
+                    <img id="editPreviewAvatar" src="" alt="Avatar">
+                    <div>
+                        <h3 id="editPreviewName" style="color: var(--accent-gold);">Player Name</h3>
+                        <p id="editPreviewEmail" style="color: var(--text-muted); font-size: 13px;">email@example.com</p>
                     </div>
                 </div>
-                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-key"></i> Grant Captain Access</button>
-            </form>
 
-            <div class="table-responsive" style="margin-top:20px;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>Player Name</th>
-                            <th>Club</th>
-                            <th>Email Address</th>
-                            <th>Role Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="captainsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 2: STANDALONE SCORE SUBMISSION -->
-        <div class="section-card">
-            <div class="section-title">
-                <span><i class="fa-solid fa-pen-to-square"></i> Direct Admin Match Score Input</span>
-            </div>
-
-            <form id="singlePlayerScoreForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label><i class="fa-solid fa-magnifying-glass"></i> Search Player Name</label>
-                        <input type="text" id="playerSearchInput" class="form-control" placeholder="Type name to search..." autocomplete="off">
-                        <div id="searchResultsList" class="search-results-list"></div>
+                        <label>Full Name</label>
+                        <input type="text" id="editName" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Selected Player</label>
-                        <select id="ebfcPlayerSelect" class="form-control" required></select>
+                        <label>eFootball Game ID</label>
+                        <input type="text" id="editGameId" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label>EBFC Player Goals (GF)</label>
-                        <input type="number" id="ebfcGoals" class="form-control" min="0" value="0" required>
+                        <label>Assigned Club</label>
+                        <input type="text" id="editClub" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Opponent Goals (GA)</label>
-                        <input type="number" id="opponentGoals" class="form-control" min="0" value="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Match Type</label>
-                        <select id="directMatchTypeSelect" class="form-control">
-                            <option value="domestic" selected>Domestic League Match</option>
-                            <option value="official">Official Match</option>
+                        <label>User Role</label>
+                        <select id="editRole" class="form-control" required>
+                            <option value="player">Player</option>
+                            <option value="captain">Captain</option>
+                            <option value="admin">Admin</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Award MOTM?</label>
-                        <select id="awardMotmSelect" class="form-control">
-                            <option value="no">No</option>
-                            <option value="yes">Yes (Award MOTM to EBFC Player)</option>
-                        </select>
+                        <label>Facebook Link</label>
+                        <input type="text" id="editFbLink" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Device Model</label>
+                        <input type="text" id="editDevice" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Occupation</label>
+                        <input type="text" id="editOccupation" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="editAddress" class="form-control">
                     </div>
                 </div>
-                <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Submit Direct Result</button>
+
+                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-floppy-disk"></i> Update Full Database Entry</button>
             </form>
         </div>
 
-        <!-- SECTION 3: TOURNAMENT FIXTURE GENERATOR -->
-        <div class="section-card">
+        <!-- SECTION 3: TOURNAMENT HISTORY MANAGER -->
+        <div class="section-card" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
-                <span><i class="fa-solid fa-sitemap"></i> Persistent Tournament Bracket Generator</span>
+                <span><i class="fa-solid fa-trophy"></i> Add Tournament History Entry</span>
             </div>
 
-            <form id="createTournamentForm">
+            <form id="addHistoryForm">
                 <div class="form-grid">
+                    <div class="form-group">
+                        <label>Select Player</label>
+                        <select id="historyPlayerSelect" class="form-control" required></select>
+                    </div>
                     <div class="form-group">
                         <label>Tournament Name</label>
-                        <input type="text" id="tName" class="form-control" placeholder="e.g., EBFC Super Championship 2026" required>
+                        <input type="text" id="historyTitle" class="form-control" placeholder="e.g. Genesis Cup 2026" required>
                     </div>
                     <div class="form-group">
-                        <label>Total Players</label>
-                        <select id="tPlayerCount" class="form-control" onchange="generatePlayerSelects()">
-                            <option value="8" selected>8 Players (Quarter-Finals)</option>
-                            <option value="16">16 Players (Round of 16)</option>
-                            <option value="20">20 Players</option>
-                            <option value="30">30 Players</option>
-                            <option value="32">32 Players (Round of 32)</option>
+                        <label>Subtitle / Date Info</label>
+                        <input type="text" id="historySub" class="form-control" placeholder="e.g. February 2026 • Official Division 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Position Tag</label>
+                        <select id="historyTag" class="form-control" required>
+                            <option value="CHAMPION">CHAMPION</option>
+                            <option value="RUNNER-UP">RUNNER-UP</option>
+                            <option value="3RD PLACE">3RD PLACE</option>
+                            <option value="PARTICIPANT">PARTICIPANT</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Round of 32 Leg System</label>
-                        <select id="r32Legs" class="form-control">
-                            <option value="2" selected>Double Leg (2 Legs)</option>
-                            <option value="1">Single Leg (1 Leg)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Round of 16 Leg System</label>
-                        <select id="r16Legs" class="form-control">
-                            <option value="2" selected>Double Leg (2 Legs)</option>
-                            <option value="1">Single Leg (1 Leg)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Quarter-Finals Leg System</label>
-                        <select id="qfLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Semi-Finals Leg System</label>
-                        <select id="sfLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Grand Final Leg System</label>
-                        <select id="finalLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label><i class="fa-solid fa-users"></i> Select Participating EBFC Registered Players</label>
-                    <div id="playerSelectsGrid" class="form-grid"></div>
-                </div>
-
-                <button type="submit" class="btn-action"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Persistent Tournament</button>
+                <button type="submit" class="btn-action"><i class="fa-solid fa-plus"></i> Add History To Player Profile</button>
             </form>
         </div>
 
-        <div class="section-card" id="activeTournamentSection" style="display: none;">
+        <!-- SECTION 4: ACHIEVEMENTS MANAGER -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span id="activeTTitle"><i class="fa-solid fa-gamepad"></i> Active Saved Tournament</span>
-                <button onclick="resetTournamentMemory()" class="btn-action btn-gold" style="font-size: 12px; padding: 6px 12px;"><i class="fa-solid fa-trash"></i> Reset / Complete Tournament</button>
+                <span><i class="fa-solid fa-award"></i> Add Special Achievement Badge</span>
             </div>
-            <div id="fixturesContainer"></div>
+
+            <form id="addAchievementForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Select Player</label>
+                        <select id="achPlayerSelect" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Achievement Title</label>
+                        <input type="text" id="achTitle" class="form-control" placeholder="e.g. Player of the Week (ECOB)" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon Style</label>
+                        <select id="achIcon" class="form-control" required>
+                            <option value="star">Star Badge (fa-star)</option>
+                            <option value="fire">Streak/Fire (fa-fire)</option>
+                            <option value="crown">Golden Boot/Crown (fa-crown)</option>
+                            <option value="medal">Medal (fa-medal)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description Details</label>
+                        <input type="text" id="achDesc" class="form-control" placeholder="e.g. Awarded for outstanding performance and top goal count." required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-plus"></i> Add Achievement To Player Profile</button>
+            </form>
         </div>
 
     </div>
 
     <script>
         let cachedPlayers = [];
-        let tState = null;
 
-        // AUTH CHECK & INITIALIZATION
+        // AUTH & DASHBOARD INIT
         auth.onAuthStateChanged(async (user) => {
             const localAdmin = JSON.parse(localStorage.getItem('ebfc_user'));
             
@@ -641,7 +516,6 @@
                 }
             }
 
-            // Load Data From Firestore
             listenToRealtimeData();
         });
 
@@ -653,503 +527,177 @@
         }
 
         function listenToRealtimeData() {
-            // Load Players & Captains
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
-                    cachedPlayers.push({ uid: doc.id, id: doc.id, ...doc.data() });
+                    cachedPlayers.push({ uid: doc.id, ...doc.data() });
                 });
+                renderAllPlayersTable();
                 populateDropdowns();
-                generatePlayerSelects();
-                renderCaptainsTable();
             });
-
-            // Load Pending Captain Submissions
-            db.collection('pending_scores').onSnapshot(snapshot => {
-                let pendingList = [];
-                snapshot.forEach(doc => {
-                    pendingList.push({ reqId: doc.id, ...doc.data() });
-                });
-                renderCaptainQueue(pendingList);
-            });
-
-            // Load Active Tournament
-            db.collection('tournaments').doc('active_tournament').onSnapshot(doc => {
-                if (doc.exists) {
-                    tState = doc.data();
-                    renderFixtures();
-                } else {
-                    document.getElementById('activeTournamentSection').style.display = 'none';
-                }
-            });
-
-            setupPlayerSearchEngine();
         }
 
-        function initStats() {
-            return { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
-        }
-
-        function populateDropdowns() {
-            let singleSelect = document.getElementById('ebfcPlayerSelect');
-            let capSelect = document.getElementById('captainPlayerSelect');
-
-            singleSelect.innerHTML = '';
-            capSelect.innerHTML = '';
+        // 1. RENDER PLAYER TABLE & IMAGE DOWNLOAD BUTTON
+        function renderAllPlayersTable() {
+            const tbody = document.getElementById('allPlayersTableBody');
+            tbody.innerHTML = '';
 
             cachedPlayers.forEach(p => {
-                singleSelect.innerHTML += `<option value="${p.uid}">${p.name || 'Unknown'} (${p.club || 'EBFC'})</option>`;
-                capSelect.innerHTML += `<option value="${p.uid}">${p.name || 'Unknown'} - ${p.email || 'No Email'}</option>`;
-            });
-        }
-
-        function setupPlayerSearchEngine() {
-            let searchInput = document.getElementById('playerSearchInput');
-            let resultsList = document.getElementById('searchResultsList');
-            let selectDropdown = document.getElementById('ebfcPlayerSelect');
-
-            searchInput.addEventListener('input', function () {
-                let query = this.value.toLowerCase().trim();
-                resultsList.innerHTML = '';
-
-                if (!query) {
-                    resultsList.style.display = 'none';
-                    return;
-                }
-
-                let filtered = cachedPlayers.filter(p => (p.name && p.name.toLowerCase().includes(query)) || (p.club && p.club.toLowerCase().includes(query)));
-
-                if (filtered.length > 0) {
-                    resultsList.style.display = 'block';
-                    filtered.forEach(p => {
-                        let item = document.createElement('div');
-                        item.className = 'search-item';
-                        item.innerHTML = `<strong>${p.name}</strong> <span style="font-size:11px; color:var(--accent-gold);">(${p.club || 'EBFC'})</span>`;
-                        item.onclick = function () {
-                            selectDropdown.value = p.uid;
-                            searchInput.value = p.name;
-                            resultsList.style.display = 'none';
-                        };
-                        resultsList.appendChild(item);
-                    });
-                } else {
-                    resultsList.style.display = 'block';
-                    resultsList.innerHTML = `<div class="search-item" style="color:var(--text-muted);">No player found...</div>`;
-                }
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!searchInput.contains(e.target) && !resultsList.contains(e.target)) {
-                    resultsList.style.display = 'none';
-                }
-            });
-        }
-
-        // GRANT CAPTAIN ACCESS
-        document.getElementById('grantCaptainForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            let pUid = document.getElementById('captainPlayerSelect').value;
-
-            try {
-                await db.collection('users').doc(pUid).update({
-                    role: 'captain'
-                });
-                alert("Success! Player granted Captain access.");
-            } catch (err) {
-                console.error(err);
-                alert("Failed to grant captain access.");
-            }
-        });
-
-        function renderCaptainsTable() {
-            let tbody = document.getElementById('captainsTableBody');
-            tbody.innerHTML = '';
-
-            let captains = cachedPlayers.filter(p => p.role === 'captain');
-
-            if (captains.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No captains assigned yet.</td></tr>`;
-                return;
-            }
-
-            captains.forEach(c => {
+                const avatarUrl = p.avatar || 'Image/player1.webp';
                 tbody.innerHTML += `
                     <tr>
-                        <td>#${c.uid.substring(0, 6)}</td>
-                        <td><strong>${c.name || 'Captain'}</strong></td>
-                        <td>${c.club || 'EBFC'}</td>
-                        <td>${c.email || 'N/A'}</td>
-                        <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                        <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                    </tr>`;
-            });
-        }
-
-        async function revokeCaptain(uid) {
-            if (confirm("Revoke Captain privileges for this user?")) {
-                try {
-                    await db.collection('users').doc(uid).update({ role: 'player' });
-                    alert("Captain access revoked.");
-                } catch (err) {
-                    alert("Error revoking access.");
-                }
-            }
-        }
-
-        // CAPTAIN SCORE QUEUE
-        function renderCaptainQueue(pendingList) {
-            let tbody = document.getElementById('captainQueueBody');
-            let badge = document.getElementById('queueBadge');
-            tbody.innerHTML = '';
-            badge.innerText = `${pendingList.length} Requests Pending`;
-
-            if (pendingList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No pending captain submissions available.</td></tr>`;
-                return;
-            }
-
-            pendingList.forEach((req) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                        <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
-                        <td>${req.squadFormat || '1v1'}</td>
-                        <td><strong>${req.gf} - ${req.ga}</strong></td>
-                        <td>${req.matchType || 'domestic'}</td>
-                        <td>${req.awardMotm ? 'Yes' : 'No'}</td>
+                        <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
+                        <td><strong>${p.name || 'N/A'}</strong></td>
+                        <td>${p.gameId || 'N/A'}</td>
+                        <td>${p.club || 'EBFC'}</td>
+                        <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
                         <td>
-                            <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${req.matchType}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
-                            <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                            <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
+                            <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
                         </td>
                     </tr>`;
             });
         }
 
-        async function approveCaptainScore(reqId, playerId, gf, ga, matchType, awardMotm) {
-            try {
-                const userRef = db.collection('users').doc(playerId);
-                const userDoc = await userRef.get();
-
-                if (userDoc.exists) {
-                    let player = userDoc.data();
-                    let isWin = gf > ga;
-                    let isDraw = gf === ga;
-                    let isLoss = gf < ga;
-
-                    function updateStatGroup(group) {
-                        group = group || initStats();
-                        group.mp = (group.mp || 0) + 1;
-                        group.gf = (group.gf || 0) + gf;
-                        group.ga = (group.ga || 0) + ga;
-                        group.gd = group.gf - group.ga;
-
-                        if (isWin) group.w = (group.w || 0) + 1;
-                        else if (isDraw) group.d = (group.d || 0) + 1;
-                        else if (isLoss) group.l = (group.l || 0) + 1;
-
-                        group.pts = ((group.w || 0) * 3) + (group.d || 0);
-                        group.winRate = group.mp > 0 ? (((group.w || 0) / group.mp) * 100).toFixed(1) : "0.0";
-                        if (awardMotm) group.motm = (group.motm || 0) + 1;
-                        return group;
-                    }
-
-                    let officialStats = updateStatGroup(player.official);
-                    let domesticStats = matchType === 'domestic' ? updateStatGroup(player.domestic) : (player.domestic || initStats());
-                    let potmStats = updateStatGroup(player.potm);
-
-                    await userRef.update({
-                        official: officialStats,
-                        domestic: domesticStats,
-                        potm: potmStats
-                    });
-
-                    await db.collection('pending_scores').doc(reqId).delete();
-                    alert("Approved and synchronized to database!");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Failed to approve score.");
-            }
+        // IMAGE DOWNLOAD FUNCTION
+        function downloadImage(url, playerName) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${playerName.replace(/\s+/g, '_')}_ebfc_photo.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
-        async function rejectCaptainScore(reqId) {
-            try {
-                await db.collection('pending_scores').doc(reqId).delete();
-            } catch (err) {
-                alert("Error rejecting request.");
-            }
-        }
+        // 2. POPULATE SELECT DROPDOWNS
+        function populateDropdowns() {
+            const editSelect = document.getElementById('editPlayerSelect');
+            const historySelect = document.getElementById('historyPlayerSelect');
+            const achSelect = document.getElementById('achPlayerSelect');
 
-        // DIRECT MATCH SCORE INPUT BY ADMIN
-        document.getElementById('singlePlayerScoreForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+            editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
+            historySelect.innerHTML = '';
+            achSelect.innerHTML = '';
 
-            let playerId = document.getElementById('ebfcPlayerSelect').value;
-            let gf = parseInt(document.getElementById('ebfcGoals').value);
-            let ga = parseInt(document.getElementById('opponentGoals').value);
-            let matchType = document.getElementById('directMatchTypeSelect').value;
-            let awardMotm = document.getElementById('awardMotmSelect').value === 'yes';
-
-            try {
-                const userRef = db.collection('users').doc(playerId);
-                const userDoc = await userRef.get();
-
-                if (!userDoc.exists) return alert("Player profile not found.");
-
-                let player = userDoc.data();
-                let isWin = gf > ga;
-                let isDraw = gf === ga;
-                let isLoss = gf < ga;
-
-                function updateStatGroup(group) {
-                    group = group || initStats();
-                    group.mp = (group.mp || 0) + 1;
-                    group.gf = (group.gf || 0) + gf;
-                    group.ga = (group.ga || 0) + ga;
-                    group.gd = group.gf - group.ga;
-
-                    if (isWin) group.w = (group.w || 0) + 1;
-                    else if (isDraw) group.d = (group.d || 0) + 1;
-                    else if (isLoss) group.l = (group.l || 0) + 1;
-
-                    group.pts = ((group.w || 0) * 3) + (group.d || 0);
-                    group.winRate = group.mp > 0 ? (((group.w || 0) / group.mp) * 100).toFixed(1) : "0.0";
-                    if (awardMotm) group.motm = (group.motm || 0) + 1;
-                    return group;
-                }
-
-                let officialStats = updateStatGroup(player.official);
-                let domesticStats = matchType === 'domestic' ? updateStatGroup(player.domestic) : (player.domestic || initStats());
-                let potmStats = updateStatGroup(player.potm);
-
-                await userRef.update({
-                    official: officialStats,
-                    domestic: domesticStats,
-                    potm: potmStats
-                });
-
-                alert(`Result recorded for ${player.name || 'Player'}!`);
-                document.getElementById('playerSearchInput').value = '';
-            } catch (err) {
-                console.error(err);
-                alert("Error saving direct score.");
-            }
-        });
-
-        // TOURNAMENT SYSTEM (PERSISTENT FIRESTORE BACKEND)
-        function generatePlayerSelects() {
-            let count = parseInt(document.getElementById('tPlayerCount').value);
-            let container = document.getElementById('playerSelectsGrid');
-            container.innerHTML = '';
-
-            for (let i = 0; i < count; i++) {
-                let optionsHtml = '';
-                cachedPlayers.forEach((p, idx) => {
-                    let selected = (idx % cachedPlayers.length) === (i % cachedPlayers.length) ? 'selected' : '';
-                    optionsHtml += `<option value="${p.uid}" ${selected}>${p.name || 'Player'}</option>`;
-                });
-
-                container.innerHTML += `
-                    <div class="form-group">
-                        <label>Slot ${i + 1}</label>
-                        <select class="form-control tournament-player-select">${optionsHtml}</select>
-                    </div>`;
-            }
-        }
-
-        document.getElementById('createTournamentForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            let tournamentData = {
-                name: document.getElementById('tName').value,
-                currentStage: 'R32',
-                legsConfig: {
-                    'Round of 32': parseInt(document.getElementById('r32Legs').value),
-                    'Round of 16': parseInt(document.getElementById('r16Legs').value),
-                    'Quarter-Finals': parseInt(document.getElementById('qfLegs').value),
-                    'Semi-Finals': parseInt(document.getElementById('sfLegs').value),
-                    'Grand Final': parseInt(document.getElementById('finalLegs').value)
-                },
-                matches: []
-            };
-
-            let selectElements = document.querySelectorAll('.tournament-player-select');
-            let selectedPlayers = [];
-
-            selectElements.forEach(s => {
-                let pId = s.value;
-                let pObj = cachedPlayers.find(p => p.uid === pId);
-                if (pObj) {
-                    selectedPlayers.push({ id: pObj.uid, name: pObj.name, avatar: pObj.avatar || 'Image/player1.webp' });
-                }
+            cachedPlayers.forEach(p => {
+                const opt = `<option value="${p.uid}">${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
+                editSelect.innerHTML += opt;
+                historySelect.innerHTML += opt;
+                achSelect.innerHTML += opt;
             });
-
-            selectedPlayers.sort(() => Math.random() - 0.5);
-
-            let count = selectedPlayers.length;
-            let targetSize = count <= 8 ? 8 : count <= 16 ? 16 : 32;
-
-            while (selectedPlayers.length < targetSize) {
-                selectedPlayers.push({ id: "-1", name: 'BYE (Auto Pass)', avatar: 'Image/player1.webp' });
-            }
-
-            if (targetSize === 8) tournamentData.currentStage = 'Quarter-Finals';
-            else if (targetSize === 16) tournamentData.currentStage = 'Round of 16';
-            else tournamentData.currentStage = 'Round of 32';
-
-            let legs = tournamentData.legsConfig[tournamentData.currentStage];
-
-            for (let i = 0; i < targetSize; i += 2) {
-                let p1 = selectedPlayers[i];
-                let p2 = selectedPlayers[i + 1];
-                let isBye = p2.name.includes('BYE');
-
-                tournamentData.matches.push({
-                    id: i / 2, p1: p1, p2: p2,
-                    winner: isBye ? p1 : null,
-                    legsNeeded: legs
-                });
-            }
-
-            try {
-                await db.collection('tournaments').doc('active_tournament').set(tournamentData);
-                alert("Tournament successfully created!");
-            } catch (err) {
-                alert("Failed to create tournament.");
-            }
-        });
-
-        async function resetTournamentMemory() {
-            if (confirm("Reset current active tournament?")) {
-                try {
-                    await db.collection('tournaments').doc('active_tournament').delete();
-                    tState = null;
-                    document.getElementById('activeTournamentSection').style.display = 'none';
-                } catch (err) {
-                    alert("Error resetting tournament.");
-                }
-            }
         }
 
-        function renderFixtures() {
-            if (!tState) return;
-            const container = document.getElementById('fixturesContainer');
-            document.getElementById('activeTournamentSection').style.display = 'block';
-            document.getElementById('activeTTitle').innerHTML = `<i class="fa-solid fa-gamepad"></i> ${tState.name} - ${tState.currentStage}`;
-
-            container.innerHTML = '';
-            let roundHtml = `<div class="round-box"><div class="round-header"><span>${tState.currentStage} Fixtures</span><span class="leg-tag">${tState.matches[0].legsNeeded === 2 ? '2 Legs System' : '1 Leg System'}</span></div>`;
-
-            tState.matches.forEach((m, idx) => {
-                const isCompleted = m.winner !== null;
-                const isDoubleLeg = m.legsNeeded === 2;
-                const isP1Win = m.winner && m.winner.id === m.p1.id;
-                const isP2Win = m.winner && m.winner.id === m.p2.id;
-
-                roundHtml += `
-                    <div class="match-card">
-                        <div class="player-vs-box">
-                            <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
-                                <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
-                            </div>
-                            <span class="vs">VS</span>
-                            <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
-                            </div>
-                        </div>
-
-                        ${!isCompleted ? `
-                            <div class="score-inputs">
-                                <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                ${isDoubleLeg ? `
-                                    <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                    <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                    <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                ` : ''}
-                                <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                            </div>
-                        ` : `
-                            <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                Winner: ${m.winner.name}
-                            </div>
-                        `}
-                    </div>`;
-            });
-
-            roundHtml += `</div>`;
-            container.innerHTML = roundHtml;
+        // 3. EDIT PLAYER DATABASE PROFILE
+        function selectPlayerForEdit(uid) {
+            document.getElementById('editPlayerSelect').value = uid;
+            loadPlayerToEditor();
+            window.scrollTo({ top: document.getElementById('editPlayerForm').offsetTop - 100, behavior: 'smooth' });
         }
 
-        async function submitScore(idx) {
-            const m = tState.matches[idx];
-            const isDoubleLeg = m.legsNeeded === 2;
+        function loadPlayerToEditor() {
+            const uid = document.getElementById('editPlayerSelect').value;
+            const player = cachedPlayers.find(p => p.uid === uid);
 
-            const l1_1 = parseInt(document.getElementById(`l1_p1_${idx}`).value) || 0;
-            const l1_2 = parseInt(document.getElementById(`l1_p2_${idx}`).value) || 0;
-
-            let l2_1 = 0, l2_2 = 0;
-            if (isDoubleLeg) {
-                l2_1 = parseInt(document.getElementById(`l2_p1_${idx}`).value) || 0;
-                l2_2 = parseInt(document.getElementById(`l2_p2_${idx}`).value) || 0;
-            }
-
-            let total1 = l1_1 + l2_1;
-            let total2 = l1_2 + l2_2;
-
-            if (total1 === total2) {
-                alert("Aggregate scores tied!");
+            if (!player) {
+                document.getElementById('playerPreviewArea').style.display = 'none';
+                document.getElementById('editPlayerForm').reset();
                 return;
             }
 
-            m.winner = total1 > total2 ? m.p1 : m.p2;
+            document.getElementById('playerPreviewArea').style.display = 'flex';
+            document.getElementById('editPreviewAvatar').src = player.avatar || 'Image/player1.webp';
+            document.getElementById('editPreviewName').innerText = player.name || 'Player';
+            document.getElementById('editPreviewEmail').innerText = player.email || 'No Email Registered';
+
+            document.getElementById('editUid').value = player.uid;
+            document.getElementById('editName').value = player.name || '';
+            document.getElementById('editGameId').value = player.gameId || '';
+            document.getElementById('editClub').value = player.club || 'East Bengal Main';
+            document.getElementById('editRole').value = player.role || 'player';
+            document.getElementById('editFbLink').value = player.fbLink || '';
+            document.getElementById('editDevice').value = player.device || '';
+            document.getElementById('editOccupation').value = player.occupation || '';
+            document.getElementById('editAddress').value = player.address || '';
+        }
+
+        document.getElementById('editPlayerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const uid = document.getElementById('editUid').value;
+            if (!uid) return alert("Select a player first.");
 
             try {
-                await db.collection('tournaments').doc('active_tournament').set(tState);
-
-                if (tState.matches.every(match => match.winner !== null)) {
-                    advanceStage();
-                }
-            } catch (err) {
-                alert("Error submitting tournament score.");
-            }
-        }
-
-        async function advanceStage() {
-            const winners = tState.matches.map(m => m.winner);
-
-            if (tState.currentStage === 'Round of 32') {
-                tState.currentStage = 'Round of 16';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Round of 16') {
-                tState.currentStage = 'Quarter-Finals';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Quarter-Finals') {
-                tState.currentStage = 'Semi-Finals';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Semi-Finals') {
-                tState.currentStage = 'Grand Final';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Grand Final') {
-                alert(`🏆 CHAMPION OF ${tState.name}: ${winners[0].name}!`);
-                await db.collection('tournaments').doc('active_tournament').set(tState);
-            }
-        }
-
-        async function setupNextRound(winnersList) {
-            tState.matches = [];
-            let legs = tState.legsConfig[tState.currentStage];
-
-            for (let i = 0; i < winnersList.length; i += 2) {
-                tState.matches.push({
-                    id: i / 2, p1: winnersList[i], p2: winnersList[i + 1], winner: null, legsNeeded: legs
+                await db.collection('users').doc(uid).update({
+                    name: document.getElementById('editName').value.trim(),
+                    gameId: document.getElementById('editGameId').value.trim(),
+                    club: document.getElementById('editClub').value.trim(),
+                    role: document.getElementById('editRole').value,
+                    fbLink: document.getElementById('editFbLink').value.trim(),
+                    device: document.getElementById('editDevice').value.trim(),
+                    occupation: document.getElementById('editOccupation').value.trim(),
+                    address: document.getElementById('editAddress').value.trim()
                 });
+                alert("Database entry updated successfully!");
+            } catch (err) {
+                console.error(err);
+                alert("Error updating profile database.");
             }
-            await db.collection('tournaments').doc('active_tournament').set(tState);
-        }
+        });
+
+        // 4. ADD TOURNAMENT HISTORY ENTRY
+        document.getElementById('addHistoryForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const uid = document.getElementById('historyPlayerSelect').value;
+            
+            const historyItem = {
+                title: document.getElementById('historyTitle').value.trim(),
+                subtitle: document.getElementById('historySub').value.trim(),
+                tag: document.getElementById('historyTag').value
+            };
+
+            try {
+                const userDoc = await db.collection('users').doc(uid).get();
+                let existingHistory = userDoc.data().tournamentHistoryList || [];
+                existingHistory.push(historyItem);
+
+                await db.collection('users').doc(uid).update({
+                    tournamentHistoryList: existingHistory
+                });
+
+                alert("Tournament History entry added!");
+                document.getElementById('addHistoryForm').reset();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to add tournament history.");
+            }
+        });
+
+        // 5. ADD ACHIEVEMENT ENTRY
+        document.getElementById('addAchievementForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const uid = document.getElementById('achPlayerSelect').value;
+
+            const achItem = {
+                title: document.getElementById('achTitle').value.trim(),
+                icon: document.getElementById('achIcon').value,
+                desc: document.getElementById('achDesc').value.trim()
+            };
+
+            try {
+                const userDoc = await db.collection('users').doc(uid).get();
+                let existingAch = userDoc.data().achievementsList || [];
+                existingAch.push(achItem);
+
+                await db.collection('users').doc(uid).update({
+                    achievementsList: existingAch
+                });
+
+                alert("Achievement badge added!");
+                document.getElementById('addAchievementForm').reset();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to add achievement.");
+            }
+        });
     </script>
 </body>
 </html>
