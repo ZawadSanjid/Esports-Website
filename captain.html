@@ -1,0 +1,450 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captain Squad Score Portal | East Bengal eFootball Club</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
+            --accent-green: #4caf50;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding-bottom: 60px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-logo .logo-img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
+                border-radius: 6px;
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+            }
+
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
+
+        .btn-outline-sm {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            padding: 6px 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 13px;
+        }
+
+            .btn-outline-sm:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .page-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: 48px;
+                text-transform: uppercase;
+                line-height: 1;
+            }
+
+            .page-header p {
+                color: var(--text-muted);
+                font-size: 16px;
+            }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 32px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+            .section-title i {
+                color: var(--primary-red);
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            color: var(--text-light);
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-red);
+            }
+
+        /* SQUAD SLOTS DYNAMIC STYLING */
+        .squad-slot-card {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+            .squad-slot-card .slot-num {
+                font-family: 'Teko', sans-serif;
+                font-size: 20px;
+                color: var(--accent-gold);
+            }
+
+        .btn-action {
+            background: var(--primary-red);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+            .btn-action:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        /* STATUS BADGE */
+        .status-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 183, 3, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .submission-item {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand-logo">
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
+            <div class="brand-name">East Bengal <span>eFootball Club</span></div>
+        </div>
+        <div>
+            <a href="home.html" onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Captain Squad Score Portal</h1>
+            <p>Select Squad Size, Enter Individual Player Scores & Send For Admin Approval</p>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span><i class="fa-solid fa-users-gear"></i> Match Setup & Squad Selection</span>
+            </div>
+
+            <form id="captainScoreForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Target Community</label>
+                        <select id="communitySelect" class="form-control" required>
+                            <option value="efob">EFOB</option>
+                            <option value="ecob">ECOB</option>
+                            <option value="cobeg(main)" selected>COBEG (Main)</option>
+                            <option value="cobeg(academy)">COBEG (Academy)</option>
+                            <option value="eaob">EAOB</option>
+                            <option value="pesbd">PESBD</option>
+                            <option value="efcob">EFCOB</option>
+                            <option value="ttsbd">TTSBD</option>
+                            <option value="gkec">GKEC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Squad Format</label>
+                        <select id="squadFormatSelect" class="form-control" onchange="generateSquadSlots()" required>
+                            <option value="6">6 Man Squad</option>
+                            <option value="8">8 Man Squad</option>
+                            <option value="10">10 Man Squad</option>
+                            <option value="12" selected>12 Man Squad</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Match Category</label>
+                        <select id="matchTypeSelect" class="form-control">
+                            <option value="domestic" selected>Domestic League Match</option>
+                            <option value="official">Official Match</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC PLAYER SQUAD SLOTS CONTAINER -->
+                <div class="section-title" style="font-size: 24px; margin-top: 20px;">
+                    <span><i class="fa-solid fa-list-ol"></i> Input Player Performance</span>
+                </div>
+
+                <div id="squadSlotsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+
+                <button type="submit" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Full Squad Score To Admin</button>
+            </form>
+        </div>
+
+        <!-- MY SUBMISSION LOGS -->
+        <div class="section-card">
+            <div class="section-title">
+                <span><i class="fa-solid fa-list-check"></i> Pending Approvals Queue</span>
+            </div>
+            <div id="pendingLogsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            generateSquadSlots();
+            renderPendingLogs();
+        });
+
+        function logoutCaptain() { localStorage.removeItem('ebfc_user'); }
+
+        function getAllPlayers() {
+            let saved = localStorage.getItem('ebfc_all_players');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // GENERATE 6/8/10/12 MAN SQUAD SLOTS DYNAMICALLY
+        function generateSquadSlots() {
+            let count = parseInt(document.getElementById('squadFormatSelect').value);
+            let players = getAllPlayers();
+            let container = document.getElementById('squadSlotsContainer');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                let optionsHtml = '<option value="">-- Select Player --</option>';
+                players.forEach((p, idx) => {
+                    let selected = (idx % players.length) === (i % players.length) ? 'selected' : '';
+                    optionsHtml += `<option value="${p.id}" ${selected}>${p.name} (${p.club})</option>`;
+                });
+
+                container.innerHTML += `
+                        <div class="squad-slot-card">
+                            <div class="form-group" style="margin:0;">
+                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GF (Goals)</label>
+                                <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GA (Against)</label>
+                                <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>MOTM?</label>
+                                <select class="form-control squad-player-motm">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // SUBMIT FULL SQUAD SCORES TO PENDING QUEUE
+        document.getElementById('captainScoreForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let players = getAllPlayers();
+            let community = document.getElementById('communitySelect').value;
+            let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
+            let matchType = document.getElementById('matchTypeSelect').value;
+
+            let playerNodes = document.querySelectorAll('.squad-player-id');
+            let gfNodes = document.querySelectorAll('.squad-player-gf');
+            let gaNodes = document.querySelectorAll('.squad-player-ga');
+            let motmNodes = document.querySelectorAll('.squad-player-motm');
+
+            let squadSubmissions = [];
+
+            playerNodes.forEach((node, idx) => {
+                let pId = parseInt(node.value);
+                let pObj = players.find(p => p.id === pId);
+
+                if (pObj) {
+                    squadSubmissions.push({
+                        id: Date.now() + idx,
+                        playerId: pId,
+                        playerName: pObj.name,
+                        community: community,
+                        squadFormat: squadFormat,
+                        gf: parseInt(gfNodes[idx].value),
+                        ga: parseInt(gaNodes[idx].value),
+                        matchType: matchType,
+                        awardMotm: motmNodes[idx].value === 'yes',
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    });
+                }
+            });
+
+            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+            pendingList = pendingList.concat(squadSubmissions);
+            localStorage.setItem('ebfc_pending_scores', JSON.stringify(pendingList));
+
+            alert(`Success! Scores for all ${squadSubmissions.length} players sent to Admin for approval.`);
+            renderPendingLogs();
+        });
+
+        // RENDER LOGS
+        function renderPendingLogs() {
+            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+            let container = document.getElementById('pendingLogsContainer');
+            container.innerHTML = '';
+
+            if (pendingList.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">No pending submissions in queue.</p>`;
+                return;
+            }
+
+            pendingList.forEach(item => {
+                container.innerHTML += `
+                        <div class="submission-item">
+                            <div>
+                                <strong>${item.playerName}</strong>
+                                <span style="color: var(--accent-gold);">[${item.community.toUpperCase()} - ${item.squadFormat}]</span>
+                                <div style="font-size: 12px; color: var(--text-muted);">GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp}</div>
+                            </div>
+                            <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                        </div>
+                    `;
+            });
+        }
+    </script>
+</body>
+</html>

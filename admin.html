@@ -1,0 +1,1143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin Dashboard | East Bengal eFootball Club</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121318;
+            --primary-red: #e50914;
+            --primary-red-hover: #b80710;
+            --accent-gold: #ffb703;
+            --accent-green: #4caf50;
+            --text-light: #ffffff;
+            --text-muted: #9a9caf;
+            --border-color: #22242d;
+            --glow-red: rgba(229, 9, 20, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding-bottom: 60px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-logo .logo-img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
+                border-radius: 6px;
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+            }
+
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
+
+        .btn-outline-sm {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            padding: 6px 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 13px;
+        }
+
+            .btn-outline-sm:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .page-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: 48px;
+                text-transform: uppercase;
+                line-height: 1;
+            }
+
+            .page-header p {
+                color: var(--text-muted);
+                font-size: 16px;
+            }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 32px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+            .section-title i {
+                color: var(--primary-red);
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 13px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                margin-bottom: 6px;
+            }
+
+        .form-control {
+            width: 100%;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            color: var(--text-light);
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-red);
+            }
+
+        /* SEARCH RESULTS DROPDOWN AUTOCOMPLETE */
+        .search-results-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #121318;
+            border: 1px solid var(--primary-red);
+            border-radius: 0 0 6px 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+        }
+
+        .search-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: 0.2s ease;
+        }
+
+            .search-item:hover {
+                background: var(--primary-red);
+                color: #fff;
+            }
+
+        .btn-action {
+            background: var(--primary-red);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .btn-action:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
+
+        .btn-gold {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+            .btn-gold:hover {
+                background: #e0a200;
+            }
+
+        .btn-green {
+            background: var(--accent-green);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .btn-danger {
+            background: var(--primary-red);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* TABLE STYLES */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+            .admin-table th {
+                background: #090a0c;
+                padding: 12px;
+                border-bottom: 2px solid var(--border-color);
+                color: var(--text-muted);
+                text-transform: uppercase;
+            }
+
+            .admin-table td {
+                padding: 12px;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+        /* FIXTURES & MATCH CARDS */
+        .round-box {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .round-header {
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .match-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .player-vs-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .player-profile-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .player-profile-item img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--primary-red);
+            }
+
+            .player-profile-item.winner-active img {
+                border-color: var(--accent-gold);
+                box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
+            }
+
+        .player-vs-box span.vs {
+            color: var(--primary-red);
+            font-size: 16px;
+            font-family: 'Teko', sans-serif;
+            font-weight: 700;
+        }
+
+        .score-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-input {
+            width: 42px;
+            text-align: center;
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 6px;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .leg-tag {
+            font-size: 11px;
+            background: rgba(255, 183, 3, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn-submit-score {
+            background: var(--accent-green);
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand-logo">
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
+            <div class="brand-name">East Bengal <span>eFootball Club</span></div>
+        </div>
+        <div>
+            <a href="rankings.html" class="btn-outline-sm" style="margin-right: 8px;"><i class="fa-solid fa-trophy"></i> Rankings Page</a>
+            <a href="home.html" onclick="logoutUser()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h1>Master Admin Control Panel</h1>
+            <p>Captain Approvals, Fast Live Search Score Input & Persistent Tournament Engine</p>
+        </div>
+
+        <!-- SECTION 0: CAPTAIN PENDING APPROVALS QUEUE -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
+                <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Player Name</th>
+                            <th>Community</th>
+                            <th>Squad Format</th>
+                            <th>GF - GA</th>
+                            <th>Type</th>
+                            <th>MOTM?</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="captainQueueBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 1: CAPTAIN ROLE ASSIGNMENT SYSTEM -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-green);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-user-shield"></i> Manage Captain Access Roles</span>
+            </div>
+
+            <form id="grantCaptainForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Select Player To Grant Captain Access</label>
+                        <select id="captainPlayerSelect" class="form-control" required></select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-key"></i> Grant Captain Access</button>
+            </form>
+
+            <!-- CURRENT CAPTAINS TABLE -->
+            <div class="table-responsive" style="margin-top:20px;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Player Name</th>
+                            <th>Club</th>
+                            <th>Email Address</th>
+                            <th>Role Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="captainsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 2: STANDALONE SCORE SUBMISSION WITH SEARCH AUTO-SELECT -->
+        <div class="section-card">
+            <div class="section-title">
+                <span><i class="fa-solid fa-pen-to-square"></i> Direct Admin Match Score Input</span>
+            </div>
+
+            <form id="singlePlayerScoreForm">
+                <div class="form-grid">
+
+                    <!-- SEARCH & AUTO-SELECT PLAYER FIELD -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-magnifying-glass"></i> Search Player Name</label>
+                        <input type="text" id="playerSearchInput" class="form-control" placeholder="Type name to search..." autocomplete="off">
+                        <div id="searchResultsList" class="search-results-list"></div>
+                    </div>
+
+                    <!-- SELECTED PLAYER DROPDOWN -->
+                    <div class="form-group">
+                        <label>Selected Player</label>
+                        <select id="ebfcPlayerSelect" class="form-control" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>EBFC Player Goals (GF)</label>
+                        <input type="number" id="ebfcGoals" class="form-control" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Opponent Goals (GA)</label>
+                        <input type="number" id="opponentGoals" class="form-control" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Match Type</label>
+                        <select id="matchTypeSelect" class="form-control">
+                            <option value="domestic" selected>Domestic League Match</option>
+                            <option value="official">Official Match</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Award MOTM?</label>
+                        <select id="awardMotmSelect" class="form-control">
+                            <option value="no">No</option>
+                            <option value="yes">Yes (Award MOTM to EBFC Player)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Submit Direct Result</button>
+            </form>
+        </div>
+
+        <!-- SECTION 3: TOURNAMENT FIXTURE GENERATOR WITH PERMANENT MEMORY -->
+        <div class="section-card">
+            <div class="section-title">
+                <span><i class="fa-solid fa-sitemap"></i> Persistent Tournament Bracket Generator</span>
+            </div>
+
+            <form id="createTournamentForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tournament Name</label>
+                        <input type="text" id="tName" class="form-control" placeholder="e.g., EBFC Super Championship 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Players</label>
+                        <select id="tPlayerCount" class="form-control" onchange="generatePlayerSelects()">
+                            <option value="8" selected>8 Players (Quarter-Finals)</option>
+                            <option value="16">16 Players (Round of 16)</option>
+                            <option value="20">20 Players</option>
+                            <option value="30">30 Players</option>
+                            <option value="32">32 Players (Round of 32)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Round of 32 Leg System</label>
+                        <select id="r32Legs" class="form-control">
+                            <option value="2" selected>Double Leg (2 Legs)</option>
+                            <option value="1">Single Leg (1 Leg)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Round of 16 Leg System</label>
+                        <select id="r16Legs" class="form-control">
+                            <option value="2" selected>Double Leg (2 Legs)</option>
+                            <option value="1">Single Leg (1 Leg)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quarter-Finals Leg System</label>
+                        <select id="qfLegs" class="form-control">
+                            <option value="1" selected>Single Leg (1 Leg)</option>
+                            <option value="2">Double Leg (2 Legs)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Semi-Finals Leg System</label>
+                        <select id="sfLegs" class="form-control">
+                            <option value="1" selected>Single Leg (1 Leg)</option>
+                            <option value="2">Double Leg (2 Legs)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Grand Final Leg System</label>
+                        <select id="finalLegs" class="form-control">
+                            <option value="1" selected>Single Leg (1 Leg)</option>
+                            <option value="2">Double Leg (2 Legs)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label><i class="fa-solid fa-users"></i> Select Participating EBFC Registered Players</label>
+                    <div id="playerSelectsGrid" class="form-grid"></div>
+                </div>
+
+                <button type="submit" class="btn-action"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Persistent Tournament</button>
+            </form>
+        </div>
+
+        <!-- ACTIVE BRACKET FIXTURES DISPLAY -->
+        <div class="section-card" id="activeTournamentSection" style="display: none;">
+            <div class="section-title">
+                <span id="activeTTitle"><i class="fa-solid fa-gamepad"></i> Active Saved Tournament</span>
+                <button onclick="resetTournamentMemory()" class="btn-action btn-gold" style="font-size: 12px; padding: 6px 12px;"><i class="fa-solid fa-trash"></i> Reset / Complete Tournament</button>
+            </div>
+            <div id="fixturesContainer"></div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT MASTER ENGINE -->
+    <script>
+        let tState = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const user = JSON.parse(localStorage.getItem('ebfc_user'));
+            if (!user || user.role !== 'admin') {
+                alert("Access Denied! Master Admin Authorization Required.");
+                window.location.href = "login.html";
+            }
+
+            populateDropdowns();
+            generatePlayerSelects();
+            renderCaptainQueue();
+            renderCaptainsTable();
+            setupPlayerSearchEngine();
+
+            let savedTournament = localStorage.getItem('ebfc_active_tournament');
+            if (savedTournament) {
+                tState = JSON.parse(savedTournament);
+                renderFixtures();
+            }
+        });
+
+        function logoutUser() { localStorage.removeItem('ebfc_user'); }
+
+        function getAllPlayers() {
+            let saved = localStorage.getItem('ebfc_all_players');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function saveAllPlayers(players) {
+            localStorage.setItem('ebfc_all_players', JSON.stringify(players));
+        }
+
+        function populateDropdowns() {
+            let players = getAllPlayers();
+            let singleSelect = document.getElementById('ebfcPlayerSelect');
+            let capSelect = document.getElementById('captainPlayerSelect');
+
+            singleSelect.innerHTML = '';
+            capSelect.innerHTML = '';
+
+            players.forEach(p => {
+                singleSelect.innerHTML += `<option value="${p.id}">${p.name} (${p.club})</option>`;
+                capSelect.innerHTML += `<option value="${p.id}">${p.name} - ${p.email || p.name.toLowerCase().replace(/\s+/g, '') + '@ebfc.com'}</option>`;
+            });
+        }
+
+        // PLAYER SEARCH & AUTO-SELECT ENGINE
+        function setupPlayerSearchEngine() {
+            let searchInput = document.getElementById('playerSearchInput');
+            let resultsList = document.getElementById('searchResultsList');
+            let selectDropdown = document.getElementById('ebfcPlayerSelect');
+
+            searchInput.addEventListener('input', function () {
+                let query = this.value.toLowerCase().trim();
+                let players = getAllPlayers();
+                resultsList.innerHTML = '';
+
+                if (!query) {
+                    resultsList.style.display = 'none';
+                    return;
+                }
+
+                let filtered = players.filter(p => p.name.toLowerCase().includes(query) || p.club.toLowerCase().includes(query));
+
+                if (filtered.length > 0) {
+                    resultsList.style.display = 'block';
+                    filtered.forEach(p => {
+                        let item = document.createElement('div');
+                        item.className = 'search-item';
+                        item.innerHTML = `<strong>${p.name}</strong> <span style="font-size:11px; color:var(--accent-gold);">(${p.club})</span>`;
+                        item.onclick = function () {
+                            selectDropdown.value = p.id;
+                            searchInput.value = p.name;
+                            resultsList.style.display = 'none';
+                        };
+                        resultsList.appendChild(item);
+                    });
+                } else {
+                    resultsList.style.display = 'block';
+                    resultsList.innerHTML = `<div class="search-item" style="color:var(--text-muted);">No player found...</div>`;
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !resultsList.contains(e.target)) {
+                    resultsList.style.display = 'none';
+                }
+            });
+        }
+
+        // CAPTAIN ROLE ACCESS ASSIGNMENT HANDLER
+        document.getElementById('grantCaptainForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let pId = parseInt(document.getElementById('captainPlayerSelect').value);
+            let players = getAllPlayers();
+            let player = players.find(p => p.id === pId);
+
+            if (player) {
+                player.role = 'captain';
+                player.email = player.email || player.name.toLowerCase().replace(/\s+/g, '') + '@ebfc.com';
+                player.password = player.password || 'ebfc123';
+
+                saveAllPlayers(players);
+                renderCaptainsTable();
+                alert(`Success! ${player.name} is now a Captain.\nLogin Email: ${player.email}\nPassword: ${player.password}`);
+            }
+        });
+
+        function renderCaptainsTable() {
+            let players = getAllPlayers();
+            let tbody = document.getElementById('captainsTableBody');
+            tbody.innerHTML = '';
+
+            let captains = players.filter(p => p.role === 'captain');
+
+            if (captains.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No captains assigned yet.</td></tr>`;
+                return;
+            }
+
+            captains.forEach(c => {
+                tbody.innerHTML += `
+                        <tr>
+                            <td>#${c.id}</td>
+                            <td><strong>${c.name}</strong></td>
+                            <td>${c.club}</td>
+                            <td>${c.email || c.name.toLowerCase().replace(/\s+/g, '') + '@ebfc.com'}</td>
+                            <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
+                            <td><button onclick="revokeCaptain(${c.id})" class="btn-danger">Revoke Access</button></td>
+                        </tr>
+                    `;
+            });
+        }
+
+        function revokeCaptain(id) {
+            let players = getAllPlayers();
+            let player = players.find(p => p.id === id);
+            if (player) {
+                player.role = 'player';
+                saveAllPlayers(players);
+                renderCaptainsTable();
+                alert(`Captain access revoked for ${player.name}.`);
+            }
+        }
+
+        // CAPTAIN APPROVAL QUEUE
+        function renderCaptainQueue() {
+            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+            let tbody = document.getElementById('captainQueueBody');
+            let badge = document.getElementById('queueBadge');
+            tbody.innerHTML = '';
+            badge.innerText = `${pendingList.length} Requests Pending`;
+
+            if (pendingList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No pending captain submissions available.</td></tr>`;
+                return;
+            }
+
+            pendingList.forEach((req, idx) => {
+                tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${req.playerName}</strong></td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">${req.community.toUpperCase()}</span></td>
+                            <td>${req.squadFormat}</td>
+                            <td><strong>${req.gf} - ${req.ga}</strong></td>
+                            <td>${req.matchType}</td>
+                            <td>${req.awardMotm ? 'Yes' : 'No'}</td>
+                            <td>
+                                <button onclick="approveCaptainScore(${idx})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
+                                <button onclick="rejectCaptainScore(${idx})" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                            </td>
+                        </tr>
+                    `;
+            });
+        }
+
+        function approveCaptainScore(index) {
+            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+            let req = pendingList[index];
+            if (!req) return;
+
+            let players = getAllPlayers();
+            let player = players.find(p => p.id === req.playerId);
+
+            if (player) {
+                let isWin = req.gf > req.ga;
+                let isDraw = req.gf === req.ga;
+                let isLoss = req.gf < req.ga;
+
+                function updateStatGroup(group) {
+                    group.mp += 1;
+                    group.gf += req.gf;
+                    group.ga += req.ga;
+                    group.gd = group.gf - group.ga;
+
+                    if (isWin) group.w += 1;
+                    else if (isDraw) group.d += 1;
+                    else if (isLoss) group.l += 1;
+
+                    group.pts = (group.w * 3) + group.d;
+                    group.winRate = group.mp > 0 ? ((group.w / group.mp) * 100).toFixed(1) : "0.0";
+                    if (req.awardMotm) group.motm += 1;
+                }
+
+                updateStatGroup(player.official);
+                if (req.matchType === 'domestic') updateStatGroup(player.domestic);
+                updateStatGroup(player.potm);
+
+                saveAllPlayers(players);
+
+                pendingList.splice(index, 1);
+                localStorage.setItem('ebfc_pending_scores', JSON.stringify(pendingList));
+                renderCaptainQueue();
+
+                alert(`Approved! Match result recorded for ${player.name}.`);
+            }
+        }
+
+        function rejectCaptainScore(index) {
+            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+            pendingList.splice(index, 1);
+            localStorage.setItem('ebfc_pending_scores', JSON.stringify(pendingList));
+            renderCaptainQueue();
+        }
+
+        // TOURNAMENT FIXTURES
+        function generatePlayerSelects() {
+            let count = parseInt(document.getElementById('tPlayerCount').value);
+            let players = getAllPlayers();
+            let container = document.getElementById('playerSelectsGrid');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                let optionsHtml = '';
+                players.forEach((p, idx) => {
+                    let selected = (idx % players.length) === (i % players.length) ? 'selected' : '';
+                    optionsHtml += `<option value="${p.id}" ${selected}>${p.name}</option>`;
+                });
+
+                container.innerHTML += `
+                        <div class="form-group">
+                            <label>Slot ${i + 1}</label>
+                            <select class="form-control tournament-player-select">${optionsHtml}</select>
+                        </div>
+                    `;
+            }
+        }
+
+        document.getElementById('createTournamentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            tState = {
+                name: document.getElementById('tName').value,
+                currentStage: 'R32',
+                legsConfig: {
+                    'Round of 32': parseInt(document.getElementById('r32Legs').value),
+                    'Round of 16': parseInt(document.getElementById('r16Legs').value),
+                    'Quarter-Finals': parseInt(document.getElementById('qfLegs').value),
+                    'Semi-Finals': parseInt(document.getElementById('sfLegs').value),
+                    'Grand Final': parseInt(document.getElementById('finalLegs').value)
+                },
+                matches: []
+            };
+
+            let allRegistered = getAllPlayers();
+            let selectElements = document.querySelectorAll('.tournament-player-select');
+            let selectedPlayers = [];
+
+            selectElements.forEach(s => {
+                let pId = parseInt(s.value);
+                let pObj = allRegistered.find(p => p.id === pId);
+                if (pObj) {
+                    selectedPlayers.push({ id: pObj.id, name: pObj.name, avatar: pObj.avatar || 'Image/player1.webp' });
+                }
+            });
+
+            selectedPlayers.sort(() => Math.random() - 0.5);
+
+            let count = selectedPlayers.length;
+            let targetSize = count <= 8 ? 8 : count <= 16 ? 16 : 32;
+
+            while (selectedPlayers.length < targetSize) {
+                selectedPlayers.push({ id: -1, name: 'BYE (Auto Pass)', avatar: 'Image/player1.webp' });
+            }
+
+            if (targetSize === 8) tState.currentStage = 'Quarter-Finals';
+            else if (targetSize === 16) tState.currentStage = 'Round of 16';
+            else tState.currentStage = 'Round of 32';
+
+            tState.matches = [];
+            let legs = tState.legsConfig[tState.currentStage];
+
+            for (let i = 0; i < targetSize; i += 2) {
+                let p1 = selectedPlayers[i];
+                let p2 = selectedPlayers[i + 1];
+                let isBye = p2.name.includes('BYE');
+
+                tState.matches.push({
+                    id: i / 2, p1: p1, p2: p2,
+                    winner: isBye ? p1 : null,
+                    legsNeeded: legs
+                });
+            }
+
+            saveTournamentMemory();
+            renderFixtures();
+        });
+
+        function saveTournamentMemory() {
+            localStorage.setItem('ebfc_active_tournament', JSON.stringify(tState));
+        }
+
+        function resetTournamentMemory() {
+            if (confirm("Reset current active tournament?")) {
+                localStorage.removeItem('ebfc_active_tournament');
+                tState = null;
+                document.getElementById('activeTournamentSection').style.display = 'none';
+            }
+        }
+
+        function renderFixtures() {
+            if (!tState) return;
+            const container = document.getElementById('fixturesContainer');
+            document.getElementById('activeTournamentSection').style.display = 'block';
+            document.getElementById('activeTTitle').innerHTML = `<i class="fa-solid fa-gamepad"></i> ${tState.name} - ${tState.currentStage}`;
+
+            container.innerHTML = '';
+            let roundHtml = `<div class="round-box"><div class="round-header"><span>${tState.currentStage} Fixtures</span><span class="leg-tag">${tState.matches[0].legsNeeded === 2 ? '2 Legs System' : '1 Leg System'}</span></div>`;
+
+            tState.matches.forEach((m, idx) => {
+                const isCompleted = m.winner !== null;
+                const isDoubleLeg = m.legsNeeded === 2;
+                const isP1Win = m.winner && m.winner.id === m.p1.id;
+                const isP2Win = m.winner && m.winner.id === m.p2.id;
+
+                roundHtml += `
+                        <div class="match-card">
+                            <div class="player-vs-box">
+                                <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
+                                    <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
+                                    <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                                </div>
+                                <span class="vs">VS</span>
+                                <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
+                                    <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
+                                    <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
+                                </div>
+                            </div>
+
+                            ${!isCompleted ? `
+                                <div class="score-inputs">
+                                    <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
+                                    <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
+                                    <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
+                                    ${isDoubleLeg ? `
+                                        <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
+                                        <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
+                                        <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
+                                    ` : ''}
+                                    <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
+                                </div>
+                            ` : `
+                                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
+                                    Winner: ${m.winner.name}
+                                </div>
+                            `}
+                        </div>
+                    `;
+            });
+
+            roundHtml += `</div>`;
+            container.innerHTML = roundHtml;
+        }
+
+        function submitScore(idx) {
+            const m = tState.matches[idx];
+            const isDoubleLeg = m.legsNeeded === 2;
+
+            const l1_1 = parseInt(document.getElementById(`l1_p1_${idx}`).value) || 0;
+            const l1_2 = parseInt(document.getElementById(`l1_p2_${idx}`).value) || 0;
+
+            let l2_1 = 0, l2_2 = 0;
+            if (isDoubleLeg) {
+                l2_1 = parseInt(document.getElementById(`l2_p1_${idx}`).value) || 0;
+                l2_2 = parseInt(document.getElementById(`l2_p2_${idx}`).value) || 0;
+            }
+
+            let total1 = l1_1 + l2_1;
+            let total2 = l1_2 + l2_2;
+
+            if (total1 === total2) {
+                alert("Aggregate scores tied!");
+                return;
+            }
+
+            m.winner = total1 > total2 ? m.p1 : m.p2;
+
+            if (m.p1.id !== -1 && m.p2.id !== -1) {
+                let players = getAllPlayers();
+                let player1 = players.find(p => p.id === m.p1.id);
+                let player2 = players.find(p => p.id === m.p2.id);
+
+                if (player1 && player2) {
+                    function applySingleLegResult(p1Obj, p2Obj, p1Goals, p2Goals) {
+                        let isP1Win = p1Goals > p2Goals;
+                        let isDraw = p1Goals === p2Goals;
+
+                        ['domestic', 'official', 'potm'].forEach(type => {
+                            p1Obj[type].mp += 1;
+                            p1Obj[type].gf += p1Goals;
+                            p1Obj[type].ga += p2Goals;
+                            p1Obj[type].gd = p1Obj[type].gf - p1Obj[type].ga;
+
+                            if (isP1Win) { p1Obj[type].w += 1; p1Obj[type].pts += 3; }
+                            else if (isDraw) { p1Obj[type].d += 1; p1Obj[type].pts += 1; }
+                            else { p1Obj[type].l += 1; }
+
+                            p1Obj[type].winRate = p1Obj[type].mp > 0 ? ((p1Obj[type].w / p1Obj[type].mp) * 100).toFixed(1) : "0.0";
+
+                            p2Obj[type].mp += 1;
+                            p2Obj[type].gf += p2Goals;
+                            p2Obj[type].ga += p1Goals;
+                            p2Obj[type].gd = p2Obj[type].gf - p2Obj[type].ga;
+
+                            if (!isP1Win && !isDraw) { p2Obj[type].w += 1; p2Obj[type].pts += 3; }
+                            else if (isDraw) { p2Obj[type].d += 1; p2Obj[type].pts += 1; }
+                            else { p2Obj[type].l += 1; }
+
+                            p2Obj[type].winRate = p2Obj[type].mp > 0 ? ((p2Obj[type].w / p2Obj[type].mp) * 100).toFixed(1) : "0.0";
+                        });
+                    }
+
+                    applySingleLegResult(player1, player2, l1_1, l1_2);
+                    if (isDoubleLeg) applySingleLegResult(player1, player2, l2_1, l2_2);
+
+                    saveAllPlayers(players);
+                }
+            }
+
+            saveTournamentMemory();
+
+            if (tState.matches.every(match => match.winner !== null)) {
+                advanceStage();
+            } else {
+                renderFixtures();
+            }
+        }
+
+        function advanceStage() {
+            const winners = tState.matches.map(m => m.winner);
+
+            if (tState.currentStage === 'Round of 32') {
+                tState.currentStage = 'Round of 16';
+                setupNextRound(winners);
+            } else if (tState.currentStage === 'Round of 16') {
+                tState.currentStage = 'Quarter-Finals';
+                setupNextRound(winners);
+            } else if (tState.currentStage === 'Quarter-Finals') {
+                tState.currentStage = 'Semi-Finals';
+                setupNextRound(winners);
+            } else if (tState.currentStage === 'Semi-Finals') {
+                tState.currentStage = 'Grand Final';
+                setupNextRound(winners);
+            } else if (tState.currentStage === 'Grand Final') {
+                alert(`🏆 CHAMPION OF ${tState.name}: ${winners[0].name}!`);
+                saveTournamentMemory();
+                renderFixtures();
+            }
+        }
+
+        function setupNextRound(winnersList) {
+            tState.matches = [];
+            let legs = tState.legsConfig[tState.currentStage];
+
+            for (let i = 0; i < winnersList.length; i += 2) {
+                tState.matches.push({
+                    id: i / 2, p1: winnersList[i], p2: winnersList[i + 1], winner: null, legsNeeded: legs
+                });
+            }
+            saveTournamentMemory();
+            renderFixtures();
+        }
+
+        // STANDALONE ADMIN DIRECT SCORE FORM
+        document.getElementById('singlePlayerScoreForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let playerId = parseInt(document.getElementById('ebfcPlayerSelect').value);
+            let gf = parseInt(document.getElementById('ebfcGoals').value);
+            let ga = parseInt(document.getElementById('opponentGoals').value);
+            let matchType = document.getElementById('matchTypeSelect').value;
+            let awardMotm = document.getElementById('awardMotmSelect').value === 'yes';
+
+            let players = getAllPlayers();
+            let player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            let isWin = gf > ga;
+            let isDraw = gf === ga;
+            let isLoss = gf < ga;
+
+            function updateStatGroup(group) {
+                group.mp += 1;
+                group.gf += gf;
+                group.ga += ga;
+                group.gd = group.gf - group.ga;
+
+                if (isWin) group.w += 1;
+                else if (isDraw) group.d += 1;
+                else if (isLoss) group.l += 1;
+
+                group.pts = (group.w * 3) + group.d;
+                group.winRate = group.mp > 0 ? ((group.w / group.mp) * 100).toFixed(1) : "0.0";
+                if (awardMotm) group.motm += 1;
+            }
+
+            updateStatGroup(player.official);
+            if (matchType === 'domestic') updateStatGroup(player.domestic);
+            updateStatGroup(player.potm);
+
+            saveAllPlayers(players);
+            alert(`Result recorded for ${player.name}!`);
+
+            // Clear Search input
+            document.getElementById('playerSearchInput').value = '';
+        });
+    </script>
+</body>
+</html>
