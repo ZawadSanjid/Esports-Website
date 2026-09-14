@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Login | East Bengal eFootball Club</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -55,7 +53,6 @@
             margin-bottom: 20px;
         }
 
-        /* CLUB LOGO STYLING */
         .brand-logo-img {
             width: 60px;
             height: 60px;
@@ -80,7 +77,6 @@
             margin-top: 5px;
         }
 
-        /* LOGIN ROLE SWITCHER BUTTONS */
         .role-switch-container {
             display: flex;
             gap: 8px;
@@ -220,13 +216,11 @@
 
     <div class="login-card">
         <div class="login-header">
-            <!-- OFFICIAL CLUB LOGO -->
-            <img src="Image/image1.jpg.jpg" alt="East Bengal eFootball Club Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
+            <img src="Image/image1.jpg.jpg" alt="EBFC Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
             <h1 id="loginTitle">Player Login</h1>
             <p id="loginSubtitle">Welcome back! Access your eFootball profile dashboard.</p>
         </div>
 
-        <!-- ROLE SELECTION BUTTONS -->
         <div class="role-switch-container">
             <button type="button" class="role-btn active" onclick="switchRole('player', event)">
                 <i class="fa-solid fa-gamepad"></i> Player
@@ -239,22 +233,19 @@
             </button>
         </div>
 
-        <!-- LOGIN FORM -->
         <form id="loginForm">
             <div class="form-group">
                 <label><i class="fa-solid fa-envelope"></i> Email / User ID</label>
-                <input type="email" class="form-control" placeholder="Enter your email" required>
+                <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
             </div>
 
             <div class="form-group">
                 <label><i class="fa-solid fa-lock"></i> Password</label>
-                <input type="password" class="form-control" placeholder="Enter password" required>
+                <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required>
             </div>
 
             <div class="form-actions-extra">
-                <label style="cursor: pointer;">
-                    <input type="checkbox"> Remember me
-                </label>
+                <label style="cursor: pointer;"><input type="checkbox"> Remember me</label>
                 <a href="#">Forgot Password?</a>
             </div>
 
@@ -268,24 +259,20 @@
         <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
     </div>
 
-    <!-- JAVASCRIPT FOR SWITCHING ROLES & SAVING SESSION -->
     <script>
         let currentRole = 'player';
         let redirectUrl = 'player-profile.html';
 
         function switchRole(role, event) {
-            // Remove active class from all buttons
             const buttons = document.querySelectorAll('.role-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
 
-            // Elements to update dynamically
             const loginTitle = document.getElementById('loginTitle');
             const loginSubtitle = document.getElementById('loginSubtitle');
             const submitBtn = document.getElementById('submitBtn');
 
             currentRole = role;
 
-            // Update details based on selected role
             if (role === 'player') {
                 event.currentTarget.classList.add('active');
                 loginTitle.innerText = "Player Login";
@@ -297,34 +284,78 @@
                 loginTitle.innerText = "Captain Login";
                 loginSubtitle.innerText = "Manage your squad, lineups, and match strategy.";
                 submitBtn.innerText = "Login To Captain Portal";
-                redirectUrl = "captain-dashboard.html";
+                redirectUrl = "captain.html";
             } else if (role === 'admin') {
                 event.currentTarget.classList.add('active');
                 loginTitle.innerText = "Admin Portal Login";
                 loginSubtitle.innerText = "Access EBFC administrative controls and rankings.";
                 submitBtn.innerText = "Login To Admin Panel";
-                redirectUrl = "admin-dashboard.html";
+                redirectUrl = "admin.html";
             }
         }
 
-        // Handle Login Submission & Save Session
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Store User Login Info in LocalStorage
-            const userData = {
-                isLoggedIn: true,
-                name: "Tawshik Ahammad Ayon",
-                role: currentRole,
-                avatar: "Image/player1.webp" // Default image path for logged in user
-            };
+            const inputEmail = document.getElementById('loginEmail').value.trim();
+            const inputPassword = document.getElementById('loginPassword').value.trim();
 
-            localStorage.setItem('ebfc_user', JSON.stringify(userData));
+            // 1. ADMIN AUTHENTICATION
+            if (currentRole === 'admin') {
+                if (inputEmail === 'eastbengalefootballclub@gmail.com' && inputPassword === 'ebfc24nov24') {
+                    let adminUser = {
+                        isLoggedIn: true,
+                        name: "System Admin",
+                        role: "admin",
+                        email: inputEmail,
+                        avatar: "Image/image1.jpg.jpg"
+                    };
+                    localStorage.setItem('ebfc_user', JSON.stringify(adminUser));
+                    window.location.href = redirectUrl; // Redirects to admin.html
+                    return;
+                } else {
+                    alert("Invalid Admin Credentials!");
+                    return;
+                }
+            }
 
-            // Redirect to appropriate page
-            window.location.href = redirectUrl;
+            let players = JSON.parse(localStorage.getItem('ebfc_all_players')) || [];
+            let foundUser = players.find(p => p.email && p.email.toLowerCase() === inputEmail.toLowerCase() && p.password === inputPassword);
+
+            // 2. CAPTAIN AUTHENTICATION
+            if (currentRole === 'captain') {
+                if (!foundUser) {
+                    alert("No registered account found with these credentials!");
+                    return;
+                }
+                if (foundUser.role !== 'captain') {
+                    alert("Access Denied! Your account does not have Captain privileges granted by Admin.");
+                    return;
+                }
+                foundUser.isLoggedIn = true;
+                localStorage.setItem('ebfc_user', JSON.stringify(foundUser));
+                window.location.href = redirectUrl; // Redirects to captain.html
+                return;
+            }
+
+            // 3. PLAYER AUTHENTICATION
+            if (currentRole === 'player') {
+                if (foundUser) {
+                    foundUser.isLoggedIn = true;
+                    localStorage.setItem('ebfc_user', JSON.stringify(foundUser));
+                } else {
+                    let fallbackUser = {
+                        isLoggedIn: true,
+                        name: "Tawshik Ahammad Ayon",
+                        email: inputEmail,
+                        role: "player",
+                        avatar: "Image/player1.webp"
+                    };
+                    localStorage.setItem('ebfc_user', JSON.stringify(fallbackUser));
+                }
+                window.location.href = redirectUrl; // Redirects to player-profile.html
+            }
         });
     </script>
-
 </body>
 </html>
