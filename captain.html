@@ -34,6 +34,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             padding-bottom: 60px;
+            overflow-x: hidden;
         }
 
         a {
@@ -60,24 +61,24 @@
             gap: 12px;
         }
 
-            .brand-logo .logo-img {
-                width: 45px;
-                height: 45px;
-                object-fit: contain;
-                border-radius: 6px;
-                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
-            }
+        .brand-logo .logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+        }
 
-            .brand-logo .brand-name {
-                font-family: 'Teko', sans-serif;
-                font-size: 26px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
+        .brand-logo .brand-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-                .brand-logo .brand-name span {
-                    color: var(--primary-red);
-                }
+        .brand-logo .brand-name span {
+            color: var(--primary-red);
+        }
 
         .btn-outline-sm {
             border: 1px solid var(--border-color);
@@ -92,10 +93,10 @@
             font-size: 13px;
         }
 
-            .btn-outline-sm:hover {
-                border-color: var(--primary-red);
-                color: var(--primary-red);
-            }
+        .btn-outline-sm:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
 
         .container {
             max-width: 1000px;
@@ -108,17 +109,17 @@
             margin-bottom: 30px;
         }
 
-            .page-header h1 {
-                font-family: 'Teko', sans-serif;
-                font-size: 48px;
-                text-transform: uppercase;
-                line-height: 1;
-            }
+        .page-header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 48px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
 
-            .page-header p {
-                color: var(--text-muted);
-                font-size: 16px;
-            }
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
 
         .section-card {
             background: var(--bg-card);
@@ -141,9 +142,9 @@
             padding-bottom: 10px;
         }
 
-            .section-title i {
-                color: var(--primary-red);
-            }
+        .section-title i {
+            color: var(--primary-red);
+        }
 
         .form-grid {
             display: grid;
@@ -172,9 +173,9 @@
             outline: none;
         }
 
-            .form-control:focus {
-                border-color: var(--primary-red);
-            }
+        .form-control:focus {
+            border-color: var(--primary-red);
+        }
 
         .squad-slot-card {
             background: #090a0c;
@@ -187,11 +188,11 @@
             align-items: center;
         }
 
-            .squad-slot-card .slot-num {
-                font-family: 'Teko', sans-serif;
-                font-size: 20px;
-                color: var(--accent-gold);
-            }
+        .squad-slot-card .slot-num {
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            color: var(--accent-gold);
+        }
 
         .btn-action {
             background: var(--primary-red);
@@ -208,10 +209,10 @@
             margin-top: 15px;
         }
 
-            .btn-action:hover {
-                background: var(--primary-red-hover);
-                box-shadow: 0 0 15px var(--glow-red);
-            }
+        .btn-action:hover {
+            background: var(--primary-red-hover);
+            box-shadow: 0 0 15px var(--glow-red);
+        }
 
         .status-badge {
             font-size: 11px;
@@ -219,6 +220,7 @@
             border-radius: 4px;
             font-weight: 700;
             text-transform: uppercase;
+            display: inline-block;
         }
 
         .status-pending {
@@ -236,8 +238,87 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
+        }
+
+        /* 📱 MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 4%;
+            }
+
+            .brand-logo .logo-img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-logo .brand-name {
+                font-size: 22px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .page-header p {
+                font-size: 14px;
+            }
+
+            .section-card {
+                padding: 18px 14px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            /* Responsive Slot Card Layout */
+            .squad-slot-card {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 8px;
+                padding: 12px;
+            }
+
+            .squad-slot-card .form-group:nth-child(1) {
+                grid-column: span 2;
+            }
+
+            .submission-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .submission-item .status-badge {
+                align-self: flex-start;
+            }
         }
     </style>
+
+    <!-- FIREBASE SYSTEM BACKEND LIBRARIES -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 </head>
 <body>
 
@@ -247,7 +328,7 @@
             <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <div>
-            <a href="login.html" onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</a>
+            <button onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</button>
         </div>
     </nav>
 
@@ -304,7 +385,7 @@
 
                 <div id="squadSlotsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
 
-                <button type="submit" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Full Squad Score To Admin</button>
+                <button type="submit" id="submitBtn" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Full Squad Score To Admin</button>
             </form>
         </div>
 
@@ -317,66 +398,105 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const user = JSON.parse(localStorage.getItem('ebfc_user'));
-            if (!user || user.role !== 'captain') {
+        let cachedPlayers = [];
+        let currentCaptainUid = null;
+
+        // AUTH & CAPTAIN ROLE CHECK
+        auth.onAuthStateChanged(async (user) => {
+            const localUser = JSON.parse(localStorage.getItem('ebfc_user'));
+
+            if (!user && (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin'))) {
                 alert("Access Denied! Captain Access Required.");
                 window.location.href = "login.html";
                 return;
             }
-            generateSquadSlots();
-            renderPendingLogs();
+
+            if (user) {
+                currentCaptainUid = user.uid;
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (!doc.exists || (doc.data().role !== 'captain' && doc.data().role !== 'admin')) {
+                    if (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin')) {
+                        alert("Access Denied! Captain Access Required.");
+                        window.location.href = "login.html";
+                        return;
+                    }
+                }
+            }
+
+            // Realtime Sync From Firestore
+            listenToRealtimeData();
         });
 
-        function logoutCaptain() { localStorage.removeItem('ebfc_user'); }
+        function logoutCaptain() {
+            localStorage.removeItem('ebfc_user');
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        }
 
-        function getAllPlayers() {
-            let saved = localStorage.getItem('ebfc_all_players');
-            return saved ? JSON.parse(saved) : [];
+        function listenToRealtimeData() {
+            // Fetch All Players for Dropdowns
+            db.collection('users').onSnapshot(snapshot => {
+                cachedPlayers = [];
+                snapshot.forEach(doc => {
+                    cachedPlayers.push({ uid: doc.id, ...doc.data() });
+                });
+                generateSquadSlots();
+            });
+
+            // Fetch Pending Submissions Realtime
+            db.collection('pending_scores').onSnapshot(snapshot => {
+                let pendingList = [];
+                snapshot.forEach(doc => {
+                    pendingList.push({ id: doc.id, ...doc.data() });
+                });
+                renderPendingLogs(pendingList);
+            });
         }
 
         function generateSquadSlots() {
             let count = parseInt(document.getElementById('squadFormatSelect').value);
-            let players = getAllPlayers();
             let container = document.getElementById('squadSlotsContainer');
             container.innerHTML = '';
 
             for (let i = 0; i < count; i++) {
                 let optionsHtml = '<option value="">-- Select Player --</option>';
-                players.forEach((p, idx) => {
-                    let selected = (idx % players.length) === (i % players.length) ? 'selected' : '';
-                    optionsHtml += `<option value="${p.id}" ${selected}>${p.name} (${p.club || 'EBFC'})</option>`;
+                cachedPlayers.forEach((p, idx) => {
+                    let selected = (idx % cachedPlayers.length) === (i % cachedPlayers.length) ? 'selected' : '';
+                    optionsHtml += `<option value="${p.uid}" ${selected}>${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
                 });
 
                 container.innerHTML += `
-                        <div class="squad-slot-card">
-                            <div class="form-group" style="margin:0;">
-                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                <select class="form-control squad-player-id" required>${optionsHtml}</select>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GF (Goals)</label>
-                                <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GA (Against)</label>
-                                <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>MOTM?</label>
-                                <select class="form-control squad-player-motm">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                        </div>`;
+                    <div class="squad-slot-card">
+                        <div class="form-group" style="margin:0;">
+                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                            <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GF (Goals)</label>
+                            <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GA (Against)</label>
+                            <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>MOTM?</label>
+                            <select class="form-control squad-player-motm">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
         }
 
-        document.getElementById('captainScoreForm').addEventListener('submit', function (e) {
+        document.getElementById('captainScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            let players = getAllPlayers();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+
             let community = document.getElementById('communitySelect').value;
             let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
             let matchType = document.getElementById('matchTypeSelect').value;
@@ -386,56 +506,64 @@
             let gaNodes = document.querySelectorAll('.squad-player-ga');
             let motmNodes = document.querySelectorAll('.squad-player-motm');
 
-            let squadSubmissions = [];
+            let batch = db.batch();
 
             playerNodes.forEach((node, idx) => {
-                let pId = parseInt(node.value);
-                let pObj = players.find(p => p.id === pId);
+                let pUid = node.value;
+                let pObj = cachedPlayers.find(p => p.uid === pUid);
 
                 if (pObj) {
-                    squadSubmissions.push({
-                        id: Date.now() + idx,
-                        playerId: pId,
-                        playerName: pObj.name,
+                    let docRef = db.collection('pending_scores').doc();
+                    let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    batch.set(docRef, {
+                        playerId: pUid,
+                        playerName: pObj.name || 'Unknown Player',
                         community: community,
                         squadFormat: squadFormat,
                         gf: parseInt(gfNodes[idx].value),
                         ga: parseInt(gaNodes[idx].value),
                         matchType: matchType,
                         awardMotm: motmNodes[idx].value === 'yes',
-                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        submittedBy: currentCaptainUid || 'captain',
+                        timestamp: currentTime,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 }
             });
 
-            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
-            pendingList = pendingList.concat(squadSubmissions);
-            localStorage.setItem('ebfc_pending_scores', JSON.stringify(pendingList));
-
-            alert(`Success! Scores for all ${squadSubmissions.length} players sent to Admin for approval.`);
-            renderPendingLogs();
+            try {
+                await batch.commit();
+                alert(`Success! Scores sent to Admin Panel for approval.`);
+            } catch (err) {
+                console.error("Submission Error: ", err);
+                alert("Failed to send scores. Please try again.");
+            } finally {
+                submitBtn.disabled = false;
+            }
         });
 
-        function renderPendingLogs() {
-            let pendingList = JSON.parse(localStorage.getItem('ebfc_pending_scores')) || [];
+        function renderPendingLogs(pendingList) {
             let container = document.getElementById('pendingLogsContainer');
             container.innerHTML = '';
 
-            if (pendingList.length === 0) {
+            if (!pendingList || pendingList.length === 0) {
                 container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">No pending submissions in queue.</p>`;
                 return;
             }
 
             pendingList.forEach(item => {
                 container.innerHTML += `
-                        <div class="submission-item">
-                            <div>
-                                <strong>${item.playerName}</strong>
-                                <span style="color: var(--accent-gold);">[${item.community.toUpperCase()} - ${item.squadFormat}]</span>
-                                <div style="font-size: 12px; color: var(--text-muted);">GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp}</div>
+                    <div class="submission-item">
+                        <div>
+                            <strong>${item.playerName}</strong>
+                            <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
+                                GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
                             </div>
-                            <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                        </div>`;
+                        </div>
+                        <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                    </div>`;
             });
         }
     </script>
