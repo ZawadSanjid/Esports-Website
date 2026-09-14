@@ -325,6 +325,27 @@
 
             submitBtn.disabled = true;
 
+            // 1. HARDCODED ADMIN CHECK
+            if (currentRole === 'admin') {
+                if (inputEmail === 'eastbengalefootballclub@gmail.com' && inputPassword === 'ebfc24nov24') {
+                    let adminUser = {
+                        isLoggedIn: true,
+                        name: "System Admin",
+                        role: "admin",
+                        email: inputEmail,
+                        avatar: "Image/image1.jpg.jpg"
+                    };
+                    localStorage.setItem('ebfc_user', JSON.stringify(adminUser));
+                    window.location.href = redirectUrl; // Redirects to admin.html
+                    return;
+                } else {
+                    alert("Wrong credentials");
+                    submitBtn.disabled = false;
+                    return;
+                }
+            }
+
+            // 2. PLAYER & CAPTAIN AUTHENTICATION
             try {
                 const persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
                 await auth.setPersistence(persistence);
@@ -343,13 +364,6 @@
 
                 const userData = userDoc.data();
                 const userRole = userData.role || 'player';
-
-                if (currentRole === 'admin' && userRole !== 'admin') {
-                    alert("Access Denied! You do not have Admin privileges.");
-                    await auth.signOut();
-                    submitBtn.disabled = false;
-                    return;
-                }
 
                 if (currentRole === 'captain' && userRole !== 'captain' && userRole !== 'admin') {
                     alert("Access Denied! Your account does not have Captain privileges.");
