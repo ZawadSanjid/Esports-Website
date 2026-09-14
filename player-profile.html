@@ -518,6 +518,18 @@
             border: 1px solid var(--text-muted);
         }
 
+        .status-3rd {
+            background: rgba(229, 9, 20, 0.15);
+            color: var(--primary-red);
+            border: 1px solid var(--primary-red);
+        }
+
+        .status-participant {
+            background: rgba(154, 156, 175, 0.15);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
         .achievement-item {
             display: flex;
             align-items: center;
@@ -618,7 +630,7 @@
 
         <div class="player-hero-card">
             <div class="player-avatar-box">
-                <img id="displayAvatar" src="Image/player1.webp" onerror="this.onerror=null; this.src='#';" alt="Player Avatar">
+                <img id="displayAvatar" src="Image/player1.webp" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="Player Avatar">
             </div>
 
             <div class="player-main-info">
@@ -632,7 +644,7 @@
                     <div class="meta-item"><i class="fa-solid fa-cake-candles"></i> DOB: <strong id="displayDob">---</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-briefcase"></i> Job: <strong id="displayOccupation">---</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Address: <strong id="displayAddress">---</strong></div>
-                    <div class="meta-item"><i class="fa-solid fa-shield-cat"></i> Prev Club: <strong id="displayPreviousClub">N/A</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-shield-cat"></i> Club: <strong id="displayClub">East Bengal</strong></div>
                 </div>
             </div>
 
@@ -740,53 +752,19 @@
 
             <div class="data-card-box">
                 <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Tournament History</h2>
-                <ul class="history-list">
+                <ul class="history-list" id="displayHistoryList">
                     <li class="history-item">
-                        <div>
-                            <div class="t-name">Genesis Cup 2026</div>
-                            <div class="t-date">February 2026 • Official Division 1</div>
-                        </div>
-                        <span class="badge-status status-champion">Champion</span>
-                    </li>
-                    <li class="history-item">
-                        <div>
-                            <div class="t-name">Independence Cup BD</div>
-                            <div class="t-date">March 2026 • Knockout Tournament</div>
-                        </div>
-                        <span class="badge-status status-runnerup">Runner-Up</span>
-                    </li>
-                    <li class="history-item">
-                        <div>
-                            <div class="t-name">EBFC Domestic League</div>
-                            <div class="t-date">January 2026 • Domestic Circuit</div>
-                        </div>
-                        <span class="badge-status status-champion">Champion</span>
+                        <div style="color: var(--text-muted); font-size: 14px;">No tournament history recorded yet.</div>
                     </li>
                 </ul>
             </div>
 
             <div class="data-card-box">
                 <h2 class="section-title"><i class="fa-solid fa-medal"></i> Achievements</h2>
-                <ul class="achievement-list">
+                <ul class="achievement-list" id="displayAchievementList">
                     <li class="achievement-item">
-                        <div class="achievement-icon"><i class="fa-solid fa-star"></i></div>
                         <div class="achievement-info">
-                            <h4>Player of the Week (ECOB)</h4>
-                            <p>Awarded for outstanding performance and top goal count.</p>
-                        </div>
-                    </li>
-                    <li class="achievement-item">
-                        <div class="achievement-icon"><i class="fa-solid fa-fire"></i></div>
-                        <div class="achievement-info">
-                            <h4>Unbeaten Streak Badge</h4>
-                            <p>Won 10 consecutive official matches in Genesis Cup.</p>
-                        </div>
-                    </li>
-                    <li class="achievement-item">
-                        <div class="achievement-icon"><i class="fa-solid fa-crown"></i></div>
-                        <div class="achievement-info">
-                            <h4>Golden Boot Winner</h4>
-                            <p>Scored highest goals in 2026 season.</p>
+                            <p style="color: var(--text-muted);">No achievement badges unlocked yet.</p>
                         </div>
                     </li>
                 </ul>
@@ -800,7 +778,7 @@
     <div id="editProfileModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <span><i class="fa-solid fa-user-pen"></i> Edit Full Profile Information</span>
+                <span><i class="fa-solid fa-user-pen"></i> Edit Profile Information</span>
                 <i class="fa-solid fa-xmark close-modal" onclick="closeEditModal()"></i>
             </div>
 
@@ -860,27 +838,23 @@
                         <label>Permanent Address</label>
                         <input type="text" id="editAddress" class="form-control" required>
                     </div>
-                    <div class="form-group full-width">
-                        <label>পূর্ববর্তী ক্লাবের নাম (না থাকলে N/A)</label>
-                        <input type="text" id="editPreviousClub" class="form-control" required>
-                    </div>
                 </div>
                 <button type="submit" id="saveBtn" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Profile Changes</button>
             </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR FIREBASE INTEGRATION & PROFILE MANAGEMENT -->
+    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION & DYNAMIC HISTORY/ACHIEVEMENTS -->
     <script>
         let currentUserId = null;
         let currentUserData = null;
         let updatedPhotoBase64 = null;
 
-        // AUTHENTICATION CHECK & LOAD PROFILE FROM FIRESTORE
+        // AUTHENTICATION CHECK & REALTIME LISTEN FROM FIRESTORE
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUserId = user.uid;
-                fetchFirestoreProfile(currentUserId);
+                listenToFirestoreProfile(currentUserId);
             } else {
                 window.location.href = "login.html";
             }
@@ -892,18 +866,18 @@
             });
         }
 
-        async function fetchFirestoreProfile(uid) {
-            try {
-                const doc = await db.collection('users').doc(uid).get();
+        // Realtime Firestore Listener for automatic profile and history updates
+        function listenToFirestoreProfile(uid) {
+            db.collection('users').doc(uid).onSnapshot(doc => {
                 if (doc.exists) {
                     currentUserData = doc.data();
                     renderProfile(currentUserData);
                 } else {
                     console.error("No user profile record found in Firestore!");
                 }
-            } catch (error) {
-                console.error("Error fetching Firestore profile: ", error);
-            }
+            }, error => {
+                console.error("Error listening to Firestore profile: ", error);
+            });
         }
 
         function renderProfile(user) {
@@ -916,7 +890,7 @@
             document.getElementById('displayDob').innerText = user.dob || "N/A";
             document.getElementById('displayOccupation').innerText = user.occupation || "N/A";
             document.getElementById('displayAddress').innerText = user.address || "N/A";
-            document.getElementById('displayPreviousClub').innerText = user.previousClub || "N/A";
+            document.getElementById('displayClub').innerText = user.club || "East Bengal";
 
             if (user.avatar) {
                 document.getElementById('displayAvatar').src = user.avatar;
@@ -945,6 +919,68 @@
             document.getElementById('domGd').innerText = (dom.gd > 0 ? '+' : '') + (dom.gd || 0);
             document.getElementById('domWr').innerText = (dom.winRate || "0.0") + "%";
             document.getElementById('domPts').innerText = dom.pts || 0;
+
+            // DYNAMIC TOURNAMENT HISTORY RENDER
+            renderTournamentHistory(user.tournamentHistoryList || []);
+
+            // DYNAMIC ACHIEVEMENTS RENDER
+            renderAchievements(user.achievementsList || []);
+        }
+
+        // Render Tournament History List
+        function renderTournamentHistory(historyList) {
+            const container = document.getElementById('displayHistoryList');
+            container.innerHTML = '';
+
+            if (historyList.length === 0) {
+                container.innerHTML = `<li class="history-item"><div style="color: var(--text-muted); font-size: 14px;">No tournament history recorded yet.</div></li>`;
+                return;
+            }
+
+            historyList.forEach(item => {
+                let badgeClass = 'status-participant';
+                const tag = (item.tag || '').toUpperCase();
+                
+                if (tag === 'CHAMPION') badgeClass = 'status-champion';
+                else if (tag === 'RUNNER-UP') badgeClass = 'status-runnerup';
+                else if (tag === '3RD PLACE') badgeClass = 'status-3rd';
+
+                container.innerHTML += `
+                    <li class="history-item">
+                        <div>
+                            <div class="t-name">${item.title}</div>
+                            <div class="t-date">${item.subtitle}</div>
+                        </div>
+                        <span class="badge-status ${badgeClass}">${item.tag}</span>
+                    </li>`;
+            });
+        }
+
+        // Render Achievements Badges List
+        function renderAchievements(achList) {
+            const container = document.getElementById('displayAchievementList');
+            container.innerHTML = '';
+
+            if (achList.length === 0) {
+                container.innerHTML = `<li class="achievement-item"><div class="achievement-info"><p style="color: var(--text-muted);">No achievement badges unlocked yet.</p></div></li>`;
+                return;
+            }
+
+            achList.forEach(item => {
+                let iconClass = 'fa-star';
+                if (item.icon === 'fire') iconClass = 'fa-fire';
+                else if (item.icon === 'crown') iconClass = 'fa-crown';
+                else if (item.icon === 'medal') iconClass = 'fa-medal';
+
+                container.innerHTML += `
+                    <li class="achievement-item">
+                        <div class="achievement-icon"><i class="fa-solid ${iconClass}"></i></div>
+                        <div class="achievement-info">
+                            <h4>${item.title}</h4>
+                            <p>${item.desc}</p>
+                        </div>
+                    </li>`;
+            });
         }
 
         // PREVIEW SELECTED FILE FROM PHONE/DEVICE
@@ -976,7 +1012,6 @@
             document.getElementById('editDob').value = currentUserData.dob || '';
             document.getElementById('editOccupation').value = currentUserData.occupation || '';
             document.getElementById('editAddress').value = currentUserData.address || '';
-            document.getElementById('editPreviousClub').value = currentUserData.previousClub || '';
 
             let currentAvatar = currentUserData.avatar || 'Image/player1.webp';
             document.getElementById('edit-preview-img').src = currentAvatar;
@@ -1008,16 +1043,11 @@
                 dob: document.getElementById('editDob').value,
                 occupation: document.getElementById('editOccupation').value.trim(),
                 address: document.getElementById('editAddress').value.trim(),
-                previousClub: document.getElementById('editPreviousClub').value.trim(),
                 avatar: updatedPhotoBase64 || currentUserData.avatar || 'Image/player1.webp'
             };
 
             try {
                 await db.collection('users').doc(currentUserId).update(updatedFields);
-
-                // Update local memory and view
-                currentUserData = { ...currentUserData, ...updatedFields };
-                renderProfile(currentUserData);
 
                 closeEditModal();
                 alert("Profile information updated successfully in Firebase!");
@@ -1027,7 +1057,6 @@
                 alert("Error updating profile: " + error.message);
             } finally {
                 saveBtn.disabled = false;
-                
             }
         });
     </script>
