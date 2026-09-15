@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -322,6 +322,26 @@
                 color: #fff;
             }
     </style>
+
+    <!-- FIREBASE COMPAT SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
 </head>
 <body>
 
@@ -333,7 +353,6 @@
         </div>
         <div>
             <a href="home.html" class="btn-outline-sm" style="margin-right:8px;"><i class="fa-solid fa-house"></i> Home</a>
-           
         </div>
     </nav>
 
@@ -356,70 +375,27 @@
         <div class="players-grid" id="playersGridContainer"></div>
     </div>
 
-    <!-- JAVASCRIPT DIRECTORY RENDERER -->
+    <!-- JAVASCRIPT REALTIME FIREBASE RENDERER -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            renderPlayersDirectory();
+            listenToRegisteredPlayers();
         });
 
-        // GET REGISTERED PLAYERS FROM LOCALSTORAGE OR DEFAULT DEMO LIST
-        function getRegisteredPlayers() {
-            let saved = localStorage.getItem('ebfc_all_players');
-            if (saved) {
-                return JSON.parse(saved);
-            }
-
-            // DEFAULT INITIAL DEMO PLAYERS LIST IF EMPTY
-            let defaultPlayers = [
-                {
-                    id: 101,
-                    name: "Tawshik Ahammad Ayon",
-                    gameId: "ASEZ-334-526-988",
-                    fbLink: "https://facebook.com",
-                    device: "Redmi Note 10",
-                    role: "captain",
-                    avatar: "Image/player1.webp",
-                    recentForm: ['W', 'W', 'D', 'W', 'L']
-                },
-                {
-                    id: 102,
-                    name: "AS Rakib",
-                    gameId: "EBFC-998-112-443",
-                    fbLink: "https://facebook.com",
-                    device: "Poco X3 Pro",
-                    role: "player",
-                    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300",
-                    recentForm: ['W', 'W', 'W', 'D', 'W']
-                },
-                {
-                    id: 103,
-                    name: "Tanvir Hossain",
-                    gameId: "EBFC-443-120-001",
-                    fbLink: "https://facebook.com",
-                    device: "Realme 8 Pro",
-                    role: "player",
-                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300",
-                    recentForm: ['D', 'L', 'W', 'L', 'W']
-                },
-                {
-                    id: 104,
-                    name: "Sabbir Ahmed",
-                    gameId: "EBFC-771-009-882",
-                    fbLink: "https://facebook.com",
-                    device: "Samsung S21 FE",
-                    role: "player",
-                    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300",
-                    recentForm: ['W', 'L', 'D', 'D', 'L']
-                }
-            ];
-
-            localStorage.setItem('ebfc_all_players', JSON.stringify(defaultPlayers));
-            return defaultPlayers;
+        // REALTIME LISTENER FROM FIREBASE FIRESTORE
+        function listenToRegisteredPlayers() {
+            db.collection('users').onSnapshot(snapshot => {
+                let players = [];
+                snapshot.forEach(doc => {
+                    players.push({ id: doc.id, ...doc.data() });
+                });
+                renderPlayersDirectory(players);
+            }, error => {
+                console.error("Error fetching players: ", error);
+            });
         }
 
         // RENDER PLAYERS INTO GRID
-        function renderPlayersDirectory() {
-            let players = getRegisteredPlayers();
+        function renderPlayersDirectory(players) {
             let container = document.getElementById('playersGridContainer');
             let counter = document.getElementById('squadCounter');
 
@@ -433,11 +409,11 @@
 
             players.forEach(p => {
                 let avatarSrc = p.avatar || 'Image/player1.webp';
-                let fbUrl = p.fbLink || 'https://facebook.com';
+                let fbUrl = p.fbLink || '#';
                 let roleTitle = p.role ? p.role.toUpperCase() : 'PLAYER';
 
                 // GENERATE RECENT FORM BADGES (W / D / L)
-                let recentForm = p.recentForm || ['W', 'W', 'D', 'L', 'W']; // Default form if not recorded
+                let recentForm = p.recentForm || ['W', 'W', 'D', 'L', 'W'];
                 let formBadgesHtml = '';
 
                 recentForm.forEach(res => {
@@ -447,40 +423,39 @@
                     } else if (r === 'D') {
                         formBadgesHtml += `<div class="res-box draw" title="Draw">D</div>`;
                     } else if (r === 'L' || r === 'R') {
-                        // Supports 'L' for Loss / 'R' for Red Loss Box
                         formBadgesHtml += `<div class="res-box loss" title="Loss">L</div>`;
                     }
                 });
 
                 container.innerHTML += `
-                    <div class="player-card">
-                        <img src="${avatarSrc}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=300';" class="player-avatar" alt="${p.name}">
-                        <div class="player-name">${p.name}</div>
-                        <div class="player-role-badge"><i class="fa-solid fa-shield-halved"></i> ${roleTitle}</div>
+                        <div class="player-card">
+                            <img src="${avatarSrc}" onerror="this.onerror=null; this.src='Image/player1.webp';" class="player-avatar" alt="${p.name || 'Player'}">
+                            <div class="player-name">${p.name || 'Unknown Player'}</div>
+                            <div class="player-role-badge"><i class="fa-solid fa-shield-halved"></i> ${roleTitle}</div>
 
-                        <div class="info-list">
-                            <div class="info-item">
-                                <span><i class="fa-solid fa-gamepad"></i> Game ID:</span>
-                                <span class="val">${p.gameId || 'N/A'}</span>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span><i class="fa-solid fa-gamepad"></i> Game ID:</span>
+                                    <span class="val">${p.gameId || 'N/A'}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span><i class="fa-solid fa-mobile-screen-button"></i> Device:</span>
+                                    <span class="val">${p.device || 'N/A'}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span><i class="fa-brands fa-facebook"></i> FB Profile:</span>
+                                    <a href="${fbUrl}" target="_blank" class="fb-btn">Visit Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                                </div>
                             </div>
-                            <div class="info-item">
-                                <span><i class="fa-solid fa-mobile-screen-button"></i> Device:</span>
-                                <span class="val">${p.device || 'N/A'}</span>
-                            </div>
-                            <div class="info-item">
-                                <span><i class="fa-brands fa-facebook"></i> FB Profile:</span>
-                                <a href="${fbUrl}" target="_blank" class="fb-btn">Visit Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+
+                            <div class="recent-results-wrapper">
+                                <span class="results-label">Recent Match Form</span>
+                                <div class="results-boxes">
+                                    ${formBadgesHtml}
+                                </div>
                             </div>
                         </div>
-
-                        <div class="recent-results-wrapper">
-                            <span class="results-label">Recent Match Form</span>
-                            <div class="results-boxes">
-                                ${formBadgesHtml}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
         }
 
