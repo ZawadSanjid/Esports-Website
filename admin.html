@@ -105,7 +105,7 @@
 
         .page-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
             .page-header h1 {
@@ -120,6 +120,49 @@
                 font-size: 16px;
             }
 
+        /* FEATURE FILTER DROPDOWN CONTAINER */
+        .feature-selector-card {
+            background: linear-gradient(135deg, #181a22, var(--bg-card));
+            border: 1px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 18px 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .feature-selector-card label {
+                font-family: 'Teko', sans-serif;
+                font-size: 22px;
+                letter-spacing: 1px;
+                color: var(--accent-gold);
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        .feature-select-dropdown {
+            width: 100%;
+            background: #090a0c;
+            border: 2px solid var(--border-color);
+            padding: 12px 16px;
+            color: var(--text-light);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            .feature-select-dropdown:focus {
+                border-color: var(--accent-gold);
+                box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);
+            }
+
         .section-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -127,6 +170,7 @@
             padding: 25px;
             margin-bottom: 35px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: opacity 0.3s ease;
         }
 
         .section-title {
@@ -459,8 +503,25 @@
             <p>Database Editor, Player Photo Downloader, History & Tournament Engine</p>
         </div>
 
+        <!-- FEATURE SELECTOR DROPDOWN CARD -->
+        <div class="feature-selector-card">
+            <label for="adminFeatureFilter"><i class="fa-solid fa-sliders"></i> Select Admin Feature / Management Module</label>
+            <select id="adminFeatureFilter" class="feature-select-dropdown" onchange="filterAdminSections()">
+                <option value="all" selected>-- View All Admin Sections --</option>
+                <option value="sec-players-db">1. Registered Player Database & Image Download</option>
+                <option value="sec-edit-player">2. Edit Player Database Profile</option>
+                <option value="sec-past-tournaments">3. Manage Past Tournaments (Hall of Fame Showcase)</option>
+                <option value="sec-player-history">4. Add Tournament History To Player Profile</option>
+                <option value="sec-achievements">5. Add Special Achievement Badges</option>
+                <option value="sec-captain-queue">6. Captain Score Submission Queue</option>
+                <option value="sec-captain-roles">7. Manage Captain Access Roles</option>
+                <option value="sec-direct-score">8. Direct Admin Match Score Input</option>
+                <option value="sec-tournament-generator">9. Persistent Tournament Bracket Generator</option>
+            </select>
+        </div>
+
         <!-- SECTION 0: REGISTERED PLAYERS LIST & PHOTO DOWNLOAD -->
-        <div class="section-card" style="border-top: 4px solid var(--primary-red);">
+        <div id="sec-players-db" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
                 <span><i class="fa-solid fa-users"></i> Registered Player Database & Image Download</span>
             </div>
@@ -483,7 +544,7 @@
         </div>
 
         <!-- SECTION 1: EDIT FULL PLAYER DATABASE PROFILE -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+        <div id="sec-edit-player" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-user-pen"></i> Edit Player Database Information</span>
             </div>
@@ -557,7 +618,7 @@
         </div>
 
         <!-- SECTION 8: PAST TOURNAMENTS & HALL OF FAME MANAGER (WITH FILE UPLOAD) -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+        <div id="sec-past-tournaments" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-trophy"></i> Add / Manage Past Tournaments (Hall of Fame)</span>
             </div>
@@ -618,7 +679,7 @@
         </div>
 
         <!-- SECTION 2: TOURNAMENT HISTORY MANAGER -->
-        <div class="section-card" style="border-top: 4px solid var(--primary-red);">
+        <div id="sec-player-history" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
                 <span><i class="fa-solid fa-award"></i> Add Tournament Entry To Player Profile</span>
             </div>
@@ -652,7 +713,7 @@
         </div>
 
         <!-- SECTION 3: ACHIEVEMENTS MANAGER -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+        <div id="sec-achievements" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-star"></i> Add Special Achievement Badge</span>
             </div>
@@ -686,7 +747,7 @@
         </div>
 
         <!-- SECTION 4: CAPTAIN PENDING APPROVALS QUEUE -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+        <div id="sec-captain-queue" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
                 <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
@@ -711,7 +772,7 @@
         </div>
 
         <!-- SECTION 5: CAPTAIN ROLE ASSIGNMENT SYSTEM -->
-        <div class="section-card" style="border-top: 4px solid var(--accent-green);">
+        <div id="sec-captain-roles" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-green);">
             <div class="section-title">
                 <span><i class="fa-solid fa-user-shield"></i> Manage Captain Access Roles</span>
             </div>
@@ -744,7 +805,7 @@
         </div>
 
         <!-- SECTION 6: STANDALONE SCORE SUBMISSION -->
-        <div class="section-card">
+        <div id="sec-direct-score" class="section-card admin-feature-sec">
             <div class="section-title">
                 <span><i class="fa-solid fa-pen-to-square"></i> Direct Admin Match Score Input</span>
             </div>
@@ -793,7 +854,7 @@
         </div>
 
         <!-- SECTION 7: TOURNAMENT FIXTURE GENERATOR -->
-        <div class="section-card">
+        <div id="sec-tournament-generator" class="section-card admin-feature-sec">
             <div class="section-title">
                 <span><i class="fa-solid fa-sitemap"></i> Persistent Tournament Bracket Generator</span>
             </div>
@@ -900,6 +961,24 @@
 
             listenToRealtimeData();
         });
+
+        // DROPDOWN SECTION FILTER FUNCTION
+        function filterAdminSections() {
+            const selectedVal = document.getElementById('adminFeatureFilter').value;
+            const sections = document.querySelectorAll('.admin-feature-sec');
+
+            sections.forEach(sec => {
+                if (selectedVal === 'all') {
+                    sec.style.display = 'block';
+                } else {
+                    if (sec.id === selectedVal) {
+                        sec.style.display = 'block';
+                    } else {
+                        sec.style.display = 'none';
+                    }
+                }
+            });
+        }
 
         function logoutUser() {
             localStorage.removeItem('ebfc_user');
@@ -1110,9 +1189,11 @@
 
         // 6. EDIT FULL PLAYER DATABASE PROFILE
         function selectPlayerForEdit(uid) {
+            document.getElementById('adminFeatureFilter').value = 'sec-edit-player';
+            filterAdminSections();
             document.getElementById('editPlayerSelect').value = uid;
             loadPlayerToEditor();
-            window.scrollTo({ top: document.getElementById('editPlayerForm').offsetTop - 100, behavior: 'smooth' });
+            window.scrollTo({ top: document.getElementById('sec-edit-player').offsetTop - 100, behavior: 'smooth' });
         }
 
         function loadPlayerToEditor() {
