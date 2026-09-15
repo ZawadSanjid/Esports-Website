@@ -511,8 +511,8 @@
                 <option value="sec-players-db">1. Registered Player Database & Image Download</option>
                 <option value="sec-edit-player">2. Edit Player Database Profile</option>
                 <option value="sec-past-tournaments">3. Manage Past Tournaments (Hall of Fame Showcase)</option>
-                <option value="sec-player-history">4. Add Tournament History To Player Profile</option>
-                <option value="sec-achievements">5. Add Special Achievement Badges</option>
+                <option value="sec-player-history">4. Add / Remove Tournament History Badges</option>
+                <option value="sec-achievements">5. Add / Remove Special Achievement Badges</option>
                 <option value="sec-captain-queue">6. Captain Score Submission Queue</option>
                 <option value="sec-captain-roles">7. Manage Captain Access Roles</option>
                 <option value="sec-direct-score">8. Direct Admin Match Score Input</option>
@@ -617,7 +617,7 @@
             </form>
         </div>
 
-        <!-- SECTION 8: PAST TOURNAMENTS & HALL OF FAME MANAGER (WITH FILE UPLOAD) -->
+        <!-- SECTION 8: PAST TOURNAMENTS & HALL OF FAME MANAGER -->
         <div id="sec-past-tournaments" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
                 <span><i class="fa-solid fa-trophy"></i> Add / Manage Past Tournaments (Hall of Fame)</span>
@@ -678,17 +678,17 @@
             </div>
         </div>
 
-        <!-- SECTION 2: TOURNAMENT HISTORY MANAGER -->
+        <!-- SECTION 2: TOURNAMENT HISTORY MANAGER (ADD & REMOVE) -->
         <div id="sec-player-history" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
-                <span><i class="fa-solid fa-award"></i> Add Tournament Entry To Player Profile</span>
+                <span><i class="fa-solid fa-award"></i> Manage Player Profile Tournament History (Add / Delete)</span>
             </div>
 
             <form id="addHistoryForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Select Player</label>
-                        <select id="historyPlayerSelect" class="form-control" required></select>
+                        <select id="historyPlayerSelect" class="form-control" onchange="renderExistingPlayerHistory()" required></select>
                     </div>
                     <div class="form-group">
                         <label>Tournament Name</label>
@@ -710,19 +710,37 @@
                 </div>
                 <button type="submit" class="btn-action"><i class="fa-solid fa-plus"></i> Add History To Player Profile</button>
             </form>
+
+            <!-- EXISTING HISTORY BADGES TABLE FOR REMOVAL -->
+            <div class="table-responsive" style="margin-top: 25px;">
+                <h4 style="font-family:'Teko',sans-serif; font-size:22px; color:var(--accent-gold); margin-bottom:8px;">Current Tournament Badges of Selected Player</h4>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Tournament Title</th>
+                            <th>Subtitle/Date</th>
+                            <th>Position Tag</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playerHistoryListBody">
+                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their history badges.</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- SECTION 3: ACHIEVEMENTS MANAGER -->
+        <!-- SECTION 3: ACHIEVEMENTS MANAGER (ADD & REMOVE) -->
         <div id="sec-achievements" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span><i class="fa-solid fa-star"></i> Add Special Achievement Badge</span>
+                <span><i class="fa-solid fa-star"></i> Manage Special Achievement Badges (Add / Delete)</span>
             </div>
 
             <form id="addAchievementForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Select Player</label>
-                        <select id="achPlayerSelect" class="form-control" required></select>
+                        <select id="achPlayerSelect" class="form-control" onchange="renderExistingPlayerAchievements()" required></select>
                     </div>
                     <div class="form-group">
                         <label>Achievement Title</label>
@@ -744,6 +762,24 @@
                 </div>
                 <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-plus"></i> Add Achievement To Player Profile</button>
             </form>
+
+            <!-- EXISTING ACHIEVEMENTS TABLE FOR REMOVAL -->
+            <div class="table-responsive" style="margin-top: 25px;">
+                <h4 style="font-family:'Teko',sans-serif; font-size:22px; color:var(--accent-gold); margin-bottom:8px;">Current Achievement Badges of Selected Player</h4>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Achievement Title</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playerAchListBody">
+                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their achievements.</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- SECTION 4: CAPTAIN PENDING APPROVALS QUEUE -->
@@ -998,6 +1034,8 @@
                 populateDropdowns();
                 generatePlayerSelects();
                 renderCaptainsTable();
+                renderExistingPlayerHistory();
+                renderExistingPlayerAchievements();
             });
 
             // Load Pending Captain Submissions
@@ -1076,9 +1114,12 @@
             let pastChampSelect = document.getElementById('pastChampionSelect');
             let pastRunnerSelect = document.getElementById('pastRunnerupSelect');
 
+            let currentHistVal = historySelect.value;
+            let currentAchVal = achSelect.value;
+
             editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            historySelect.innerHTML = '';
-            achSelect.innerHTML = '';
+            historySelect.innerHTML = '<option value="">-- Choose Player --</option>';
+            achSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             singleSelect.innerHTML = '';
             capSelect.innerHTML = '';
             pastChampSelect.innerHTML = '<option value="">-- Choose Champion --</option>';
@@ -1094,6 +1135,9 @@
                 pastChampSelect.innerHTML += opt;
                 pastRunnerSelect.innerHTML += opt;
             });
+
+            if (currentHistVal) historySelect.value = currentHistVal;
+            if (currentAchVal) achSelect.value = currentAchVal;
         }
 
         // 3. FILE PREVIEW & CONVERT TO BASE64
@@ -1245,10 +1289,11 @@
             }
         });
 
-        // TOURNAMENT HISTORY MANAGER (PLAYER PROFILE)
+        // --- TOURNAMENT HISTORY MANAGER (ADD & DELETE BADGES) ---
         document.getElementById('addHistoryForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('historyPlayerSelect').value;
+            if (!uid) return alert("Select a player first!");
 
             const historyItem = {
                 title: document.getElementById('historyTitle').value.trim(),
@@ -1265,18 +1310,72 @@
                     tournamentHistoryList: existingHistory
                 });
 
-                alert("Tournament History entry added!");
-                document.getElementById('addHistoryForm').reset();
+                alert("Tournament History badge added to player profile!");
+                document.getElementById('historyTitle').value = '';
+                document.getElementById('historySub').value = '';
+                renderExistingPlayerHistory();
             } catch (err) {
                 console.error(err);
                 alert("Failed to add tournament history.");
             }
         });
 
-        // ACHIEVEMENTS MANAGER
+        function renderExistingPlayerHistory() {
+            const uid = document.getElementById('historyPlayerSelect').value;
+            const tbody = document.getElementById('playerHistoryListBody');
+            tbody.innerHTML = '';
+
+            if (!uid) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their history badges.</td></tr>';
+                return;
+            }
+
+            const player = cachedPlayers.find(p => p.uid === uid);
+            const historyList = (player && player.tournamentHistoryList) ? player.tournamentHistoryList : [];
+
+            if (historyList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No tournament history badges found for this player.</td></tr>';
+                return;
+            }
+
+            historyList.forEach((item, index) => {
+                tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${item.title}</strong></td>
+                            <td>${item.subtitle}</td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
+                            <td>
+                                <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                            </td>
+                        </tr>`;
+            });
+        }
+
+        async function removeTournamentHistoryBadge(uid, index) {
+            if (!confirm("Are you sure you want to remove this Tournament Badge from player's profile?")) return;
+
+            try {
+                const player = cachedPlayers.find(p => p.uid === uid);
+                let historyList = player.tournamentHistoryList || [];
+                historyList.splice(index, 1);
+
+                await db.collection('users').doc(uid).update({
+                    tournamentHistoryList: historyList
+                });
+
+                alert("Tournament badge removed successfully!");
+                renderExistingPlayerHistory();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to remove badge.");
+            }
+        }
+
+        // --- ACHIEVEMENTS MANAGER (ADD & DELETE BADGES) ---
         document.getElementById('addAchievementForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('achPlayerSelect').value;
+            if (!uid) return alert("Select a player first!");
 
             const achItem = {
                 title: document.getElementById('achTitle').value.trim(),
@@ -1293,13 +1392,66 @@
                     achievementsList: existingAch
                 });
 
-                alert("Achievement badge added!");
-                document.getElementById('addAchievementForm').reset();
+                alert("Achievement badge added to player profile!");
+                document.getElementById('achTitle').value = '';
+                document.getElementById('achDesc').value = '';
+                renderExistingPlayerAchievements();
             } catch (err) {
                 console.error(err);
                 alert("Failed to add achievement.");
             }
         });
+
+        function renderExistingPlayerAchievements() {
+            const uid = document.getElementById('achPlayerSelect').value;
+            const tbody = document.getElementById('playerAchListBody');
+            tbody.innerHTML = '';
+
+            if (!uid) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their achievements.</td></tr>';
+                return;
+            }
+
+            const player = cachedPlayers.find(p => p.uid === uid);
+            const achList = (player && player.achievementsList) ? player.achievementsList : [];
+
+            if (achList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No achievement badges found for this player.</td></tr>';
+                return;
+            }
+
+            achList.forEach((item, index) => {
+                tbody.innerHTML += `
+                        <tr>
+                            <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
+                            <td><strong>${item.title}</strong></td>
+                            <td>${item.desc}</td>
+                            <td>
+                                <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                            </td>
+                        </tr>`;
+            });
+        }
+
+        async function removeAchievementBadge(uid, index) {
+            if (!confirm("Are you sure you want to remove this Achievement Badge from player's profile?")) return;
+
+            try {
+                const player = cachedPlayers.find(p => p.uid === uid);
+                let achList = player.achievementsList || [];
+                achList.splice(index, 1);
+
+                await db.collection('users').doc(uid).update({
+                    achievementsList: achList
+                });
+
+                alert("Achievement badge removed successfully!");
+                renderExistingPlayerAchievements();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to remove achievement.");
+            }
+        }
 
         // SEARCH ENGINE FOR DIRECT SCORE
         function setupPlayerSearchEngine() {
