@@ -556,10 +556,71 @@
             </form>
         </div>
 
+        <!-- SECTION 8: PAST TOURNAMENTS & HALL OF FAME MANAGER (WITH FILE UPLOAD) -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-trophy"></i> Add / Manage Past Tournaments (Hall of Fame)</span>
+            </div>
+
+            <form id="addPastTournamentForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tournament Name</label>
+                        <input type="text" id="pastTName" class="form-control" placeholder="e.g., Genesis Cup 2026" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subtitle / Date & Division</label>
+                        <input type="text" id="pastTDate" class="form-control" placeholder="e.g., February 2026 • Official Division" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Tournament Logo (Direct File)</label>
+                        <input type="file" id="pastTLogoFile" class="form-control" accept="image/*" onchange="previewPastTLogo(this)">
+                        <input type="hidden" id="pastTLogoBase64">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Champion Player</label>
+                        <select id="pastChampionSelect" class="form-control" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Runner-Up Player</label>
+                        <select id="pastRunnerupSelect" class="form-control" required></select>
+                    </div>
+                </div>
+
+                <div id="logoPreviewContainer" style="display:none; margin-bottom: 15px; align-items:center; gap:10px;">
+                    <span style="font-size:12px; color:var(--text-muted);">Logo Preview:</span>
+                    <img id="pastTLogoPreview" src="" style="width: 50px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid var(--accent-gold);">
+                </div>
+
+                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-plus"></i> Publish Tournament to Showcase</button>
+            </form>
+
+            <div class="table-responsive" style="margin-top:25px;">
+                <h3 style="font-family:'Teko',sans-serif; font-size:24px; color:var(--accent-gold); margin-bottom:10px;">Published Hall of Fame Tournaments</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Tournament</th>
+                            <th>Date/Info</th>
+                            <th>Champion</th>
+                            <th>Runner-Up</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pastTournamentsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- SECTION 2: TOURNAMENT HISTORY MANAGER -->
         <div class="section-card" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
-                <span><i class="fa-solid fa-trophy"></i> Add Tournament History Entry</span>
+                <span><i class="fa-solid fa-award"></i> Add Tournament Entry To Player Profile</span>
             </div>
 
             <form id="addHistoryForm">
@@ -593,7 +654,7 @@
         <!-- SECTION 3: ACHIEVEMENTS MANAGER -->
         <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span><i class="fa-solid fa-award"></i> Add Special Achievement Badge</span>
+                <span><i class="fa-solid fa-star"></i> Add Special Achievement Badge</span>
             </div>
 
             <form id="addAchievementForm">
@@ -869,7 +930,7 @@
                 renderCaptainQueue(pendingList);
             });
 
-            // Load Active Tournament
+            // Load Active Tournament Bracket
             db.collection('tournaments').doc('active_tournament').onSnapshot(doc => {
                 if (doc.exists) {
                     tState = doc.data();
@@ -877,6 +938,15 @@
                 } else {
                     document.getElementById('activeTournamentSection').style.display = 'none';
                 }
+            });
+
+            // Load Past Hall of Fame Tournaments
+            db.collection('past_tournaments').onSnapshot(snapshot => {
+                let list = [];
+                snapshot.forEach(doc => {
+                    list.push({ id: doc.id, ...doc.data() });
+                });
+                renderPastTournamentsTable(list);
             });
 
             setupPlayerSearchEngine();
@@ -894,17 +964,17 @@
             cachedPlayers.forEach(p => {
                 const avatarUrl = p.avatar || 'Image/player1.webp';
                 tbody.innerHTML += `
-                        <tr>
-                            <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
-                            <td><strong>${p.name || 'N/A'}</strong></td>
-                            <td>${p.gameId || 'N/A'}</td>
-                            <td>${p.club || 'EBFC'}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
-                            <td>
-                                <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
-                                <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
-                            </td>
-                        </tr>`;
+                            <tr>
+                                <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
+                                <td><strong>${p.name || 'N/A'}</strong></td>
+                                <td>${p.gameId || 'N/A'}</td>
+                                <td>${p.club || 'EBFC'}</td>
+                                <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
+                                <td>
+                                    <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
+                                    <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
+                                </td>
+                            </tr>`;
             });
         }
 
@@ -924,12 +994,16 @@
             let achSelect = document.getElementById('achPlayerSelect');
             let singleSelect = document.getElementById('ebfcPlayerSelect');
             let capSelect = document.getElementById('captainPlayerSelect');
+            let pastChampSelect = document.getElementById('pastChampionSelect');
+            let pastRunnerSelect = document.getElementById('pastRunnerupSelect');
 
             editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             historySelect.innerHTML = '';
             achSelect.innerHTML = '';
             singleSelect.innerHTML = '';
             capSelect.innerHTML = '';
+            pastChampSelect.innerHTML = '<option value="">-- Choose Champion --</option>';
+            pastRunnerSelect.innerHTML = '<option value="">-- Choose Runner-Up --</option>';
 
             cachedPlayers.forEach(p => {
                 let opt = `<option value="${p.uid}">${p.name || 'Unknown'} (${p.club || 'EBFC'})</option>`;
@@ -938,10 +1012,103 @@
                 achSelect.innerHTML += opt;
                 singleSelect.innerHTML += opt;
                 capSelect.innerHTML += `<option value="${p.uid}">${p.name || 'Unknown'} - ${p.email || 'No Email'}</option>`;
+                pastChampSelect.innerHTML += opt;
+                pastRunnerSelect.innerHTML += opt;
             });
         }
 
-        // 3. EDIT FULL PLAYER DATABASE PROFILE
+        // 3. FILE PREVIEW & CONVERT TO BASE64
+        function previewPastTLogo(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('pastTLogoBase64').value = e.target.result;
+                    document.getElementById('pastTLogoPreview').src = e.target.result;
+                    document.getElementById('logoPreviewContainer').style.display = 'flex';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 4. SUBMIT PAST TOURNAMENT WITH DIRECT IMAGE FILE
+        document.getElementById('addPastTournamentForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const champUid = document.getElementById('pastChampionSelect').value;
+            const runnerUid = document.getElementById('pastRunnerupSelect').value;
+
+            const champObj = cachedPlayers.find(p => p.uid === champUid);
+            const runnerObj = cachedPlayers.find(p => p.uid === runnerUid);
+
+            if (!champObj || !runnerObj) return alert("Select valid players for Champion and Runner-Up!");
+
+            const uploadedLogo = document.getElementById('pastTLogoBase64').value || 'Image/image1.jpg.jpg';
+
+            const pastTournamentData = {
+                title: document.getElementById('pastTName').value.trim(),
+                date: document.getElementById('pastTDate').value.trim(),
+                logo: uploadedLogo,
+                champion: {
+                    name: champObj.name,
+                    avatar: champObj.avatar || 'Image/player1.webp'
+                },
+                runnerup: {
+                    name: runnerObj.name,
+                    avatar: runnerObj.avatar || 'Image/player1.webp'
+                },
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('past_tournaments').add(pastTournamentData);
+                alert("Tournament published with uploaded image successfully!");
+                document.getElementById('addPastTournamentForm').reset();
+                document.getElementById('pastTLogoBase64').value = '';
+                document.getElementById('logoPreviewContainer').style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                alert("Failed to publish tournament.");
+            }
+        });
+
+        // 5. RENDER PAST TOURNAMENTS TABLE IN ADMIN PANEL
+        function renderPastTournamentsTable(tournaments) {
+            const tbody = document.getElementById('pastTournamentsTableBody');
+            tbody.innerHTML = '';
+
+            if (tournaments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No published tournaments in database.</td></tr>`;
+                return;
+            }
+
+            tournaments.forEach(t => {
+                const logoImg = t.logo || 'Image/image1.jpg.jpg';
+                tbody.innerHTML += `
+                        <tr>
+                            <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
+                            <td><strong>${t.title}</strong></td>
+                            <td>${t.date}</td>
+                            <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
+                            <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
+                            <td>
+                                <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+                            </td>
+                        </tr>`;
+            });
+        }
+
+        async function deletePastTournament(id) {
+            if (confirm("Remove this tournament entry from Hall of Fame showcase?")) {
+                try {
+                    await db.collection('past_tournaments').doc(id).delete();
+                    alert("Tournament deleted successfully!");
+                } catch (err) {
+                    alert("Error deleting tournament.");
+                }
+            }
+        }
+
+        // 6. EDIT FULL PLAYER DATABASE PROFILE
         function selectPlayerForEdit(uid) {
             document.getElementById('editPlayerSelect').value = uid;
             loadPlayerToEditor();
@@ -997,7 +1164,7 @@
             }
         });
 
-        // 4. TOURNAMENT HISTORY MANAGER
+        // TOURNAMENT HISTORY MANAGER (PLAYER PROFILE)
         document.getElementById('addHistoryForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('historyPlayerSelect').value;
@@ -1025,7 +1192,7 @@
             }
         });
 
-        // 5. ACHIEVEMENTS MANAGER
+        // ACHIEVEMENTS MANAGER
         document.getElementById('addAchievementForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('achPlayerSelect').value;
@@ -1053,7 +1220,7 @@
             }
         });
 
-        // 6. SEARCH ENGINE
+        // SEARCH ENGINE FOR DIRECT SCORE
         function setupPlayerSearchEngine() {
             let searchInput = document.getElementById('playerSearchInput');
             let resultsList = document.getElementById('searchResultsList');
@@ -1125,14 +1292,14 @@
 
             captains.forEach(c => {
                 tbody.innerHTML += `
-                        <tr>
-                            <td>#${c.uid.substring(0, 6)}</td>
-                            <td><strong>${c.name || 'Captain'}</strong></td>
-                            <td>${c.club || 'EBFC'}</td>
-                            <td>${c.email || 'N/A'}</td>
-                            <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                            <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                        </tr>`;
+                            <tr>
+                                <td>#${c.uid.substring(0, 6)}</td>
+                                <td><strong>${c.name || 'Captain'}</strong></td>
+                                <td>${c.club || 'EBFC'}</td>
+                                <td>${c.email || 'N/A'}</td>
+                                <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
+                                <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
+                            </tr>`;
             });
         }
 
@@ -1161,18 +1328,18 @@
 
             pendingList.forEach((req) => {
                 tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
-                            <td>${req.squadFormat || '1v1'}</td>
-                            <td><strong>${req.gf} - ${req.ga}</strong></td>
-                            <td>${req.matchType || 'domestic'}</td>
-                            <td>${req.awardMotm ? 'Yes' : 'No'}</td>
-                            <td>
-                                <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${req.matchType}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
-                                <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                            </td>
-                        </tr>`;
+                            <tr>
+                                <td><strong>${req.playerName || 'Unknown'}</strong></td>
+                                <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
+                                <td>${req.squadFormat || '1v1'}</td>
+                                <td><strong>${req.gf} - ${req.ga}</strong></td>
+                                <td>${req.matchType || 'domestic'}</td>
+                                <td>${req.awardMotm ? 'Yes' : 'No'}</td>
+                                <td>
+                                    <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${req.matchType}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
+                                    <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                                </td>
+                            </tr>`;
             });
         }
 
@@ -1287,7 +1454,7 @@
             }
         });
 
-        // TOURNAMENT SYSTEM
+        // TOURNAMENT SYSTEM BRACKETS
         function generatePlayerSelects() {
             let count = parseInt(document.getElementById('tPlayerCount').value);
             let container = document.getElementById('playerSelectsGrid');
@@ -1301,10 +1468,10 @@
                 });
 
                 container.innerHTML += `
-                        <div class="form-group">
-                            <label>Slot ${i + 1}</label>
-                            <select class="form-control tournament-player-select">${optionsHtml}</select>
-                        </div>`;
+                            <div class="form-group">
+                                <label>Slot ${i + 1}</label>
+                                <select class="form-control tournament-player-select">${optionsHtml}</select>
+                            </div>`;
             }
         }
 
@@ -1398,37 +1565,37 @@
                 const isP2Win = m.winner && m.winner.id === m.p2.id;
 
                 roundHtml += `
-                        <div class="match-card">
-                            <div class="player-vs-box">
-                                <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                    <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
-                                    <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                            <div class="match-card">
+                                <div class="player-vs-box">
+                                    <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
+                                        <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                        <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                                    </div>
+                                    <span class="vs">VS</span>
+                                    <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
+                                        <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
+                                        <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                    </div>
                                 </div>
-                                <span class="vs">VS</span>
-                                <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                    <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                    <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';" alt="">
-                                </div>
-                            </div>
 
-                            ${!isCompleted ? `
-                                <div class="score-inputs">
-                                    <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                    <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                    <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                    ${isDoubleLeg ? `
-                                        <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                        <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                        <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                    ` : ''}
-                                    <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                                </div>
-                            ` : `
-                                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                    Winner: ${m.winner.name}
-                                </div>
-                            `}
-                        </div>`;
+                                ${!isCompleted ? `
+                                    <div class="score-inputs">
+                                        <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
+                                        <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
+                                        <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
+                                        ${isDoubleLeg ? `
+                                            <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
+                                            <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
+                                            <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
+                                        ` : ''}
+                                        <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
+                                    </div>
+                                ` : `
+                                    <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
+                                        Winner: ${m.winner.name}
+                                    </div>
+                                `}
+                            </div>`;
             });
 
             roundHtml += `</div>`;
