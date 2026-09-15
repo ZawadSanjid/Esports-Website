@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -256,6 +256,24 @@
             color: #c0c0c0;
         }
     </style>
+
+    <!-- FIREBASE COMPAT SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
 </head>
 <body>
 
@@ -277,123 +295,76 @@
             <p>Historic Competitions, Champions & Honor Roll</p>
         </div>
 
-        <!-- TOURNAMENT HISTORY CARDS GRID -->
-        <div class="tournament-grid">
-
-            <!-- TOURNAMENT 1 -->
-            <div class="tournament-card">
-                <div class="t-card-header">
-                    <img src="Image/image1.jpg.jpg" alt="Genesis Cup Logo" class="t-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
-                    <div class="t-header-info">
-                        <h3>Genesis Cup 2026</h3>
-                        <span class="t-date"><i class="fa-regular fa-calendar"></i> February 2026 • Official Division</span>
-                    </div>
-                </div>
-
-                <div class="winners-box">
-                    <!-- Champion -->
-                    <div class="winner-row champion-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Champion Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='player1.webp';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-crown"></i> Champion</span>
-                                <div class="p-name">Tawshik Ahammad Ayon</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-trophy trophy-icon"></i>
-                    </div>
-
-                    <!-- Runner-Up -->
-                    <div class="winner-row runnerup-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Runner-Up Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-medal"></i> Runner-Up</span>
-                                <div class="p-name">AS Rakib</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-award trophy-icon"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TOURNAMENT 2 -->
-            <div class="tournament-card">
-                <div class="t-card-header">
-                    <img src="Image/image1.jpg.jpg" alt="Independence Cup Logo" class="t-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
-                    <div class="t-header-info">
-                        <h3>Independence Cup BD</h3>
-                        <span class="t-date"><i class="fa-regular fa-calendar"></i> March 2026 • Knockout League</span>
-                    </div>
-                </div>
-
-                <div class="winners-box">
-                    <!-- Champion -->
-                    <div class="winner-row champion-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Champion Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-crown"></i> Champion</span>
-                                <div class="p-name">AS Rakib</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-trophy trophy-icon"></i>
-                    </div>
-
-                    <!-- Runner-Up -->
-                    <div class="winner-row runnerup-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Runner-Up Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='player1.webp';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-medal"></i> Runner-Up</span>
-                                <div class="p-name">Tawshik Ahammad Ayon</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-award trophy-icon"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TOURNAMENT 3 -->
-            <div class="tournament-card">
-                <div class="t-card-header">
-                    <img src="Image/image1.jpg.jpg" alt="EBFC Domestic Logo" class="t-logo-img" onerror="this.onerror=null; this.src='image1.jpg.jpg';">
-                    <div class="t-header-info">
-                        <h3>EBFC Domestic League</h3>
-                        <span class="t-date"><i class="fa-regular fa-calendar"></i> January 2026 • Domestic Circuit</span>
-                    </div>
-                </div>
-
-                <div class="winners-box">
-                    <!-- Champion -->
-                    <div class="winner-row champion-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Champion Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='player1.webp';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-crown"></i> Champion</span>
-                                <div class="p-name">Muhammad Zahid Imam</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-trophy trophy-icon"></i>
-                    </div>
-
-                    <!-- Runner-Up -->
-                    <div class="winner-row runnerup-row">
-                        <div class="winner-profile">
-                            <img src="Image/player1.webp" alt="Runner-Up Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=200';">
-                            <div class="winner-details">
-                                <span class="badge-label"><i class="fa-solid fa-medal"></i> Runner-Up</span>
-                                <div class="p-name">Siam Ahmed</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-award trophy-icon"></i>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        <!-- DYNAMIC TOURNAMENT HISTORY CARDS GRID FROM FIREBASE -->
+        <div class="tournament-grid" id="pastTournamentsGrid"></div>
 
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            listenToPastTournaments();
+        });
+
+        function listenToPastTournaments() {
+            db.collection('past_tournaments').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                const grid = document.getElementById('pastTournamentsGrid');
+                grid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No historic tournaments found in database.</p>`;
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const t = doc.data();
+                    const logoUrl = t.logo || 'Image/image1.jpg.jpg';
+                    const champName = t.champion ? t.champion.name : 'Unknown';
+                    const champAvatar = t.champion ? t.champion.avatar : 'Image/player1.webp';
+                    const runnerName = t.runnerup ? t.runnerup.name : 'Unknown';
+                    const runnerAvatar = t.runnerup ? t.runnerup.avatar : 'Image/player1.webp';
+
+                    grid.innerHTML += `
+                            <div class="tournament-card">
+                                <div class="t-card-header">
+                                    <img src="${logoUrl}" alt="Logo" class="t-logo-img" onerror="this.onerror=null; this.src='Image/image1.jpg.jpg';">
+                                    <div class="t-header-info">
+                                        <h3>${t.title}</h3>
+                                        <span class="t-date"><i class="fa-regular fa-calendar"></i> ${t.date}</span>
+                                    </div>
+                                </div>
+
+                                <div class="winners-box">
+                                    <!-- Champion -->
+                                    <div class="winner-row champion-row">
+                                        <div class="winner-profile">
+                                            <img src="${champAvatar}" alt="Champion Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='Image/player1.webp';">
+                                            <div class="winner-details">
+                                                <span class="badge-label"><i class="fa-solid fa-crown"></i> Champion</span>
+                                                <div class="p-name">${champName}</div>
+                                            </div>
+                                        </div>
+                                        <i class="fa-solid fa-trophy trophy-icon"></i>
+                                    </div>
+
+                                    <!-- Runner-Up -->
+                                    <div class="winner-row runnerup-row">
+                                        <div class="winner-profile">
+                                            <img src="${runnerAvatar}" alt="Runner-Up Avatar" class="winner-avatar" onerror="this.onerror=null; this.src='Image/player1.webp';">
+                                            <div class="winner-details">
+                                                <span class="badge-label"><i class="fa-solid fa-medal"></i> Runner-Up</span>
+                                                <div class="p-name">${runnerName}</div>
+                                            </div>
+                                        </div>
+                                        <i class="fa-solid fa-award trophy-icon"></i>
+                                    </div>
+                                </div>
+                            </div>`;
+                });
+            }, error => {
+                console.error("Error loading past tournaments: ", error);
+            });
+        }
+    </script>
 
 </body>
 </html>
