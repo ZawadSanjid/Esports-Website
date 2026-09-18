@@ -638,6 +638,7 @@
                 <div class="meta-tags">
                     <div class="meta-item"><i class="fa-solid fa-gamepad"></i> Game ID: <strong id="displayGameId">---</strong></div>
                     <div class="meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="displayFbLink" href="#" target="_blank" style="color:var(--accent-gold);">View Profile</a></div>
+                    <div class="meta-item"><i class="fa-solid fa-droplet" style="color: var(--primary-red);"></i> Blood Group: <strong id="displayBloodGroup">N/A</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong id="displayDevice">---</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-clock"></i> Slot: <strong id="displayActivityTime">---</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-network-wired"></i> VPN: <strong id="displayVpn">No</strong></div>
@@ -807,6 +808,20 @@
                         <label>Facebook Profile Link</label>
                         <input type="url" id="editFbLink" class="form-control" required>
                     </div>
+                    <!-- EDIT BLOOD GROUP DROP DOWN -->
+                    <div class="form-group">
+                        <label>Blood Group</label>
+                        <select id="editBloodGroup" class="form-control" required>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Device Model</label>
                         <input type="text" id="editDevice" class="form-control" required>
@@ -884,6 +899,7 @@
             document.getElementById('displayName').innerText = user.name || "EBFC Player";
             document.getElementById('displayGameId').innerText = user.gameId || "N/A";
             document.getElementById('displayFbLink').href = user.fbLink || "#";
+            document.getElementById('displayBloodGroup').innerText = user.bloodGroup || "N/A";
             document.getElementById('displayDevice').innerText = user.device || "N/A";
             document.getElementById('displayActivityTime').innerText = user.activityTime || "10 pm - 11 pm";
             document.getElementById('displayVpn').innerText = user.vpn || "No";
@@ -1006,6 +1022,7 @@
             document.getElementById('editName').value = currentUserData.name || '';
             document.getElementById('editGameId').value = currentUserData.gameId || '';
             document.getElementById('editFbLink').value = currentUserData.fbLink || '';
+            document.getElementById('editBloodGroup').value = currentUserData.bloodGroup || 'A+';
             document.getElementById('editDevice').value = currentUserData.device || '';
             document.getElementById('editActivityTime').value = currentUserData.activityTime || "10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)";
             document.getElementById('editVpn').value = currentUserData.vpn || "No";
@@ -1037,6 +1054,7 @@
                 name: document.getElementById('editName').value.trim(),
                 gameId: document.getElementById('editGameId').value.trim(),
                 fbLink: document.getElementById('editFbLink').value.trim(),
+                bloodGroup: document.getElementById('editBloodGroup').value,
                 device: document.getElementById('editDevice').value.trim(),
                 activityTime: document.getElementById('editActivityTime').value,
                 vpn: document.getElementById('editVpn').value,
