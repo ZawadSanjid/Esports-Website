@@ -272,6 +272,22 @@
                     <input type="text" id="regDevice" class="form-control" placeholder="e.g. Redmi Note 10" required>
                 </div>
 
+                <!-- BLOOD GROUP SELECTION FIELD -->
+                <div class="form-group">
+                    <label>Blood Group <span class="required-star">*</span></label>
+                    <select id="regBloodGroup" class="form-control" required>
+                        <option value="" disabled selected>-- Select Blood Group --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label>Activity Time (Comfortable Match Slot) <span class="required-star">*</span></label>
                     <select id="regActivityTime" class="form-control" required>
@@ -343,7 +359,7 @@
                 // 1. CHECK FILE SIZE (MUST BE UP TO 5 MB)
                 const fileSizeMB = file.size / (1024 * 1024);
                 if (fileSizeMB > 5) {
-                    alert("ছবিটির সাইজ ৫ MB এর চেয়ে বেশি! রেজিস্ট্রেশন সম্পন্ন করতে ৫ MB এর চেয়ে ছোট ছবি আপলোড করুন।");
+                    alert("ছবিটির সাইজ ৫ MB এর চেয়ে বেশি! রেজিস্ট্রেশন সম্পন্ন করতে ৫ MB এর চেয়ে ছোট ছবি আপলোড করুন।");
                     fileInput.value = "";
                     resetPreview();
                     return;
@@ -435,6 +451,7 @@
                     gameId: document.getElementById('regGameId').value.trim(),
                     fbLink: document.getElementById('regFbLink').value.trim(),
                     device: document.getElementById('regDevice').value.trim(),
+                    bloodGroup: document.getElementById('regBloodGroup').value,
                     activityTime: document.getElementById('regActivityTime').value,
                     vpn: document.getElementById('regVpn').value,
                     dob: document.getElementById('regDob').value,
