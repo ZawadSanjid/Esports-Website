@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- CROPPER.JS LIBRARY FOR PERFECT 1:1 FACE CROP -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -566,6 +570,41 @@
             color: var(--text-muted);
         }
 
+        /* CROP MODAL POPUP STYLES */
+        .crop-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            padding: 15px;
+        }
+
+        .crop-modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .crop-container {
+            width: 100%;
+            max-height: 320px;
+            margin: 15px 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .crop-container img {
+            max-width: 100%;
+        }
+
         /* RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .player-hero-card {
@@ -788,9 +827,9 @@
                 <label for="edit-player-photo" class="edit-image-preview">
                     <img id="edit-preview-img" src="Image/player1.webp" alt="Preview">
                 </label>
-                <input type="file" id="edit-player-photo" accept="image/*" onchange="previewEditFile()">
+                <input type="file" id="edit-player-photo" accept="image/*" onchange="initEditCropper(event)">
                 <span style="font-size: 11px; color: var(--accent-gold); margin-top: 6px; cursor: pointer;" onclick="document.getElementById('edit-player-photo').click()">
-                    <i class="fa-solid fa-camera"></i> Tap to Change Photo
+                    <i class="fa-solid fa-camera"></i> Tap to Change & Crop Photo
                 </span>
             </div>
 
@@ -864,11 +903,27 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION -->
+    <!-- CROPPER MODAL DIALOG -->
+    <div class="crop-modal-overlay" id="cropModal">
+        <div class="crop-modal-card">
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">ADJUST PHOTO FOCUS</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Drag or zoom to adjust face position</p>
+            <div class="crop-container">
+                <img id="cropTargetImage" src="">
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button type="button" class="btn-save" style="margin-top:0; padding:8px 16px; width:auto; font-size:13px;" onclick="applyCrop()">Crop & Apply</button>
+                <button type="button" class="btn-outline-sm" onclick="closeCropModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION & CROPPER.JS -->
     <script>
         let currentUserId = null;
         let currentUserData = null;
         let updatedPhotoBase64 = null;
+        let cropper = null;
 
         // AUTHENTICATION CHECK & REALTIME LISTEN FROM FIRESTORE
         auth.onAuthStateChanged(user => {
@@ -1000,19 +1055,45 @@
             });
         }
 
-        function previewEditFile() {
-            const preview = document.getElementById('edit-preview-img');
-            const file = document.getElementById('edit-player-photo').files[0];
-            const reader = new FileReader();
+        // CROPPER INITIALIZATION FOR EDIT PHOTO
+        function initEditCropper(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                if (file.size / (1024 * 1024) > 5) {
+                    alert("ছবিটির সাইজ ৫ MB এর চেয়ে বেশি! ৫ MB এর চেয়ে ছোট ছবি আপলোড করুন।");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.getElementById('cropTargetImage');
+                    img.src = event.target.result;
+                    document.getElementById('cropModal').style.display = 'flex';
 
-            reader.onloadend = function () {
-                preview.src = reader.result;
-                updatedPhotoBase64 = reader.result;
-            }
-
-            if (file) {
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(img, {
+                        aspectRatio: 1, // 1:1 PERFECT SQUARE RATIO FOR CIRCULAR AVATARS
+                        viewMode: 1,
+                        background: false
+                    });
+                };
                 reader.readAsDataURL(file);
             }
+        }
+
+        function applyCrop() {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({ width: 350, height: 350 });
+            const croppedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            document.getElementById('edit-preview-img').src = croppedBase64;
+            updatedPhotoBase64 = croppedBase64;
+            closeCropModal();
+        }
+
+        function closeCropModal() {
+            document.getElementById('cropModal').style.display = 'none';
+            if (cropper) cropper.destroy();
         }
 
         // OPEN MODAL & PREFILL ALL INPUTS
