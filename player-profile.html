@@ -284,7 +284,7 @@
             color: var(--primary-red);
         }
 
-        /* IMAGE EDIT FILE UPLOAD STYLES inside Modal */
+        /* IMAGE EDIT FILE UPLOAD STYLES */
         .edit-image-upload-wrapper {
             display: flex;
             flex-direction: column;
@@ -597,7 +597,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // ⚡ SAVED FIREBASE CONFIGURATION (EBFC PORTAL)
         const firebaseConfig = {
             apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
             authDomain: "ebfc-portal.firebaseapp.com",
@@ -637,6 +636,7 @@
                 <h1 id="displayName">Loading Name...</h1>
                 <div class="meta-tags">
                     <div class="meta-item"><i class="fa-solid fa-gamepad"></i> Game ID: <strong id="displayGameId">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-phone"></i> Mobile: <strong id="displayPhone">N/A</strong></div>
                     <div class="meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="displayFbLink" href="#" target="_blank" style="color:var(--accent-gold);">View Profile</a></div>
                     <div class="meta-item"><i class="fa-solid fa-droplet" style="color: var(--primary-red);"></i> Blood Group: <strong id="displayBloodGroup">N/A</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong id="displayDevice">---</strong></div>
@@ -775,7 +775,7 @@
 
     </div>
 
-    <!-- EDIT PROFILE MODAL DIALOG WITH PHONE FILE UPLOAD -->
+    <!-- EDIT PROFILE MODAL DIALOG WITH MOBILE NUMBER OPTION -->
     <div id="editProfileModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
@@ -799,6 +799,11 @@
                     <div class="form-group">
                         <label>Player Name</label>
                         <input type="text" id="editName" class="form-control" required>
+                    </div>
+                    <!-- MOBILE NUMBER EDIT FIELD -->
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="editPhone" class="form-control" placeholder="01XXXXXXXXX" pattern="[0-9]{11}" maxlength="11" minlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
                     <div class="form-group">
                         <label>eFootball Game ID</label>
@@ -859,7 +864,7 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION & DYNAMIC HISTORY/ACHIEVEMENTS -->
+    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION -->
     <script>
         let currentUserId = null;
         let currentUserData = null;
@@ -881,7 +886,7 @@
             });
         }
 
-        // Realtime Firestore Listener for automatic profile and history updates
+        // Realtime Firestore Listener
         function listenToFirestoreProfile(uid) {
             db.collection('users').doc(uid).onSnapshot(doc => {
                 if (doc.exists) {
@@ -897,6 +902,7 @@
 
         function renderProfile(user) {
             document.getElementById('displayName').innerText = user.name || "EBFC Player";
+            document.getElementById('displayPhone').innerText = user.phone || "N/A";
             document.getElementById('displayGameId').innerText = user.gameId || "N/A";
             document.getElementById('displayFbLink').href = user.fbLink || "#";
             document.getElementById('displayBloodGroup').innerText = user.bloodGroup || "N/A";
@@ -936,14 +942,10 @@
             document.getElementById('domWr').innerText = (dom.winRate || "0.0") + "%";
             document.getElementById('domPts').innerText = dom.pts || 0;
 
-            // DYNAMIC TOURNAMENT HISTORY RENDER
             renderTournamentHistory(user.tournamentHistoryList || []);
-
-            // DYNAMIC ACHIEVEMENTS RENDER
             renderAchievements(user.achievementsList || []);
         }
 
-        // Render Tournament History List
         function renderTournamentHistory(historyList) {
             const container = document.getElementById('displayHistoryList');
             container.innerHTML = '';
@@ -972,7 +974,6 @@
             });
         }
 
-        // Render Achievements Badges List
         function renderAchievements(achList) {
             const container = document.getElementById('displayAchievementList');
             container.innerHTML = '';
@@ -999,7 +1000,6 @@
             });
         }
 
-        // PREVIEW SELECTED FILE FROM PHONE/DEVICE
         function previewEditFile() {
             const preview = document.getElementById('edit-preview-img');
             const file = document.getElementById('edit-player-photo').files[0];
@@ -1020,6 +1020,7 @@
             if (!currentUserData) return;
 
             document.getElementById('editName').value = currentUserData.name || '';
+            document.getElementById('editPhone').value = currentUserData.phone || '';
             document.getElementById('editGameId').value = currentUserData.gameId || '';
             document.getElementById('editFbLink').value = currentUserData.fbLink || '';
             document.getElementById('editBloodGroup').value = currentUserData.bloodGroup || 'A+';
@@ -1047,11 +1048,19 @@
 
             if (!currentUserId) return;
 
+            const phoneInput = document.getElementById('editPhone').value.trim();
+            if (phoneInput.length !== 11) {
+                alert("অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর প্রদান করুন।");
+                document.getElementById('editPhone').focus();
+                return;
+            }
+
             const saveBtn = document.getElementById('saveBtn');
             saveBtn.disabled = true;
             
             const updatedFields = {
                 name: document.getElementById('editName').value.trim(),
+                phone: phoneInput,
                 gameId: document.getElementById('editGameId').value.trim(),
                 fbLink: document.getElementById('editFbLink').value.trim(),
                 bloodGroup: document.getElementById('editBloodGroup').value,
