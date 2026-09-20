@@ -636,7 +636,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Upload Tournament Logo (Direct File)</label>
+                        <label>Upload Tournament Logo (Max 5 MB)</label>
                         <input type="file" id="pastTLogoFile" class="form-control" accept="image/*" onchange="previewPastTLogo(this)">
                         <input type="hidden" id="pastTLogoBase64">
                     </div>
@@ -1140,16 +1140,56 @@
             if (currentAchVal) achSelect.value = currentAchVal;
         }
 
-        // 3. FILE PREVIEW & CONVERT TO BASE64
+        // 3. FILE PREVIEW & AUTO COMPRESS TO BASE64 (UP TO 5MB SUPPORT)
         function previewPastTLogo(input) {
             if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Check 5 MB Limit (5 * 1024 * 1024 bytes)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("Image size exceeds 5 MB limit! Please choose a smaller file.");
+                    input.value = "";
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    document.getElementById('pastTLogoBase64').value = e.target.result;
-                    document.getElementById('pastTLogoPreview').src = e.target.result;
-                    document.getElementById('logoPreviewContainer').style.display = 'flex';
+                    const img = new Image();
+                    img.onload = function () {
+                        // Canvas Dynamic Downscaler (Max Dimension 500px)
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxDim = 500;
+
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height *= maxDim / width;
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width *= maxDim / height;
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Compress Image to High Quality JPEG Data URL (~40KB-80KB Size)
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+                        document.getElementById('pastTLogoBase64').value = compressedBase64;
+                        document.getElementById('pastTLogoPreview').src = compressedBase64;
+                        document.getElementById('logoPreviewContainer').style.display = 'flex';
+                    };
+                    img.src = e.target.result;
                 };
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -1190,7 +1230,7 @@
                 document.getElementById('logoPreviewContainer').style.display = 'none';
             } catch (err) {
                 console.error(err);
-                alert("Failed to publish tournament.");
+                alert("Failed to publish tournament: " + err.message);
             }
         });
 
