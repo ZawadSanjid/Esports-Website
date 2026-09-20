@@ -63,24 +63,24 @@
             gap: 12px;
         }
 
-            .brand-logo .logo-img {
-                width: 45px;
-                height: 45px;
-                object-fit: contain;
-                border-radius: 6px;
-                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
-            }
+        .brand-logo .logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+        }
 
-            .brand-logo .brand-name {
-                font-family: 'Teko', sans-serif;
-                font-size: 26px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
+        .brand-logo .brand-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-                .brand-logo .brand-name span {
-                    color: var(--primary-red);
-                }
+        .brand-logo .brand-name span {
+            color: var(--primary-red);
+        }
 
         .btn-outline-sm {
             border: 1px solid var(--border-color);
@@ -95,10 +95,10 @@
             font-size: 13px;
         }
 
-            .btn-outline-sm:hover {
-                border-color: var(--primary-red);
-                color: var(--primary-red);
-            }
+        .btn-outline-sm:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
 
         .container {
             max-width: 1200px;
@@ -111,17 +111,17 @@
             margin-bottom: 30px;
         }
 
-            .page-header h1 {
-                font-family: 'Teko', sans-serif;
-                font-size: 48px;
-                text-transform: uppercase;
-                line-height: 1;
-            }
+        .page-header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 48px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
 
-            .page-header p {
-                color: var(--text-muted);
-                font-size: 16px;
-            }
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
 
         /* RANKING TABS */
         .tab-navigation {
@@ -148,24 +148,24 @@
             gap: 8px;
         }
 
-            .tab-btn:hover {
-                color: var(--text-light);
-                border-color: var(--primary-red);
-            }
+        .tab-btn:hover {
+            color: var(--text-light);
+            border-color: var(--primary-red);
+        }
 
-            .tab-btn.active {
-                background: var(--primary-red);
-                color: #fff;
-                border-color: var(--primary-red);
-                box-shadow: 0 0 15px var(--glow-red);
-            }
+        .tab-btn.active {
+            background: var(--primary-red);
+            color: #fff;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 15px var(--glow-red);
+        }
 
-            .tab-btn.potm-btn.active {
-                background: var(--accent-gold);
-                color: #000;
-                border-color: var(--accent-gold);
-                box-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
-            }
+        .tab-btn.potm-btn.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+        }
 
         /* SEARCH & ACTIONS BAR */
         .action-bar {
@@ -187,9 +187,9 @@
             width: 250px;
         }
 
-            .search-input:focus {
-                border-color: var(--primary-red);
-            }
+        .search-input:focus {
+            border-color: var(--primary-red);
+        }
 
         .btn-reset-potm {
             background: rgba(229, 9, 20, 0.15);
@@ -203,10 +203,10 @@
             display: none;
         }
 
-            .btn-reset-potm:hover {
-                background: var(--primary-red);
-                color: #fff;
-            }
+        .btn-reset-potm:hover {
+            background: var(--primary-red);
+            color: #fff;
+        }
 
         /* TABLE CONTAINER */
         .table-responsive {
@@ -225,25 +225,25 @@
             min-width: 900px;
         }
 
-            .ranking-table th {
-                background: #090a0c;
-                color: var(--text-muted);
-                padding: 14px 10px;
-                text-transform: uppercase;
-                font-weight: 700;
-                font-size: 12px;
-                border-bottom: 2px solid var(--border-color);
-            }
+        .ranking-table th {
+            background: #090a0c;
+            color: var(--text-muted);
+            padding: 14px 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
 
-            .ranking-table td {
-                padding: 12px 10px;
-                border-bottom: 1px solid var(--border-color);
-                font-weight: 600;
-            }
+        .ranking-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
 
-            .ranking-table tr:hover {
-                background: rgba(255, 255, 255, 0.03);
-            }
+        .ranking-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
 
         /* RANK BADGES */
         .rank-badge {
@@ -273,20 +273,36 @@
             color: #000;
         }
 
-        .player-cell {
+        /* CLICKABLE PLAYER LINK & CELL */
+        .player-link {
             display: flex;
             align-items: center;
             gap: 10px;
             text-align: left;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
         }
 
-            .player-cell img {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 1px solid var(--primary-red);
-            }
+        .player-link:hover {
+            color: var(--accent-gold);
+            transform: translateX(4px);
+        }
+
+        .player-link img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-red);
+            transition: 0.3s ease;
+        }
+
+        .player-link:hover img {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
+        }
 
         .pts-col {
             color: var(--accent-gold);
@@ -491,15 +507,20 @@
                 let stat = p[currentTab] || getDefaultStats();
                 let rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
                 let avatarUrl = p.avatar || 'Image/player1.webp';
+                
+                // CLICKABLE DYNAMIC LINK TO PLAYER PROFILE WITH USER ID
+                let profileUrl = `player-profile.html?uid=${p.uid}`;
 
                 tbody.innerHTML += `
                         <tr>
                             <td><span class="rank-badge ${rankClass}">${rank}</span></td>
                             <td>
-                                <div class="player-cell">
-                                    <img src="${avatarUrl}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                    <div><div style="font-weight: 700;">${p.name || 'Unknown Player'}</div></div>
-                                </div>
+                                <a href="${profileUrl}" class="player-link" title="View Profile of ${p.name || 'Player'}">
+                                    <img src="${avatarUrl}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="${p.name}">
+                                    <div>
+                                        <div style="font-weight: 700;">${p.name || 'Unknown Player'}</div>
+                                    </div>
+                                </a>
                             </td>
                             <td>${p.club || 'EBFC'}</td>
                             <td>${stat.mp || 0}</td>
@@ -552,4 +573,4 @@
         }
     </script>
 </body>
-</html>
+</html>s
