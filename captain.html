@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Admin Dashboard | East Bengal eFootball Club</title>
+    <title>Captain Squad Score Portal | East Bengal eFootball Club</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
@@ -34,6 +34,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             padding-bottom: 60px;
+            overflow-x: hidden;
         }
 
         a {
@@ -98,14 +99,14 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .page-header h1 {
@@ -120,48 +121,6 @@
             font-size: 16px;
         }
 
-        .feature-selector-card {
-            background: linear-gradient(135deg, #181a22, var(--bg-card));
-            border: 1px solid var(--accent-gold);
-            border-radius: 10px;
-            padding: 18px 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(255, 183, 3, 0.15);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .feature-selector-card label {
-            font-family: 'Teko', sans-serif;
-            font-size: 22px;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-select-dropdown {
-            width: 100%;
-            background: #090a0c;
-            border: 2px solid var(--border-color);
-            padding: 12px 16px;
-            color: var(--text-light);
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 700;
-            outline: none;
-            cursor: pointer;
-            transition: 0.3s ease;
-        }
-
-        .feature-select-dropdown:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);
-        }
-
         .section-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -169,7 +128,6 @@
             padding: 25px;
             margin-bottom: 35px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: opacity 0.3s ease;
         }
 
         .section-title {
@@ -188,29 +146,11 @@
             color: var(--primary-red);
         }
 
-        .sub-heading {
-            font-family: 'Teko', sans-serif;
-            font-size: 24px;
-            color: var(--accent-gold);
-            margin: 15px 0 10px 0;
-            text-transform: uppercase;
-            border-left: 3px solid var(--accent-gold);
-            padding-left: 10px;
-        }
-
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
-        }
-
-        .form-group {
-            position: relative;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
         }
 
         .form-group label {
@@ -237,33 +177,21 @@
             border-color: var(--primary-red);
         }
 
-        .search-results-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #121318;
-            border: 1px solid var(--primary-red);
-            border-radius: 0 0 6px 6px;
-            max-height: 180px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+        .squad-slot-card {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
         }
 
-        .search-item {
-            padding: 10px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-light);
-            transition: 0.2s ease;
-        }
-
-        .search-item:hover {
-            background: var(--primary-red);
-            color: #fff;
+        .squad-slot-card .slot-num {
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            color: var(--accent-gold);
         }
 
         .btn-action {
@@ -272,11 +200,13 @@
             border: none;
             padding: 12px 24px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             text-transform: uppercase;
             border-radius: 4px;
             cursor: pointer;
             transition: 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
         }
 
         .btn-action:hover {
@@ -293,183 +223,102 @@
             background: #e0a200;
         }
 
-        .btn-green {
-            background: var(--accent-green);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .btn-danger {
-            background: var(--primary-red);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            margin-top: 15px;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .admin-table th {
-            background: #090a0c;
-            padding: 12px;
-            border-bottom: 2px solid var(--border-color);
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .admin-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .player-img-table {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--primary-red);
-        }
-
-        .preview-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            background: #090a0c;
-            padding: 10px 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .preview-box img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-gold);
-        }
-
-        .round-box {
-            background: #090a0c;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .round-header {
-            font-family: 'Teko', sans-serif;
-            font-size: 28px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .match-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .player-vs-box {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            gap: 10px;
-        }
-
-        .player-profile-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .player-profile-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-red);
-        }
-
-        .player-profile-item.winner-active img {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
-        }
-
-        .player-vs-box span.vs {
-            color: var(--primary-red);
-            font-size: 16px;
-            font-family: 'Teko', sans-serif;
-            font-weight: 700;
-        }
-
-        .score-inputs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .score-input {
-            width: 42px;
-            text-align: center;
-            background: #090a0c;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 6px;
-            font-weight: 700;
-            border-radius: 4px;
-        }
-
-        .leg-tag {
+        .status-badge {
             font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-pending {
             background: rgba(255, 183, 3, 0.2);
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
         }
 
-        .btn-submit-score {
-            background: var(--accent-green);
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border-radius: 4px;
-            cursor: pointer;
+        .submission-item {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* AUTO WIN BANNER STYLE */
+        .auto-win-info-box {
+            background: rgba(255, 183, 3, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 15px;
+            color: var(--accent-gold);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* 📱 MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 4%;
+            }
+
+            .brand-logo .logo-img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-logo .brand-name {
+                font-size: 22px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .page-header p {
+                font-size: 14px;
+            }
+
+            .section-card {
+                padding: 18px 14px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .squad-slot-card {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 8px;
+                padding: 12px;
+            }
+
+            .squad-slot-card .form-group:nth-child(1) {
+                grid-column: span 2;
+            }
+
+            .submission-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .submission-item .status-badge {
+                align-self: flex-start;
+            }
         }
     </style>
 
@@ -501,667 +350,140 @@
             <div class="brand-name">East Bengal <span>eFootball Club</span></div>
         </div>
         <div>
-            <button onclick="logoutUser()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
+            <button onclick="logoutCaptain()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout Captain</button>
         </div>
     </nav>
 
     <div class="container">
-
         <div class="page-header">
-            <h1>Master Admin Control Panel</h1>
-            <p>Database Editor, Player Photo Downloader, History & Tournament Engine</p>
+            <h1>Captain Squad Score Portal</h1>
+            <p>Select Target Community, Overall Result & Player Scores For Admin Approval</p>
         </div>
 
-        <!-- FEATURE SELECTOR DROPDOWN CARD -->
-        <div class="feature-selector-card">
-            <label for="adminFeatureFilter"><i class="fa-solid fa-sliders"></i> Select Admin Feature / Management Module</label>
-            <select id="adminFeatureFilter" class="feature-select-dropdown" onchange="filterAdminSections()">
-                <option value="all" selected>-- View All Admin Sections --</option>
-                <option value="sec-players-db">1. Registered Player Database & Image Download</option>
-                <option value="sec-edit-player">2. Edit Player Database Profile</option>
-                <option value="sec-stats-editor">3. Official & Domestic Stats Editor (Undo / Override)</option>
-                <option value="sec-community-editor">4. Community Stats Editor & Reset Module</option>
-                <option value="sec-past-tournaments">5. Manage Past Tournaments (Hall of Fame Showcase)</option>
-                <option value="sec-player-history">6. Add / Remove Tournament History Badges</option>
-                <option value="sec-achievements">7. Add / Remove Special Achievement Badges</option>
-                <option value="sec-captain-queue">8. Captain Score Submission Queue</option>
-                <option value="sec-captain-roles">9. Manage Captain Access Roles</option>
-                <option value="sec-direct-score">10. Direct Admin Match Score Input</option>
-                <option value="sec-tournament-generator">11. Persistent Tournament Bracket Generator</option>
-            </select>
-        </div>
-
-        <!-- SECTION 0: REGISTERED PLAYERS LIST & PHOTO DOWNLOAD -->
-        <div id="sec-players-db" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
+        <!-- 1ST SECTION: MATCH SETUP & COMMUNITY RESULT SELECTION -->
+        <div class="section-card">
             <div class="section-title">
-                <span><i class="fa-solid fa-users"></i> Registered Player Database & Image Download</span>
+                <span><i class="fa-solid fa-users-gear"></i> Official Match Submission & Community Result</span>
             </div>
 
-            <div class="table-responsive">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Photo</th>
-                            <th>Name</th>
-                            <th>Game ID</th>
-                            <th>Club</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="allPlayersTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 1: EDIT FULL PLAYER DATABASE PROFILE -->
-        <div id="sec-edit-player" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-user-pen"></i> Edit Player Database Information</span>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label>Select Player To Edit Profile</label>
-                <select id="editPlayerSelect" class="form-control" onchange="loadPlayerToEditor()">
-                    <option value="">-- Choose Player --</option>
-                </select>
-            </div>
-
-            <form id="editPlayerForm">
-                <input type="hidden" id="editUid">
-
-                <div id="playerPreviewArea" class="preview-box" style="display: none;">
-                    <img id="editPreviewAvatar" src="" alt="Avatar">
-                    <div>
-                        <h3 id="editPreviewName" style="color: var(--accent-gold);">Player Name</h3>
-                        <p id="editPreviewEmail" style="color: var(--text-muted); font-size: 13px;">email@example.com</p>
-                    </div>
-                </div>
-
+            <form id="captainScoreForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="editName" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>eFootball Game ID</label>
-                        <input type="text" id="editGameId" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Assigned Club</label>
-                        <input type="text" id="editClub" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>User Role</label>
-                        <select id="editRole" class="form-control" required>
-                            <option value="player">Player</option>
-                            <option value="captain">Captain</option>
-                            <option value="admin">Admin</option>
+                        <label>Target Community</label>
+                        <select id="communitySelect" class="form-control" required>
+                            <option value="efob">EFOB</option>
+                            <option value="ecob">ECOB</option>
+                            <option value="easb">EASB</option>
+                            <option value="cobeg(main)" selected>COBEG (Main)</option>
+                            <option value="cobeg(academy)">COBEG (Academy)</option>
+                            <option value="eaob">EAOB</option>
+                            <option value="pesbd">PESBD</option>
+                            <option value="befa">BEFA</option>
+                            <option value="befc">BEFC</option>
+                            <option value="efcob">EFCOB</option>
+                            <option value="ttsbd">TTSBD</option>
+                            <option value="gkec">GKEC</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label>Facebook Link</label>
-                        <input type="text" id="editFbLink" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Device Model</label>
-                        <input type="text" id="editDevice" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Occupation</label>
-                        <input type="text" id="editOccupation" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" id="editAddress" class="form-control">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-floppy-disk"></i> Update Full Database Entry</button>
-            </form>
-        </div>
-
-        <!-- SECTION: OFFICIAL & DOMESTIC STATS EDITOR (UNDO / OVERRIDE) -->
-        <div id="sec-stats-editor" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-rotate-left"></i> Official & Domestic Stats Editor (Undo / Override)</span>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label>Select Player To Edit / Correct Stats</label>
-                <select id="statsPlayerSelect" class="form-control" onchange="loadPlayerStatsToEditor()">
-                    <option value="">-- Choose Player --</option>
-                </select>
-            </div>
-
-            <form id="editPlayerStatsForm">
-                <input type="hidden" id="statsUid">
-
-                <!-- OFFICIAL RANKING STATS -->
-                <div class="sub-heading">Official Ranking Stats</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Matches Played (MP)</label>
-                        <input type="number" id="offMP" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Wins (W)</label>
-                        <input type="number" id="offW" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Draws (D)</label>
-                        <input type="number" id="offD" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Losses (L)</label>
-                        <input type="number" id="offL" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals For (GF)</label>
-                        <input type="number" id="offGF" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals Against (GA)</label>
-                        <input type="number" id="offGA" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Points (PTS)</label>
-                        <input type="number" id="offPTS" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>MOTM Count</label>
-                        <input type="number" id="offMOTM" class="form-control" min="0" value="0">
-                    </div>
-                </div>
-
-                <!-- DOMESTIC RANKING STATS -->
-                <div class="sub-heading">Domestic Ranking Stats</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Matches Played (MP)</label>
-                        <input type="number" id="domMP" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Wins (W)</label>
-                        <input type="number" id="domW" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Draws (D)</label>
-                        <input type="number" id="domD" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Losses (L)</label>
-                        <input type="number" id="domL" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals For (GF)</label>
-                        <input type="number" id="domGF" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals Against (GA)</label>
-                        <input type="number" id="domGA" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Points (PTS)</label>
-                        <input type="number" id="domPTS" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>MOTM Count</label>
-                        <input type="number" id="domMOTM" class="form-control" min="0" value="0">
-                    </div>
-                </div>
-
-                <div style="display:flex; gap:12px; margin-top: 10px;">
-                    <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Save Corrected Ranking Stats</button>
-                    <button type="button" onclick="resetSelectedPlayerStats()" class="btn-danger"><i class="fa-solid fa-trash-arrow-up"></i> Reset All Stats To Zero</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- NEW SECTION: COMMUNITY STATS & RANKING EDITOR (RESET / OVERRIDE) -->
-        <div id="sec-community-editor" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-people-group"></i> Community Stats Editor & Reset Module</span>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>1. Select Player</label>
-                    <select id="commPlayerSelect" class="form-control" onchange="loadPlayerCommunities()">
-                        <option value="">-- Choose Player --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>2. Select Active Community</label>
-                    <select id="commCodeSelect" class="form-control" onchange="loadCommunityStatsToEditor()">
-                        <option value="">-- Select Community --</option>
-                    </select>
-                </div>
-            </div>
-
-            <form id="editCommunityStatsForm">
-                <input type="hidden" id="commUid">
-
-                <div class="sub-heading">Selected Community Breakdown Stats</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Matches Played (MP)</label>
-                        <input type="number" id="cMP" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Wins (W)</label>
-                        <input type="number" id="cW" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Draws (D)</label>
-                        <input type="number" id="cD" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Losses (L)</label>
-                        <input type="number" id="cL" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals For (GF)</label>
-                        <input type="number" id="cGF" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Goals Against (GA)</label>
-                        <input type="number" id="cGA" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Auto Wins (Walkover)</label>
-                        <input type="number" id="cAuto" class="form-control" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Points (PTS)</label>
-                        <input type="number" id="cPTS" class="form-control" min="0" value="0">
-                    </div>
-                </div>
-
-                <div style="display:flex; gap:12px; margin-top: 10px; flex-wrap: wrap;">
-                    <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-floppy-disk"></i> Update Community Stats</button>
-                    <button type="button" onclick="resetCommunityStatsToZero()" class="btn-outline-sm" style="border-color:var(--accent-gold); color:var(--accent-gold);"><i class="fa-solid fa-rotate-left"></i> Reset Stats To 0</button>
-                    <button type="button" onclick="deleteCommunityRecord()" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Community Record</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- SECTION 8: PAST TOURNAMENTS & HALL OF FAME MANAGER -->
-        <div id="sec-past-tournaments" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-trophy"></i> Add / Manage Past Tournaments (Hall of Fame)</span>
-            </div>
-
-            <form id="addPastTournamentForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Tournament Name</label>
-                        <input type="text" id="pastTName" class="form-control" placeholder="e.g., Genesis Cup 2026" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Subtitle / Date & Division</label>
-                        <input type="text" id="pastTDate" class="form-control" placeholder="e.g., February 2026 • Official Division" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Upload Tournament Logo (Max 5 MB)</label>
-                        <input type="file" id="pastTLogoFile" class="form-control" accept="image/*" onchange="previewPastTLogo(this)">
-                        <input type="hidden" id="pastTLogoBase64">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Select Champion Player</label>
-                        <select id="pastChampionSelect" class="form-control" required></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Select Runner-Up Player</label>
-                        <select id="pastRunnerupSelect" class="form-control" required></select>
-                    </div>
-                </div>
-
-                <div id="logoPreviewContainer" style="display:none; margin-bottom: 15px; align-items:center; gap:10px;">
-                    <span style="font-size:12px; color:var(--text-muted);">Logo Preview:</span>
-                    <img id="pastTLogoPreview" src="" style="width: 50px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid var(--accent-gold);">
-                </div>
-
-                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-plus"></i> Publish Tournament to Showcase</button>
-            </form>
-
-            <div class="table-responsive" style="margin-top:25px;">
-                <h3 style="font-family:'Teko',sans-serif; font-size:24px; color:var(--accent-gold); margin-bottom:10px;">Published Hall of Fame Tournaments</h3>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Tournament</th>
-                            <th>Date/Info</th>
-                            <th>Champion</th>
-                            <th>Runner-Up</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pastTournamentsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 2: TOURNAMENT HISTORY MANAGER (ADD & REMOVE) -->
-        <div id="sec-player-history" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-award"></i> Manage Player Profile Tournament History (Add / Delete)</span>
-            </div>
-
-            <form id="addHistoryForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Select Player</label>
-                        <select id="historyPlayerSelect" class="form-control" onchange="renderExistingPlayerHistory()" required></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Tournament Name</label>
-                        <input type="text" id="historyTitle" class="form-control" placeholder="e.g. Genesis Cup 2026" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Subtitle / Date Info</label>
-                        <input type="text" id="historySub" class="form-control" placeholder="e.g. February 2026 • Official Division 1" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Position Tag</label>
-                        <select id="historyTag" class="form-control" required>
-                            <option value="CHAMPION">CHAMPION</option>
-                            <option value="RUNNER-UP">RUNNER-UP</option>
-                            <option value="3RD PLACE">3RD PLACE</option>
-                            <option value="PARTICIPANT">PARTICIPANT</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-action"><i class="fa-solid fa-plus"></i> Add History To Player Profile</button>
-            </form>
-
-            <div class="table-responsive" style="margin-top: 25px;">
-                <h4 style="font-family:'Teko',sans-serif; font-size:22px; color:var(--accent-gold); margin-bottom:8px;">Current Tournament Badges of Selected Player</h4>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Tournament Title</th>
-                            <th>Subtitle/Date</th>
-                            <th>Position Tag</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="playerHistoryListBody">
-                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their history badges.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 3: ACHIEVEMENTS MANAGER (ADD & REMOVE) -->
-        <div id="sec-achievements" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-star"></i> Manage Special Achievement Badges (Add / Delete)</span>
-            </div>
-
-            <form id="addAchievementForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Select Player</label>
-                        <select id="achPlayerSelect" class="form-control" onchange="renderExistingPlayerAchievements()" required></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Achievement Title</label>
-                        <input type="text" id="achTitle" class="form-control" placeholder="e.g. Player of the Week (ECOB)" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Icon Style</label>
-                        <select id="achIcon" class="form-control" required>
-                            <option value="star">Star Badge (fa-star)</option>
-                            <option value="fire">Streak/Fire (fa-fire)</option>
-                            <option value="crown">Golden Boot/Crown (fa-crown)</option>
-                            <option value="medal">Medal (fa-medal)</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Description Details</label>
-                        <input type="text" id="achDesc" class="form-control" placeholder="e.g. Awarded for outstanding performance and top goal count." required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-plus"></i> Add Achievement To Player Profile</button>
-            </form>
-
-            <div class="table-responsive" style="margin-top: 25px;">
-                <h4 style="font-family:'Teko',sans-serif; font-size:22px; color:var(--accent-gold); margin-bottom:8px;">Current Achievement Badges of Selected Player</h4>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Icon</th>
-                            <th>Achievement Title</th>
-                            <th>Description</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="playerAchListBody">
-                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their achievements.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 4: CAPTAIN PENDING APPROVALS QUEUE -->
-        <div id="sec-captain-queue" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
-                <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
-            </div>
-
-            <div class="table-responsive">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Player Name</th>
-                            <th>Target Community</th>
-                            <th>Squad Format</th>
-                            <th>GF - GA</th>
-                            <th>Type / Result</th>
-                            <th>MOTM?</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="captainQueueBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 5: CAPTAIN ROLE ASSIGNMENT SYSTEM -->
-        <div id="sec-captain-roles" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-green);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-user-shield"></i> Manage Captain Access Roles</span>
-            </div>
-
-            <form id="grantCaptainForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Select Player To Grant Captain Access</label>
-                        <select id="captainPlayerSelect" class="form-control" required></select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-key"></i> Grant Captain Access</button>
-            </form>
-
-            <div class="table-responsive" style="margin-top:20px;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>Player Name</th>
-                            <th>Club</th>
-                            <th>Email Address</th>
-                            <th>Role Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="captainsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 6: STANDALONE SCORE SUBMISSION -->
-        <div id="sec-direct-score" class="section-card admin-feature-sec">
-            <div class="section-title">
-                <span><i class="fa-solid fa-pen-to-square"></i> Direct Admin Match Score Input</span>
-            </div>
-
-            <form id="singlePlayerScoreForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-magnifying-glass"></i> Search Player Name</label>
-                        <input type="text" id="playerSearchInput" class="form-control" placeholder="Type name to search..." autocomplete="off">
-                        <div id="searchResultsList" class="search-results-list"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Selected Player</label>
-                        <select id="ebfcPlayerSelect" class="form-control" required></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>EBFC Player Goals (GF)</label>
-                        <input type="number" id="ebfcGoals" class="form-control" min="0" value="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Opponent Goals (GA)</label>
-                        <input type="number" id="opponentGoals" class="form-control" min="0" value="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Match Type</label>
-                        <select id="directMatchTypeSelect" class="form-control">
-                            <option value="domestic" selected>Domestic League Match</option>
-                            <option value="official">Official Match</option>
+                    <div class="form-group" id="squadFormatGroup">
+                        <label>Squad Format</label>
+                        <select id="squadFormatSelect" class="form-control" onchange="generateSquadSlots()" required>
+                            <option value="6">6 Man Squad</option>
+                            <option value="8">8 Man Squad</option>
+                            <option value="10">10 Man Squad</option>
+                            <option value="12" selected>12 Man Squad</option>
                         </select>
                     </div>
 
+                    <!-- COMMUNITY MATCH RESULT DROPDOWN -->
                     <div class="form-group">
-                        <label>Award MOTM?</label>
-                        <select id="awardMotmSelect" class="form-control">
-                            <option value="no">No</option>
-                            <option value="yes">Yes (Award MOTM to EBFC Player)</option>
+                        <label>Community Match Result</label>
+                        <select id="communityMatchResultSelect" class="form-control" onchange="toggleAutoWinMode()" required>
+                            <option value="w" selected>Win (W)</option>
+                            <option value="d">Draw (D)</option>
+                            <option value="l">Loss (L)</option>
+                            <option value="auto">Auto Win (Auto + Win)</option>
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Submit Direct Result</button>
+
+                <!-- PLAYER INPUT SECTION (Dynamic hide on Auto Win) -->
+                <div id="playerPerformanceWrapper">
+                    <div class="section-title" style="font-size: 24px; margin-top: 20px;">
+                        <span><i class="fa-solid fa-list-ol"></i> Input Player Performance</span>
+                    </div>
+
+                    <div id="squadSlotsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                </div>
+
+                <!-- AUTO WIN NOTICE BANNER -->
+                <div id="autoWinNoticeBox" class="auto-win-info-box" style="display: none;">
+                    <i class="fa-solid fa-circle-info" style="font-size: 22px;"></i>
+                    <span>Auto Win Selected! No individual player stats will be recorded. Only 1 Win (+3 PTS) will be directly credited to the target community upon admin approval.</span>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Squad Score & Community Result To Admin</button>
             </form>
         </div>
 
-        <!-- SECTION 7: TOURNAMENT FIXTURE GENERATOR -->
-        <div id="sec-tournament-generator" class="section-card admin-feature-sec">
+        <!-- 2ND SECTION: DOMESTIC LEAGUE BATCH SUBMISSION FOR UP TO 40 PLAYERS -->
+        <div class="section-card" style="border-top: 4px solid var(--accent-gold);">
             <div class="section-title">
-                <span><i class="fa-solid fa-sitemap"></i> Persistent Tournament Bracket Generator</span>
+                <span><i class="fa-solid fa-trophy"></i> Domestic Tournament Match Submission </span>
             </div>
 
-            <form id="createTournamentForm">
-                <div class="form-grid">
+            <form id="domesticBatchForm">
+                <div class="form-grid" style="grid-template-columns: 1fr;">
                     <div class="form-group">
-                        <label>Tournament Name</label>
-                        <input type="text" id="tName" class="form-control" placeholder="e.g., EBFC Super Championship 2026" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Total Players</label>
-                        <select id="tPlayerCount" class="form-control" onchange="generatePlayerSelects()">
-                            <option value="8" selected>8 Players (Quarter-Finals)</option>
-                            <option value="16">16 Players (Round of 16)</option>
+                        <label>Total Active Slots To Show</label>
+                        <select id="domesticSlotsCount" class="form-control" onchange="generateDomesticSlots()">
+                            <option value="10" selected>10 Players</option>
                             <option value="20">20 Players</option>
                             <option value="30">30 Players</option>
-                            <option value="32">32 Players (Round of 32)</option>
+                            <option value="40">40 players</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Round of 32 Leg System</label>
-                        <select id="r32Legs" class="form-control">
-                            <option value="2" selected>Double Leg (2 Legs)</option>
-                            <option value="1">Single Leg (1 Leg)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Round of 16 Leg System</label>
-                        <select id="r16Legs" class="form-control">
-                            <option value="2" selected>Double Leg (2 Legs)</option>
-                            <option value="1">Single Leg (1 Leg)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Quarter-Finals Leg System</label>
-                        <select id="qfLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Semi-Finals Leg System</label>
-                        <select id="sfLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Grand Final Leg System</label>
-                        <select id="finalLegs" class="form-control">
-                            <option value="1" selected>Single Leg (1 Leg)</option>
-                            <option value="2">Double Leg (2 Legs)</option>
-                        </select>
-                    </div>
+                <div class="section-title" style="font-size: 20px; margin-top: 15px; border:none; padding-bottom:0;">
+                    <span><i class="fa-solid fa-users"></i> Input Domestic Match Statistics (Unselected Slots Will Be Skipped)</span>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label><i class="fa-solid fa-users"></i> Select Participating EBFC Registered Players</label>
-                    <div id="playerSelectsGrid" class="form-grid"></div>
-                </div>
+                <div id="domesticSlotsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;"></div>
 
-                <button type="submit" class="btn-action"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Persistent Tournament</button>
+                <button type="submit" id="domSubmitBtn" class="btn-action btn-gold"><i class="fa-solid fa-paper-plane"></i> Submit Domestic Batch For Admin Approval</button>
             </form>
         </div>
 
-        <div class="section-card" id="activeTournamentSection" style="display: none;">
+        <div class="section-card">
             <div class="section-title">
-                <span id="activeTTitle"><i class="fa-solid fa-gamepad"></i> Active Saved Tournament</span>
-                <button onclick="resetTournamentMemory()" class="btn-action btn-gold" style="font-size: 12px; padding: 6px 12px;"><i class="fa-solid fa-trash"></i> Reset / Complete Tournament</button>
+                <span><i class="fa-solid fa-list-check"></i> Pending Approvals Queue</span>
             </div>
-            <div id="fixturesContainer"></div>
+            <div id="pendingLogsContainer"></div>
         </div>
-
     </div>
 
     <script>
         let cachedPlayers = [];
-        let tState = null;
+        let currentCaptainUid = null;
 
-        // AUTH CHECK & INITIALIZATION
+        // AUTH & CAPTAIN ROLE CHECK
         auth.onAuthStateChanged(async (user) => {
-            const localAdmin = JSON.parse(localStorage.getItem('ebfc_user'));
+            const localUser = JSON.parse(localStorage.getItem('ebfc_user'));
 
-            if (!user && (!localAdmin || localAdmin.role !== 'admin')) {
+            if (!user && (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin'))) {
+                alert("Access Denied! Captain Access Required.");
                 window.location.href = "login.html";
                 return;
             }
 
             if (user) {
+                currentCaptainUid = user.uid;
                 const doc = await db.collection('users').doc(user.uid).get();
-                if (!doc.exists || (doc.data().role !== 'admin')) {
-                    if (!localAdmin || localAdmin.role !== 'admin') {
+                if (!doc.exists || (doc.data().role !== 'captain' && doc.data().role !== 'admin')) {
+                    if (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin')) {
+                        alert("Access Denied! Captain Access Required.");
                         window.location.href = "login.html";
                         return;
                     }
@@ -1171,25 +493,7 @@
             listenToRealtimeData();
         });
 
-        // DROPDOWN SECTION FILTER FUNCTION
-        function filterAdminSections() {
-            const selectedVal = document.getElementById('adminFeatureFilter').value;
-            const sections = document.querySelectorAll('.admin-feature-sec');
-
-            sections.forEach(sec => {
-                if (selectedVal === 'all') {
-                    sec.style.display = 'block';
-                } else {
-                    if (sec.id === selectedVal) {
-                        sec.style.display = 'block';
-                    } else {
-                        sec.style.display = 'none';
-                    }
-                }
-            });
-        }
-
-        function logoutUser() {
+        function logoutCaptain() {
             localStorage.removeItem('ebfc_user');
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
@@ -1197,10 +501,11 @@
         }
 
         function listenToRealtimeData() {
+            // Fetch All Players with A-Z Sorting
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
-                    cachedPlayers.push({ uid: doc.id, id: doc.id, ...doc.data() });
+                    cachedPlayers.push({ uid: doc.id, ...doc.data() });
                 });
 
                 cachedPlayers.sort((a, b) => {
@@ -1209,1161 +514,297 @@
                     return nameA.localeCompare(nameB);
                 });
 
-                renderAllPlayersTable();
-                populateDropdowns();
-                generatePlayerSelects();
-                renderCaptainsTable();
-                renderExistingPlayerHistory();
-                renderExistingPlayerAchievements();
+                generateSquadSlots();
+                generateDomesticSlots();
             });
 
+            // Fetch Pending Submissions Realtime
             db.collection('pending_scores').onSnapshot(snapshot => {
                 let pendingList = [];
                 snapshot.forEach(doc => {
-                    pendingList.push({ reqId: doc.id, ...doc.data() });
+                    pendingList.push({ id: doc.id, ...doc.data() });
                 });
-                renderCaptainQueue(pendingList);
-            });
-
-            db.collection('tournaments').doc('active_tournament').onSnapshot(doc => {
-                if (doc.exists) {
-                    tState = doc.data();
-                    renderFixtures();
-                } else {
-                    document.getElementById('activeTournamentSection').style.display = 'none';
-                }
-            });
-
-            db.collection('past_tournaments').onSnapshot(snapshot => {
-                let list = [];
-                snapshot.forEach(doc => {
-                    list.push({ id: doc.id, ...doc.data() });
-                });
-                renderPastTournamentsTable(list);
-            });
-
-            setupPlayerSearchEngine();
-        }
-
-        function initStats() {
-            return { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
-        }
-
-        function renderAllPlayersTable() {
-            const tbody = document.getElementById('allPlayersTableBody');
-            tbody.innerHTML = '';
-
-            cachedPlayers.forEach(p => {
-                const avatarUrl = p.avatar || 'Image/player1.webp';
-                tbody.innerHTML += `
-                        <tr>
-                            <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
-                            <td><strong>${p.name || 'N/A'}</strong></td>
-                            <td>${p.gameId || 'N/A'}</td>
-                            <td>${p.club || 'EBFC'}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
-                            <td>
-                                <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
-                                <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
-                            </td>
-                        </tr>`;
+                renderPendingLogs(pendingList);
             });
         }
 
-        function downloadImage(url, playerName) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${playerName.replace(/\s+/g, '_')}_ebfc_photo.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        // TOGGLE AUTO WIN MODE FUNCTION
+        function toggleAutoWinMode() {
+            let resVal = document.getElementById('communityMatchResultSelect').value;
+            let playerWrapper = document.getElementById('playerPerformanceWrapper');
+            let autoWinNotice = document.getElementById('autoWinNoticeBox');
+            let squadFormatGroup = document.getElementById('squadFormatGroup');
 
-        function populateDropdowns() {
-            let editSelect = document.getElementById('editPlayerSelect');
-            let statsSelect = document.getElementById('statsPlayerSelect');
-            let commPlayerSelect = document.getElementById('commPlayerSelect');
-            let historySelect = document.getElementById('historyPlayerSelect');
-            let achSelect = document.getElementById('achPlayerSelect');
-            let singleSelect = document.getElementById('ebfcPlayerSelect');
-            let capSelect = document.getElementById('captainPlayerSelect');
-            let pastChampSelect = document.getElementById('pastChampionSelect');
-            let pastRunnerSelect = document.getElementById('pastRunnerupSelect');
+            let playerSelects = document.querySelectorAll('.squad-player-id');
+            let gfInputs = document.querySelectorAll('.squad-player-gf');
+            let gaInputs = document.querySelectorAll('.squad-player-ga');
 
-            let currentHistVal = historySelect.value;
-            let currentAchVal = achSelect.value;
-            let currentStatsVal = statsSelect.value;
-            let currentCommPVal = commPlayerSelect.value;
+            if (resVal === 'auto') {
+                playerWrapper.style.display = 'none';
+                autoWinNotice.style.display = 'flex';
+                squadFormatGroup.style.opacity = '0.4';
+                squadFormatGroup.style.pointerEvents = 'none';
 
-            editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            statsSelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            commPlayerSelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            historySelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            achSelect.innerHTML = '<option value="">-- Choose Player --</option>';
-            singleSelect.innerHTML = '';
-            capSelect.innerHTML = '';
-            pastChampSelect.innerHTML = '<option value="">-- Choose Champion --</option>';
-            pastRunnerSelect.innerHTML = '<option value="">-- Choose Runner-Up --</option>';
+                // Disable required attribute when Auto Win is selected
+                playerSelects.forEach(el => el.removeAttribute('required'));
+                gfInputs.forEach(el => el.removeAttribute('required'));
+                gaInputs.forEach(el => el.removeAttribute('required'));
+            } else {
+                playerWrapper.style.display = 'block';
+                autoWinNotice.style.display = 'none';
+                squadFormatGroup.style.opacity = '1';
+                squadFormatGroup.style.pointerEvents = 'auto';
 
-            cachedPlayers.forEach(p => {
-                let opt = `<option value="${p.uid}">${p.name || 'Unknown'} (${p.club || 'EBFC'})</option>`;
-                editSelect.innerHTML += opt;
-                statsSelect.innerHTML += opt;
-                commPlayerSelect.innerHTML += opt;
-                historySelect.innerHTML += opt;
-                achSelect.innerHTML += opt;
-                singleSelect.innerHTML += opt;
-                capSelect.innerHTML += `<option value="${p.uid}">${p.name || 'Unknown'} - ${p.email || 'No Email'}</option>`;
-                pastChampSelect.innerHTML += opt;
-                pastRunnerSelect.innerHTML += opt;
-            });
-
-            if (currentHistVal) historySelect.value = currentHistVal;
-            if (currentAchVal) achSelect.value = currentAchVal;
-            if (currentStatsVal) statsSelect.value = currentStatsVal;
-            if (currentCommPVal) commPlayerSelect.value = currentCommPVal;
-        }
-
-        // LOAD PLAYER STATS INTO STATS EDITOR
-        function loadPlayerStatsToEditor() {
-            const uid = document.getElementById('statsPlayerSelect').value;
-            const player = cachedPlayers.find(p => p.uid === uid);
-
-            document.getElementById('statsUid').value = uid || '';
-
-            if (!player) {
-                document.getElementById('editPlayerStatsForm').reset();
-                return;
-            }
-
-            const off = player.official || initStats();
-            const dom = player.domestic || initStats();
-
-            document.getElementById('offMP').value = off.mp || 0;
-            document.getElementById('offW').value = off.w || 0;
-            document.getElementById('offD').value = off.d || 0;
-            document.getElementById('offL').value = off.l || 0;
-            document.getElementById('offGF').value = off.gf || 0;
-            document.getElementById('offGA').value = off.ga || 0;
-            document.getElementById('offPTS').value = off.pts || 0;
-            document.getElementById('offMOTM').value = off.motm || 0;
-
-            document.getElementById('domMP').value = dom.mp || 0;
-            document.getElementById('domW').value = dom.w || 0;
-            document.getElementById('domD').value = dom.d || 0;
-            document.getElementById('domL').value = dom.l || 0;
-            document.getElementById('domGF').value = dom.gf || 0;
-            document.getElementById('domGA').value = dom.ga || 0;
-            document.getElementById('domPTS').value = dom.pts || 0;
-            document.getElementById('domMOTM').value = dom.motm || 0;
-        }
-
-        // SAVE OVERRIDDEN/CORRECTED PLAYER STATS
-        document.getElementById('editPlayerStatsForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const uid = document.getElementById('statsUid').value;
-            if (!uid) return;
-
-            const offMP = parseInt(document.getElementById('offMP').value) || 0;
-            const offW = parseInt(document.getElementById('offW').value) || 0;
-            const offD = parseInt(document.getElementById('offD').value) || 0;
-            const offL = parseInt(document.getElementById('offL').value) || 0;
-            const offGF = parseInt(document.getElementById('offGF').value) || 0;
-            const offGA = parseInt(document.getElementById('offGA').value) || 0;
-            const offPTS = parseInt(document.getElementById('offPTS').value) || 0;
-            const offMOTM = parseInt(document.getElementById('offMOTM').value) || 0;
-
-            const domMP = parseInt(document.getElementById('domMP').value) || 0;
-            const domW = parseInt(document.getElementById('domW').value) || 0;
-            const domD = parseInt(document.getElementById('domD').value) || 0;
-            const domL = parseInt(document.getElementById('domL').value) || 0;
-            const domGF = parseInt(document.getElementById('domGF').value) || 0;
-            const domGA = parseInt(document.getElementById('domGA').value) || 0;
-            const domPTS = parseInt(document.getElementById('domPTS').value) || 0;
-            const domMOTM = parseInt(document.getElementById('domMOTM').value) || 0;
-
-            const updatedOfficial = {
-                mp: offMP,
-                w: offW,
-                d: offD,
-                l: offL,
-                gf: offGF,
-                ga: offGA,
-                gd: offGF - offGA,
-                pts: offPTS,
-                motm: offMOTM,
-                winRate: offMP > 0 ? ((offW / offMP) * 100).toFixed(1) : "0.0"
-            };
-
-            const updatedDomestic = {
-                mp: domMP,
-                w: domW,
-                d: domD,
-                l: domL,
-                gf: domGF,
-                ga: domGA,
-                gd: domGF - domGA,
-                pts: domPTS,
-                motm: domMOTM,
-                winRate: domMP > 0 ? ((domW / domMP) * 100).toFixed(1) : "0.0"
-            };
-
-            try {
-                await db.collection('users').doc(uid).update({
-                    official: updatedOfficial,
-                    domestic: updatedDomestic
-                });
-            } catch (err) {
-                console.error("Error updating stats: ", err);
-            }
-        });
-
-        // RESET ALL STATS FOR SELECTED PLAYER
-        async function resetSelectedPlayerStats() {
-            const uid = document.getElementById('statsUid').value;
-            if (!uid) return;
-
-            if (confirm("Are you sure you want to RESET all official and domestic stats to ZERO for this player?")) {
-                const zeroStats = initStats();
-                try {
-                    await db.collection('users').doc(uid).update({
-                        official: zeroStats,
-                        domestic: zeroStats
-                    });
-                    loadPlayerStatsToEditor();
-                } catch (err) {
-                    console.error("Error resetting stats: ", err);
-                }
+                // Re-enable required attributes for normal matches
+                playerSelects.forEach(el => el.setAttribute('required', 'true'));
+                gfInputs.forEach(el => el.setAttribute('required', 'true'));
+                gaInputs.forEach(el => el.setAttribute('required', 'true'));
             }
         }
 
-        // COMMUNITY STATS MODULE FUNCTIONS
-        function loadPlayerCommunities() {
-            const uid = document.getElementById('commPlayerSelect').value;
-            const commSelect = document.getElementById('commCodeSelect');
-            commSelect.innerHTML = '<option value="">-- Select Community --</option>';
-
-            document.getElementById('editCommunityStatsForm').reset();
-            document.getElementById('commUid').value = uid || '';
-
-            if (!uid) return;
-
-            const player = cachedPlayers.find(p => p.uid === uid);
-            if (!player || !player.communities) return;
-
-            Object.keys(player.communities).forEach(commCode => {
-                commSelect.innerHTML += `<option value="${commCode}">${commCode.toUpperCase()}</option>`;
-            });
-        }
-
-        function loadCommunityStatsToEditor() {
-            const uid = document.getElementById('commPlayerSelect').value;
-            const commCode = document.getElementById('commCodeSelect').value;
-
-            if (!uid || !commCode) {
-                document.getElementById('editCommunityStatsForm').reset();
-                return;
-            }
-
-            const player = cachedPlayers.find(p => p.uid === uid);
-            if (!player || !player.communities || !player.communities[commCode]) return;
-
-            const c = player.communities[commCode];
-
-            document.getElementById('commUid').value = uid;
-            document.getElementById('cMP').value = c.mp || 0;
-            document.getElementById('cW').value = c.w || 0;
-            document.getElementById('cD').value = c.d || 0;
-            document.getElementById('cL').value = c.l || 0;
-            document.getElementById('cGF').value = c.gf || 0;
-            document.getElementById('cGA').value = c.ga || 0;
-            document.getElementById('cAuto').value = c.auto || 0;
-            document.getElementById('cPTS').value = c.pts || 0;
-        }
-
-        document.getElementById('editCommunityStatsForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const uid = document.getElementById('commUid').value;
-            const commCode = document.getElementById('commCodeSelect').value;
-
-            if (!uid || !commCode) return;
-
-            const mp = parseInt(document.getElementById('cMP').value) || 0;
-            const w = parseInt(document.getElementById('cW').value) || 0;
-            const d = parseInt(document.getElementById('cD').value) || 0;
-            const l = parseInt(document.getElementById('cL').value) || 0;
-            const gf = parseInt(document.getElementById('cGF').value) || 0;
-            const ga = parseInt(document.getElementById('cGA').value) || 0;
-            const auto = parseInt(document.getElementById('cAuto').value) || 0;
-            const pts = parseInt(document.getElementById('cPTS').value) || 0;
-
-            const updatedComm = {
-                mp: mp,
-                w: w,
-                d: d,
-                l: l,
-                gf: gf,
-                ga: ga,
-                auto: auto,
-                pts: pts,
-                winRate: mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0"
-            };
-
-            try {
-                const userRef = db.collection('users').doc(uid);
-                const userDoc = await userRef.get();
-                let communities = userDoc.data().communities || {};
-
-                communities[commCode] = updatedComm;
-
-                await userRef.update({ communities: communities });
-            } catch (err) {
-                console.error("Error updating community stats: ", err);
-            }
-        });
-
-        async function resetCommunityStatsToZero() {
-            const uid = document.getElementById('commUid').value;
-            const commCode = document.getElementById('commCodeSelect').value;
-
-            if (!uid || !commCode) return;
-
-            if (confirm(`Reset stats to ZERO for community '${commCode.toUpperCase()}'?`)) {
-                try {
-                    const userRef = db.collection('users').doc(uid);
-                    const userDoc = await userRef.get();
-                    let communities = userDoc.data().communities || {};
-
-                    communities[commCode] = { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
-
-                    await userRef.update({ communities: communities });
-                    loadCommunityStatsToEditor();
-                } catch (err) {
-                    console.error("Error resetting community stats: ", err);
-                }
-            }
-        }
-
-        async function deleteCommunityRecord() {
-            const uid = document.getElementById('commUid').value;
-            const commCode = document.getElementById('commCodeSelect').value;
-
-            if (!uid || !commCode) return;
-
-            if (confirm(`DELETE the community record '${commCode.toUpperCase()}' permanently from player's profile?`)) {
-                try {
-                    const userRef = db.collection('users').doc(uid);
-                    await userRef.update({
-                        [`communities.${commCode}`]: firebase.firestore.FieldValue.delete()
-                    });
-                    loadPlayerCommunities();
-                } catch (err) {
-                    console.error("Error deleting community record: ", err);
-                }
-            }
-        }
-
-        function previewPastTLogo(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-
-                if (file.size > 5 * 1024 * 1024) {
-                    input.value = "";
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-
-                        const maxDim = 200;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > maxDim) {
-                                height = Math.round(height * (maxDim / width));
-                                width = maxDim;
-                            }
-                        } else {
-                            if (height > maxDim) {
-                                width = Math.round(width * (maxDim / height));
-                                height = maxDim;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        ctx.clearRect(0, 0, width, height);
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
-
-                        document.getElementById('pastTLogoBase64').value = compressedBase64;
-                        document.getElementById('pastTLogoPreview').src = compressedBase64;
-                        document.getElementById('logoPreviewContainer').style.display = 'flex';
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        document.getElementById('addPastTournamentForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const champUid = document.getElementById('pastChampionSelect').value;
-            const runnerUid = document.getElementById('pastRunnerupSelect').value;
-
-            const champObj = cachedPlayers.find(p => p.uid === champUid);
-            const runnerObj = cachedPlayers.find(p => p.uid === runnerUid);
-
-            if (!champObj || !runnerObj) return;
-
-            const uploadedLogo = document.getElementById('pastTLogoBase64').value || 'Image/image1.jpg.jpg';
-
-            const pastTournamentData = {
-                title: document.getElementById('pastTName').value.trim(),
-                date: document.getElementById('pastTDate').value.trim(),
-                logo: uploadedLogo,
-                champion: {
-                    name: champObj.name,
-                    avatar: champObj.avatar || 'Image/player1.webp'
-                },
-                runnerup: {
-                    name: runnerObj.name,
-                    avatar: runnerObj.avatar || 'Image/player1.webp'
-                },
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                await db.collection('past_tournaments').add(pastTournamentData);
-                document.getElementById('addPastTournamentForm').reset();
-                document.getElementById('pastTLogoBase64').value = '';
-                document.getElementById('logoPreviewContainer').style.display = 'none';
-            } catch (err) {
-                console.error("Failed to publish tournament: ", err);
-            }
-        });
-
-        function renderPastTournamentsTable(tournaments) {
-            const tbody = document.getElementById('pastTournamentsTableBody');
-            tbody.innerHTML = '';
-
-            if (tournaments.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No published tournaments in database.</td></tr>`;
-                return;
-            }
-
-            tournaments.forEach(t => {
-                const logoImg = t.logo || 'Image/image1.jpg.jpg';
-                tbody.innerHTML += `
-                        <tr>
-                            <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
-                            <td><strong>${t.title}</strong></td>
-                            <td>${t.date}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
-                            <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
-                            <td>
-                                <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
-                            </td>
-                        </tr>`;
-            });
-        }
-
-        async function deletePastTournament(id) {
-            if (confirm("Remove this tournament entry from Hall of Fame showcase?")) {
-                try {
-                    await db.collection('past_tournaments').doc(id).delete();
-                } catch (err) {
-                    console.error("Error deleting tournament: ", err);
-                }
-            }
-        }
-
-        function selectPlayerForEdit(uid) {
-            document.getElementById('adminFeatureFilter').value = 'sec-edit-player';
-            filterAdminSections();
-            document.getElementById('editPlayerSelect').value = uid;
-            loadPlayerToEditor();
-            window.scrollTo({ top: document.getElementById('sec-edit-player').offsetTop - 100, behavior: 'smooth' });
-        }
-
-        function loadPlayerToEditor() {
-            const uid = document.getElementById('editPlayerSelect').value;
-            const player = cachedPlayers.find(p => p.uid === uid);
-
-            if (!player) {
-                document.getElementById('playerPreviewArea').style.display = 'none';
-                document.getElementById('editPlayerForm').reset();
-                return;
-            }
-
-            document.getElementById('playerPreviewArea').style.display = 'flex';
-            document.getElementById('editPreviewAvatar').src = player.avatar || 'Image/player1.webp';
-            document.getElementById('editPreviewName').innerText = player.name || 'Player';
-            document.getElementById('editPreviewEmail').innerText = player.email || 'No Email Registered';
-
-            document.getElementById('editUid').value = player.uid;
-            document.getElementById('editName').value = player.name || '';
-            document.getElementById('editGameId').value = player.gameId || '';
-            document.getElementById('editClub').value = player.club || 'East Bengal Main';
-            document.getElementById('editRole').value = player.role || 'player';
-            document.getElementById('editFbLink').value = player.fbLink || '';
-            document.getElementById('editDevice').value = player.device || '';
-            document.getElementById('editOccupation').value = player.occupation || '';
-            document.getElementById('editAddress').value = player.address || '';
-        }
-
-        document.getElementById('editPlayerForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const uid = document.getElementById('editUid').value;
-            if (!uid) return;
-
-            try {
-                await db.collection('users').doc(uid).update({
-                    name: document.getElementById('editName').value.trim(),
-                    gameId: document.getElementById('editGameId').value.trim(),
-                    club: document.getElementById('editClub').value.trim(),
-                    role: document.getElementById('editRole').value,
-                    fbLink: document.getElementById('editFbLink').value.trim(),
-                    device: document.getElementById('editDevice').value.trim(),
-                    occupation: document.getElementById('editOccupation').value.trim(),
-                    address: document.getElementById('editAddress').value.trim()
-                });
-            } catch (err) {
-                console.error("Error updating profile: ", err);
-            }
-        });
-
-        document.getElementById('addHistoryForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const uid = document.getElementById('historyPlayerSelect').value;
-            if (!uid) return;
-
-            const historyItem = {
-                title: document.getElementById('historyTitle').value.trim(),
-                subtitle: document.getElementById('historySub').value.trim(),
-                tag: document.getElementById('historyTag').value
-            };
-
-            try {
-                const userDoc = await db.collection('users').doc(uid).get();
-                let existingHistory = userDoc.data().tournamentHistoryList || [];
-                existingHistory.push(historyItem);
-
-                await db.collection('users').doc(uid).update({
-                    tournamentHistoryList: existingHistory
-                });
-
-                document.getElementById('historyTitle').value = '';
-                document.getElementById('historySub').value = '';
-                renderExistingPlayerHistory();
-            } catch (err) {
-                console.error("Failed to add tournament history: ", err);
-            }
-        });
-
-        function renderExistingPlayerHistory() {
-            const uid = document.getElementById('historyPlayerSelect').value;
-            const tbody = document.getElementById('playerHistoryListBody');
-            tbody.innerHTML = '';
-
-            if (!uid) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their history badges.</td></tr>';
-                return;
-            }
-
-            const player = cachedPlayers.find(p => p.uid === uid);
-            const historyList = (player && player.tournamentHistoryList) ? player.tournamentHistoryList : [];
-
-            if (historyList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No tournament history badges found for this player.</td></tr>';
-                return;
-            }
-
-            historyList.forEach((item, index) => {
-                tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${item.title}</strong></td>
-                            <td>${item.subtitle}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
-                            <td>
-                                <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                            </td>
-                        </tr>`;
-            });
-        }
-
-        async function removeTournamentHistoryBadge(uid, index) {
-            if (!confirm("Are you sure you want to remove this Tournament Badge from player's profile?")) return;
-
-            try {
-                const player = cachedPlayers.find(p => p.uid === uid);
-                let historyList = player.tournamentHistoryList || [];
-                historyList.splice(index, 1);
-
-                await db.collection('users').doc(uid).update({
-                    tournamentHistoryList: historyList
-                });
-
-                renderExistingPlayerHistory();
-            } catch (err) {
-                console.error("Failed to remove badge: ", err);
-            }
-        }
-
-        document.getElementById('addAchievementForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const uid = document.getElementById('achPlayerSelect').value;
-            if (!uid) return;
-
-            const achItem = {
-                title: document.getElementById('achTitle').value.trim(),
-                icon: document.getElementById('achIcon').value,
-                desc: document.getElementById('achDesc').value.trim()
-            };
-
-            try {
-                const userDoc = await db.collection('users').doc(uid).get();
-                let existingAch = userDoc.data().achievementsList || [];
-                existingAch.push(achItem);
-
-                await db.collection('users').doc(uid).update({
-                    achievementsList: existingAch
-                });
-
-                document.getElementById('achTitle').value = '';
-                document.getElementById('achDesc').value = '';
-                renderExistingPlayerAchievements();
-            } catch (err) {
-                console.error("Failed to add achievement: ", err);
-            }
-        });
-
-        function renderExistingPlayerAchievements() {
-            const uid = document.getElementById('achPlayerSelect').value;
-            const tbody = document.getElementById('playerAchListBody');
-            tbody.innerHTML = '';
-
-            if (!uid) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Select a player above to see their achievements.</td></tr>';
-                return;
-            }
-
-            const player = cachedPlayers.find(p => p.uid === uid);
-            const achList = (player && player.achievementsList) ? player.achievementsList : [];
-
-            if (achList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No achievement badges found for this player.</td></tr>';
-                return;
-            }
-
-            achList.forEach((item, index) => {
-                tbody.innerHTML += `
-                        <tr>
-                            <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
-                            <td><strong>${item.title}</strong></td>
-                            <td>${item.desc}</td>
-                            <td>
-                                <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                            </td>
-                        </tr>`;
-            });
-        }
-
-        async function removeAchievementBadge(uid, index) {
-            if (!confirm("Are you sure you want to remove this Achievement Badge from player's profile?")) return;
-
-            try {
-                const player = cachedPlayers.find(p => p.uid === uid);
-                let achList = player.achievementsList || [];
-                achList.splice(index, 1);
-
-                await db.collection('users').doc(uid).update({
-                    achievementsList: achList
-                });
-
-                renderExistingPlayerAchievements();
-            } catch (err) {
-                console.error("Failed to remove achievement: ", err);
-            }
-        }
-
-        function setupPlayerSearchEngine() {
-            let searchInput = document.getElementById('playerSearchInput');
-            let resultsList = document.getElementById('searchResultsList');
-            let selectDropdown = document.getElementById('ebfcPlayerSelect');
-
-            searchInput.addEventListener('input', function () {
-                let query = this.value.toLowerCase().trim();
-                resultsList.innerHTML = '';
-
-                if (!query) {
-                    resultsList.style.display = 'none';
-                    return;
-                }
-
-                let filtered = cachedPlayers.filter(p => (p.name && p.name.toLowerCase().includes(query)) || (p.club && p.club.toLowerCase().includes(query)));
-
-                if (filtered.length > 0) {
-                    resultsList.style.display = 'block';
-                    filtered.forEach(p => {
-                        let item = document.createElement('div');
-                        item.className = 'search-item';
-                        item.innerHTML = `<strong>${p.name}</strong> <span style="font-size:11px; color:var(--accent-gold);">(${p.club || 'EBFC'})</span>`;
-                        item.onclick = function () {
-                            selectDropdown.value = p.uid;
-                            searchInput.value = p.name;
-                            resultsList.style.display = 'none';
-                        };
-                        resultsList.appendChild(item);
-                    });
-                } else {
-                    resultsList.style.display = 'block';
-                    resultsList.innerHTML = `<div class="search-item" style="color:var(--text-muted);">No player found...</div>`;
-                }
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!searchInput.contains(e.target) && !resultsList.contains(e.target)) {
-                    resultsList.style.display = 'none';
-                }
-            });
-        }
-
-        document.getElementById('grantCaptainForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            let pUid = document.getElementById('captainPlayerSelect').value;
-
-            try {
-                await db.collection('users').doc(pUid).update({
-                    role: 'captain'
-                });
-            } catch (err) {
-                console.error("Failed to grant captain access: ", err);
-            }
-        });
-
-        function renderCaptainsTable() {
-            let tbody = document.getElementById('captainsTableBody');
-            tbody.innerHTML = '';
-
-            let captains = cachedPlayers.filter(p => p.role === 'captain');
-
-            if (captains.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No captains assigned yet.</td></tr>`;
-                return;
-            }
-
-            captains.forEach(c => {
-                tbody.innerHTML += `
-                        <tr>
-                            <td>#${c.uid.substring(0, 6)}</td>
-                            <td><strong>${c.name || 'Captain'}</strong></td>
-                            <td>${c.club || 'EBFC'}</td>
-                            <td>${c.email || 'N/A'}</td>
-                            <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                            <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                        </tr>`;
-            });
-        }
-
-        async function revokeCaptain(uid) {
-            if (confirm("Revoke Captain privileges for this user?")) {
-                try {
-                    await db.collection('users').doc(uid).update({ role: 'player' });
-                } catch (err) {
-                    console.error("Error revoking access: ", err);
-                }
-            }
-        }
-
-        // CAPTAIN SCORE QUEUE RENDER
-        function renderCaptainQueue(pendingList) {
-            let tbody = document.getElementById('captainQueueBody');
-            let badge = document.getElementById('queueBadge');
-            tbody.innerHTML = '';
-            badge.innerText = `${pendingList.length} Requests Pending`;
-
-            if (pendingList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No pending captain submissions available.</td></tr>`;
-                return;
-            }
-
-            pendingList.forEach((req) => {
-                const commCode = req.community || 'cobeg(main)';
-                const resTag = req.communityResult ? ` (${req.communityResult.toUpperCase()})` : '';
-                tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
-                            <td>${req.squadFormat || '1v1'}</td>
-                            <td><strong>${req.gf} - ${req.ga}</strong></td>
-                            <td>${(req.matchType || 'official').toUpperCase()}${resTag}</td>
-                            <td>${req.awardMotm ? 'Yes' : 'No'}</td>
-                            <td>
-                                <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${commCode}', '${req.communityResult || 'w'}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
-                                <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                            </td>
-                        </tr>`;
-            });
-        }
-
-        // UPDATED CAPTAIN SCORE APPROVAL FUNCTION (INCLUDES AUTO WIN COMMUNITY LOGIC)
-        async function approveCaptainScore(reqId, playerId, gf, ga, commCode, commResult, awardMotm) {
-            try {
-                // HANDLE AUTO WIN (COMMUNITY ONLY ENTRY)
-                if (playerId === "COMMUNITY_AUTO_WIN" || commResult === "auto") {
-                    const commRef = db.collection('communities').doc(commCode);
-                    await db.runTransaction(async (transaction) => {
-                        const commDoc = await transaction.get(commRef);
-                        let cData = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, auto: 0, pts: 0 };
-
-                        cData.auto = (cData.auto || 0) + 1;
-                        cData.w = (cData.w || 0) + 1;
-                        cData.pts = (cData.pts || 0) + 3;
-
-                        transaction.set(commRef, cData, { merge: true });
-                        transaction.delete(db.collection('pending_scores').doc(reqId));
-                    });
-                    alert(`Auto Win approved for Community: ${commCode.toUpperCase()}! (+3 PTS Added)`);
-                    return;
-                }
-
-                // HANDLE NORMAL PLAYER MATCH APPROVAL
-                const userRef = db.collection('users').doc(playerId);
-
-                await db.runTransaction(async (transaction) => {
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists) throw new Error("Player profile not found");
-
-                    let player = userDoc.data();
-
-                    // 1. Initialize or Load Official Stats
-                    let offStats = player.official || initStats();
-                    offStats.mp = (offStats.mp || 0) + 1;
-                    offStats.gf = (offStats.gf || 0) + gf;
-                    offStats.ga = (offStats.ga || 0) + ga;
-                    offStats.gd = offStats.gf - offStats.ga;
-
-                    if (gf > ga) offStats.w = (offStats.w || 0) + 1;
-                    else if (gf === ga) offStats.d = (offStats.d || 0) + 1;
-                    else offStats.l = (offStats.l || 0) + 1;
-
-                    offStats.pts = ((offStats.w || 0) * 3) + (offStats.d || 0);
-                    offStats.winRate = offStats.mp > 0 ? (((offStats.w || 0) / offStats.mp) * 100).toFixed(1) : "0.0";
-                    if (awardMotm) offStats.motm = (offStats.motm || 0) + 1;
-
-                    // 2. Initialize or Load Community Stats
-                    let communities = player.communities || {};
-                    let cStats = communities[commCode] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
-
-                    cStats.mp += 1;
-                    cStats.gf += gf;
-                    cStats.ga += ga;
-
-                    if (commResult === 'w') {
-                        cStats.w += 1;
-                        cStats.pts += 3;
-                    } else if (commResult === 'd') {
-                        cStats.d += 1;
-                        cStats.pts += 1;
-                    } else if (commResult === 'l') {
-                        cStats.l += 1;
-                    }
-                    cStats.winRate = cStats.mp > 0 ? ((cStats.w / cStats.mp) * 100).toFixed(1) : "0.0";
-
-                    communities[commCode] = cStats;
-
-                    transaction.update(userRef, {
-                        official: offStats,
-                        communities: communities
-                    });
-
-                    // Direct delete pending score request silently
-                    transaction.delete(db.collection('pending_scores').doc(reqId));
-                });
-
-            } catch (err) {
-                console.error("Error approving score: ", err);
-                alert("Failed to approve score: " + err.message);
-            }
-        }
-
-        async function rejectCaptainScore(reqId) {
-            try {
-                await db.collection('pending_scores').doc(reqId).delete();
-            } catch (err) {
-                console.error("Error rejecting score: ", err);
-            }
-        }
-
-        // DIRECT MATCH SCORE INPUT BY ADMIN
-        document.getElementById('singlePlayerScoreForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            let playerId = document.getElementById('ebfcPlayerSelect').value;
-            let gf = parseInt(document.getElementById('ebfcGoals').value);
-            let ga = parseInt(document.getElementById('opponentGoals').value);
-            let matchType = document.getElementById('directMatchTypeSelect').value;
-            let awardMotm = document.getElementById('awardMotmSelect').value === 'yes';
-
-            try {
-                const userRef = db.collection('users').doc(playerId);
-                const userDoc = await userRef.get();
-
-                if (!userDoc.exists) return;
-
-                let player = userDoc.data();
-                let isWin = gf > ga;
-                let isDraw = gf === ga;
-                let isLoss = gf < ga;
-
-                function updateStatGroup(group) {
-                    group = group || initStats();
-                    group.mp = (group.mp || 0) + 1;
-                    group.gf = (group.gf || 0) + gf;
-                    group.ga = (group.ga || 0) + ga;
-                    group.gd = group.gf - group.ga;
-
-                    if (isWin) group.w = (group.w || 0) + 1;
-                    else if (isDraw) group.d = (group.d || 0) + 1;
-                    else if (isLoss) group.l = (group.l || 0) + 1;
-
-                    group.pts = ((group.w || 0) * 3) + (group.d || 0);
-                    group.winRate = group.mp > 0 ? (((group.w || 0) / group.mp) * 100).toFixed(1) : "0.0";
-                    if (awardMotm) group.motm = (group.motm || 0) + 1;
-                    return group;
-                }
-
-                let officialStats = updateStatGroup(player.official);
-                let domesticStats = matchType === 'domestic' ? updateStatGroup(player.domestic) : (player.domestic || initStats());
-
-                await userRef.update({
-                    official: officialStats,
-                    domestic: domesticStats
-                });
-
-                document.getElementById('playerSearchInput').value = '';
-            } catch (err) {
-                console.error("Error saving direct score: ", err);
-            }
-        });
-
-        // TOURNAMENT BRACKET ENGINE
-        function generatePlayerSelects() {
-            let count = parseInt(document.getElementById('tPlayerCount').value);
-            let container = document.getElementById('playerSelectsGrid');
+        function generateSquadSlots() {
+            let count = parseInt(document.getElementById('squadFormatSelect').value);
+            let container = document.getElementById('squadSlotsContainer');
             container.innerHTML = '';
 
             for (let i = 0; i < count; i++) {
-                let optionsHtml = '';
+                let optionsHtml = '<option value="">-- Select Player --</option>';
                 cachedPlayers.forEach((p, idx) => {
                     let selected = (idx % cachedPlayers.length) === (i % cachedPlayers.length) ? 'selected' : '';
-                    optionsHtml += `<option value="${p.uid}" ${selected}>${p.name || 'Player'}</option>`;
+                    optionsHtml += `<option value="${p.uid}" ${selected}>${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
                 });
 
                 container.innerHTML += `
-                        <div class="form-group">
-                            <label>Slot ${i + 1}</label>
-                            <select class="form-control tournament-player-select">${optionsHtml}</select>
-                        </div>`;
+                            <div class="squad-slot-card">
+                                <div class="form-group" style="margin:0;">
+                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                    <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GF (Goals)</label>
+                                    <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GA (Against)</label>
+                                    <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>MOTM?</label>
+                                    <select class="form-control squad-player-motm">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+                            </div>`;
+            }
+            toggleAutoWinMode(); // Re-apply toggle state if squad slots re-generate
+        }
+
+        function generateDomesticSlots() {
+            let count = parseInt(document.getElementById('domesticSlotsCount').value) || 40;
+            let container = document.getElementById('domesticSlotsContainer');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                let optionsHtml = '<option value="">-- None / Skip Slot --</option>';
+                cachedPlayers.forEach(p => {
+                    optionsHtml += `<option value="${p.uid}">${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
+                });
+
+                container.innerHTML += `
+                            <div class="squad-slot-card">
+                                <div class="form-group" style="margin:0;">
+                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                    <select class="form-control dom-player-id">${optionsHtml}</select>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>Wins (W)</label>
+                                    <input type="number" class="form-control dom-w" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>Draws (D)</label>
+                                    <input type="number" class="form-control dom-d" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>Losses (L)</label>
+                                    <input type="number" class="form-control dom-l" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GF</label>
+                                    <input type="number" class="form-control dom-gf" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GA</label>
+                                    <input type="number" class="form-control dom-ga" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>MOTM?</label>
+                                    <select class="form-control dom-motm">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+                            </div>`;
             }
         }
 
-        document.getElementById('createTournamentForm').addEventListener('submit', async function (e) {
+        // SQUAD SCORE & COMMUNITY RESULT SUBMISSION HANDLER
+        document.getElementById('captainScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            let tournamentData = {
-                name: document.getElementById('tName').value,
-                currentStage: 'R32',
-                legsConfig: {
-                    'Round of 32': parseInt(document.getElementById('r32Legs').value),
-                    'Round of 16': parseInt(document.getElementById('r16Legs').value),
-                    'Quarter-Finals': parseInt(document.getElementById('qfLegs').value),
-                    'Semi-Finals': parseInt(document.getElementById('sfLegs').value),
-                    'Grand Final': parseInt(document.getElementById('finalLegs').value)
-                },
-                matches: []
-            };
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
 
-            let selectElements = document.querySelectorAll('.tournament-player-select');
-            let selectedPlayers = [];
+            let community = document.getElementById('communitySelect').value;
+            let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
+            let communityResult = document.getElementById('communityMatchResultSelect').value; // 'w', 'd', 'l', 'auto'
 
-            selectElements.forEach(s => {
-                let pId = s.value;
-                let pObj = cachedPlayers.find(p => p.uid === pId);
-                if (pObj) {
-                    selectedPlayers.push({ id: pObj.uid, name: pObj.name, avatar: pObj.avatar || 'Image/player1.webp' });
-                }
-            });
+            let batch = db.batch();
+            let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            selectedPlayers.sort(() => Math.random() - 0.5);
+            if (communityResult === 'auto') {
+                // AUTO WIN HANDLING: Submit 1 entry for community win, NO player updates
+                let docRef = db.collection('pending_scores').doc();
+                batch.set(docRef, {
+                    playerId: "COMMUNITY_AUTO_WIN",
+                    playerName: `AUTO WIN (${community.toUpperCase()})`,
+                    community: community,
+                    communityResult: 'auto',
+                    squadFormat: 'Auto Win Entry',
+                    gf: 0,
+                    ga: 0,
+                    awardMotm: false,
+                    submittedBy: currentCaptainUid || 'captain',
+                    timestamp: currentTime,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } else {
+                // NORMAL SQUAD SCORE HANDLING
+                let playerNodes = document.querySelectorAll('.squad-player-id');
+                let gfNodes = document.querySelectorAll('.squad-player-gf');
+                let gaNodes = document.querySelectorAll('.squad-player-ga');
+                let motmNodes = document.querySelectorAll('.squad-player-motm');
 
-            let count = selectedPlayers.length;
-            let targetSize = count <= 8 ? 8 : count <= 16 ? 16 : 32;
+                playerNodes.forEach((node, idx) => {
+                    let pUid = node.value;
+                    let pObj = cachedPlayers.find(p => p.uid === pUid);
 
-            while (selectedPlayers.length < targetSize) {
-                selectedPlayers.push({ id: "-1", name: 'BYE (Auto Pass)', avatar: 'Image/player1.webp' });
-            }
+                    if (pObj) {
+                        let docRef = db.collection('pending_scores').doc();
 
-            if (targetSize === 8) tournamentData.currentStage = 'Quarter-Finals';
-            else if (targetSize === 16) tournamentData.currentStage = 'Round of 16';
-            else tournamentData.currentStage = 'Round of 32';
-
-            let legs = tournamentData.legsConfig[tournamentData.currentStage];
-
-            for (let i = 0; i < targetSize; i += 2) {
-                let p1 = selectedPlayers[i];
-                let p2 = selectedPlayers[i + 1];
-                let isBye = p2.name.includes('BYE');
-
-                tournamentData.matches.push({
-                    id: i / 2, p1: p1, p2: p2,
-                    winner: isBye ? p1 : null,
-                    legsNeeded: legs
+                        batch.set(docRef, {
+                            playerId: pUid,
+                            playerName: pObj.name || 'Unknown Player',
+                            community: community,
+                            communityResult: communityResult,
+                            squadFormat: squadFormat,
+                            gf: parseInt(gfNodes[idx].value) || 0,
+                            ga: parseInt(gaNodes[idx].value) || 0,
+                            awardMotm: motmNodes[idx].value === 'yes',
+                            submittedBy: currentCaptainUid || 'captain',
+                            timestamp: currentTime,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
                 });
             }
 
             try {
-                await db.collection('tournaments').doc('active_tournament').set(tournamentData);
+                await batch.commit();
+                alert(`Success! Squad scores & Community Result (${communityResult.toUpperCase()}) sent to Admin Panel for approval.`);
             } catch (err) {
-                console.error("Failed to create tournament: ", err);
+                console.error("Submission Error: ", err);
+                alert("Failed to send scores. Please try again.");
+            } finally {
+                submitBtn.disabled = false;
             }
         });
 
-        async function resetTournamentMemory() {
-            if (confirm("Reset current active tournament?")) {
-                try {
-                    await db.collection('tournaments').doc('active_tournament').delete();
-                    tState = null;
-                    document.getElementById('activeTournamentSection').style.display = 'none';
-                } catch (err) {
-                    console.error("Error resetting tournament: ", err);
+        // DOMESTIC LEAGUE SUBMISSION HANDLER
+        document.getElementById('domesticBatchForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const domBtn = document.getElementById('domSubmitBtn');
+            let playerNodes = document.querySelectorAll('.dom-player-id');
+            let wNodes = document.querySelectorAll('.dom-w');
+            let dNodes = document.querySelectorAll('.dom-d');
+            let lNodes = document.querySelectorAll('.dom-l');
+            let gfNodes = document.querySelectorAll('.dom-gf');
+            let gaNodes = document.querySelectorAll('.dom-ga');
+            let motmNodes = document.querySelectorAll('.dom-motm');
+
+            let batch = db.batch();
+            let submittedCount = 0;
+
+            playerNodes.forEach((node, idx) => {
+                let pUid = node.value;
+                if (pUid) { // Skip unselected / 'None' slots
+                    let pObj = cachedPlayers.find(p => p.uid === pUid);
+                    let docRef = db.collection('pending_scores').doc();
+                    let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    batch.set(docRef, {
+                        playerId: pUid,
+                        playerName: pObj ? (pObj.name || 'Unknown Player') : 'Unknown Player',
+                        community: 'Domestic League',
+                        squadFormat: 'Domestic Solo',
+                        matchType: 'domestic',
+                        wins: parseInt(wNodes[idx].value) || 0,
+                        draws: parseInt(dNodes[idx].value) || 0,
+                        losses: parseInt(lNodes[idx].value) || 0,
+                        gf: parseInt(gfNodes[idx].value) || 0,
+                        ga: parseInt(gaNodes[idx].value) || 0,
+                        awardMotm: motmNodes[idx].value === 'yes',
+                        submittedBy: currentCaptainUid || 'captain',
+                        timestamp: currentTime,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    submittedCount++;
                 }
-            }
-        }
-
-        function renderFixtures() {
-            if (!tState) return;
-            const container = document.getElementById('fixturesContainer');
-            document.getElementById('activeTournamentSection').style.display = 'block';
-            document.getElementById('activeTTitle').innerHTML = `<i class="fa-solid fa-gamepad"></i> ${tState.name} - ${tState.currentStage}`;
-
-            container.innerHTML = '';
-            let roundHtml = `<div class="round-box"><div class="round-header"><span>${tState.currentStage} Fixtures</span><span class="leg-tag">${tState.matches[0].legsNeeded === 2 ? '2 Legs System' : '1 Leg System'}</span></div>`;
-
-            tState.matches.forEach((m, idx) => {
-                const isCompleted = m.winner !== null;
-                const isDoubleLeg = m.legsNeeded === 2;
-                const isP1Win = m.winner && m.winner.id === m.p1.id;
-                const isP2Win = m.winner && m.winner.id === m.p2.id;
-
-                roundHtml += `
-                        <div class="match-card">
-                            <div class="player-vs-box">
-                                <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                    <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                    <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
-                                </div>
-                                <span class="vs">VS</span>
-                                <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                    <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                    <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                </div>
-                            </div>
-
-                            ${!isCompleted ? `
-                                <div class="score-inputs">
-                                    <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                    <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                    <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                    ${isDoubleLeg ? `
-                                        <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                        <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                        <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                    ` : ''}
-                                    <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                                </div>
-                            ` : `
-                                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                    Winner: ${m.winner.name}
-                                </div>
-                            `}
-                        </div>`;
             });
 
-            roundHtml += `</div>`;
-            container.innerHTML = roundHtml;
-        }
-
-        async function submitScore(idx) {
-            const m = tState.matches[idx];
-            const isDoubleLeg = m.legsNeeded === 2;
-
-            const l1_1 = parseInt(document.getElementById(`l1_p1_${idx}`).value) || 0;
-            const l1_2 = parseInt(document.getElementById(`l1_p2_${idx}`).value) || 0;
-
-            let l2_1 = 0, l2_2 = 0;
-            if (isDoubleLeg) {
-                l2_1 = parseInt(document.getElementById(`l2_p1_${idx}`).value) || 0;
-                l2_2 = parseInt(document.getElementById(`l2_p2_${idx}`).value) || 0;
+            if (submittedCount === 0) {
+                return alert("At least select 1 player to submit domestic scores!");
             }
 
-            let total1 = l1_1 + l2_1;
-            let total2 = l1_2 + l2_2;
-
-            if (total1 === total2) return;
-
-            m.winner = total1 > total2 ? m.p1 : m.p2;
+            domBtn.disabled = true;
 
             try {
-                await db.collection('tournaments').doc('active_tournament').set(tState);
-
-                if (tState.matches.every(match => match.winner !== null)) {
-                    advanceStage();
-                }
+                await batch.commit();
+                alert(`Success! Sent ${submittedCount} domestic player scores to Admin Panel for approval.`);
+                generateDomesticSlots();
             } catch (err) {
-                console.error("Error submitting tournament score: ", err);
+                console.error("Domestic Batch Submission Error:", err);
+                alert("Failed to submit domestic scores.");
+            } finally {
+                domBtn.disabled = false;
             }
-        }
+        });
 
-        async function advanceStage() {
-            const winners = tState.matches.map(m => m.winner);
+        function renderPendingLogs(pendingList) {
+            let container = document.getElementById('pendingLogsContainer');
+            container.innerHTML = '';
 
-            if (tState.currentStage === 'Round of 32') {
-                tState.currentStage = 'Round of 16';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Round of 16') {
-                tState.currentStage = 'Quarter-Finals';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Quarter-Finals') {
-                tState.currentStage = 'Semi-Finals';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Semi-Finals') {
-                tState.currentStage = 'Grand Final';
-                setupNextRound(winners);
-            } else if (tState.currentStage === 'Grand Final') {
-                await db.collection('tournaments').doc('active_tournament').set(tState);
+            if (!pendingList || pendingList.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">No pending submissions in queue.</p>`;
+                return;
             }
-        }
 
-        async function setupNextRound(winnersList) {
-            tState.matches = [];
-            let legs = tState.legsConfig[tState.currentStage];
-
-            for (let i = 0; i < winnersList.length; i += 2) {
-                tState.matches.push({
-                    id: i / 2, p1: winnersList[i], p2: winnersList[i + 1], winner: null, legsNeeded: legs
-                });
-            }
-            await db.collection('tournaments').doc('active_tournament').set(tState);
+            pendingList.forEach(item => {
+                let commResTag = item.communityResult ? `Result: ${item.communityResult.toUpperCase()} | ` : '';
+                container.innerHTML += `
+                            <div class="submission-item">
+                                <div>
+                                    <strong>${item.playerName}</strong>
+                                    <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
+                                        ${commResTag}${item.wins !== undefined ? `W: ${item.wins} | D: ${item.draws} \vert{} L:${item.losses} | ` : ''}GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
+                                    </div>
+                                </div>
+                                <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                            </div>`;
+            });
         }
     </script>
 </body>
