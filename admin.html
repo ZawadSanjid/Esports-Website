@@ -1988,7 +1988,7 @@
             });
         }
 
-        // FULL FIXED & SAFE APPROVAL FUNCTION WITH STRICT MATCH TYPE ISOLATION
+        // FULL FIXED & SAFE APPROVAL FUNCTION WITH STRICT MATCH TYPE & SINGLE WIN GUARD
         async function approveCaptainScore(reqId) {
             try {
                 const pendingDoc = await db.collection('pending_scores').doc(reqId).get();
@@ -1998,7 +1998,7 @@
                 }
 
                 const req = pendingDoc.data();
-                const { playerId, gf, ga, community, communityResult, awardMotm, matchType, wins, draws, losses } = req;
+                const { playerId, gf, ga, community, communityResult, awardMotm, matchType } = req;
                 const commCode = community || 'cobeg(main)';
 
                 // 1. AUTO WIN APPROVAL (COMMUNITY DIRECT CREDIT ONLY)
@@ -2028,17 +2028,16 @@
 
                     let player = userDoc.data();
 
-                    // Calculating MP & Wins/Draws/Losses
-                    let pWins = wins !== undefined ? wins : (gf > ga ? 1 : 0);
-                    let pDraws = draws !== undefined ? draws : (gf === ga ? 1 : 0);
-                    let pLosses = losses !== undefined ? losses : (gf < ga ? 1 : 0);
-                    let pMP = pWins + pDraws + pLosses || 1;
+                    // Calculate outcome for 1 single match
+                    let pWins = gf > ga ? 1 : 0;
+                    let pDraws = gf === ga ? 1 : 0;
+                    let pLosses = gf < ga ? 1 : 0;
 
                     // OFFICIAL VS DOMESTIC ISOLATION LOGIC
                     if (matchType === 'domestic') {
                         // UPDATE DOMESTIC STATS ONLY
                         let domStats = player.domestic || initStats();
-                        domStats.mp = (domStats.mp || 0) + pMP;
+                        domStats.mp = (domStats.mp || 0) + 1;
                         domStats.w = (domStats.w || 0) + pWins;
                         domStats.d = (domStats.d || 0) + pDraws;
                         domStats.l = (domStats.l || 0) + pLosses;
@@ -2053,7 +2052,7 @@
                     } else {
                         // UPDATE OFFICIAL STATS ONLY
                         let offStats = player.official || initStats();
-                        offStats.mp = (offStats.mp || 0) + pMP;
+                        offStats.mp = (offStats.mp || 0) + 1;
                         offStats.w = (offStats.w || 0) + pWins;
                         offStats.d = (offStats.d || 0) + pDraws;
                         offStats.l = (offStats.l || 0) + pLosses;
@@ -2068,26 +2067,21 @@
                         let communities = player.communities || {};
                         let cStats = communities[commCode] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
 
-                        cStats.mp += pMP;
-                        cStats.gf += gf;
-                        cStats.ga += ga;
+                        cStats.mp = (cStats.mp || 0) + 1;
+                        cStats.gf = (cStats.gf || 0) + gf;
+                        cStats.ga = (cStats.ga || 0) + ga;
 
-                        if (communityResult === 'w') {
-                            cStats.w += 1;
-                            cStats.pts += 3;
-                        } else if (communityResult === 'd') {
-                            cStats.d += 1;
-                            cStats.pts += 1;
-                        } else if (communityResult === 'l') {
-                            cStats.l += 1;
+                        if (communityResult === 'w' || (pWins === 1 && !communityResult)) {
+                            cStats.w = (cStats.w || 0) + 1;
+                            cStats.pts = (cStats.pts || 0) + 3;
+                        } else if (communityResult === 'd' || (pDraws === 1 && !communityResult)) {
+                            cStats.d = (cStats.d || 0) + 1;
+                            cStats.pts = (cStats.pts || 0) + 1;
                         } else {
-                            cStats.w += pWins;
-                            cStats.d += pDraws;
-                            cStats.l += pLosses;
-                            cStats.pts += (pWins * 3) + pDraws;
+                            cStats.l = (cStats.l || 0) + 1;
                         }
 
-                        cStats.winRate = cStats.mp > 0 ? ((cStats.w / cStats.mp) * 100).toFixed(1) : "0.0";
+                        cStats.winRate = cStats.mp > 0 ? (((cStats.w || 0) / cStats.mp) * 100).toFixed(1) : "0.0";
                         communities[commCode] = cStats;
 
                         transaction.update(userRef, {
@@ -2100,6 +2094,7 @@
                     transaction.delete(db.collection('pending_scores').doc(reqId));
                 });
 
+                alert("Score Approved & Ranked Correctly!");
             } catch (err) {
                 console.error("Error approving score: ", err);
                 alert("Failed to approve score: " + err.message);
