@@ -1154,7 +1154,6 @@
             const localAdmin = JSON.parse(localStorage.getItem('ebfc_user'));
 
             if (!user && (!localAdmin || localAdmin.role !== 'admin')) {
-                alert("Access Denied! Master Admin Authorization Required.");
                 window.location.href = "login.html";
                 return;
             }
@@ -1163,7 +1162,6 @@
                 const doc = await db.collection('users').doc(user.uid).get();
                 if (!doc.exists || (doc.data().role !== 'admin')) {
                     if (!localAdmin || localAdmin.role !== 'admin') {
-                        alert("Access Denied! Master Admin Authorization Required.");
                         window.location.href = "login.html";
                         return;
                     }
@@ -1364,7 +1362,7 @@
         document.getElementById('editPlayerStatsForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('statsUid').value;
-            if (!uid) return alert("Select a player first.");
+            if (!uid) return;
 
             const offMP = parseInt(document.getElementById('offMP').value) || 0;
             const offW = parseInt(document.getElementById('offW').value) || 0;
@@ -1415,17 +1413,15 @@
                     official: updatedOfficial,
                     domestic: updatedDomestic
                 });
-                alert("Player Ranking Stats updated successfully!");
             } catch (err) {
-                console.error(err);
-                alert("Error updating stats: " + err.message);
+                console.error("Error updating stats: ", err);
             }
         });
 
         // RESET ALL STATS FOR SELECTED PLAYER
         async function resetSelectedPlayerStats() {
             const uid = document.getElementById('statsUid').value;
-            if (!uid) return alert("Select a player first.");
+            if (!uid) return;
 
             if (confirm("Are you sure you want to RESET all official and domestic stats to ZERO for this player?")) {
                 const zeroStats = initStats();
@@ -1434,11 +1430,9 @@
                         official: zeroStats,
                         domestic: zeroStats
                     });
-                    alert("Player stats reset to zero!");
                     loadPlayerStatsToEditor();
                 } catch (err) {
-                    console.error(err);
-                    alert("Error resetting stats.");
+                    console.error("Error resetting stats: ", err);
                 }
             }
         }
@@ -1492,7 +1486,7 @@
             const uid = document.getElementById('commUid').value;
             const commCode = document.getElementById('commCodeSelect').value;
 
-            if (!uid || !commCode) return alert("Select player and community first!");
+            if (!uid || !commCode) return;
 
             const mp = parseInt(document.getElementById('cMP').value) || 0;
             const w = parseInt(document.getElementById('cW').value) || 0;
@@ -1523,10 +1517,8 @@
                 communities[commCode] = updatedComm;
 
                 await userRef.update({ communities: communities });
-                alert(`Community (${commCode.toUpperCase()}) stats updated successfully!`);
             } catch (err) {
-                console.error(err);
-                alert("Error updating community stats: " + err.message);
+                console.error("Error updating community stats: ", err);
             }
         });
 
@@ -1534,7 +1526,7 @@
             const uid = document.getElementById('commUid').value;
             const commCode = document.getElementById('commCodeSelect').value;
 
-            if (!uid || !commCode) return alert("Select player and community first!");
+            if (!uid || !commCode) return;
 
             if (confirm(`Reset stats to ZERO for community '${commCode.toUpperCase()}'?`)) {
                 try {
@@ -1545,11 +1537,9 @@
                     communities[commCode] = { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
 
                     await userRef.update({ communities: communities });
-                    alert("Community stats reset to zero!");
                     loadCommunityStatsToEditor();
                 } catch (err) {
-                    console.error(err);
-                    alert("Error resetting community stats.");
+                    console.error("Error resetting community stats: ", err);
                 }
             }
         }
@@ -1558,7 +1548,7 @@
             const uid = document.getElementById('commUid').value;
             const commCode = document.getElementById('commCodeSelect').value;
 
-            if (!uid || !commCode) return alert("Select player and community first!");
+            if (!uid || !commCode) return;
 
             if (confirm(`DELETE the community record '${commCode.toUpperCase()}' permanently from player's profile?`)) {
                 try {
@@ -1566,11 +1556,9 @@
                     await userRef.update({
                         [`communities.${commCode}`]: firebase.firestore.FieldValue.delete()
                     });
-                    alert("Community record deleted!");
                     loadPlayerCommunities();
                 } catch (err) {
-                    console.error(err);
-                    alert("Error deleting community record.");
+                    console.error("Error deleting community record: ", err);
                 }
             }
         }
@@ -1580,7 +1568,6 @@
                 const file = input.files[0];
 
                 if (file.size > 5 * 1024 * 1024) {
-                    alert("Image size exceeds 5 MB limit! Please choose a smaller file.");
                     input.value = "";
                     return;
                 }
@@ -1635,7 +1622,7 @@
             const champObj = cachedPlayers.find(p => p.uid === champUid);
             const runnerObj = cachedPlayers.find(p => p.uid === runnerUid);
 
-            if (!champObj || !runnerObj) return alert("Select valid players for Champion and Runner-Up!");
+            if (!champObj || !runnerObj) return;
 
             const uploadedLogo = document.getElementById('pastTLogoBase64').value || 'Image/image1.jpg.jpg';
 
@@ -1656,13 +1643,11 @@
 
             try {
                 await db.collection('past_tournaments').add(pastTournamentData);
-                alert("Tournament published with uploaded image successfully!");
                 document.getElementById('addPastTournamentForm').reset();
                 document.getElementById('pastTLogoBase64').value = '';
                 document.getElementById('logoPreviewContainer').style.display = 'none';
             } catch (err) {
-                console.error(err);
-                alert("Failed to publish tournament: " + err.message);
+                console.error("Failed to publish tournament: ", err);
             }
         });
 
@@ -1695,9 +1680,8 @@
             if (confirm("Remove this tournament entry from Hall of Fame showcase?")) {
                 try {
                     await db.collection('past_tournaments').doc(id).delete();
-                    alert("Tournament deleted successfully!");
                 } catch (err) {
-                    alert("Error deleting tournament.");
+                    console.error("Error deleting tournament: ", err);
                 }
             }
         }
@@ -1739,7 +1723,7 @@
         document.getElementById('editPlayerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('editUid').value;
-            if (!uid) return alert("Select a player first.");
+            if (!uid) return;
 
             try {
                 await db.collection('users').doc(uid).update({
@@ -1752,17 +1736,15 @@
                     occupation: document.getElementById('editOccupation').value.trim(),
                     address: document.getElementById('editAddress').value.trim()
                 });
-                alert("Database entry updated successfully!");
             } catch (err) {
-                console.error(err);
-                alert("Error updating profile database.");
+                console.error("Error updating profile: ", err);
             }
         });
 
         document.getElementById('addHistoryForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('historyPlayerSelect').value;
-            if (!uid) return alert("Select a player first!");
+            if (!uid) return;
 
             const historyItem = {
                 title: document.getElementById('historyTitle').value.trim(),
@@ -1779,13 +1761,11 @@
                     tournamentHistoryList: existingHistory
                 });
 
-                alert("Tournament History badge added to player profile!");
                 document.getElementById('historyTitle').value = '';
                 document.getElementById('historySub').value = '';
                 renderExistingPlayerHistory();
             } catch (err) {
-                console.error(err);
-                alert("Failed to add tournament history.");
+                console.error("Failed to add tournament history: ", err);
             }
         });
 
@@ -1832,18 +1812,16 @@
                     tournamentHistoryList: historyList
                 });
 
-                alert("Tournament badge removed successfully!");
                 renderExistingPlayerHistory();
             } catch (err) {
-                console.error(err);
-                alert("Failed to remove badge.");
+                console.error("Failed to remove badge: ", err);
             }
         }
 
         document.getElementById('addAchievementForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const uid = document.getElementById('achPlayerSelect').value;
-            if (!uid) return alert("Select a player first!");
+            if (!uid) return;
 
             const achItem = {
                 title: document.getElementById('achTitle').value.trim(),
@@ -1860,13 +1838,11 @@
                     achievementsList: existingAch
                 });
 
-                alert("Achievement badge added to player profile!");
                 document.getElementById('achTitle').value = '';
                 document.getElementById('achDesc').value = '';
                 renderExistingPlayerAchievements();
             } catch (err) {
-                console.error(err);
-                alert("Failed to add achievement.");
+                console.error("Failed to add achievement: ", err);
             }
         });
 
@@ -1913,11 +1889,9 @@
                     achievementsList: achList
                 });
 
-                alert("Achievement badge removed successfully!");
                 renderExistingPlayerAchievements();
             } catch (err) {
-                console.error(err);
-                alert("Failed to remove achievement.");
+                console.error("Failed to remove achievement: ", err);
             }
         }
 
@@ -1971,10 +1945,8 @@
                 await db.collection('users').doc(pUid).update({
                     role: 'captain'
                 });
-                alert("Success! Player granted Captain access.");
             } catch (err) {
-                console.error(err);
-                alert("Failed to grant captain access.");
+                console.error("Failed to grant captain access: ", err);
             }
         });
 
@@ -2006,9 +1978,8 @@
             if (confirm("Revoke Captain privileges for this user?")) {
                 try {
                     await db.collection('users').doc(uid).update({ role: 'player' });
-                    alert("Captain access revoked.");
                 } catch (err) {
-                    alert("Error revoking access.");
+                    console.error("Error revoking access: ", err);
                 }
             }
         }
@@ -2043,7 +2014,7 @@
             });
         }
 
-        // AUTO-SYNCING CAPTAIN SCORE APPROVAL FUNCTION WITH COMMUNITY BREAKDOWN
+        // DIRECT SILENT CAPTAIN SCORE APPROVAL FUNCTION (NOTIFICATION CANCELLED)
         async function approveCaptainScore(reqId, playerId, gf, ga, commCode, commResult, awardMotm) {
             try {
                 const userRef = db.collection('users').doc(playerId);
@@ -2099,25 +2070,20 @@
                         communities: communities
                     });
 
-                    // Remove pending score entry
+                    // Direct delete pending score request silently
                     transaction.delete(db.collection('pending_scores').doc(reqId));
                 });
 
-                alert("Score approved and synced to player's Community & Official stats!");
-
             } catch (err) {
-                console.error(err);
-                alert("Failed to approve score: " + err.message);
+                console.error("Error approving score: ", err);
             }
         }
 
         async function rejectCaptainScore(reqId) {
-            if (!confirm("Reject and remove this captain submission?")) return;
             try {
                 await db.collection('pending_scores').doc(reqId).delete();
-                alert("Submission rejected.");
             } catch (err) {
-                alert("Error rejecting request.");
+                console.error("Error rejecting score: ", err);
             }
         }
 
@@ -2135,7 +2101,7 @@
                 const userRef = db.collection('users').doc(playerId);
                 const userDoc = await userRef.get();
 
-                if (!userDoc.exists) return alert("Player profile not found.");
+                if (!userDoc.exists) return;
 
                 let player = userDoc.data();
                 let isWin = gf > ga;
@@ -2167,11 +2133,9 @@
                     domestic: domesticStats
                 });
 
-                alert(`Result recorded for ${player.name || 'Player'}!`);
                 document.getElementById('playerSearchInput').value = '';
             } catch (err) {
-                console.error(err);
-                alert("Error saving direct score.");
+                console.error("Error saving direct score: ", err);
             }
         });
 
@@ -2252,9 +2216,8 @@
 
             try {
                 await db.collection('tournaments').doc('active_tournament').set(tournamentData);
-                alert("Tournament successfully created!");
             } catch (err) {
-                alert("Failed to create tournament.");
+                console.error("Failed to create tournament: ", err);
             }
         });
 
@@ -2265,7 +2228,7 @@
                     tState = null;
                     document.getElementById('activeTournamentSection').style.display = 'none';
                 } catch (err) {
-                    alert("Error resetting tournament.");
+                    console.error("Error resetting tournament: ", err);
                 }
             }
         }
@@ -2339,10 +2302,7 @@
             let total1 = l1_1 + l2_1;
             let total2 = l1_2 + l2_2;
 
-            if (total1 === total2) {
-                alert("Aggregate scores tied!");
-                return;
-            }
+            if (total1 === total2) return;
 
             m.winner = total1 > total2 ? m.p1 : m.p2;
 
@@ -2353,7 +2313,7 @@
                     advanceStage();
                 }
             } catch (err) {
-                alert("Error submitting tournament score.");
+                console.error("Error submitting tournament score: ", err);
             }
         }
 
@@ -2373,7 +2333,6 @@
                 tState.currentStage = 'Grand Final';
                 setupNextRound(winners);
             } else if (tState.currentStage === 'Grand Final') {
-                alert(`🏆 CHAMPION OF ${tState.name}: ${winners[0].name}!`);
                 await db.collection('tournaments').doc('active_tournament').set(tState);
             }
         }
