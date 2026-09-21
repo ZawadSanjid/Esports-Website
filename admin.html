@@ -188,6 +188,16 @@
             color: var(--primary-red);
         }
 
+        .sub-heading {
+            font-family: 'Teko', sans-serif;
+            font-size: 24px;
+            color: var(--accent-gold);
+            margin: 15px 0 10px 0;
+            text-transform: uppercase;
+            border-left: 3px solid var(--accent-gold);
+            padding-left: 10px;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -509,13 +519,14 @@
                 <option value="all" selected>-- View All Admin Sections --</option>
                 <option value="sec-players-db">1. Registered Player Database & Image Download</option>
                 <option value="sec-edit-player">2. Edit Player Database Profile</option>
-                <option value="sec-past-tournaments">3. Manage Past Tournaments (Hall of Fame Showcase)</option>
-                <option value="sec-player-history">4. Add / Remove Tournament History Badges</option>
-                <option value="sec-achievements">5. Add / Remove Special Achievement Badges</option>
-                <option value="sec-captain-queue">6. Captain Score Submission Queue</option>
-                <option value="sec-captain-roles">7. Manage Captain Access Roles</option>
-                <option value="sec-direct-score">8. Direct Admin Match Score Input</option>
-                <option value="sec-tournament-generator">9. Persistent Tournament Bracket Generator</option>
+                <option value="sec-stats-editor">3. Player Stats & Ranking Editor (Undo / Override)</option>
+                <option value="sec-past-tournaments">4. Manage Past Tournaments (Hall of Fame Showcase)</option>
+                <option value="sec-player-history">5. Add / Remove Tournament History Badges</option>
+                <option value="sec-achievements">6. Add / Remove Special Achievement Badges</option>
+                <option value="sec-captain-queue">7. Captain Score Submission Queue</option>
+                <option value="sec-captain-roles">8. Manage Captain Access Roles</option>
+                <option value="sec-direct-score">9. Direct Admin Match Score Input</option>
+                <option value="sec-tournament-generator">10. Persistent Tournament Bracket Generator</option>
             </select>
         </div>
 
@@ -613,6 +624,103 @@
                 </div>
 
                 <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-floppy-disk"></i> Update Full Database Entry</button>
+            </form>
+        </div>
+
+        <!-- NEW SECTION: PLAYER STATS & RANKING OVERRIDE (UNDO / EDIT STATS) -->
+        <div id="sec-stats-editor" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-rotate-left"></i> Player Stats & Ranking Editor (Undo / Override)</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Select Player To Edit / Correct Stats</label>
+                <select id="statsPlayerSelect" class="form-control" onchange="loadPlayerStatsToEditor()">
+                    <option value="">-- Choose Player --</option>
+                </select>
+            </div>
+
+            <form id="editPlayerStatsForm">
+                <input type="hidden" id="statsUid">
+
+                <!-- OFFICIAL RANKING STATS -->
+                <div class="sub-heading">Official Ranking Stats</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Matches Played (MP)</label>
+                        <input type="number" id="offMP" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Wins (W)</label>
+                        <input type="number" id="offW" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Draws (D)</label>
+                        <input type="number" id="offD" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Losses (L)</label>
+                        <input type="number" id="offL" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals For (GF)</label>
+                        <input type="number" id="offGF" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals Against (GA)</label>
+                        <input type="number" id="offGA" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Points (PTS)</label>
+                        <input type="number" id="offPTS" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>MOTM Count</label>
+                        <input type="number" id="offMOTM" class="form-control" min="0" value="0">
+                    </div>
+                </div>
+
+                <!-- DOMESTIC RANKING STATS -->
+                <div class="sub-heading">Domestic Ranking Stats</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Matches Played (MP)</label>
+                        <input type="number" id="domMP" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Wins (W)</label>
+                        <input type="number" id="domW" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Draws (D)</label>
+                        <input type="number" id="domD" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Losses (L)</label>
+                        <input type="number" id="domL" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals For (GF)</label>
+                        <input type="number" id="domGF" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals Against (GA)</label>
+                        <input type="number" id="domGA" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Points (PTS)</label>
+                        <input type="number" id="domPTS" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>MOTM Count</label>
+                        <input type="number" id="domMOTM" class="form-control" min="0" value="0">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top: 10px;">
+                    <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Save Corrected Ranking Stats</button>
+                    <button type="button" onclick="resetSelectedPlayerStats()" class="btn-danger"><i class="fa-solid fa-trash-arrow-up"></i> Reset All Stats To Zero</button>
+                </div>
             </form>
         </div>
 
@@ -1105,6 +1213,7 @@
 
         function populateDropdowns() {
             let editSelect = document.getElementById('editPlayerSelect');
+            let statsSelect = document.getElementById('statsPlayerSelect');
             let historySelect = document.getElementById('historyPlayerSelect');
             let achSelect = document.getElementById('achPlayerSelect');
             let singleSelect = document.getElementById('ebfcPlayerSelect');
@@ -1114,8 +1223,10 @@
 
             let currentHistVal = historySelect.value;
             let currentAchVal = achSelect.value;
+            let currentStatsVal = statsSelect.value;
 
             editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
+            statsSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             historySelect.innerHTML = '<option value="">-- Choose Player --</option>';
             achSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             singleSelect.innerHTML = '';
@@ -1126,6 +1237,7 @@
             cachedPlayers.forEach(p => {
                 let opt = `<option value="${p.uid}">${p.name || 'Unknown'} (${p.club || 'EBFC'})</option>`;
                 editSelect.innerHTML += opt;
+                statsSelect.innerHTML += opt;
                 historySelect.innerHTML += opt;
                 achSelect.innerHTML += opt;
                 singleSelect.innerHTML += opt;
@@ -1136,6 +1248,124 @@
 
             if (currentHistVal) historySelect.value = currentHistVal;
             if (currentAchVal) achSelect.value = currentAchVal;
+            if (currentStatsVal) statsSelect.value = currentStatsVal;
+        }
+
+        // LOAD PLAYER STATS INTO STATS EDITOR
+        function loadPlayerStatsToEditor() {
+            const uid = document.getElementById('statsPlayerSelect').value;
+            const player = cachedPlayers.find(p => p.uid === uid);
+
+            document.getElementById('statsUid').value = uid || '';
+
+            if (!player) {
+                document.getElementById('editPlayerStatsForm').reset();
+                return;
+            }
+
+            const off = player.official || initStats();
+            const dom = player.domestic || initStats();
+
+            document.getElementById('offMP').value = off.mp || 0;
+            document.getElementById('offW').value = off.w || 0;
+            document.getElementById('offD').value = off.d || 0;
+            document.getElementById('offL').value = off.l || 0;
+            document.getElementById('offGF').value = off.gf || 0;
+            document.getElementById('offGA').value = off.ga || 0;
+            document.getElementById('offPTS').value = off.pts || 0;
+            document.getElementById('offMOTM').value = off.motm || 0;
+
+            document.getElementById('domMP').value = dom.mp || 0;
+            document.getElementById('domW').value = dom.w || 0;
+            document.getElementById('domD').value = dom.d || 0;
+            document.getElementById('domL').value = dom.l || 0;
+            document.getElementById('domGF').value = dom.gf || 0;
+            document.getElementById('domGA').value = dom.ga || 0;
+            document.getElementById('domPTS').value = dom.pts || 0;
+            document.getElementById('domMOTM').value = dom.motm || 0;
+        }
+
+        // SAVE OVERRIDDEN/CORRECTED PLAYER STATS
+        document.getElementById('editPlayerStatsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const uid = document.getElementById('statsUid').value;
+            if (!uid) return alert("Select a player first.");
+
+            const offMP = parseInt(document.getElementById('offMP').value) || 0;
+            const offW = parseInt(document.getElementById('offW').value) || 0;
+            const offD = parseInt(document.getElementById('offD').value) || 0;
+            const offL = parseInt(document.getElementById('offL').value) || 0;
+            const offGF = parseInt(document.getElementById('offGF').value) || 0;
+            const offGA = parseInt(document.getElementById('offGA').value) || 0;
+            const offPTS = parseInt(document.getElementById('offPTS').value) || 0;
+            const offMOTM = parseInt(document.getElementById('offMOTM').value) || 0;
+
+            const domMP = parseInt(document.getElementById('domMP').value) || 0;
+            const domW = parseInt(document.getElementById('domW').value) || 0;
+            const domD = parseInt(document.getElementById('domD').value) || 0;
+            const domL = parseInt(document.getElementById('domL').value) || 0;
+            const domGF = parseInt(document.getElementById('domGF').value) || 0;
+            const domGA = parseInt(document.getElementById('domGA').value) || 0;
+            const domPTS = parseInt(document.getElementById('domPTS').value) || 0;
+            const domMOTM = parseInt(document.getElementById('domMOTM').value) || 0;
+
+            const updatedOfficial = {
+                mp: offMP,
+                w: offW,
+                d: offD,
+                l: offL,
+                gf: offGF,
+                ga: offGA,
+                gd: offGF - offGA,
+                pts: offPTS,
+                motm: offMOTM,
+                winRate: offMP > 0 ? ((offW / offMP) * 100).toFixed(1) : "0.0"
+            };
+
+            const updatedDomestic = {
+                mp: domMP,
+                w: domW,
+                d: domD,
+                l: domL,
+                gf: domGF,
+                ga: domGA,
+                gd: domGF - domGA,
+                pts: domPTS,
+                motm: domMOTM,
+                winRate: domMP > 0 ? ((domW / domMP) * 100).toFixed(1) : "0.0"
+            };
+
+            try {
+                await db.collection('users').doc(uid).update({
+                    official: updatedOfficial,
+                    domestic: updatedDomestic
+                });
+                alert("Player Ranking Stats updated successfully!");
+            } catch (err) {
+                console.error(err);
+                alert("Error updating stats: " + err.message);
+            }
+        });
+
+        // RESET ALL STATS FOR SELECTED PLAYER
+        async function resetSelectedPlayerStats() {
+            const uid = document.getElementById('statsUid').value;
+            if (!uid) return alert("Select a player first.");
+
+            if (confirm("Are you sure you want to RESET all official and domestic stats to ZERO for this player?")) {
+                const zeroStats = initStats();
+                try {
+                    await db.collection('users').doc(uid).update({
+                        official: zeroStats,
+                        domestic: zeroStats
+                    });
+                    alert("Player stats reset to zero!");
+                    loadPlayerStatsToEditor();
+                } catch (err) {
+                    console.error(err);
+                    alert("Error resetting stats.");
+                }
+            }
         }
 
         function previewPastTLogo(input) {
