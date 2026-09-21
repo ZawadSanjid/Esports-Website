@@ -624,7 +624,7 @@
             });
         }
 
-        // RENDER PLAYERS INTO GRID
+        // RENDER PLAYERS INTO GRID WITH A-Z SORTING SYSTEM
         function renderPlayersDirectory(players) {
             let container = document.getElementById('playersGridContainer');
             let counter = document.getElementById('squadCounter');
@@ -636,6 +636,13 @@
                 container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No registered players found in database.</p>`;
                 return;
             }
+
+            // ALPHABETICAL (A-Z) SORTING LOGIC
+            players.sort((a, b) => {
+                let nameA = (a.name || 'Unknown Player').trim().toLowerCase();
+                let nameB = (b.name || 'Unknown Player').trim().toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
 
             players.forEach(p => {
                 let avatarSrc = p.avatar || 'Image/player1.webp';
@@ -658,35 +665,35 @@
                 });
 
                 container.innerHTML += `
-                        <div class="player-card">
-                            <img src="${avatarSrc}" onerror="this.onerror=null; this.src='Image/player1.webp';" class="player-avatar" alt="${p.name || 'Player'}">
+                            <div class="player-card">
+                                <img src="${avatarSrc}" onerror="this.onerror=null; this.src='Image/player1.webp';" class="player-avatar" alt="${p.name || 'Player'}">
 
-                            <!-- CLICKABLE NAME TO OPEN PROFILE MODAL -->
-                            <div class="player-name" onclick="openPlayerModal('${p.uid}')">${p.name || 'Unknown Player'}</div>
-                            <div class="player-role-badge"><i class="fa-solid fa-shield-halved"></i> ${roleTitle}</div>
+                                <!-- CLICKABLE NAME TO OPEN PROFILE MODAL -->
+                                <div class="player-name" onclick="openPlayerModal('${p.uid}')">${p.name || 'Unknown Player'}</div>
+                                <div class="player-role-badge"><i class="fa-solid fa-shield-halved"></i> ${roleTitle}</div>
 
-                            <div class="info-list">
-                                <div class="info-item">
-                                    <span><i class="fa-solid fa-gamepad"></i> Game ID:</span>
-                                    <span class="val">${p.gameId || 'N/A'}</span>
+                                <div class="info-list">
+                                    <div class="info-item">
+                                        <span><i class="fa-solid fa-gamepad"></i> Game ID:</span>
+                                        <span class="val">${p.gameId || 'N/A'}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span><i class="fa-solid fa-mobile-screen-button"></i> Device:</span>
+                                        <span class="val">${p.device || 'N/A'}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span><i class="fa-brands fa-facebook"></i> FB Profile:</span>
+                                        <a href="${fbUrl}" target="_blank" class="fb-btn">Visit Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                                    </div>
                                 </div>
-                                <div class="info-item">
-                                    <span><i class="fa-solid fa-mobile-screen-button"></i> Device:</span>
-                                    <span class="val">${p.device || 'N/A'}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span><i class="fa-brands fa-facebook"></i> FB Profile:</span>
-                                    <a href="${fbUrl}" target="_blank" class="fb-btn">Visit Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
-                                </div>
-                            </div>
 
-                            <div class="recent-results-wrapper">
-                                <span class="results-label">Recent Match Form</span>
-                                <div class="results-boxes">
-                                    ${formBadgesHtml}
+                                <div class="recent-results-wrapper">
+                                    <span class="results-label">Recent Match Form</span>
+                                    <div class="results-boxes">
+                                        ${formBadgesHtml}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`;
+                            </div>`;
             });
         }
 
@@ -711,24 +718,24 @@
             // RENDER OFFICIAL STATS
             const off = player.official || {};
             document.getElementById('modalOffStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-                `;
+                        <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                    `;
 
             // RENDER DOMESTIC STATS
             const dom = player.domestic || {};
             document.getElementById('modalDomStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-                `;
+                        <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
+                        <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                    `;
 
             // RENDER TOURNAMENT HISTORY
             const historyList = player.tournamentHistoryList || [];
