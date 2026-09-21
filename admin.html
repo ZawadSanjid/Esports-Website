@@ -1024,12 +1024,20 @@
         }
 
         function listenToRealtimeData() {
-            // Load Players & Captains
+            // Load Players & Captains with A-Z Sorting
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
                     cachedPlayers.push({ uid: doc.id, id: doc.id, ...doc.data() });
                 });
+
+                // ALPHABETICAL (A-Z) SORTING FOR ALL PLAYERS
+                cachedPlayers.sort((a, b) => {
+                    let nameA = (a.name || 'Unknown Player').trim().toLowerCase();
+                    let nameB = (b.name || 'Unknown Player').trim().toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+
                 renderAllPlayersTable();
                 populateDropdowns();
                 generatePlayerSelects();
@@ -1081,17 +1089,17 @@
             cachedPlayers.forEach(p => {
                 const avatarUrl = p.avatar || 'Image/player1.webp';
                 tbody.innerHTML += `
-                            <tr>
-                                <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
-                                <td><strong>${p.name || 'N/A'}</strong></td>
-                                <td>${p.gameId || 'N/A'}</td>
-                                <td>${p.club || 'EBFC'}</td>
-                                <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
-                                <td>
-                                    <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
-                                    <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
-                                </td>
-                            </tr>`;
+                                    <tr>
+                                        <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
+                                        <td><strong>${p.name || 'N/A'}</strong></td>
+                                        <td>${p.gameId || 'N/A'}</td>
+                                        <td>${p.club || 'EBFC'}</td>
+                                        <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
+                                        <td>
+                                            <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
+                                            <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
+                                        </td>
+                                    </tr>`;
             });
         }
 
@@ -1158,7 +1166,7 @@
                     img.onload = function () {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        
+
                         // Capped at 200px max dimension for small safe footprint (~15-30 KB)
                         const maxDim = 200;
                         let width = img.width;
@@ -1250,16 +1258,16 @@
             tournaments.forEach(t => {
                 const logoImg = t.logo || 'Image/image1.jpg.jpg';
                 tbody.innerHTML += `
-                        <tr>
-                            <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
-                            <td><strong>${t.title}</strong></td>
-                            <td>${t.date}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
-                            <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
-                            <td>
-                                <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
-                            </td>
-                        </tr>`;
+                                <tr>
+                                    <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
+                                    <td><strong>${t.title}</strong></td>
+                                    <td>${t.date}</td>
+                                    <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
+                                    <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
+                                    <td>
+                                        <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+                                    </td>
+                                </tr>`;
             });
         }
 
@@ -1383,14 +1391,14 @@
 
             historyList.forEach((item, index) => {
                 tbody.innerHTML += `
-                        <tr>
-                            <td><strong>${item.title}</strong></td>
-                            <td>${item.subtitle}</td>
-                            <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
-                            <td>
-                                <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                            </td>
-                        </tr>`;
+                                <tr>
+                                    <td><strong>${item.title}</strong></td>
+                                    <td>${item.subtitle}</td>
+                                    <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
+                                    <td>
+                                        <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                    </td>
+                                </tr>`;
             });
         }
 
@@ -1465,14 +1473,14 @@
 
             achList.forEach((item, index) => {
                 tbody.innerHTML += `
-                        <tr>
-                            <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
-                            <td><strong>${item.title}</strong></td>
-                            <td>${item.desc}</td>
-                            <td>
-                                <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                            </td>
-                        </tr>`;
+                                <tr>
+                                    <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
+                                    <td><strong>${item.title}</strong></td>
+                                    <td>${item.desc}</td>
+                                    <td>
+                                        <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                    </td>
+                                </tr>`;
             });
         }
 
@@ -1568,14 +1576,14 @@
 
             captains.forEach(c => {
                 tbody.innerHTML += `
-                            <tr>
-                                <td>#${c.uid.substring(0, 6)}</td>
-                                <td><strong>${c.name || 'Captain'}</strong></td>
-                                <td>${c.club || 'EBFC'}</td>
-                                <td>${c.email || 'N/A'}</td>
-                                <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                                <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                            </tr>`;
+                                    <tr>
+                                        <td>#${c.uid.substring(0, 6)}</td>
+                                        <td><strong>${c.name || 'Captain'}</strong></td>
+                                        <td>${c.club || 'EBFC'}</td>
+                                        <td>${c.email || 'N/A'}</td>
+                                        <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
+                                        <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
+                                    </tr>`;
             });
         }
 
@@ -1604,18 +1612,18 @@
 
             pendingList.forEach((req) => {
                 tbody.innerHTML += `
-                            <tr>
-                                <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                                <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
-                                <td>${req.squadFormat || '1v1'}</td>
-                                <td><strong>${req.gf} - ${req.ga}</strong></td>
-                                <td>${req.matchType || 'domestic'}</td>
-                                <td>${req.awardMotm ? 'Yes' : 'No'}</td>
-                                <td>
-                                    <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${req.matchType}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
-                                    <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                                </td>
-                            </tr>`;
+                                    <tr>
+                                        <td><strong>${req.playerName || 'Unknown'}</strong></td>
+                                        <td><span style="color:var(--accent-gold); font-weight:700;">${(req.community || 'EBFC').toUpperCase()}</span></td>
+                                        <td>${req.squadFormat || '1v1'}</td>
+                                        <td><strong>${req.gf} - ${req.ga}</strong></td>
+                                        <td>${req.matchType || 'domestic'}</td>
+                                        <td>${req.awardMotm ? 'Yes' : 'No'}</td>
+                                        <td>
+                                            <button onclick="approveCaptainScore('${req.reqId}', '${req.playerId}', ${req.gf}, ${req.ga}, '${req.matchType}', ${req.awardMotm})" class="btn-green"><i class="fa-solid fa-check"></i> Approve</button>
+                                            <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                                        </td>
+                                    </tr>`;
             });
         }
 
@@ -1744,10 +1752,10 @@
                 });
 
                 container.innerHTML += `
-                            <div class="form-group">
-                                <label>Slot ${i + 1}</label>
-                                <select class="form-control tournament-player-select">${optionsHtml}</select>
-                            </div>`;
+                                    <div class="form-group">
+                                        <label>Slot ${i + 1}</label>
+                                        <select class="form-control tournament-player-select">${optionsHtml}</select>
+                                    </div>`;
             }
         }
 
@@ -1841,37 +1849,37 @@
                 const isP2Win = m.winner && m.winner.id === m.p2.id;
 
                 roundHtml += `
-                            <div class="match-card">
-                                <div class="player-vs-box">
-                                    <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                        <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                        <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
-                                    </div>
-                                    <span class="vs">VS</span>
-                                    <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                        <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                        <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                    </div>
-                                </div>
+                                    <div class="match-card">
+                                        <div class="player-vs-box">
+                                            <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
+                                                <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                                            </div>
+                                            <span class="vs">VS</span>
+                                            <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
+                                                <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
+                                                <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                            </div>
+                                        </div>
 
-                                ${!isCompleted ? `
-                                    <div class="score-inputs">
-                                        <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                        <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                        <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                        ${isDoubleLeg ? `
-                                            <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                            <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                            <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                        ` : ''}
-                                        <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                                    </div>
-                                ` : `
-                                    <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                        Winner: ${m.winner.name}
-                                    </div>
-                                `}
-                            </div>`;
+                                        ${!isCompleted ? `
+                                            <div class="score-inputs">
+                                                <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
+                                                <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
+                                                <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
+                                                ${isDoubleLeg ? `
+                                                    <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
+                                                    <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
+                                                    <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
+                                                ` : ''}
+                                                <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
+                                            </div>
+                                        ` : `
+                                            <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
+                                                Winner: ${m.winner.name}
+                                            </div>
+                                        `}
+                                    </div>`;
             });
 
             roundHtml += `</div>`;
