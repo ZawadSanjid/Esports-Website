@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player Profile Dashboard | East Bengal eFootball Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- CROPPER.JS LIBRARY -->
+    <!-- CROPPER.JS LIBRARY FOR PERFECT 1:1 FACE CROP -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -22,7 +24,9 @@
         :root {
             --bg-dark: #0a0a0c;
             --bg-card: #121318;
+            --bg-card-hover: #1a1c24;
             --primary-red: #e50914;
+            --primary-red-hover: #b80710;
             --accent-gold: #ffb703;
             --accent-green: #4caf50;
             --text-light: #ffffff;
@@ -42,6 +46,7 @@
             color: inherit;
         }
 
+        /* NAVBAR */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -49,9 +54,10 @@
             padding: 15px 5%;
             background: rgba(10, 10, 12, 0.95);
             border-bottom: 1px solid var(--border-color);
-            sticky;
+            position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .brand-logo {
@@ -60,30 +66,41 @@
             gap: 12px;
         }
 
-            .brand-logo .logo-img {
-                width: 45px;
-                height: 45px;
-                object-fit: contain;
-            }
+        .brand-logo .logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+        }
 
-            .brand-logo .brand-name {
-                font-family: 'Teko', sans-serif;
-                font-size: 26px;
-                text-transform: uppercase;
-            }
+        .brand-logo .brand-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-                .brand-logo .brand-name span {
-                    color: var(--primary-red);
-                }
+        .brand-logo .brand-name span {
+            color: var(--primary-red);
+        }
 
         .btn-outline-sm {
             border: 1px solid var(--border-color);
             background: transparent;
-            color: #fff;
+            color: var(--text-light);
             padding: 6px 16px;
             font-weight: 700;
+            text-transform: uppercase;
             border-radius: 4px;
             cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 13px;
+        }
+
+        .btn-outline-sm:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
         }
 
         .btn-gold-sm {
@@ -92,16 +109,27 @@
             color: var(--accent-gold);
             padding: 6px 16px;
             font-weight: 700;
+            text-transform: uppercase;
             border-radius: 4px;
             cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 13px;
         }
 
+        .btn-gold-sm:hover {
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+        }
+
+        /* DASHBOARD CONTAINER */
         .dashboard-container {
             max-width: 1100px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
+        /* PLAYER HERO CARD */
         .player-hero-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -111,10 +139,13 @@
             display: flex;
             align-items: center;
             gap: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             margin-bottom: 30px;
         }
 
         .player-avatar-box {
+            position: relative;
             width: 120px;
             height: 120px;
             border-radius: 50%;
@@ -124,11 +155,18 @@
             box-shadow: 0 0 20px var(--glow-red);
         }
 
-            .player-avatar-box img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .player-avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-main-info h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 42px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
 
         .meta-tags {
             display: flex;
@@ -146,7 +184,57 @@
             color: var(--text-muted);
         }
 
-        /* MODAL STYLES */
+        .meta-item i {
+            color: var(--primary-red);
+            margin-right: 6px;
+        }
+
+        .meta-item strong {
+            color: var(--text-light);
+        }
+
+        /* DUAL RANKINGS CONTAINER */
+        .rankings-dual-wrapper {
+            margin-left: auto;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .rank-badge-box {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(0,0,0,0.4));
+            border: 1px solid var(--primary-red);
+            padding: 12px 20px;
+            border-radius: 10px;
+            min-width: 110px;
+        }
+
+        .rank-badge-box.domestic {
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.15), rgba(0,0,0,0.4));
+            border-color: var(--accent-gold);
+        }
+
+        .rank-badge-box .title {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .rank-badge-box .number {
+            font-family: 'Teko', sans-serif;
+            font-size: 40px;
+            color: var(--primary-red);
+            line-height: 1;
+        }
+
+        .rank-badge-box.domestic .number {
+            color: var(--accent-gold);
+        }
+
+        /* EDIT PROFILE MODAL STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -158,6 +246,7 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            backdrop-filter: blur(8px);
         }
 
         .modal-card {
@@ -170,6 +259,72 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header i {
+            color: var(--accent-gold);
+        }
+
+        .close-modal {
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 20px;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-red);
+        }
+
+        /* IMAGE EDIT FILE UPLOAD STYLES */
+        .edit-image-upload-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .edit-image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px dashed var(--accent-gold);
+            background: #090a0c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .edit-image-preview:hover {
+            border-style: solid;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        .edit-image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #edit-player-photo {
+            display: none;
         }
 
         .form-grid-modal {
@@ -178,23 +333,248 @@
             gap: 15px;
         }
 
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
         .form-control {
             width: 100%;
             background: #090a0c;
             border: 1px solid var(--border-color);
-            padding: 10px;
-            color: #fff;
+            padding: 10px 12px;
+            color: var(--text-light);
             border-radius: 4px;
             font-size: 14px;
+            outline: none;
         }
 
-        /* CROP MODAL STYLES */
+        .form-control:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .btn-save {
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-save:hover {
+            background: #e0a200;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+        }
+
+        /* SECTION TITLES */
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-red);
+        }
+
+        .sub-stat-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .sub-stat-title.official {
+            color: var(--primary-red);
+        }
+
+        .sub-stat-title.domestic {
+            color: var(--accent-gold);
+        }
+
+        /* STATISTICS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+
+        .stat-card.domestic-card:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .stat-card .value {
+            font-family: 'Teko', sans-serif;
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* BOTTOM SECTION GRID */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .data-card-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+        }
+
+        .history-list, .achievement-list {
+            list-style: none;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .t-name {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .history-item .t-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge-status {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-champion {
+            background: rgba(255, 183, 3, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .status-runnerup {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: 1px solid var(--text-muted);
+        }
+
+        .status-3rd {
+            background: rgba(229, 9, 20, 0.15);
+            color: var(--primary-red);
+            border: 1px solid var(--primary-red);
+        }
+
+        .status-participant {
+            background: rgba(154, 156, 175, 0.15);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .achievement-item:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(229, 9, 20, 0.1);
+            border: 1px solid var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .achievement-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .achievement-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* CROP MODAL POPUP STYLES */
         .crop-modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.9);
             display: none;
             justify-content: center;
@@ -206,6 +586,7 @@
         .crop-modal-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
+            border-radius: 8px;
             padding: 20px;
             max-width: 450px;
             width: 100%;
@@ -214,17 +595,42 @@
 
         .crop-container {
             width: 100%;
-            max-height: 300px;
+            max-height: 320px;
             margin: 15px 0;
             overflow: hidden;
             background: #000;
         }
 
-            .crop-container img {
-                max-width: 100%;
+        .crop-container img {
+            max-width: 100%;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .player-hero-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
             }
+
+            .rankings-dual-wrapper {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .meta-tags {
+                justify-content: center;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 
+    <!-- FIREBASE COMPAT SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -239,6 +645,7 @@
             appId: "1:93840741420:web:05d574c95368be68e62d89",
             measurementId: "G-VBHEWLE64S"
         };
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -258,9 +665,10 @@
     </nav>
 
     <div class="dashboard-container">
+
         <div class="player-hero-card">
             <div class="player-avatar-box">
-                <img id="displayAvatar" src="Image/player1.webp" alt="Avatar">
+                <img id="displayAvatar" src="Image/player1.webp" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="Player Avatar">
             </div>
 
             <div class="player-main-info">
@@ -271,94 +679,391 @@
                     <div class="meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="displayFbLink" href="#" target="_blank" style="color:var(--accent-gold);">View Profile</a></div>
                     <div class="meta-item"><i class="fa-solid fa-droplet" style="color: var(--primary-red);"></i> Blood Group: <strong id="displayBloodGroup">N/A</strong></div>
                     <div class="meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong id="displayDevice">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-clock"></i> Slot: <strong id="displayActivityTime">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-network-wired"></i> VPN: <strong id="displayVpn">No</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-cake-candles"></i> DOB: <strong id="displayDob">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-briefcase"></i> Job: <strong id="displayOccupation">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Address: <strong id="displayAddress">---</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-shield-cat"></i> Club: <strong id="displayClub">East Bengal</strong></div>
                 </div>
             </div>
 
-            <button onclick="openEditModal()" class="btn-gold-sm" style="margin-left: auto;"><i class="fa-solid fa-pen-to-square"></i> Edit Info</button>
+            <div class="rankings-dual-wrapper">
+                <div class="rank-badge-box">
+                    <div class="title">Official Rank</div>
+                    <div class="number" id="displayOfficialRank">#1</div>
+                </div>
+                <div class="rank-badge-box domestic">
+                    <div class="title">Domestic Rank</div>
+                    <div class="number" id="displayDomesticRank">#1</div>
+                </div>
+                <!-- EDIT PROFILE BUTTON -->
+                <button onclick="openEditModal()" class="btn-gold-sm"><i class="fa-solid fa-pen-to-square"></i> Edit Info</button>
+            </div>
         </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Career Statistics</h2>
+
+        <div class="sub-stat-title official">
+            <i class="fa-solid fa-trophy"></i> Official Statistics
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value" id="offMp" style="color: var(--text-light);">0</div>
+                <div class="label">Matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offW" style="color: var(--accent-green);">0</div>
+                <div class="label">Wins</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offD" style="color: var(--accent-gold);">0</div>
+                <div class="label">Draws</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offL" style="color: var(--primary-red);">0</div>
+                <div class="label">Losses</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offGf" style="color: var(--text-light);">0</div>
+                <div class="label">Goals For</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offGa" style="color: var(--text-light);">0</div>
+                <div class="label">Goals Against</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offGd" style="color: var(--accent-green);">0</div>
+                <div class="label">Goal Diff</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offWr" style="color: var(--accent-gold);">0.0%</div>
+                <div class="label">Win Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="offPts" style="color: var(--primary-red);">0</div>
+                <div class="label">Points</div>
+            </div>
+        </div>
+
+        <div class="sub-stat-title domestic">
+            <i class="fa-solid fa-shield"></i> Domestic Statistics
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card domestic-card">
+                <div class="value" id="domMp" style="color: var(--text-light);">0</div>
+                <div class="label">Matches</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domW" style="color: var(--accent-green);">0</div>
+                <div class="label">Wins</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domD" style="color: var(--accent-gold);">0</div>
+                <div class="label">Draws</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domL" style="color: var(--primary-red);">0</div>
+                <div class="label">Losses</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domGf" style="color: var(--text-light);">0</div>
+                <div class="label">Goals For</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domGa" style="color: var(--text-light);">0</div>
+                <div class="label">Goals Against</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domGd" style="color: var(--accent-green);">0</div>
+                <div class="label">Goal Diff</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domWr" style="color: var(--accent-gold);">0.0%</div>
+                <div class="label">Win Rate</div>
+            </div>
+            <div class="stat-card domestic-card">
+                <div class="value" id="domPts" style="color: var(--accent-gold);">0</div>
+                <div class="label">Points</div>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+
+            <div class="data-card-box">
+                <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Tournament History</h2>
+                <ul class="history-list" id="displayHistoryList">
+                    <li class="history-item">
+                        <div style="color: var(--text-muted); font-size: 14px;">No tournament history recorded yet.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="data-card-box">
+                <h2 class="section-title"><i class="fa-solid fa-medal"></i> Achievements</h2>
+                <ul class="achievement-list" id="displayAchievementList">
+                    <li class="achievement-item">
+                        <div class="achievement-info">
+                            <p style="color: var(--text-muted);">No achievement badges unlocked yet.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- EDIT PROFILE MODAL -->
+    <!-- EDIT PROFILE MODAL DIALOG WITH MOBILE NUMBER OPTION -->
     <div id="editProfileModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold); margin-bottom:15px;">EDIT PROFILE INFORMATION</h3>
+            <div class="modal-header">
+                <span><i class="fa-solid fa-user-pen"></i> Edit Profile Information</span>
+                <i class="fa-solid fa-xmark close-modal" onclick="closeEditModal()"></i>
+            </div>
 
-            <div style="text-align:center; margin-bottom:15px;">
-                <img id="edit-preview-img" src="Image/player1.webp" style="width:90px; height:90px; border-radius:50%; border:2px solid var(--accent-gold); object-fit:cover;">
-                <input type="file" id="edit-player-photo" accept="image/*" style="display:none;" onchange="initEditCropper(event)">
-                <br>
-                <button type="button" class="btn-gold-sm" style="margin-top:8px;" onclick="document.getElementById('edit-player-photo').click()"><i class="fa-solid fa-camera"></i> Change & Adjust Photo</button>
+            <!-- PROFILE PHOTO FILE CHOOSE OPTION -->
+            <div class="edit-image-upload-wrapper">
+                <label for="edit-player-photo" class="edit-image-preview">
+                    <img id="edit-preview-img" src="Image/player1.webp" alt="Preview">
+                </label>
+                <input type="file" id="edit-player-photo" accept="image/*" onchange="initEditCropper(event)">
+                <span style="font-size: 11px; color: var(--accent-gold); margin-top: 6px; cursor: pointer;" onclick="document.getElementById('edit-player-photo').click()">
+                    <i class="fa-solid fa-camera"></i> Tap to Change & Crop Photo
+                </span>
             </div>
 
             <form id="editProfileForm">
                 <div class="form-grid-modal">
-                    <div class="form-group"><label>Player Name</label><input type="text" id="editName" class="form-control" required></div>
-                    <div class="form-group"><label>Mobile Number</label><input type="tel" id="editPhone" class="form-control" pattern="[0-9]{11}" maxlength="11" minlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required></div>
-                    <div class="form-group"><label>Game ID</label><input type="text" id="editGameId" class="form-control" required></div>
-                    <div class="form-group"><label>FB Profile Link</label><input type="url" id="editFbLink" class="form-control" required></div>
-                    <div class="form-group"><label>Device Model</label><input type="text" id="editDevice" class="form-control" required></div>
+                    <div class="form-group">
+                        <label>Player Name</label>
+                        <input type="text" id="editName" class="form-control" required>
+                    </div>
+                    <!-- MOBILE NUMBER EDIT FIELD -->
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="editPhone" class="form-control" placeholder="01XXXXXXXXX" pattern="[0-9]{11}" maxlength="11" minlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>
+                    <div class="form-group">
+                        <label>eFootball Game ID</label>
+                        <input type="text" id="editGameId" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Profile Link</label>
+                        <input type="url" id="editFbLink" class="form-control" required>
+                    </div>
+                    <!-- EDIT BLOOD GROUP DROP DOWN -->
+                    <div class="form-group">
+                        <label>Blood Group</label>
+                        <select id="editBloodGroup" class="form-control" required>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Device Model</label>
+                        <input type="text" id="editDevice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Activity Time</label>
+                        <select id="editActivityTime" class="form-control" required>
+                            <option value="10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)">10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)</option>
+                            <option value="11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)">11:30 pm - 12:30 am (রাত ১১ঃ৩০ টা থেকে ১২ঃ৩০টা)</option>
+                            <option value="12 am - 1 am (রাত ১২ টা থেকে ১টা)">12 am - 1 am (রাত ১২ টা থেকে ১টা)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>VPN Needed?</label>
+                        <select id="editVpn" class="form-control">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="editDob" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Occupation</label>
+                        <input type="text" id="editOccupation" class="form-control" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Permanent Address</label>
+                        <input type="text" id="editAddress" class="form-control" required>
+                    </div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <button type="submit" id="saveBtn" class="btn-gold-sm" style="flex:1;">Save Profile Changes</button>
-                    <button type="button" class="btn-outline-sm" onclick="closeEditModal()">Cancel</button>
-                </div>
+                <button type="submit" id="saveBtn" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Profile Changes</button>
             </form>
         </div>
     </div>
 
-    <!-- CROP MODAL -->
+    <!-- CROPPER MODAL DIALOG -->
     <div class="crop-modal-overlay" id="cropModal">
         <div class="crop-modal-card">
-            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold);">CROP NEW PROFILE PHOTO</h3>
-            <div class="crop-container"><img id="cropTargetImage" src=""></div>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">ADJUST PHOTO FOCUS</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Drag or zoom to adjust face position</p>
+            <div class="crop-container">
+                <img id="cropTargetImage" src="">
+            </div>
             <div style="display:flex; gap:10px; justify-content:center;">
-                <button type="button" class="btn-gold-sm" onclick="applyEditCrop()">Apply Crop</button>
+                <button type="button" class="btn-save" style="margin-top:0; padding:8px 16px; width:auto; font-size:13px;" onclick="applyCrop()">Crop & Apply</button>
                 <button type="button" class="btn-outline-sm" onclick="closeCropModal()">Cancel</button>
             </div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT FOR REALTIME FIREBASE INTEGRATION & CROPPER.JS -->
     <script>
         let currentUserId = null;
         let currentUserData = null;
         let updatedPhotoBase64 = null;
         let cropper = null;
 
+        // AUTHENTICATION CHECK & REALTIME LISTEN FROM FIRESTORE
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUserId = user.uid;
-                db.collection('users').doc(currentUserId).onSnapshot(doc => {
-                    if (doc.exists) {
-                        currentUserData = doc.data();
-                        document.getElementById('displayName').innerText = currentUserData.name || "EBFC Player";
-                        document.getElementById('displayPhone').innerText = currentUserData.phone || "N/A";
-                        document.getElementById('displayGameId').innerText = currentUserData.gameId || "N/A";
-                        document.getElementById('displayFbLink').href = currentUserData.fbLink || "#";
-                        document.getElementById('displayDevice').innerText = currentUserData.device || "N/A";
-                        if (currentUserData.avatar) document.getElementById('displayAvatar').src = currentUserData.avatar;
-                    }
-                });
-            } else { window.location.href = "login.html"; }
+                listenToFirestoreProfile(currentUserId);
+            } else {
+                window.location.href = "login.html";
+            }
         });
 
-        function logoutUser() { auth.signOut().then(() => { window.location.href = "login.html"; }); }
-
-        function openEditModal() {
-            if (!currentUserData) return;
-            document.getElementById('editName').value = currentUserData.name || '';
-            document.getElementById('editPhone').value = currentUserData.phone || '';
-            document.getElementById('editGameId').value = currentUserData.gameId || '';
-            document.getElementById('editFbLink').value = currentUserData.fbLink || '';
-            document.getElementById('editDevice').value = currentUserData.device || '';
-            document.getElementById('edit-preview-img').src = currentUserData.avatar || 'Image/player1.webp';
-            document.getElementById('editProfileModal').style.display = 'flex';
+        function logoutUser() {
+            auth.signOut().then(() => {
+                window.location.href = "login.html";
+            });
         }
 
-        function closeEditModal() { document.getElementById('editProfileModal').style.display = 'none'; }
+        // Realtime Firestore Listener
+        function listenToFirestoreProfile(uid) {
+            db.collection('users').doc(uid).onSnapshot(doc => {
+                if (doc.exists) {
+                    currentUserData = doc.data();
+                    renderProfile(currentUserData);
+                } else {
+                    console.error("No user profile record found in Firestore!");
+                }
+            }, error => {
+                console.error("Error listening to Firestore profile: ", error);
+            });
+        }
 
+        function renderProfile(user) {
+            document.getElementById('displayName').innerText = user.name || "EBFC Player";
+            document.getElementById('displayPhone').innerText = user.phone || "N/A";
+            document.getElementById('displayGameId').innerText = user.gameId || "N/A";
+            document.getElementById('displayFbLink').href = user.fbLink || "#";
+            document.getElementById('displayBloodGroup').innerText = user.bloodGroup || "N/A";
+            document.getElementById('displayDevice').innerText = user.device || "N/A";
+            document.getElementById('displayActivityTime').innerText = user.activityTime || "10 pm - 11 pm";
+            document.getElementById('displayVpn').innerText = user.vpn || "No";
+            document.getElementById('displayDob').innerText = user.dob || "N/A";
+            document.getElementById('displayOccupation').innerText = user.occupation || "N/A";
+            document.getElementById('displayAddress').innerText = user.address || "N/A";
+            document.getElementById('displayClub').innerText = user.club || "East Bengal";
+
+            if (user.avatar) {
+                document.getElementById('displayAvatar').src = user.avatar;
+            }
+
+            // OFFICIAL STATS
+            const off = user.official || {};
+            document.getElementById('offMp').innerText = off.mp || 0;
+            document.getElementById('offW').innerText = off.w || 0;
+            document.getElementById('offD').innerText = off.d || 0;
+            document.getElementById('offL').innerText = off.l || 0;
+            document.getElementById('offGf').innerText = off.gf || 0;
+            document.getElementById('offGa').innerText = off.ga || 0;
+            document.getElementById('offGd').innerText = (off.gd > 0 ? '+' : '') + (off.gd || 0);
+            document.getElementById('offWr').innerText = (off.winRate || "0.0") + "%";
+            document.getElementById('offPts').innerText = off.pts || 0;
+
+            // DOMESTIC STATS
+            const dom = user.domestic || {};
+            document.getElementById('domMp').innerText = dom.mp || 0;
+            document.getElementById('domW').innerText = dom.w || 0;
+            document.getElementById('domD').innerText = dom.d || 0;
+            document.getElementById('domL').innerText = dom.l || 0;
+            document.getElementById('domGf').innerText = dom.gf || 0;
+            document.getElementById('domGa').innerText = dom.ga || 0;
+            document.getElementById('domGd').innerText = (dom.gd > 0 ? '+' : '') + (dom.gd || 0);
+            document.getElementById('domWr').innerText = (dom.winRate || "0.0") + "%";
+            document.getElementById('domPts').innerText = dom.pts || 0;
+
+            renderTournamentHistory(user.tournamentHistoryList || []);
+            renderAchievements(user.achievementsList || []);
+        }
+
+        function renderTournamentHistory(historyList) {
+            const container = document.getElementById('displayHistoryList');
+            container.innerHTML = '';
+
+            if (historyList.length === 0) {
+                container.innerHTML = `<li class="history-item"><div style="color: var(--text-muted); font-size: 14px;">No tournament history recorded yet.</div></li>`;
+                return;
+            }
+
+            historyList.forEach(item => {
+                let badgeClass = 'status-participant';
+                const tag = (item.tag || '').toUpperCase();
+                
+                if (tag === 'CHAMPION') badgeClass = 'status-champion';
+                else if (tag === 'RUNNER-UP') badgeClass = 'status-runnerup';
+                else if (tag === '3RD PLACE') badgeClass = 'status-3rd';
+
+                container.innerHTML += `
+                    <li class="history-item">
+                        <div>
+                            <div class="t-name">${item.title}</div>
+                            <div class="t-date">${item.subtitle}</div>
+                        </div>
+                        <span class="badge-status ${badgeClass}">${item.tag}</span>
+                    </li>`;
+            });
+        }
+
+        function renderAchievements(achList) {
+            const container = document.getElementById('displayAchievementList');
+            container.innerHTML = '';
+
+            if (achList.length === 0) {
+                container.innerHTML = `<li class="achievement-item"><div class="achievement-info"><p style="color: var(--text-muted);">No achievement badges unlocked yet.</p></div></li>`;
+                return;
+            }
+
+            achList.forEach(item => {
+                let iconClass = 'fa-star';
+                if (item.icon === 'fire') iconClass = 'fa-fire';
+                else if (item.icon === 'crown') iconClass = 'fa-crown';
+                else if (item.icon === 'medal') iconClass = 'fa-medal';
+
+                container.innerHTML += `
+                    <li class="achievement-item">
+                        <div class="achievement-icon"><i class="fa-solid ${iconClass}"></i></div>
+                        <div class="achievement-info">
+                            <h4>${item.title}</h4>
+                            <p>${item.desc}</p>
+                        </div>
+                    </li>`;
+            });
+        }
+
+        // CROPPER INITIALIZATION FOR EDIT PHOTO
         function initEditCropper(e) {
             const files = e.target.files;
             if (files && files.length > 0) {
+                const file = files[0];
+                if (file.size / (1024 * 1024) > 5) {
+                    alert("ছবিটির সাইজ ৫ MB এর চেয়ে বেশি! ৫ MB এর চেয়ে ছোট ছবি আপলোড করুন।");
+                    return;
+                }
                 const reader = new FileReader();
                 reader.onload = function (event) {
                     const img = document.getElementById('cropTargetImage');
@@ -366,17 +1071,23 @@
                     document.getElementById('cropModal').style.display = 'flex';
 
                     if (cropper) cropper.destroy();
-                    cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1 });
+                    cropper = new Cropper(img, {
+                        aspectRatio: 1, // 1:1 PERFECT SQUARE RATIO FOR CIRCULAR AVATARS
+                        viewMode: 1,
+                        background: false
+                    });
                 };
-                reader.readAsDataURL(files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
-        function applyEditCrop() {
+        function applyCrop() {
             if (!cropper) return;
             const canvas = cropper.getCroppedCanvas({ width: 350, height: 350 });
-            updatedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
-            document.getElementById('edit-preview-img').src = updatedPhotoBase64;
+            const croppedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            document.getElementById('edit-preview-img').src = croppedBase64;
+            updatedPhotoBase64 = croppedBase64;
             closeCropModal();
         }
 
@@ -385,23 +1096,76 @@
             if (cropper) cropper.destroy();
         }
 
+        // OPEN MODAL & PREFILL ALL INPUTS
+        function openEditModal() {
+            if (!currentUserData) return;
+
+            document.getElementById('editName').value = currentUserData.name || '';
+            document.getElementById('editPhone').value = currentUserData.phone || '';
+            document.getElementById('editGameId').value = currentUserData.gameId || '';
+            document.getElementById('editFbLink').value = currentUserData.fbLink || '';
+            document.getElementById('editBloodGroup').value = currentUserData.bloodGroup || 'A+';
+            document.getElementById('editDevice').value = currentUserData.device || '';
+            document.getElementById('editActivityTime').value = currentUserData.activityTime || "10 pm - 11 pm (রাত ১০ টা থেকে ১১টা)";
+            document.getElementById('editVpn').value = currentUserData.vpn || "No";
+            document.getElementById('editDob').value = currentUserData.dob || '';
+            document.getElementById('editOccupation').value = currentUserData.occupation || '';
+            document.getElementById('editAddress').value = currentUserData.address || '';
+
+            let currentAvatar = currentUserData.avatar || 'Image/player1.webp';
+            document.getElementById('edit-preview-img').src = currentAvatar;
+            updatedPhotoBase64 = currentAvatar;
+
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        // SAVE ALL UPDATED PROFILE FIELDS TO FIRESTORE DATABASE
         document.getElementById('editProfileForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const phoneInput = document.getElementById('editPhone').value.trim();
-            if (phoneInput.length !== 11) { alert("১১ ডিজিটের মোবাইল নম্বর প্রদান করুন।"); return; }
 
+            if (!currentUserId) return;
+
+            const phoneInput = document.getElementById('editPhone').value.trim();
+            if (phoneInput.length !== 11) {
+                alert("অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর প্রদান করুন।");
+                document.getElementById('editPhone').focus();
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            
             const updatedFields = {
                 name: document.getElementById('editName').value.trim(),
                 phone: phoneInput,
                 gameId: document.getElementById('editGameId').value.trim(),
                 fbLink: document.getElementById('editFbLink').value.trim(),
+                bloodGroup: document.getElementById('editBloodGroup').value,
                 device: document.getElementById('editDevice').value.trim(),
+                activityTime: document.getElementById('editActivityTime').value,
+                vpn: document.getElementById('editVpn').value,
+                dob: document.getElementById('editDob').value,
+                occupation: document.getElementById('editOccupation').value.trim(),
+                address: document.getElementById('editAddress').value.trim(),
                 avatar: updatedPhotoBase64 || currentUserData.avatar || 'Image/player1.webp'
             };
 
-            await db.collection('users').doc(currentUserId).update(updatedFields);
-            closeEditModal();
-            alert("Profile Information Updated!");
+            try {
+                await db.collection('users').doc(currentUserId).update(updatedFields);
+
+                closeEditModal();
+                alert("Profile information updated successfully in Firebase!");
+
+            } catch (error) {
+                console.error("Firestore update error: ", error);
+                alert("Error updating profile: " + error.message);
+            } finally {
+                saveBtn.disabled = false;
+            }
         });
     </script>
 </body>
