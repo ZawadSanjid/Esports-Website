@@ -435,12 +435,20 @@
         }
 
         function listenToRealtimeData() {
-            // Fetch All Players for Dropdowns
+            // Fetch All Players for Dropdowns with A-Z Sorting
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
                     cachedPlayers.push({ uid: doc.id, ...doc.data() });
                 });
+
+                // ALPHABETICAL (A-Z) SORTING FOR ALL PLAYERS
+                cachedPlayers.sort((a, b) => {
+                    let nameA = (a.name || 'Unknown Player').trim().toLowerCase();
+                    let nameB = (b.name || 'Unknown Player').trim().toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+
                 generateSquadSlots();
             });
 
