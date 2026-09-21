@@ -519,14 +519,15 @@
                 <option value="all" selected>-- View All Admin Sections --</option>
                 <option value="sec-players-db">1. Registered Player Database & Image Download</option>
                 <option value="sec-edit-player">2. Edit Player Database Profile</option>
-                <option value="sec-stats-editor">3. Player Stats & Ranking Editor (Undo / Override)</option>
-                <option value="sec-past-tournaments">4. Manage Past Tournaments (Hall of Fame Showcase)</option>
-                <option value="sec-player-history">5. Add / Remove Tournament History Badges</option>
-                <option value="sec-achievements">6. Add / Remove Special Achievement Badges</option>
-                <option value="sec-captain-queue">7. Captain Score Submission Queue</option>
-                <option value="sec-captain-roles">8. Manage Captain Access Roles</option>
-                <option value="sec-direct-score">9. Direct Admin Match Score Input</option>
-                <option value="sec-tournament-generator">10. Persistent Tournament Bracket Generator</option>
+                <option value="sec-stats-editor">3. Official & Domestic Stats Editor (Undo / Override)</option>
+                <option value="sec-community-editor">4. Community Stats Editor & Reset Module</option>
+                <option value="sec-past-tournaments">5. Manage Past Tournaments (Hall of Fame Showcase)</option>
+                <option value="sec-player-history">6. Add / Remove Tournament History Badges</option>
+                <option value="sec-achievements">7. Add / Remove Special Achievement Badges</option>
+                <option value="sec-captain-queue">8. Captain Score Submission Queue</option>
+                <option value="sec-captain-roles">9. Manage Captain Access Roles</option>
+                <option value="sec-direct-score">10. Direct Admin Match Score Input</option>
+                <option value="sec-tournament-generator">11. Persistent Tournament Bracket Generator</option>
             </select>
         </div>
 
@@ -627,10 +628,10 @@
             </form>
         </div>
 
-        <!-- NEW SECTION: PLAYER STATS & RANKING OVERRIDE (UNDO / EDIT STATS) -->
+        <!-- SECTION: OFFICIAL & DOMESTIC STATS EDITOR (UNDO / OVERRIDE) -->
         <div id="sec-stats-editor" class="section-card admin-feature-sec" style="border-top: 4px solid var(--primary-red);">
             <div class="section-title">
-                <span><i class="fa-solid fa-rotate-left"></i> Player Stats & Ranking Editor (Undo / Override)</span>
+                <span><i class="fa-solid fa-rotate-left"></i> Official & Domestic Stats Editor (Undo / Override)</span>
             </div>
 
             <div class="form-group" style="margin-bottom: 20px;">
@@ -720,6 +721,75 @@
                 <div style="display:flex; gap:12px; margin-top: 10px;">
                     <button type="submit" class="btn-action"><i class="fa-solid fa-check"></i> Save Corrected Ranking Stats</button>
                     <button type="button" onclick="resetSelectedPlayerStats()" class="btn-danger"><i class="fa-solid fa-trash-arrow-up"></i> Reset All Stats To Zero</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- NEW SECTION: COMMUNITY STATS & RANKING EDITOR (RESET / OVERRIDE) -->
+        <div id="sec-community-editor" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
+            <div class="section-title">
+                <span><i class="fa-solid fa-people-group"></i> Community Stats Editor & Reset Module</span>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>1. Select Player</label>
+                    <select id="commPlayerSelect" class="form-control" onchange="loadPlayerCommunities()">
+                        <option value="">-- Choose Player --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>2. Select Active Community</label>
+                    <select id="commCodeSelect" class="form-control" onchange="loadCommunityStatsToEditor()">
+                        <option value="">-- Select Community --</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="editCommunityStatsForm">
+                <input type="hidden" id="commUid">
+
+                <div class="sub-heading">Selected Community Breakdown Stats</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Matches Played (MP)</label>
+                        <input type="number" id="cMP" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Wins (W)</label>
+                        <input type="number" id="cW" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Draws (D)</label>
+                        <input type="number" id="cD" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Losses (L)</label>
+                        <input type="number" id="cL" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals For (GF)</label>
+                        <input type="number" id="cGF" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Goals Against (GA)</label>
+                        <input type="number" id="cGA" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Auto Wins (Walkover)</label>
+                        <input type="number" id="cAuto" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Points (PTS)</label>
+                        <input type="number" id="cPTS" class="form-control" min="0" value="0">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top: 10px; flex-wrap: wrap;">
+                    <button type="submit" class="btn-action btn-gold"><i class="fa-solid fa-floppy-disk"></i> Update Community Stats</button>
+                    <button type="button" onclick="resetCommunityStatsToZero()" class="btn-outline-sm" style="border-color:var(--accent-gold); color:var(--accent-gold);"><i class="fa-solid fa-rotate-left"></i> Reset Stats To 0</button>
+                    <button type="button" onclick="deleteCommunityRecord()" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Community Record</button>
                 </div>
             </form>
         </div>
@@ -1214,6 +1284,7 @@
         function populateDropdowns() {
             let editSelect = document.getElementById('editPlayerSelect');
             let statsSelect = document.getElementById('statsPlayerSelect');
+            let commPlayerSelect = document.getElementById('commPlayerSelect');
             let historySelect = document.getElementById('historyPlayerSelect');
             let achSelect = document.getElementById('achPlayerSelect');
             let singleSelect = document.getElementById('ebfcPlayerSelect');
@@ -1224,9 +1295,11 @@
             let currentHistVal = historySelect.value;
             let currentAchVal = achSelect.value;
             let currentStatsVal = statsSelect.value;
+            let currentCommPVal = commPlayerSelect.value;
 
             editSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             statsSelect.innerHTML = '<option value="">-- Choose Player --</option>';
+            commPlayerSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             historySelect.innerHTML = '<option value="">-- Choose Player --</option>';
             achSelect.innerHTML = '<option value="">-- Choose Player --</option>';
             singleSelect.innerHTML = '';
@@ -1238,6 +1311,7 @@
                 let opt = `<option value="${p.uid}">${p.name || 'Unknown'} (${p.club || 'EBFC'})</option>`;
                 editSelect.innerHTML += opt;
                 statsSelect.innerHTML += opt;
+                commPlayerSelect.innerHTML += opt;
                 historySelect.innerHTML += opt;
                 achSelect.innerHTML += opt;
                 singleSelect.innerHTML += opt;
@@ -1249,6 +1323,7 @@
             if (currentHistVal) historySelect.value = currentHistVal;
             if (currentAchVal) achSelect.value = currentAchVal;
             if (currentStatsVal) statsSelect.value = currentStatsVal;
+            if (currentCommPVal) commPlayerSelect.value = currentCommPVal;
         }
 
         // LOAD PLAYER STATS INTO STATS EDITOR
@@ -1364,6 +1439,138 @@
                 } catch (err) {
                     console.error(err);
                     alert("Error resetting stats.");
+                }
+            }
+        }
+
+        // COMMUNITY STATS MODULE FUNCTIONS
+        function loadPlayerCommunities() {
+            const uid = document.getElementById('commPlayerSelect').value;
+            const commSelect = document.getElementById('commCodeSelect');
+            commSelect.innerHTML = '<option value="">-- Select Community --</option>';
+
+            document.getElementById('editCommunityStatsForm').reset();
+            document.getElementById('commUid').value = uid || '';
+
+            if (!uid) return;
+
+            const player = cachedPlayers.find(p => p.uid === uid);
+            if (!player || !player.communities) return;
+
+            Object.keys(player.communities).forEach(commCode => {
+                commSelect.innerHTML += `<option value="${commCode}">${commCode.toUpperCase()}</option>`;
+            });
+        }
+
+        function loadCommunityStatsToEditor() {
+            const uid = document.getElementById('commPlayerSelect').value;
+            const commCode = document.getElementById('commCodeSelect').value;
+
+            if (!uid || !commCode) {
+                document.getElementById('editCommunityStatsForm').reset();
+                return;
+            }
+
+            const player = cachedPlayers.find(p => p.uid === uid);
+            if (!player || !player.communities || !player.communities[commCode]) return;
+
+            const c = player.communities[commCode];
+
+            document.getElementById('commUid').value = uid;
+            document.getElementById('cMP').value = c.mp || 0;
+            document.getElementById('cW').value = c.w || 0;
+            document.getElementById('cD').value = c.d || 0;
+            document.getElementById('cL').value = c.l || 0;
+            document.getElementById('cGF').value = c.gf || 0;
+            document.getElementById('cGA').value = c.ga || 0;
+            document.getElementById('cAuto').value = c.auto || 0;
+            document.getElementById('cPTS').value = c.pts || 0;
+        }
+
+        document.getElementById('editCommunityStatsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const uid = document.getElementById('commUid').value;
+            const commCode = document.getElementById('commCodeSelect').value;
+
+            if (!uid || !commCode) return alert("Select player and community first!");
+
+            const mp = parseInt(document.getElementById('cMP').value) || 0;
+            const w = parseInt(document.getElementById('cW').value) || 0;
+            const d = parseInt(document.getElementById('cD').value) || 0;
+            const l = parseInt(document.getElementById('cL').value) || 0;
+            const gf = parseInt(document.getElementById('cGF').value) || 0;
+            const ga = parseInt(document.getElementById('cGA').value) || 0;
+            const auto = parseInt(document.getElementById('cAuto').value) || 0;
+            const pts = parseInt(document.getElementById('cPTS').value) || 0;
+
+            const updatedComm = {
+                mp: mp,
+                w: w,
+                d: d,
+                l: l,
+                gf: gf,
+                ga: ga,
+                auto: auto,
+                pts: pts,
+                winRate: mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0"
+            };
+
+            try {
+                const userRef = db.collection('users').doc(uid);
+                const userDoc = await userRef.get();
+                let communities = userDoc.data().communities || {};
+
+                communities[commCode] = updatedComm;
+
+                await userRef.update({ communities: communities });
+                alert(`Community (${commCode.toUpperCase()}) stats updated successfully!`);
+            } catch (err) {
+                console.error(err);
+                alert("Error updating community stats: " + err.message);
+            }
+        });
+
+        async function resetCommunityStatsToZero() {
+            const uid = document.getElementById('commUid').value;
+            const commCode = document.getElementById('commCodeSelect').value;
+
+            if (!uid || !commCode) return alert("Select player and community first!");
+
+            if (confirm(`Reset stats to ZERO for community '${commCode.toUpperCase()}'?`)) {
+                try {
+                    const userRef = db.collection('users').doc(uid);
+                    const userDoc = await userRef.get();
+                    let communities = userDoc.data().communities || {};
+
+                    communities[commCode] = { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
+
+                    await userRef.update({ communities: communities });
+                    alert("Community stats reset to zero!");
+                    loadCommunityStatsToEditor();
+                } catch (err) {
+                    console.error(err);
+                    alert("Error resetting community stats.");
+                }
+            }
+        }
+
+        async function deleteCommunityRecord() {
+            const uid = document.getElementById('commUid').value;
+            const commCode = document.getElementById('commCodeSelect').value;
+
+            if (!uid || !commCode) return alert("Select player and community first!");
+
+            if (confirm(`DELETE the community record '${commCode.toUpperCase()}' permanently from player's profile?`)) {
+                try {
+                    const userRef = db.collection('users').doc(uid);
+                    await userRef.update({
+                        [`communities.${commCode}`]: firebase.firestore.FieldValue.delete()
+                    });
+                    alert("Community record deleted!");
+                    loadPlayerCommunities();
+                } catch (err) {
+                    console.error(err);
+                    alert("Error deleting community record.");
                 }
             }
         }
