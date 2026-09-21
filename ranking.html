@@ -748,7 +748,7 @@
             let gf = Number(s.gf) || 0;
             let ga = Number(s.ga) || 0;
             let gd = gf - ga;
-            let pts = (s.pts !== undefined && s.pts !== null) ? Number(s.pts) : ((w * 3) + d);
+            let pts = (s.pts !== undefined && s.pts !== null && s.pts !== "") ? Number(s.pts) : ((w * 3) + d);
             let motm = Number(s.motm) || 0;
             let winRate = mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0";
 
@@ -760,7 +760,7 @@
             if (tab === 'domestic') return calculatePlayerStats(p.domestic);
             
             if (tab === 'potm') {
-                if (p.potm) return calculatePlayerStats(p.potm);
+                if (p.potm && (p.potm.mp !== undefined || p.potm.pts !== undefined)) return calculatePlayerStats(p.potm);
                 
                 let off = calculatePlayerStats(p.official);
                 let dom = calculatePlayerStats(p.domestic);
@@ -813,7 +813,7 @@
                             d += Number(cStats.d) || 0;
                             l += Number(cStats.l) || 0;
                             auto += Number(cStats.auto) || 0;
-                            pts += (cStats.pts !== undefined) ? Number(cStats.pts) : ((Number(cStats.w) || 0) * 3 + (Number(cStats.d) || 0));
+                            pts += (cStats.pts !== undefined && cStats.pts !== null) ? Number(cStats.pts) : ((Number(cStats.w) || 0) * 3 + (Number(cStats.d) || 0));
                         }
                     });
 
