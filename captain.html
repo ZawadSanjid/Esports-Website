@@ -250,7 +250,6 @@
             gap: 15px;
         }
 
-        /* AUTO WIN BANNER STYLE */
         .auto-win-info-box {
             background: rgba(255, 183, 3, 0.1);
             border: 1px solid var(--accent-gold);
@@ -264,61 +263,19 @@
             margin-top: 15px;
         }
 
-        /* 📱 MOBILE RESPONSIVE STYLES */
         @media (max-width: 768px) {
-            .navbar {
-                padding: 12px 4%;
-            }
-
-            .brand-logo .logo-img {
-                width: 38px;
-                height: 38px;
-            }
-
-            .brand-logo .brand-name {
-                font-size: 22px;
-            }
-
-            .container {
-                margin: 20px auto;
-                padding: 0 12px;
-            }
-
-            .page-header h1 {
-                font-size: 36px;
-            }
-
-            .page-header p {
-                font-size: 14px;
-            }
-
-            .section-card {
-                padding: 18px 14px;
-            }
-
-            .section-title {
-                font-size: 26px;
-            }
-
-            .squad-slot-card {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px 8px;
-                padding: 12px;
-            }
-
-            .squad-slot-card .form-group:nth-child(1) {
-                grid-column: span 2;
-            }
-
-            .submission-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .submission-item .status-badge {
-                align-self: flex-start;
-            }
+            .navbar { padding: 12px 4%; }
+            .brand-logo .logo-img { width: 38px; height: 38px; }
+            .brand-logo .brand-name { font-size: 22px; }
+            .container { margin: 20px auto; padding: 0 12px; }
+            .page-header h1 { font-size: 36px; }
+            .page-header p { font-size: 14px; }
+            .section-card { padding: 18px 14px; }
+            .section-title { font-size: 26px; }
+            .squad-slot-card { grid-template-columns: 1fr 1fr; gap: 12px 8px; padding: 12px; }
+            .squad-slot-card .form-group:nth-child(1) { grid-column: span 2; }
+            .submission-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .submission-item .status-badge { align-self: flex-start; }
         }
     </style>
 
@@ -396,7 +353,6 @@
                         </select>
                     </div>
 
-                    <!-- COMMUNITY MATCH RESULT DROPDOWN -->
                     <div class="form-group">
                         <label>Community Match Result</label>
                         <select id="communityMatchResultSelect" class="form-control" onchange="toggleAutoWinMode()" required>
@@ -408,7 +364,6 @@
                     </div>
                 </div>
 
-                <!-- PLAYER INPUT SECTION (Dynamic hide on Auto Win) -->
                 <div id="playerPerformanceWrapper">
                     <div class="section-title" style="font-size: 24px; margin-top: 20px;">
                         <span><i class="fa-solid fa-list-ol"></i> Input Player Performance</span>
@@ -417,7 +372,6 @@
                     <div id="squadSlotsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
                 </div>
 
-                <!-- AUTO WIN NOTICE BANNER -->
                 <div id="autoWinNoticeBox" class="auto-win-info-box" style="display: none;">
                     <i class="fa-solid fa-circle-info" style="font-size: 22px;"></i>
                     <span>Auto Win Selected! No individual player stats will be recorded. Only 1 Win (+3 PTS) will be directly credited to the target community upon admin approval.</span>
@@ -468,7 +422,6 @@
         let cachedPlayers = [];
         let currentCaptainUid = null;
 
-        // AUTH & CAPTAIN ROLE CHECK
         auth.onAuthStateChanged(async (user) => {
             const localUser = JSON.parse(localStorage.getItem('ebfc_user'));
 
@@ -501,7 +454,6 @@
         }
 
         function listenToRealtimeData() {
-            // Fetch All Players with A-Z Sorting
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
@@ -518,7 +470,6 @@
                 generateDomesticSlots();
             });
 
-            // Fetch Pending Submissions Realtime
             db.collection('pending_scores').onSnapshot(snapshot => {
                 let pendingList = [];
                 snapshot.forEach(doc => {
@@ -528,7 +479,6 @@
             });
         }
 
-        // TOGGLE AUTO WIN MODE FUNCTION
         function toggleAutoWinMode() {
             let resVal = document.getElementById('communityMatchResultSelect').value;
             let playerWrapper = document.getElementById('playerPerformanceWrapper');
@@ -545,7 +495,6 @@
                 squadFormatGroup.style.opacity = '0.4';
                 squadFormatGroup.style.pointerEvents = 'none';
 
-                // Disable required attribute when Auto Win is selected
                 playerSelects.forEach(el => el.removeAttribute('required'));
                 gfInputs.forEach(el => el.removeAttribute('required'));
                 gaInputs.forEach(el => el.removeAttribute('required'));
@@ -555,7 +504,6 @@
                 squadFormatGroup.style.opacity = '1';
                 squadFormatGroup.style.pointerEvents = 'auto';
 
-                // Re-enable required attributes for normal matches
                 playerSelects.forEach(el => el.setAttribute('required', 'true'));
                 gfInputs.forEach(el => el.setAttribute('required', 'true'));
                 gaInputs.forEach(el => el.setAttribute('required', 'true'));
@@ -575,29 +523,29 @@
                 });
 
                 container.innerHTML += `
-                            <div class="squad-slot-card">
-                                <div class="form-group" style="margin:0;">
-                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                    <select class="form-control squad-player-id" required>${optionsHtml}</select>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GF (Goals)</label>
-                                    <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GA (Against)</label>
-                                    <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>MOTM?</label>
-                                    <select class="form-control squad-player-motm">
-                                        <option value="no">No</option>
-                                        <option value="yes">Yes</option>
-                                    </select>
-                                </div>
-                            </div>`;
+                    <div class="squad-slot-card">
+                        <div class="form-group" style="margin:0;">
+                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                            <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GF (Goals)</label>
+                            <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GA (Against)</label>
+                            <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>MOTM?</label>
+                            <select class="form-control squad-player-motm">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
-            toggleAutoWinMode(); // Re-apply toggle state if squad slots re-generate
+            toggleAutoWinMode();
         }
 
         function generateDomesticSlots() {
@@ -612,43 +560,42 @@
                 });
 
                 container.innerHTML += `
-                            <div class="squad-slot-card">
-                                <div class="form-group" style="margin:0;">
-                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                    <select class="form-control dom-player-id">${optionsHtml}</select>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>Wins (W)</label>
-                                    <input type="number" class="form-control dom-w" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>Draws (D)</label>
-                                    <input type="number" class="form-control dom-d" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>Losses (L)</label>
-                                    <input type="number" class="form-control dom-l" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GF</label>
-                                    <input type="number" class="form-control dom-gf" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GA</label>
-                                    <input type="number" class="form-control dom-ga" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>MOTM?</label>
-                                    <select class="form-control dom-motm">
-                                        <option value="no">No</option>
-                                        <option value="yes">Yes</option>
-                                    </select>
-                                </div>
-                            </div>`;
+                    <div class="squad-slot-card">
+                        <div class="form-group" style="margin:0;">
+                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                            <select class="form-control dom-player-id">${optionsHtml}</select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Wins (W)</label>
+                            <input type="number" class="form-control dom-w" min="0" value="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Draws (D)</label>
+                            <input type="number" class="form-control dom-d" min="0" value="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Losses (L)</label>
+                            <input type="number" class="form-control dom-l" min="0" value="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GF</label>
+                            <input type="number" class="form-control dom-gf" min="0" value="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>GA</label>
+                            <input type="number" class="form-control dom-ga" min="0" value="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>MOTM?</label>
+                            <select class="form-control dom-motm">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
         }
 
-        // SQUAD SCORE & COMMUNITY RESULT SUBMISSION HANDLER
         document.getElementById('captainScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -657,19 +604,19 @@
 
             let community = document.getElementById('communitySelect').value;
             let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
-            let communityResult = document.getElementById('communityMatchResultSelect').value; // 'w', 'd', 'l', 'auto'
+            let communityResult = document.getElementById('communityMatchResultSelect').value;
 
             let batch = db.batch();
             let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             if (communityResult === 'auto') {
-                // AUTO WIN HANDLING: Submit 1 entry for community win, NO player updates
                 let docRef = db.collection('pending_scores').doc();
                 batch.set(docRef, {
                     playerId: "COMMUNITY_AUTO_WIN",
                     playerName: `AUTO WIN (${community.toUpperCase()})`,
                     community: community,
                     communityResult: 'auto',
+                    matchType: 'official',
                     squadFormat: 'Auto Win Entry',
                     gf: 0,
                     ga: 0,
@@ -679,7 +626,6 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } else {
-                // NORMAL SQUAD SCORE HANDLING
                 let playerNodes = document.querySelectorAll('.squad-player-id');
                 let gfNodes = document.querySelectorAll('.squad-player-gf');
                 let gaNodes = document.querySelectorAll('.squad-player-ga');
@@ -697,6 +643,7 @@
                             playerName: pObj.name || 'Unknown Player',
                             community: community,
                             communityResult: communityResult,
+                            matchType: 'official',
                             squadFormat: squadFormat,
                             gf: parseInt(gfNodes[idx].value) || 0,
                             ga: parseInt(gaNodes[idx].value) || 0,
@@ -720,7 +667,6 @@
             }
         });
 
-        // DOMESTIC LEAGUE SUBMISSION HANDLER
         document.getElementById('domesticBatchForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -738,7 +684,7 @@
 
             playerNodes.forEach((node, idx) => {
                 let pUid = node.value;
-                if (pUid) { // Skip unselected / 'None' slots
+                if (pUid) {
                     let pObj = cachedPlayers.find(p => p.uid === pUid);
                     let docRef = db.collection('pending_scores').doc();
                     let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -782,6 +728,7 @@
             }
         });
 
+        // FIXED RENDER PENDING LOGS FUNCTION WITH FIXED SYNTAX TYPO
         function renderPendingLogs(pendingList) {
             let container = document.getElementById('pendingLogsContainer');
             container.innerHTML = '';
@@ -793,17 +740,18 @@
 
             pendingList.forEach(item => {
                 let commResTag = item.communityResult ? `Result: ${item.communityResult.toUpperCase()} | ` : '';
+                let matchTypeTag = item.matchType ? `Type: ${item.matchType.toUpperCase()} | ` : '';
                 container.innerHTML += `
-                            <div class="submission-item">
-                                <div>
-                                    <strong>${item.playerName}</strong>
-                                    <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
-                                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
-                                        ${commResTag}${item.wins !== undefined ? `W: ${item.wins} | D: ${item.draws} \vert{} L:${item.losses} | ` : ''}GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
-                                    </div>
-                                </div>
-                                <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                            </div>`;
+                    <div class="submission-item">
+                        <div>
+                            <strong>${item.playerName}</strong>
+                            <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
+                                ${matchTypeTag}${commResTag}${item.wins !== undefined ? `W: ${item.wins} | D: ${item.draws} \vert{} L:${item.losses} | ` : ''}GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
+                            </div>
+                        </div>
+                        <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                    </div>`;
             });
         }
     </script>
