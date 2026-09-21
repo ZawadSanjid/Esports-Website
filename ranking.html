@@ -66,24 +66,24 @@
             gap: 12px;
         }
 
-        .brand-logo .logo-img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            border-radius: 6px;
-            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
-        }
+            .brand-logo .logo-img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
+                border-radius: 6px;
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+            }
 
-        .brand-logo .brand-name {
-            font-family: 'Teko', sans-serif;
-            font-size: 26px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
 
-        .brand-logo .brand-name span {
-            color: var(--primary-red);
-        }
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
 
         .btn-outline-sm {
             border: 1px solid var(--border-color);
@@ -98,10 +98,10 @@
             font-size: 13px;
         }
 
-        .btn-outline-sm:hover {
-            border-color: var(--primary-red);
-            color: var(--primary-red);
-        }
+            .btn-outline-sm:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
 
         .container {
             max-width: 1200px;
@@ -114,17 +114,17 @@
             margin-bottom: 30px;
         }
 
-        .page-header h1 {
-            font-family: 'Teko', sans-serif;
-            font-size: 48px;
-            text-transform: uppercase;
-            line-height: 1;
-        }
+            .page-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: 48px;
+                text-transform: uppercase;
+                line-height: 1;
+            }
 
-        .page-header p {
-            color: var(--text-muted);
-            font-size: 16px;
-        }
+            .page-header p {
+                color: var(--text-muted);
+                font-size: 16px;
+            }
 
         /* RANKING TABS */
         .tab-navigation {
@@ -151,24 +151,31 @@
             gap: 8px;
         }
 
-        .tab-btn:hover {
-            color: var(--text-light);
-            border-color: var(--primary-red);
-        }
+            .tab-btn:hover {
+                color: var(--text-light);
+                border-color: var(--primary-red);
+            }
 
-        .tab-btn.active {
-            background: var(--primary-red);
-            color: #fff;
-            border-color: var(--primary-red);
-            box-shadow: 0 0 15px var(--glow-red);
-        }
+            .tab-btn.active {
+                background: var(--primary-red);
+                color: #fff;
+                border-color: var(--primary-red);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
 
-        .tab-btn.potm-btn.active {
-            background: var(--accent-gold);
-            color: #000;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
-        }
+            .tab-btn.potm-btn.active {
+                background: var(--accent-gold);
+                color: #000;
+                border-color: var(--accent-gold);
+                box-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+            }
+
+            .tab-btn.community-btn.active {
+                background: #20bf6b;
+                color: #fff;
+                border-color: #20bf6b;
+                box-shadow: 0 0 15px rgba(32, 191, 107, 0.4);
+            }
 
         /* SEARCH & ACTIONS BAR */
         .action-bar {
@@ -190,9 +197,9 @@
             width: 250px;
         }
 
-        .search-input:focus {
-            border-color: var(--primary-red);
-        }
+            .search-input:focus {
+                border-color: var(--primary-red);
+            }
 
         .btn-reset-potm {
             background: rgba(229, 9, 20, 0.15);
@@ -206,10 +213,10 @@
             display: none;
         }
 
-        .btn-reset-potm:hover {
-            background: var(--primary-red);
-            color: #fff;
-        }
+            .btn-reset-potm:hover {
+                background: var(--primary-red);
+                color: #fff;
+            }
 
         /* TABLE CONTAINER */
         .table-responsive {
@@ -225,33 +232,33 @@
             border-collapse: collapse;
             text-align: center;
             font-size: 14px;
-            min-width: 900px;
+            min-width: 800px;
         }
 
-        .ranking-table th {
-            background: #090a0c;
-            color: var(--text-muted);
-            padding: 14px 10px;
-            text-transform: uppercase;
-            font-weight: 700;
-            font-size: 12px;
-            border-bottom: 2px solid var(--border-color);
-        }
+            .ranking-table th {
+                background: #090a0c;
+                color: var(--text-muted);
+                padding: 14px 10px;
+                text-transform: uppercase;
+                font-weight: 700;
+                font-size: 12px;
+                border-bottom: 2px solid var(--border-color);
+            }
 
-        .ranking-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-        }
+            .ranking-table td {
+                padding: 12px 10px;
+                border-bottom: 1px solid var(--border-color);
+                font-weight: 600;
+            }
 
         .clickable-row {
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .clickable-row:hover {
-            background: rgba(229, 9, 20, 0.15) !important;
-        }
+            .clickable-row:hover {
+                background: rgba(229, 9, 20, 0.15) !important;
+            }
 
         /* RANK BADGES */
         .rank-badge {
@@ -288,13 +295,13 @@
             text-align: left;
         }
 
-        .player-cell img {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-red);
-        }
+            .player-cell img {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--primary-red);
+            }
 
         .pts-col {
             color: var(--accent-gold);
@@ -345,9 +352,9 @@
             transition: 0.2s ease;
         }
 
-        .close-modal:hover {
-            color: var(--primary-red);
-        }
+            .close-modal:hover {
+                color: var(--primary-red);
+            }
 
         /* MODAL PROFILE HERO */
         .modal-hero {
@@ -360,14 +367,14 @@
             flex-wrap: wrap;
         }
 
-        .modal-hero img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-red);
-            box-shadow: 0 0 15px var(--glow-red);
-        }
+            .modal-hero img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid var(--primary-red);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
 
         .modal-hero-info h2 {
             font-family: 'Teko', sans-serif;
@@ -392,14 +399,14 @@
             color: var(--text-muted);
         }
 
-        .modal-meta-item strong {
-            color: var(--text-light);
-        }
+            .modal-meta-item strong {
+                color: var(--text-light);
+            }
 
-        .modal-meta-item i {
-            color: var(--primary-red);
-            margin-right: 5px;
-        }
+            .modal-meta-item i {
+                color: var(--primary-red);
+                margin-right: 5px;
+            }
 
         /* MODAL STATS GRID */
         .modal-stat-header {
@@ -427,18 +434,18 @@
             text-align: center;
         }
 
-        .stat-box-mini .val {
-            font-family: 'Teko', sans-serif;
-            font-size: 26px;
-            line-height: 1;
-            font-weight: 700;
-        }
+            .stat-box-mini .val {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                line-height: 1;
+                font-weight: 700;
+            }
 
-        .stat-box-mini .lbl {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+            .stat-box-mini .lbl {
+                font-size: 11px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+            }
 
         /* MODAL LISTS */
         .modal-two-column {
@@ -461,14 +468,14 @@
             padding: 15px;
         }
 
-        .modal-list-box h4 {
-            font-family: 'Teko', sans-serif;
-            font-size: 22px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
+            .modal-list-box h4 {
+                font-family: 'Teko', sans-serif;
+                font-size: 22px;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 5px;
+            }
 
         .modal-list-item {
             display: flex;
@@ -516,7 +523,7 @@
     <div class="container">
         <div class="page-header">
             <h1>EBFC Leaderboards</h1>
-            <p>Official Competitive Ranks, Domestic Standings & Monthly POTM Statistics</p>
+            <p>Official Competitive Ranks, Domestic Standings, Monthly POTM & Community Breakdown</p>
         </div>
 
         <!-- RANKING TAB BUTTONS -->
@@ -530,6 +537,9 @@
             <button class="tab-btn potm-btn" onclick="switchTab('potm', event)">
                 <i class="fa-solid fa-star"></i> POTM Ranking (Monthly)
             </button>
+            <button class="tab-btn community-btn" onclick="switchTab('community', event)">
+                <i class="fa-solid fa-users"></i> EBFC in Communities
+            </button>
         </div>
 
         <!-- ACTION BAR: RESET & SEARCH -->
@@ -539,31 +549,17 @@
                     <i class="fa-solid fa-rotate-left"></i> Reset Monthly POTM Stats
                 </button>
             </div>
-            <input type="text" id="searchInput" onkeyup="filterTable()" class="search-input" placeholder="Search player by name...">
+            <input type="text" id="searchInput" onkeyup="filterTable()" class="search-input" placeholder="Search name...">
         </div>
 
         <!-- RANKINGS TABLE -->
         <div class="table-responsive">
             <table class="ranking-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th style="text-align: left;">Player</th>
-                        <th>Club</th>
-                        <th>MP</th>
-                        <th>W</th>
-                        <th>D</th>
-                        <th>L</th>
-                        <th>GF</th>
-                        <th>GA</th>
-                        <th>GD</th>
-                        <th>Win %</th>
-                        <th>Points</th>
-                        <th>MOTM</th>
-                    </tr>
+                <thead id="rankingTableHeader">
+                    <!-- Dynamic Headers Rendered in JS -->
                 </thead>
                 <tbody id="rankingTableBody">
-                    <tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-muted);">Loading live player rankings...</td></tr>
+                    <tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-muted);">Loading live rankings...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -622,8 +618,23 @@
         let cachedPlayers = [];
         let currentUserRole = 'player';
 
+        // COMMUNITY LIST
+        const communitiesList = [
+            { code: 'efob', name: 'EFOB' },
+            { code: 'ecob', name: 'ECOB' },
+            { code: 'easb', name: 'EASB' },
+            { code: 'cobeg(main)', name: 'COBEG (Main)' },
+            { code: 'cobeg(academy)', name: 'COBEG (Academy)' },
+            { code: 'eaob', name: 'EAOB' },
+            { code: 'pesbd', name: 'PESBD' },
+            { code: 'befa', name: 'BEFA' },
+            { code: 'befc', name: 'BEFC' },
+            { code: 'efcob', name: 'EFCOB' },
+            { code: 'ttsbd', name: 'TTSBD' },
+            { code: 'gkec', name: 'GKEC' }
+        ];
+
         document.addEventListener("DOMContentLoaded", function () {
-            // Check logged in user role for Reset button permission
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     const userDoc = await db.collection('users').doc(user.uid).get();
@@ -639,7 +650,6 @@
                 checkAdminForReset();
             });
 
-            // Listen Realtime Firestore Database
             db.collection('users').onSnapshot(snapshot => {
                 cachedPlayers = [];
                 snapshot.forEach(doc => {
@@ -649,7 +659,6 @@
             });
         });
 
-        // OPEN DETAILED PLAYER PROFILE MODAL
         function openPlayerModal(uid) {
             const player = cachedPlayers.find(p => p.uid === uid || p.id === uid);
             if (!player) return;
@@ -667,29 +676,26 @@
             document.getElementById('mJob').innerText = player.occupation || 'N/A';
             document.getElementById('mAddress').innerText = player.address || 'N/A';
 
-            // RENDER OFFICIAL STATS
             const off = player.official || {};
             document.getElementById('modalOffStats').innerHTML = `
-                <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-            `;
+                    <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                `;
 
-            // RENDER DOMESTIC STATS
             const dom = player.domestic || {};
             document.getElementById('modalDomStats').innerHTML = `
-                <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
-                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-            `;
+                    <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                `;
 
-            // RENDER TOURNAMENT HISTORY
             const historyList = player.tournamentHistoryList || [];
             let histHtml = '';
             if (historyList.length === 0) {
@@ -701,7 +707,6 @@
             }
             document.getElementById('modalHistoryList').innerHTML = histHtml;
 
-            // RENDER ACHIEVEMENTS
             const achList = player.achievementsList || [];
             let achHtml = '';
             if (achList.length === 0) {
@@ -742,14 +747,102 @@
         }
 
         function renderTable() {
+            const header = document.getElementById('rankingTableHeader');
+            const tbody = document.getElementById('rankingTableBody');
+
+            if (currentTab === 'community') {
+                // RENDER COMMUNITY TAB HEADERS (REMOVED GF, GA, GD | ADDED AUTO)
+                header.innerHTML = `
+                        <tr>
+                            <th>#</th>
+                            <th style="text-align: left;">Community Name</th>
+                            <th>MP</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>Auto</th>
+                            <th>Win %</th>
+                            <th>Points</th>
+                        </tr>
+                    `;
+
+                // AGGREGATE COMMUNITY STATS FROM PLAYERS DATA
+                let commData = communitiesList.map((c) => {
+                    let mp = 0, w = 0, d = 0, l = 0, auto = 0, pts = 0;
+
+                    cachedPlayers.forEach(p => {
+                        let cStats = (p.communities && p.communities[c.code]) ? p.communities[c.code] : null;
+                        if (cStats) {
+                            mp += cStats.mp || 0;
+                            w += cStats.w || 0;
+                            d += cStats.d || 0;
+                            l += cStats.l || 0;
+                            auto += cStats.auto || 0;
+                            pts += cStats.pts || ((cStats.w || 0) * 3 + (cStats.d || 0));
+                        }
+                    });
+
+                    let winRate = mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0";
+
+                    return { name: c.name, code: c.code, mp, w, d, l, auto, winRate, pts };
+                });
+
+                // SORT COMMUNITIES BY POINTS & WIN RATE
+                commData.sort((a, b) => {
+                    if (b.pts !== a.pts) return b.pts - a.pts;
+                    return parseFloat(b.winRate) - parseFloat(a.winRate);
+                });
+
+                tbody.innerHTML = '';
+                commData.forEach((item, idx) => {
+                    let rank = idx + 1;
+                    let rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+
+                    tbody.innerHTML += `
+                            <tr>
+                                <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+                                <td style="text-align: left; font-weight: 700; color: var(--text-light);">${item.name}</td>
+                                <td>${item.mp}</td>
+                                <td style="color: var(--accent-green);">${item.w}</td>
+                                <td style="color: var(--accent-gold);">${item.d}</td>
+                                <td style="color: var(--primary-red);">${item.l}</td>
+                                <td style="color: var(--accent-gold);">${item.auto}</td>
+                                <td>${item.winRate}%</td>
+                                <td class="pts-col">${item.pts}</td>
+                            </tr>
+                        `;
+                });
+
+                filterTable();
+                return;
+            }
+
+            // DEFAULT PLAYER RANKINGS HEADERS
+            header.innerHTML = `
+                    <tr>
+                        <th>Rank</th>
+                        <th style="text-align: left;">Player</th>
+                        <th>Club</th>
+                        <th>MP</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GF</th>
+                        <th>GA</th>
+                        <th>GD</th>
+                        <th>Win %</th>
+                        <th>Points</th>
+                        <th>MOTM</th>
+                    </tr>
+                `;
+
             if (cachedPlayers.length === 0) {
-                document.getElementById('rankingTableBody').innerHTML = `<tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-muted);">No players found in database.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-muted);">No players found in database.</td></tr>`;
                 return;
             }
 
             let players = [...cachedPlayers];
 
-            // AUTOMATIC RANKING SORTING LOGIC
             players.sort((a, b) => {
                 let statA = a[currentTab] || getDefaultStats();
                 let statB = b[currentTab] || getDefaultStats();
@@ -780,7 +873,6 @@
                 }
             });
 
-            const tbody = document.getElementById('rankingTableBody');
             tbody.innerHTML = '';
 
             players.forEach((p, index) => {
@@ -815,7 +907,6 @@
             filterTable();
         }
 
-        // RESET MONTHLY POTM STATS (FIRESTORE SYNC)
         async function resetPotmRanking() {
             if (confirm("Are you sure you want to Reset Monthly POTM Ranking in Firebase Database? Official and Domestic stats will remain safe!")) {
                 try {
@@ -835,15 +926,14 @@
             }
         }
 
-        // LIVE TABLE FILTER
         function filterTable() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let rows = document.querySelectorAll('#rankingTableBody tr');
 
             rows.forEach(row => {
                 if (row.cells.length > 1) {
-                    let playerName = row.cells[1].innerText.toLowerCase();
-                    row.style.display = playerName.includes(input) ? '' : 'none';
+                    let textName = row.cells[1].innerText.toLowerCase();
+                    row.style.display = textName.includes(input) ? '' : 'none';
                 }
             });
         }
