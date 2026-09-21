@@ -313,7 +313,7 @@
             color: var(--accent-green);
         }
 
-        /* MODAL STYLES FOR PLAYER PROFILE OVERVIEW */
+        /* MODAL STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -356,7 +356,6 @@
             color: var(--primary-red);
         }
 
-        /* MODAL PROFILE HERO */
         .modal-hero {
             display: flex;
             align-items: center;
@@ -408,7 +407,6 @@
             margin-right: 5px;
         }
 
-        /* MODAL STATS GRID */
         .modal-stat-header {
             font-family: 'Teko', sans-serif;
             font-size: 24px;
@@ -447,7 +445,6 @@
             text-transform: uppercase;
         }
 
-        /* MODAL LISTS */
         .modal-two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -618,7 +615,6 @@
         let cachedPlayers = [];
         let currentUserRole = 'player';
 
-        // COMMUNITY LIST
         const communitiesList = [
             { code: 'efob', name: 'EFOB' },
             { code: 'ecob', name: 'ECOB' },
@@ -676,24 +672,24 @@
             document.getElementById('mJob').innerText = player.occupation || 'N/A';
             document.getElementById('mAddress').innerText = player.address || 'N/A';
 
-            const off = player.official || {};
+            const off = calculatePlayerStats(player.official);
             document.getElementById('modalOffStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp}</div><div class="lbl">MP</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w}</div><div class="lbl">W</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d}</div><div class="lbl">D</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l}</div><div class="lbl">L</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts}</div><div class="lbl">PTS</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate}%</div><div class="lbl">Win%</div></div>
                 `;
 
-            const dom = player.domestic || {};
+            const dom = calculatePlayerStats(player.domestic);
             document.getElementById('modalDomStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp}</div><div class="lbl">MP</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w}</div><div class="lbl">W</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d}</div><div class="lbl">D</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l}</div><div class="lbl">L</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts}</div><div class="lbl">PTS</div></div>
+                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate}%</div><div class="lbl">Win%</div></div>
                 `;
 
             const historyList = player.tournamentHistoryList || [];
@@ -727,7 +723,7 @@
 
         function checkAdminForReset() {
             const resetBtn = document.getElementById('resetPotmBtn');
-            if (currentUserRole === 'captain' && currentTab === 'potm') {
+            if ((currentUserRole === 'admin' || currentUserRole === 'captain') && currentTab === 'potm') {
                 resetBtn.style.display = 'inline-block';
             } else {
                 resetBtn.style.display = 'none';
@@ -742,16 +738,55 @@
             renderTable();
         }
 
-        function getDefaultStats() {
-            return { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, winRate: "0.0", pts: 0, motm: 0 };
+        // ACCURATE STATS CALCULATOR WITH GD & PTS AUTO RECALCULATION
+        function calculatePlayerStats(rawStat) {
+            let s = rawStat || {};
+            let mp = Number(s.mp) || 0;
+            let w = Number(s.w) || 0;
+            let d = Number(s.d) || 0;
+            let l = Number(s.l) || 0;
+            let gf = Number(s.gf) || 0;
+            let ga = Number(s.ga) || 0;
+            let gd = gf - ga;
+            let pts = (s.pts !== undefined && s.pts !== null) ? Number(s.pts) : ((w * 3) + d);
+            let motm = Number(s.motm) || 0;
+            let winRate = mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0";
+
+            return { mp, w, d, l, gf, ga, gd, winRate, pts, motm };
+        }
+
+        function getPlayerTabStats(p, tab) {
+            if (tab === 'official') return calculatePlayerStats(p.official);
+            if (tab === 'domestic') return calculatePlayerStats(p.domestic);
+            
+            if (tab === 'potm') {
+                if (p.potm) return calculatePlayerStats(p.potm);
+                
+                let off = calculatePlayerStats(p.official);
+                let dom = calculatePlayerStats(p.domestic);
+                
+                let mp = off.mp + dom.mp;
+                let w = off.w + dom.w;
+                let d = off.d + dom.d;
+                let l = off.l + dom.l;
+                let gf = off.gf + dom.gf;
+                let ga = off.ga + dom.ga;
+                let gd = gf - ga;
+                let pts = off.pts + dom.pts;
+                let motm = off.motm + dom.motm;
+                let winRate = mp > 0 ? ((w / mp) * 100).toFixed(1) : "0.0";
+                
+                return { mp, w, d, l, gf, ga, gd, winRate, pts, motm };
+            }
+            return calculatePlayerStats(null);
         }
 
         function renderTable() {
             const header = document.getElementById('rankingTableHeader');
             const tbody = document.getElementById('rankingTableBody');
 
+            // COMMUNITY TAB FIXED LOGIC (NO DUP-ADDING ACROSS MULTIPLE KEYS)
             if (currentTab === 'community') {
-                // RENDER COMMUNITY TAB HEADERS (REMOVED GF, GA, GD | ADDED AUTO)
                 header.innerHTML = `
                         <tr>
                             <th>#</th>
@@ -766,19 +801,19 @@
                         </tr>
                     `;
 
-                // AGGREGATE COMMUNITY STATS FROM PLAYERS DATA (ACCURATE SINGLE SUBMISSION RECORDING)
                 let commData = communitiesList.map((c) => {
                     let mp = 0, w = 0, d = 0, l = 0, auto = 0, pts = 0;
 
                     cachedPlayers.forEach(p => {
-                        let cStats = (p.communities && p.communities[c.code]) ? p.communities[c.code] : null;
-                        if (cStats) {
-                            mp += cStats.mp || 0;
-                            w += cStats.w || 0;
-                            d += cStats.d || 0;
-                            l += cStats.l || 0;
-                            auto += cStats.auto || 0;
-                            pts += cStats.pts || ((cStats.w || 0) * 3 + (cStats.d || 0));
+                        // Accurately extract community specific object
+                        if (p.communities && p.communities[c.code]) {
+                            let cStats = p.communities[c.code];
+                            mp += Number(cStats.mp) || 0;
+                            w += Number(cStats.w) || 0;
+                            d += Number(cStats.d) || 0;
+                            l += Number(cStats.l) || 0;
+                            auto += Number(cStats.auto) || 0;
+                            pts += (cStats.pts !== undefined) ? Number(cStats.pts) : ((Number(cStats.w) || 0) * 3 + (Number(cStats.d) || 0));
                         }
                     });
 
@@ -787,7 +822,6 @@
                     return { name: c.name, code: c.code, mp, w, d, l, auto, winRate, pts };
                 });
 
-                // SORT COMMUNITIES BY POINTS & WIN RATE
                 commData.sort((a, b) => {
                     if (b.pts !== a.pts) return b.pts - a.pts;
                     return parseFloat(b.winRate) - parseFloat(a.winRate);
@@ -844,32 +878,21 @@
             let players = [...cachedPlayers];
 
             players.sort((a, b) => {
-                let statA = a[currentTab] || getDefaultStats();
-                let statB = b[currentTab] || getDefaultStats();
-
-                let ptsA = statA.pts || 0;
-                let ptsB = statB.pts || 0;
-                let motmA = statA.motm || 0;
-                let motmB = statB.motm || 0;
-                let winRateA = parseFloat(statA.winRate) || 0;
-                let winRateB = parseFloat(statB.winRate) || 0;
-                let gdA = statA.gd || 0;
-                let gdB = statB.gd || 0;
-                let wA = statA.w || 0;
-                let wB = statB.w || 0;
+                let statA = getPlayerTabStats(a, currentTab);
+                let statB = getPlayerTabStats(b, currentTab);
 
                 if (currentTab === 'potm') {
-                    if (ptsB !== ptsA) return ptsB - ptsA;
-                    if (motmB !== motmA) return motmB - motmA;
-                    if (winRateB !== winRateA) return winRateB - winRateA;
-                    if (gdB !== gdA) return gdB - gdA;
-                    return wB - wA;
+                    if (statB.motm !== statA.motm) return statB.motm - statA.motm;
+                    if (statB.pts !== statA.pts) return statB.pts - statA.pts;
+                    if (parseFloat(statB.winRate) !== parseFloat(statA.winRate)) return parseFloat(statB.winRate) - parseFloat(statA.winRate);
+                    if (statB.gd !== statA.gd) return statB.gd - statA.gd;
+                    return statB.w - statA.w;
                 } else {
-                    if (ptsB !== ptsA) return ptsB - ptsA;
-                    if (winRateB !== winRateA) return winRateB - winRateA;
-                    if (wB !== wA) return wB - wA;
-                    if (gdB !== gdA) return gdB - gdA;
-                    return motmB - motmA;
+                    if (statB.pts !== statA.pts) return statB.pts - statA.pts;
+                    if (parseFloat(statB.winRate) !== parseFloat(statA.winRate)) return parseFloat(statB.winRate) - parseFloat(statA.winRate);
+                    if (statB.w !== statA.w) return statB.w - statA.w;
+                    if (statB.gd !== statA.gd) return statB.gd - statA.gd;
+                    return statB.motm - statA.motm;
                 }
             });
 
@@ -877,7 +900,7 @@
 
             players.forEach((p, index) => {
                 let rank = index + 1;
-                let stat = p[currentTab] || getDefaultStats();
+                let stat = getPlayerTabStats(p, currentTab);
                 let rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
                 let avatarUrl = p.avatar || 'Image/player1.webp';
 
@@ -891,16 +914,16 @@
                                 </div>
                             </td>
                             <td>${p.club || 'EBFC'}</td>
-                            <td>${stat.mp || 0}</td>
-                            <td style="color: var(--accent-green);">${stat.w || 0}</td>
-                            <td style="color: var(--accent-gold);">${stat.d || 0}</td>
-                            <td style="color: var(--primary-red);">${stat.l || 0}</td>
-                            <td>${stat.gf || 0}</td>
-                            <td>${stat.ga || 0}</td>
-                            <td class="gd-col">${(stat.gd || 0) > 0 ? '+' + stat.gd : (stat.gd || 0)}</td>
-                            <td>${stat.winRate || "0.0"}%</td>
-                            <td class="pts-col">${stat.pts || 0}</td>
-                            <td style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${stat.motm || 0}</td>
+                            <td>${stat.mp}</td>
+                            <td style="color: var(--accent-green);">${stat.w}</td>
+                            <td style="color: var(--accent-gold);">${stat.d}</td>
+                            <td style="color: var(--primary-red);">${stat.l}</td>
+                            <td>${stat.gf}</td>
+                            <td>${stat.ga}</td>
+                            <td class="gd-col">${stat.gd > 0 ? '+' + stat.gd : stat.gd}</td>
+                            <td>${stat.winRate}%</td>
+                            <td class="pts-col">${stat.pts}</td>
+                            <td style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${stat.motm}</td>
                         </tr>`;
             });
 
@@ -914,7 +937,7 @@
                     cachedPlayers.forEach(p => {
                         const userRef = db.collection('users').doc(p.uid);
                         batch.update(userRef, {
-                            potm: getDefaultStats()
+                            potm: calculatePlayerStats(null)
                         });
                     });
                     await batch.commit();
