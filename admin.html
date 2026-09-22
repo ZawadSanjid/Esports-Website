@@ -1205,17 +1205,17 @@
             cachedPlayers.forEach(p => {
                 const avatarUrl = p.avatar || 'Image/player1.webp';
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
-                                        <td><strong>${p.name || 'N/A'}</strong></td>
-                                        <td>${p.gameId || 'N/A'}</td>
-                                        <td>${p.club || 'EBFC'}</td>
-                                        <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
-                                        <td>
-                                            <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
-                                            <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
+                                                <td><strong>${p.name || 'N/A'}</strong></td>
+                                                <td>${p.gameId || 'N/A'}</td>
+                                                <td>${p.club || 'EBFC'}</td>
+                                                <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
+                                                <td>
+                                                    <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
+                                                    <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1363,7 +1363,8 @@
                 try {
                     await db.collection('users').doc(uid).update({
                         official: zeroStats,
-                        domestic: zeroStats
+                        domestic: zeroStats,
+                        potm: zeroStats
                     });
                     loadPlayerStatsToEditor();
                 } catch (err) {
@@ -1587,16 +1588,16 @@
             tournaments.forEach(t => {
                 const logoImg = t.logo || 'Image/image1.jpg.jpg';
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
-                                        <td><strong>${t.title}</strong></td>
-                                        <td>${t.date}</td>
-                                        <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
-                                        <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
-                                        <td>
-                                            <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
+                                                <td><strong>${t.title}</strong></td>
+                                                <td>${t.date}</td>
+                                                <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
+                                                <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
+                                                <td>
+                                                    <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1714,14 +1715,14 @@
 
             historyList.forEach((item, index) => {
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><strong>${item.title}</strong></td>
-                                        <td>${item.subtitle}</td>
-                                        <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
-                                        <td>
-                                            <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><strong>${item.title}</strong></td>
+                                                <td>${item.subtitle}</td>
+                                                <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
+                                                <td>
+                                                    <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1791,14 +1792,14 @@
 
             achList.forEach((item, index) => {
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
-                                        <td><strong>${item.title}</strong></td>
-                                        <td>${item.desc}</td>
-                                        <td>
-                                            <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
+                                                <td><strong>${item.title}</strong></td>
+                                                <td>${item.desc}</td>
+                                                <td>
+                                                    <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1887,14 +1888,14 @@
 
             captains.forEach(c => {
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td>#${c.uid.substring(0, 6)}</td>
-                                        <td><strong>${c.name || 'Captain'}</strong></td>
-                                        <td>${c.club || 'EBFC'}</td>
-                                        <td>${c.email || 'N/A'}</td>
-                                        <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                                        <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                                    </tr>`;
+                                            <tr>
+                                                <td>#${c.uid.substring(0, 6)}</td>
+                                                <td><strong>${c.name || 'Captain'}</strong></td>
+                                                <td>${c.club || 'EBFC'}</td>
+                                                <td>${c.email || 'N/A'}</td>
+                                                <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
+                                                <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
+                                            </tr>`;
             });
         }
 
@@ -1923,18 +1924,18 @@
                 const commCode = req.community || 'cobeg';
 
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                                        <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
-                                        <td>${req.squadFormat || '1v1'}</td>
-                                        <td><strong>${req.gf} - ${req.ga}</strong></td>
-                                        <td>${(req.matchType || 'official').toUpperCase()}</td>
-                                        <td><span style="color:${req.awardMotm ? 'var(--accent-gold)' : 'inherit'}; font-weight:700;">${req.awardMotm ? 'YES (POTM)' : 'No'}</span></td>
-                                        <td>
-                                            <button onclick="approveCaptainScore('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve & Sync Rank</button>
-                                            <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><strong>${req.playerName || 'Unknown'}</strong></td>
+                                                <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
+                                                <td>${req.squadFormat || '1v1'}</td>
+                                                <td><strong>${req.gf} - ${req.ga}</strong></td>
+                                                <td>${(req.matchType || 'official').toUpperCase()}</td>
+                                                <td><span style="color:${req.awardMotm ? 'var(--accent-gold)' : 'inherit'}; font-weight:700;">${req.awardMotm ? 'YES (POTM)' : 'No'}</span></td>
+                                                <td>
+                                                    <button onclick="approveCaptainScore('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve & Sync Rank</button>
+                                                    <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1955,16 +1956,16 @@
                 const resText = `[W:${req.win || 0}, D:${req.draw || 0}, L:${req.loss || 0}, Auto:${req.auto || 0}]`;
 
                 tbody.innerHTML += `
-                                    <tr>
-                                        <td><strong>${req.captainName || 'Team Captain'}</strong></td>
-                                        <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
-                                        <td><span style="color:#00bcd4; font-weight:700;">${resText}</span></td>
-                                        <td>${formattedDate}</td>
-                                        <td>
-                                            <button onclick="approveCommunityWin('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve Result</button>
-                                            <button onclick="rejectCommunityWin('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                                        </td>
-                                    </tr>`;
+                                            <tr>
+                                                <td><strong>${req.captainName || 'Team Captain'}</strong></td>
+                                                <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
+                                                <td><span style="color:#00bcd4; font-weight:700;">${resText}</span></td>
+                                                <td>${formattedDate}</td>
+                                                <td>
+                                                    <button onclick="approveCommunityWin('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve Result</button>
+                                                    <button onclick="rejectCommunityWin('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
+                                                </td>
+                                            </tr>`;
             });
         }
 
@@ -1988,7 +1989,7 @@
                     const commRef = db.collection('communities').doc(commCode);
                     const commDoc = await transaction.get(commRef);
 
-                    let globalCommStats = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, auto: 0, pts: 0 };
+                    let globalCommStats = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, auto: 0, pts: 0, winRate: "0.0" };
                     let matchCountDelta = winDelta + drawDelta + lossDelta + autoDelta;
 
                     globalCommStats.w = (Number(globalCommStats.w) || 0) + winDelta;
@@ -1997,6 +1998,7 @@
                     globalCommStats.auto = (Number(globalCommStats.auto) || 0) + autoDelta;
                     globalCommStats.mp = (Number(globalCommStats.mp) || 0) + matchCountDelta;
                     globalCommStats.pts = (Number(globalCommStats.pts) || 0) + (winDelta * 3) + drawDelta;
+                    globalCommStats.winRate = globalCommStats.mp > 0 ? (((globalCommStats.w + globalCommStats.auto) / globalCommStats.mp) * 100).toFixed(1) : "0.0";
 
                     transaction.set(commRef, globalCommStats, { merge: true });
                     transaction.delete(pendingRef);
@@ -2033,7 +2035,7 @@
                     const { playerId, gf, ga, community, awardMotm, matchType } = req;
                     const commCode = (community || 'cobeg').toLowerCase();
 
-                    // ১. Player Data fetch
+                    // 1. Player Data fetch
                     const userRef = db.collection('users').doc(playerId);
                     const userDoc = await transaction.get(userRef);
                     if (!userDoc.exists) throw new Error("Player profile not found in database.");
@@ -2045,18 +2047,7 @@
                     let goalsFor = Number(gf) || 0;
                     let goalsAgainst = Number(ga) || 0;
 
-                    // ২. Global Community Ranking/Standings fetch
-                    const commRef = db.collection('communities').doc(commCode);
-                    const commDoc = await transaction.get(commRef);
-
-                    let globalCommStats = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, pts: 0 };
-                    globalCommStats.mp = (Number(globalCommStats.mp) || 0) + 1;
-                    globalCommStats.w = (Number(globalCommStats.w) || 0) + pWins;
-                    globalCommStats.d = (Number(globalCommStats.d) || 0) + pDraws;
-                    globalCommStats.l = (Number(globalCommStats.l) || 0) + pLosses;
-                    globalCommStats.pts = (globalCommStats.w * 3) + globalCommStats.d;
-
-                    // ৩. Player er Individual Official / Domestic Stats update
+                    // 2. Helper to Update Player's Individual Official / Domestic / POTM Stats
                     const updateStatsMap = (existing, deltaW, deltaD, deltaL, deltaGF, deltaGA, isMotm) => {
                         let st = existing || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
                         let mpAdd = deltaW + deltaD + deltaL;
@@ -2076,13 +2067,17 @@
                     };
 
                     let updatePayload = {};
-                    if (matchType === 'domestic') {
+                    const selectedType = matchType || 'official';
+
+                    if (selectedType === 'domestic') {
                         updatePayload.domestic = updateStatsMap(player.domestic, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
                     } else {
+                        // Update official and syncing potm ranking
                         updatePayload.official = updateStatsMap(player.official, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
+                        updatePayload.potm = updateStatsMap(player.potm, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
                     }
 
-                    // ৪. Player er nijer profile-er specific community stats update
+                    // 3. Player profile specific community stats update (Update stats only in player's personal profile)
                     let playerCommunities = player.communities || {};
                     let commStats = playerCommunities[commCode] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, winRate: "0.0" };
 
@@ -2099,12 +2094,11 @@
                     updatePayload.communities = playerCommunities;
 
                     // Database Operations inside Transaction
-                    transaction.set(commRef, globalCommStats, { merge: true });
                     transaction.update(userRef, updatePayload);
                     transaction.delete(pendingRef);
                 });
 
-                alert("Score Approved Successfully! Global Community Standings, Player Official Ranking, and Profile Community Stats updated.");
+                alert("Score Approved Successfully! Player Official & POTM Ranking and Individual Profile Stats updated.");
             } catch (err) {
                 console.error("Error approving score: ", err);
                 alert("Failed to approve score: " + err.message);
@@ -2158,8 +2152,7 @@
 
                 if (matchType === 'domestic') {
                     let domesticStats = updateStatGroup(player.domestic);
-                    let potmStats = updateStatGroup(player.potm);
-                    await userRef.update({ domestic: domesticStats, potm: potmStats });
+                    await userRef.update({ domestic: domesticStats });
                 } else {
                     let officialStats = updateStatGroup(player.official);
                     let potmStats = updateStatGroup(player.potm);
@@ -2191,10 +2184,10 @@
                 });
 
                 container.innerHTML += `
-                                    <div class="form-group">
-                                        <label>Slot ${i + 1}</label>
-                                        <select class="form-control tournament-player-select">${optionsHtml}</select>
-                                    </div>`;
+                                            <div class="form-group">
+                                                <label>Slot ${i + 1}</label>
+                                                <select class="form-control tournament-player-select">${optionsHtml}</select>
+                                            </div>`;
             }
         }
 
@@ -2287,37 +2280,37 @@
                 const isP2Win = m.winner && m.winner.id === m.p2.id;
 
                 roundHtml += `
-                                    <div class="match-card">
-                                        <div class="player-vs-box">
-                                            <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                                <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                                <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
-                                            </div>
-                                            <span class="vs">VS</span>
-                                            <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                                <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                                <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                            </div>
-                                        </div>
+                                            <div class="match-card">
+                                                <div class="player-vs-box">
+                                                    <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
+                                                        <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                        <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                                                    </div>
+                                                    <span class="vs">VS</span>
+                                                    <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
+                                                        <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
+                                                        <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                    </div>
+                                                </div>
 
-                                        ${!isCompleted ? `
-                                            <div class="score-inputs">
-                                                <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                                <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                                <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                                ${isDoubleLeg ? `
-                                                    <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                                    <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                                    <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                                ` : ''}
-                                                <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                                            </div>
-                                        ` : `
-                                            <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                                Winner: ${m.winner.name}
-                                            </div>
-                                        `}
-                                    </div>`;
+                                                ${!isCompleted ? `
+                                                    <div class="score-inputs">
+                                                        <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
+                                                        <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
+                                                        <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
+                                                        ${isDoubleLeg ? `
+                                                            <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
+                                                            <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
+                                                            <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
+                                                        ` : ''}
+                                                        <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
+                                                    </div>
+                                                ` : `
+                                                    <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
+                                                        Winner: ${m.winner.name}
+                                                    </div>
+                                                `}
+                                            </div>`;
             });
 
             roundHtml += `</div>`;
