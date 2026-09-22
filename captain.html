@@ -61,24 +61,24 @@
             gap: 12px;
         }
 
-        .brand-logo .logo-img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            border-radius: 6px;
-            box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
-        }
+            .brand-logo .logo-img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
+                border-radius: 6px;
+                box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+            }
 
-        .brand-logo .brand-name {
-            font-family: 'Teko', sans-serif;
-            font-size: 26px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+            .brand-logo .brand-name {
+                font-family: 'Teko', sans-serif;
+                font-size: 26px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
 
-        .brand-logo .brand-name span {
-            color: var(--primary-red);
-        }
+                .brand-logo .brand-name span {
+                    color: var(--primary-red);
+                }
 
         .btn-outline-sm {
             border: 1px solid var(--border-color);
@@ -93,10 +93,10 @@
             font-size: 13px;
         }
 
-        .btn-outline-sm:hover {
-            border-color: var(--primary-red);
-            color: var(--primary-red);
-        }
+            .btn-outline-sm:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
 
         .container {
             max-width: 1000px;
@@ -109,17 +109,17 @@
             margin-bottom: 30px;
         }
 
-        .page-header h1 {
-            font-family: 'Teko', sans-serif;
-            font-size: 48px;
-            text-transform: uppercase;
-            line-height: 1;
-        }
+            .page-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: 48px;
+                text-transform: uppercase;
+                line-height: 1;
+            }
 
-        .page-header p {
-            color: var(--text-muted);
-            font-size: 16px;
-        }
+            .page-header p {
+                color: var(--text-muted);
+                font-size: 16px;
+            }
 
         .section-card {
             background: var(--bg-card);
@@ -142,9 +142,9 @@
             padding-bottom: 10px;
         }
 
-        .section-title i {
-            color: var(--primary-red);
-        }
+            .section-title i {
+                color: var(--primary-red);
+            }
 
         .form-grid {
             display: grid;
@@ -173,9 +173,9 @@
             outline: none;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-red);
-        }
+            .form-control:focus {
+                border-color: var(--primary-red);
+            }
 
         .squad-slot-card {
             background: #090a0c;
@@ -188,11 +188,11 @@
             align-items: center;
         }
 
-        .squad-slot-card .slot-num {
-            font-family: 'Teko', sans-serif;
-            font-size: 20px;
-            color: var(--accent-gold);
-        }
+            .squad-slot-card .slot-num {
+                font-family: 'Teko', sans-serif;
+                font-size: 20px;
+                color: var(--accent-gold);
+            }
 
         .btn-action {
             background: var(--primary-red);
@@ -209,19 +209,19 @@
             margin-top: 15px;
         }
 
-        .btn-action:hover {
-            background: var(--primary-red-hover);
-            box-shadow: 0 0 15px var(--glow-red);
-        }
+            .btn-action:hover {
+                background: var(--primary-red-hover);
+                box-shadow: 0 0 15px var(--glow-red);
+            }
 
         .btn-gold {
             background: var(--accent-gold);
             color: #000;
         }
 
-        .btn-gold:hover {
-            background: #e0a200;
-        }
+            .btn-gold:hover {
+                background: #e0a200;
+            }
 
         .status-badge {
             font-size: 11px;
@@ -250,32 +250,74 @@
             gap: 15px;
         }
 
-        .auto-win-info-box {
-            background: rgba(255, 183, 3, 0.1);
-            border: 1px solid var(--accent-gold);
-            border-radius: 6px;
+        .result-input-box {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             padding: 15px;
-            color: var(--accent-gold);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
         }
 
         @media (max-width: 768px) {
-            .navbar { padding: 12px 4%; }
-            .brand-logo .logo-img { width: 38px; height: 38px; }
-            .brand-logo .brand-name { font-size: 22px; }
-            .container { margin: 20px auto; padding: 0 12px; }
-            .page-header h1 { font-size: 36px; }
-            .page-header p { font-size: 14px; }
-            .section-card { padding: 18px 14px; }
-            .section-title { font-size: 26px; }
-            .squad-slot-card { grid-template-columns: 1fr 1fr; gap: 12px 8px; padding: 12px; }
-            .squad-slot-card .form-group:nth-child(1) { grid-column: span 2; }
-            .submission-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .submission-item .status-badge { align-self: flex-start; }
+            .navbar {
+                padding: 12px 4%;
+            }
+
+            .brand-logo .logo-img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-logo .brand-name {
+                font-size: 22px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .page-header p {
+                font-size: 14px;
+            }
+
+            .section-card {
+                padding: 18px 14px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .squad-slot-card {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 8px;
+                padding: 12px;
+            }
+
+                .squad-slot-card .form-group:nth-child(1) {
+                    grid-column: span 2;
+                }
+
+            .submission-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+                .submission-item .status-badge {
+                    align-self: flex-start;
+                }
         }
     </style>
 
@@ -314,10 +356,10 @@
     <div class="container">
         <div class="page-header">
             <h1>Captain Squad Score Portal</h1>
-            <p>Select Target Community, Overall Result & Player Scores For Admin Approval</p>
+            <p>Select Target Community, Submit Squad Results & Community Win Status For Admin Approval</p>
         </div>
 
-        <!-- 1ST SECTION: MATCH SETUP & COMMUNITY RESULT SELECTION -->
+        <!-- 1ST SECTION: MATCH SETUP & DIRECT COMMUNITY RESULT INPUT -->
         <div class="section-card">
             <div class="section-title">
                 <span><i class="fa-solid fa-users-gear"></i> Official Match Submission & Community Result</span>
@@ -331,8 +373,8 @@
                             <option value="efob">EFOB</option>
                             <option value="ecob">ECOB</option>
                             <option value="easb">EASB</option>
-                            <option value="cobeg(main)" selected>COBEG (Main)</option>
-                            <option value="cobeg(academy)">COBEG (Academy)</option>
+                            <option value="cobeg" selected>COBEG (Main)</option>
+                            <option value="cobeg_academy">COBEG (Academy)</option>
                             <option value="eaob">EAOB</option>
                             <option value="pesbd">PESBD</option>
                             <option value="befa">BEFA</option>
@@ -343,7 +385,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group" id="squadFormatGroup">
+                    <div class="form-group">
                         <label>Squad Format</label>
                         <select id="squadFormatSelect" class="form-control" onchange="generateSquadSlots()" required>
                             <option value="6">6 Man Squad</option>
@@ -352,32 +394,42 @@
                             <option value="12" selected>12 Man Squad</option>
                         </select>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Community Match Result</label>
-                        <select id="communityMatchResultSelect" class="form-control" onchange="toggleAutoWinMode()" required>
-                            <option value="w" selected>Win (W)</option>
-                            <option value="d">Draw (D)</option>
-                            <option value="l">Loss (L)</option>
-                            <option value="auto">Auto Win (Auto + Win)</option>
-                        </select>
+                <!-- OVERALL COMMUNITY RESULT INPUT FIELDS -->
+                <div class="result-input-box">
+                    <label style="display:block; font-weight:700; color:var(--accent-gold); margin-bottom:10px; font-size:14px; text-transform:uppercase;">
+                        <i class="fa-solid fa-chart-line"></i> Overall Community Result Submission (Admin Queue)
+                    </label>
+                    <div class="result-input-grid">
+                        <div class="form-group" style="margin:0;">
+                            <label style="color:#4caf50;">Win (W)</label>
+                            <input type="number" id="resWin" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="color:#ffb703;">Draw (D)</label>
+                            <input type="number" id="resDraw" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="color:#e50914;">Loss (L)</label>
+                            <input type="number" id="resLoss" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="color:#00bcd4;">Auto Win</label>
+                            <input type="number" id="resAuto" class="form-control" min="0" value="0" required>
+                        </div>
                     </div>
                 </div>
 
                 <div id="playerPerformanceWrapper">
                     <div class="section-title" style="font-size: 24px; margin-top: 20px;">
-                        <span><i class="fa-solid fa-list-ol"></i> Input Player Performance</span>
+                        <span><i class="fa-solid fa-list-ol"></i> Input Individual Player Performance</span>
                     </div>
 
                     <div id="squadSlotsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
                 </div>
 
-                <div id="autoWinNoticeBox" class="auto-win-info-box" style="display: none;">
-                    <i class="fa-solid fa-circle-info" style="font-size: 22px;"></i>
-                    <span>Auto Win Selected! No individual player stats will be recorded. Only 1 Win (+3 PTS) will be directly credited to the target community upon admin approval.</span>
-                </div>
-
-                <button type="submit" id="submitBtn" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Squad Score & Community Result To Admin</button>
+                <button type="submit" id="submitBtn" class="btn-action"><i class="fa-solid fa-paper-plane"></i> Submit Squad Score & Result To Admin</button>
             </form>
         </div>
 
@@ -395,7 +447,7 @@
                             <option value="10" selected>10 Players</option>
                             <option value="20">20 Players</option>
                             <option value="30">30 Players</option>
-                            <option value="40">40 players</option>
+                            <option value="40">40 Players</option>
                         </select>
                     </div>
                 </div>
@@ -421,6 +473,7 @@
     <script>
         let cachedPlayers = [];
         let currentCaptainUid = null;
+        let currentCaptainName = "Captain";
 
         auth.onAuthStateChanged(async (user) => {
             const localUser = JSON.parse(localStorage.getItem('ebfc_user'));
@@ -434,11 +487,14 @@
             if (user) {
                 currentCaptainUid = user.uid;
                 const doc = await db.collection('users').doc(user.uid).get();
-                if (!doc.exists || (doc.data().role !== 'captain' && doc.data().role !== 'admin')) {
-                    if (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin')) {
-                        alert("Access Denied! Captain Access Required.");
-                        window.location.href = "login.html";
-                        return;
+                if (doc.exists) {
+                    currentCaptainName = doc.data().name || "Captain";
+                    if (doc.data().role !== 'captain' && doc.data().role !== 'admin') {
+                        if (!localUser || (localUser.role !== 'captain' && localUser.role !== 'admin')) {
+                            alert("Access Denied! Captain Access Required.");
+                            window.location.href = "login.html";
+                            return;
+                        }
                     }
                 }
             }
@@ -470,44 +526,13 @@
                 generateDomesticSlots();
             });
 
-            db.collection('pending_scores').onSnapshot(snapshot => {
+            db.collection('pending_scores').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
                 let pendingList = [];
                 snapshot.forEach(doc => {
                     pendingList.push({ id: doc.id, ...doc.data() });
                 });
                 renderPendingLogs(pendingList);
             });
-        }
-
-        function toggleAutoWinMode() {
-            let resVal = document.getElementById('communityMatchResultSelect').value;
-            let playerWrapper = document.getElementById('playerPerformanceWrapper');
-            let autoWinNotice = document.getElementById('autoWinNoticeBox');
-            let squadFormatGroup = document.getElementById('squadFormatGroup');
-
-            let playerSelects = document.querySelectorAll('.squad-player-id');
-            let gfInputs = document.querySelectorAll('.squad-player-gf');
-            let gaInputs = document.querySelectorAll('.squad-player-ga');
-
-            if (resVal === 'auto') {
-                playerWrapper.style.display = 'none';
-                autoWinNotice.style.display = 'flex';
-                squadFormatGroup.style.opacity = '0.4';
-                squadFormatGroup.style.pointerEvents = 'none';
-
-                playerSelects.forEach(el => el.removeAttribute('required'));
-                gfInputs.forEach(el => el.removeAttribute('required'));
-                gaInputs.forEach(el => el.removeAttribute('required'));
-            } else {
-                playerWrapper.style.display = 'block';
-                autoWinNotice.style.display = 'none';
-                squadFormatGroup.style.opacity = '1';
-                squadFormatGroup.style.pointerEvents = 'auto';
-
-                playerSelects.forEach(el => el.setAttribute('required', 'true'));
-                gfInputs.forEach(el => el.setAttribute('required', 'true'));
-                gaInputs.forEach(el => el.setAttribute('required', 'true'));
-            }
         }
 
         function generateSquadSlots() {
@@ -523,33 +548,32 @@
                 });
 
                 container.innerHTML += `
-                    <div class="squad-slot-card">
-                        <div class="form-group" style="margin:0;">
-                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                            <select class="form-control squad-player-id" required>${optionsHtml}</select>
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>GF (Goals)</label>
-                            <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>GA (Against)</label>
-                            <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>MOTM?</label>
-                            <select class="form-control squad-player-motm">
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                        </div>
-                    </div>`;
+                            <div class="squad-slot-card">
+                                <div class="form-group" style="margin:0;">
+                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                    <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GF (Goals)</label>
+                                    <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GA (Against)</label>
+                                    <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>MOTM / POTM?</label>
+                                    <select class="form-control squad-player-motm">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+                            </div>`;
             }
-            toggleAutoWinMode();
         }
 
         function generateDomesticSlots() {
-            let count = parseInt(document.getElementById('domesticSlotsCount').value) || 40;
+            let count = parseInt(document.getElementById('domesticSlotsCount').value) || 10;
             let container = document.getElementById('domesticSlotsContainer');
             container.innerHTML = '';
 
@@ -560,105 +584,107 @@
                 });
 
                 container.innerHTML += `
-                    <div class="squad-slot-card">
-                        <div class="form-group" style="margin:0;">
-                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                            <select class="form-control dom-player-id">${optionsHtml}</select>
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>Wins (W)</label>
-                            <input type="number" class="form-control dom-w" min="0" value="0">
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>Draws (D)</label>
-                            <input type="number" class="form-control dom-d" min="0" value="0">
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>Losses (L)</label>
-                            <input type="number" class="form-control dom-l" min="0" value="0">
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>GF</label>
-                            <input type="number" class="form-control dom-gf" min="0" value="0">
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>GA</label>
-                            <input type="number" class="form-control dom-ga" min="0" value="0">
-                        </div>
-                        <div class="form-group" style="margin:0;">
-                            <label>MOTM?</label>
-                            <select class="form-control dom-motm">
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                        </div>
-                    </div>`;
+                            <div class="squad-slot-card">
+                                <div class="form-group" style="margin:0;">
+                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                    <select class="form-control dom-player-id">${optionsHtml}</select>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GF (Goals)</label>
+                                    <input type="number" class="form-control dom-gf" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>GA (Against)</label>
+                                    <input type="number" class="form-control dom-ga" min="0" value="0">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>MOTM / POTM?</label>
+                                    <select class="form-control dom-motm">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+                            </div>`;
             }
         }
 
+        // SUBMIT SQUAD SCORE & COMMUNITY RESULTS FORM
         document.getElementById('captainScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
 
-            let community = document.getElementById('communitySelect').value;
+            let community = document.getElementById('communitySelect').value.trim().toLowerCase();
             let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
-            let communityResult = document.getElementById('communityMatchResultSelect').value;
 
+            let resWin = parseInt(document.getElementById('resWin').value) || 0;
+            let resDraw = parseInt(document.getElementById('resDraw').value) || 0;
+            let resLoss = parseInt(document.getElementById('resLoss').value) || 0;
+            let resAuto = parseInt(document.getElementById('resAuto').value) || 0;
+
+            let playerNodes = document.querySelectorAll('.squad-player-id');
+            let gfNodes = document.querySelectorAll('.squad-player-gf');
+            let gaNodes = document.querySelectorAll('.squad-player-ga');
+            let motmNodes = document.querySelectorAll('.squad-player-motm');
+
+            let playerResultsList = [];
             let batch = db.batch();
             let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            if (communityResult === 'auto') {
-                let docRef = db.collection('pending_scores').doc();
-                batch.set(docRef, {
-                    playerId: "COMMUNITY_AUTO_WIN",
-                    playerName: `AUTO WIN (${community.toUpperCase()})`,
+            // 1. Send individual match scores to single match approval queue
+            playerNodes.forEach((node, idx) => {
+                let pUid = node.value;
+                let pObj = cachedPlayers.find(p => p.uid === pUid);
+
+                if (pObj) {
+                    let gf = parseInt(gfNodes[idx].value) || 0;
+                    let ga = parseInt(gaNodes[idx].value) || 0;
+
+                    playerResultsList.push({
+                        playerId: pUid,
+                        playerName: pObj.name || 'Unknown Player',
+                        gf: gf,
+                        ga: ga
+                    });
+
+                    let docRef = db.collection('pending_scores').doc();
+                    batch.set(docRef, {
+                        playerId: pUid,
+                        playerName: pObj.name || 'Unknown Player',
+                        community: community,
+                        matchType: 'official',
+                        squadFormat: squadFormat,
+                        gf: gf,
+                        ga: ga,
+                        awardMotm: motmNodes[idx].value === 'yes',
+                        submittedBy: currentCaptainUid || 'captain',
+                        timestamp: currentTime,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            });
+
+            // 2. If any Community Results are entered, send request to Community Win Approval Queue (Section 8.1)
+            if (resWin > 0 || resDraw > 0 || resLoss > 0 || resAuto > 0) {
+                let commWinRef = db.collection('pending_community_wins').doc();
+                batch.set(commWinRef, {
+                    captainUid: currentCaptainUid || 'captain',
+                    captainName: currentCaptainName,
                     community: community,
-                    communityResult: 'auto',
-                    matchType: 'official',
-                    squadFormat: 'Auto Win Entry',
-                    gf: 0,
-                    ga: 0,
-                    awardMotm: false,
-                    submittedBy: currentCaptainUid || 'captain',
-                    timestamp: currentTime,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } else {
-                let playerNodes = document.querySelectorAll('.squad-player-id');
-                let gfNodes = document.querySelectorAll('.squad-player-gf');
-                let gaNodes = document.querySelectorAll('.squad-player-ga');
-                let motmNodes = document.querySelectorAll('.squad-player-motm');
-
-                playerNodes.forEach((node, idx) => {
-                    let pUid = node.value;
-                    let pObj = cachedPlayers.find(p => p.uid === pUid);
-
-                    if (pObj) {
-                        let docRef = db.collection('pending_scores').doc();
-
-                        batch.set(docRef, {
-                            playerId: pUid,
-                            playerName: pObj.name || 'Unknown Player',
-                            community: community,
-                            communityResult: communityResult,
-                            matchType: 'official',
-                            squadFormat: squadFormat,
-                            gf: parseInt(gfNodes[idx].value) || 0,
-                            ga: parseInt(gaNodes[idx].value) || 0,
-                            awardMotm: motmNodes[idx].value === 'yes',
-                            submittedBy: currentCaptainUid || 'captain',
-                            timestamp: currentTime,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    }
+                    squadFormat: squadFormat,
+                    win: resWin,
+                    draw: resDraw,
+                    loss: resLoss,
+                    auto: resAuto,
+                    playerResults: playerResultsList,
+                    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             }
 
             try {
                 await batch.commit();
-                alert(`Success! Squad scores & Community Result (${communityResult.toUpperCase()}) sent to Admin Panel for approval.`);
+                alert(`Success! Squad match scores and Community Results sent to Admin Panel Queue.`);
             } catch (err) {
                 console.error("Submission Error: ", err);
                 alert("Failed to send scores. Please try again.");
@@ -667,14 +693,12 @@
             }
         });
 
+        // SUBMIT DOMESTIC MATCH BATCH FORM
         document.getElementById('domesticBatchForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const domBtn = document.getElementById('domSubmitBtn');
             let playerNodes = document.querySelectorAll('.dom-player-id');
-            let wNodes = document.querySelectorAll('.dom-w');
-            let dNodes = document.querySelectorAll('.dom-d');
-            let lNodes = document.querySelectorAll('.dom-l');
             let gfNodes = document.querySelectorAll('.dom-gf');
             let gaNodes = document.querySelectorAll('.dom-ga');
             let motmNodes = document.querySelectorAll('.dom-motm');
@@ -695,9 +719,6 @@
                         community: 'Domestic League',
                         squadFormat: 'Domestic Solo',
                         matchType: 'domestic',
-                        wins: parseInt(wNodes[idx].value) || 0,
-                        draws: parseInt(dNodes[idx].value) || 0,
-                        losses: parseInt(lNodes[idx].value) || 0,
                         gf: parseInt(gfNodes[idx].value) || 0,
                         ga: parseInt(gaNodes[idx].value) || 0,
                         awardMotm: motmNodes[idx].value === 'yes',
@@ -728,7 +749,7 @@
             }
         });
 
-        // FIXED RENDER PENDING LOGS FUNCTION WITH FIXED SYNTAX TYPO
+        // RENDER PENDING QUEUE LOGS
         function renderPendingLogs(pendingList) {
             let container = document.getElementById('pendingLogsContainer');
             container.innerHTML = '';
@@ -739,19 +760,19 @@
             }
 
             pendingList.forEach(item => {
-                let commResTag = item.communityResult ? `Result: ${item.communityResult.toUpperCase()} | ` : '';
                 let matchTypeTag = item.matchType ? `Type: ${item.matchType.toUpperCase()} | ` : '';
+
                 container.innerHTML += `
-                    <div class="submission-item">
-                        <div>
-                            <strong>${item.playerName}</strong>
-                            <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
-                                ${matchTypeTag}${commResTag}${item.wins !== undefined ? `W: ${item.wins} | D: ${item.draws} \vert{} L:${item.losses} | ` : ''}GF: ${item.gf} | GA: ${item.ga} | MOTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
-                            </div>
-                        </div>
-                        <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                    </div>`;
+                            <div class="submission-item">
+                                <div>
+                                    <strong>${item.playerName}</strong>
+                                    <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
+                                        ${matchTypeTag}GF: ${item.gf} | GA: ${item.ga} | POTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
+                                    </div>
+                                </div>
+                                <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                            </div>`;
             });
         }
     </script>
