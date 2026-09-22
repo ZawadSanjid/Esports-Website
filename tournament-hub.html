@@ -1184,28 +1184,49 @@
 
         async function verifyCaptainAccess() {
             try {
-                // Check access privilege by logged user name / ID
-                const userDoc = await usersRef.doc(currentLoggedUser.name).get();
+                let userData = null;
 
+                // ১. প্রথমে Current User-এর UID দিয়ে সরাসরি চেক
+                let userDoc = await usersRef.doc(currentLoggedUser.id).get();
                 if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    if (userData.role === 'captain' || userData.role === 'admin') {
+                    userData = userDoc.data();
+                } else {
+                    // ২. UID দিয়ে না পেলে 'users' কালেকশনে 'name' ফিল্ড দিয়ে সার্চ
+                    let queryByName = await usersRef.where('name', '==', currentLoggedUser.name).get();
+                    if (!queryByName.empty) {
+                        userData = queryByName.docs[0].data();
+                    } else {
+                        // ৩. Document ID হিসেবে User Name দিয়ে চেষ্টা
+                        userDoc = await usersRef.doc(currentLoggedUser.name).get();
+                        if (userDoc.exists) {
+                            userData = userDoc.data();
+                        }
+                    }
+                }
+
+                // userData পাওয়া গেলে Role চেক
+                if (userData) {
+                    const userRole = (userData.role || '').toLowerCase();
+
+                    // Captain অথবা Admin কিনা যাচাই
+                    if (userRole === 'captain' || userRole === 'admin') {
                         isAdminLoggedIn = true;
                         document.getElementById('managerHeroSection').style.display = 'none';
                         document.getElementById('adminPanelSection').style.display = 'block';
                         closeModal('adminLoginModal');
-                        alert(`Access Granted! Welcome ${userData.role.toUpperCase()} ${currentLoggedUser.name}`);
+                        alert(`Access Granted! Welcome ${userRole.toUpperCase()} ${currentLoggedUser.name}`);
                     } else {
-                        alert("Access Denied: You Have No Captain Access!");
+                        alert(`Access Denied: Your role is listed as "${userData.role}". Captain/Admin role required!`);
                         closeModal('adminLoginModal');
                     }
                 } else {
-                    alert("Access Denied: You Have No Access!");
+                    // Database-এ ডাটা না পাওয়া গেলে
+                    alert(`Access Denied: No record found in 'users' collection for ID/Name: "${currentLoggedUser.name}"!`);
                     closeModal('adminLoginModal');
                 }
             } catch (e) {
                 console.error("Error verifying access:", e);
-                alert("Verification error! Please check database connection.");
+                alert("Verification error! Please check database connection or console logs.");
                 closeModal('adminLoginModal');
             }
         }
