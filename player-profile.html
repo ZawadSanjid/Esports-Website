@@ -1029,42 +1029,61 @@
             });
         }
 
-        // Realtime Firestore Listener
         function listenToFirestoreProfile(uid) {
-            db.collection('users').onSnapshot(snapshot => {
-                let allPlayers = [];
-                snapshot.forEach(doc => {
-                    allPlayers.push({ uid: doc.id, ...doc.data() });
-                });
+    db.collection('users').onSnapshot(snapshot => {
+        let allPlayers = [];
+        snapshot.forEach(doc => {
+            allPlayers.push({ uid: doc.id, ...doc.data() });
+        });
 
-                // Sort players by Official Points for Official Rank calculation
-                let officialSorted = [...allPlayers].sort((a, b) => {
-                    let ptsA = (a.official && a.official.pts) ? a.official.pts : 0;
-                    let ptsB = (b.official && b.official.pts) ? b.official.pts : 0;
-                    return ptsB - ptsA;
-                });
+        // 1. OFFICIAL RANK SORTING (Points -> Goal Difference -> Wins)
+        let officialSorted = [...allPlayers].sort((a, b) => {
+            let ptsA = Number(a.official?.pts || a.official?.points || 0);
+            let ptsB = Number(b.official?.pts || b.official?.points || 0);
+            if (ptsB !== ptsA) return ptsB - ptsA;
 
-                // Sort players by Domestic Points for Domestic Rank calculation
-                let domesticSorted = [...allPlayers].sort((a, b) => {
-                    let ptsA = (a.domestic && a.domestic.pts) ? a.domestic.pts : 0;
-                    let ptsB = (b.domestic && b.domestic.pts) ? b.domestic.pts : 0;
-                    return ptsB - ptsA;
-                });
+            let gdA = Number(a.official?.gd || 0);
+            let gdB = Number(b.official?.gd || 0);
+            if (gdB !== gdA) return gdB - gdA;
 
-                // Find current logged-in user data and their ranks
-                let userDoc = allPlayers.find(p => p.uid === uid);
-                if (userDoc) {
-                    currentUserData = userDoc;
+            let wA = Number(a.official?.w || 0);
+            let wB = Number(b.official?.w || 0);
+            return wB - wA;
+        });
 
-                    let offRank = officialSorted.findIndex(p => p.uid === uid) + 1;
-                    let domRank = domesticSorted.findIndex(p => p.uid === uid) + 1;
+        // 2. DOMESTIC RANK SORTING (Points -> Goal Difference -> Wins)
+        let domesticSorted = [...allPlayers].sort((a, b) => {
+            let ptsA = Number(a.domestic?.pts || a.domestic?.points || 0);
+            let ptsB = Number(b.domestic?.pts || b.domestic?.points || 0);
+            if (ptsB !== ptsA) return ptsB - ptsA;
 
-                    renderProfile(currentUserData, offRank, domRank);
-                }
-            }, error => {
-                console.error("Error listening to Firestore profile: ", error);
-            });
+            let gdA = Number(a.domestic?.gd || 0);
+            let gdB = Number(b.domestic?.gd || 0);
+            if (gdB !== gdA) return gdB - gdA;
+
+            let wA = Number(a.domestic?.w || 0);
+            let wB = Number(b.domestic?.w || 0);
+            return wB - wA;
+        });
+
+        // Current Logged-in User khuje ber kora ebong Rank index ber kora
+        let userDoc = allPlayers.find(p => p.uid === uid);
+        if (userDoc) {
+            currentUserData = userDoc;
+
+            // findIndex 0 theke shuru hoy, tai +1 jog kora hoyeche (e.g. Index 4 = Rank #5)
+            let offRankIndex = officialSorted.findIndex(p => p.uid === uid);
+            let domRankIndex = domesticSorted.findIndex(p => p.uid === uid);
+
+            let offRank = offRankIndex !== -1 ? offRankIndex + 1 : "N/A";
+            let domRank = domRankIndex !== -1 ? domRankIndex + 1 : "N/A";
+
+            renderProfile(currentUserData, offRank, domRank);
         }
+    }, error => {
+        console.error("Error listening to Firestore profile: ", error);
+    });
+}
 
         function renderProfile(user, offRank, domRank) {
             document.getElementById('displayName').innerText = user.name || "EBFC Player";
