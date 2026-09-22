@@ -795,6 +795,7 @@
             <li><a href="home.html" class="active">Home</a></li>
             <li><a href="players.html">Players</a></li>
             <li><a href="ranking.html">Rankings</a></li>
+            <li><a href="tournament-hub.html">Tournament-Hub</a></li>
             <li><a href="tournament.html">Tournaments</a></li>
             <li><a href="#">About Us</a></li>
         </ul>
@@ -1032,6 +1033,7 @@
                 <li><a href="home.html" class="footer-btn">Home</a></li>
                 <li><a href="players.html" class="footer-btn">Players</a></li>
                 <li><a href="ranking.html" class="footer-btn">Rankings</a></li>
+                <li><a href="tournament-hub.html" class="footer-btn">Tournament-Hub</a></li>
                 <li><a href="tournament.html" class="footer-btn">Tournaments</a></li>
                 <li><a href="#" class="footer-btn">About Us</a></li>
             </ul>
@@ -1088,19 +1090,19 @@
                     if (doc.exists) {
                         const userData = doc.data();
                         navAuthArea.innerHTML = `
-                                    <a href="player-profile.html" class="user-profile-circle" title="Go to Dashboard">
-                                        <img src="${userData.avatar || 'Image/player1.webp'}" onerror="this.src='Image/player1.webp';" alt="${userData.name}">
-                                    </a>
-                                `;
+                                        <a href="player-profile.html" class="user-profile-circle" title="Go to Dashboard">
+                                            <img src="${userData.avatar || 'Image/player1.webp'}" onerror="this.src='Image/player1.webp';" alt="${userData.name}">
+                                        </a>
+                                    `;
                     }
                 } catch (error) {
                     console.error("Error fetching user data: ", error);
                 }
             } else {
                 navAuthArea.innerHTML = `
-                            <a href="register.html" class="btn-main">Register</a>
-                            <a href="login.html" class="btn-main">Login</a>
-                        `;
+                                <a href="register.html" class="btn-main">Register</a>
+                                <a href="login.html" class="btn-main">Login</a>
+                            `;
             }
         });
 
@@ -1146,32 +1148,32 @@
                 let ovrRating = Math.min(99, 80 + Math.floor(player.pts / 3));
 
                 wrapper.innerHTML += `
-                            <div class="swiper-slide">
-                                <div class="player-card">
-                                    <div class="player-img-wrapper">
-                                        <span class="rating-badge">${ovrRating} OVR</span>
-                                        <img src="${player.avatar}" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="${player.name}">
-                                    </div>
-                                    <div class="player-info">
-                                        <div class="player-gamertag">${player.name}</div>
-                                        <div class="player-realname">${player.club}</div>
-                                        <div class="player-match-details">
-                                            <div class="match-detail-title">
-                                                <span>Career Performance</span>
-                                                <span style="color: var(--accent-gold);">Rank #${index + 1}</span>
-                                            </div>
-                                            <div class="stats-grid-mini">
-                                                <div class="stat-box"><div class="val">${player.mp}</div><div class="lbl">Matches</div></div>
-                                                <div class="stat-box"><div class="val" style="color: #4caf50;">${player.w}</div><div class="lbl">Wins</div></div>
-                                                <div class="stat-box"><div class="val" style="color: #f44336;">${player.l}</div><div class="lbl">Losses</div></div>
-                                                <div class="stat-box"><div class="val">${player.gf}</div><div class="lbl">Goals</div></div>
-                                                <div class="stat-box"><div class="val">${player.gd > 0 ? '+' + player.gd : player.gd}</div><div class="lbl">GD</div></div>
-                                                <div class="stat-box"><div class="val" style="color: var(--accent-gold);">${player.winRate}%</div><div class="lbl">Win Rate</div></div>
+                                <div class="swiper-slide">
+                                    <div class="player-card">
+                                        <div class="player-img-wrapper">
+                                            <span class="rating-badge">${ovrRating} OVR</span>
+                                            <img src="${player.avatar}" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="${player.name}">
+                                        </div>
+                                        <div class="player-info">
+                                            <div class="player-gamertag">${player.name}</div>
+                                            <div class="player-realname">${player.club}</div>
+                                            <div class="player-match-details">
+                                                <div class="match-detail-title">
+                                                    <span>Career Performance</span>
+                                                    <span style="color: var(--accent-gold);">Rank #${index + 1}</span>
+                                                </div>
+                                                <div class="stats-grid-mini">
+                                                    <div class="stat-box"><div class="val">${player.mp}</div><div class="lbl">Matches</div></div>
+                                                    <div class="stat-box"><div class="val" style="color: #4caf50;">${player.w}</div><div class="lbl">Wins</div></div>
+                                                    <div class="stat-box"><div class="val" style="color: #f44336;">${player.l}</div><div class="lbl">Losses</div></div>
+                                                    <div class="stat-box"><div class="val">${player.gf}</div><div class="lbl">Goals</div></div>
+                                                    <div class="stat-box"><div class="val">${player.gd > 0 ? '+' + player.gd : player.gd}</div><div class="lbl">GD</div></div>
+                                                    <div class="stat-box"><div class="val" style="color: var(--accent-gold);">${player.winRate}%</div><div class="lbl">Win Rate</div></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>`;
+                                </div>`;
             });
 
             // Re-initialize Swiper after dynamic elements update
