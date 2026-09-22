@@ -2033,6 +2033,7 @@
                     const { playerId, gf, ga, community, awardMotm, matchType } = req;
                     const commCode = (community || 'cobeg').toLowerCase();
 
+                    // ১. Player Data fetch
                     const userRef = db.collection('users').doc(playerId);
                     const userDoc = await transaction.get(userRef);
                     if (!userDoc.exists) throw new Error("Player profile not found in database.");
@@ -2041,9 +2042,23 @@
                     let pWins = gf > ga ? 1 : 0;
                     let pDraws = gf === ga ? 1 : 0;
                     let pLosses = gf < ga ? 1 : 0;
+                    let goalsFor = Number(gf) || 0;
+                    let goalsAgainst = Number(ga) || 0;
 
+                    // ২. Global Community Ranking/Standings fetch
+                    const commRef = db.collection('communities').doc(commCode);
+                    const commDoc = await transaction.get(commRef);
+
+                    let globalCommStats = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, pts: 0 };
+                    globalCommStats.mp = (Number(globalCommStats.mp) || 0) + 1;
+                    globalCommStats.w = (Number(globalCommStats.w) || 0) + pWins;
+                    globalCommStats.d = (Number(globalCommStats.d) || 0) + pDraws;
+                    globalCommStats.l = (Number(globalCommStats.l) || 0) + pLosses;
+                    globalCommStats.pts = (globalCommStats.w * 3) + globalCommStats.d;
+
+                    // ৩. Player er Individual Official / Domestic Stats update
                     const updateStatsMap = (existing, deltaW, deltaD, deltaL, deltaGF, deltaGA, isMotm) => {
-                        let st = existing || initStats();
+                        let st = existing || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
                         let mpAdd = deltaW + deltaD + deltaL;
 
                         st.mp = (Number(st.mp) || 0) + mpAdd;
@@ -2060,28 +2075,36 @@
                         return st;
                     };
 
+                    let updatePayload = {};
                     if (matchType === 'domestic') {
-                        let domStats = updateStatsMap(player.domestic, pWins, pDraws, pLosses, Number(gf) || 0, Number(ga) || 0, awardMotm);
-                        let potmStats = updateStatsMap(player.potm, pWins, pDraws, pLosses, Number(gf) || 0, Number(ga) || 0, awardMotm);
-
-                        transaction.update(userRef, {
-                            domestic: domStats,
-                            potm: potmStats
-                        });
+                        updatePayload.domestic = updateStatsMap(player.domestic, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
                     } else {
-                        let offStats = updateStatsMap(player.official, pWins, pDraws, pLosses, Number(gf) || 0, Number(ga) || 0, awardMotm);
-                        let potmStats = updateStatsMap(player.potm, pWins, pDraws, pLosses, Number(gf) || 0, Number(ga) || 0, awardMotm);
-
-                        transaction.update(userRef, {
-                            official: offStats,
-                            potm: potmStats
-                        });
+                        updatePayload.official = updateStatsMap(player.official, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
                     }
 
+                    // ৪. Player er nijer profile-er specific community stats update
+                    let playerCommunities = player.communities || {};
+                    let commStats = playerCommunities[commCode] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, winRate: "0.0" };
+
+                    commStats.mp = (Number(commStats.mp) || 0) + 1;
+                    commStats.w = (Number(commStats.w) || 0) + pWins;
+                    commStats.d = (Number(commStats.d) || 0) + pDraws;
+                    commStats.l = (Number(commStats.l) || 0) + pLosses;
+                    commStats.gf = (Number(commStats.gf) || 0) + goalsFor;
+                    commStats.ga = (Number(commStats.ga) || 0) + goalsAgainst;
+                    commStats.pts = (commStats.w * 3) + commStats.d;
+                    commStats.winRate = commStats.mp > 0 ? ((commStats.w / commStats.mp) * 100).toFixed(1) : "0.0";
+
+                    playerCommunities[commCode] = commStats;
+                    updatePayload.communities = playerCommunities;
+
+                    // Database Operations inside Transaction
+                    transaction.set(commRef, globalCommStats, { merge: true });
+                    transaction.update(userRef, updatePayload);
                     transaction.delete(pendingRef);
                 });
 
-                alert("Score Approved & Ranking Stats Successfully Synced!");
+                alert("Score Approved Successfully! Global Community Standings, Player Official Ranking, and Profile Community Stats updated.");
             } catch (err) {
                 console.error("Error approving score: ", err);
                 alert("Failed to approve score: " + err.message);
