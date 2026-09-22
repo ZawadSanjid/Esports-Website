@@ -65,20 +65,24 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             padding-bottom: 60px;
+            overflow-x: hidden;
         }
 
-        /* HEADER & BANNER */
+        /* HEADER & BANNER RESPONSIVE FIX */
         .hub-header {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 15px;
             background: linear-gradient(180deg, rgba(229, 9, 20, 0.2) 0%, rgba(7, 9, 14, 1) 100%);
             border-bottom: 1px solid var(--border-color);
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
             .hub-header h1 {
                 font-family: 'Teko', sans-serif;
-                font-size: 42px;
+                font-size: clamp(28px, 6vw, 42px);
                 color: var(--accent-gold);
                 text-transform: uppercase;
                 letter-spacing: 1px;
@@ -86,16 +90,16 @@
             }
 
         .header-btn-group {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
         }
 
         .container {
             max-width: 1000px;
-            margin: 25px auto;
+            margin: 20px auto;
             padding: 0 15px;
         }
 
@@ -104,8 +108,8 @@
             background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
             color: #fff;
             border: none;
-            padding: 6px 14px;
-            font-size: 12px;
+            padding: 8px 16px;
+            font-size: 13px;
             font-weight: 700;
             border-radius: 4px;
             cursor: pointer;
@@ -129,7 +133,7 @@
         .auth-controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 25px;
             flex-wrap: wrap;
         }
@@ -138,13 +142,16 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: #fff;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 14px;
             font-weight: 700;
             text-transform: uppercase;
             border-radius: 6px;
             cursor: pointer;
             transition: 0.3s;
+            flex: 1 1 200px;
+            max-width: 280px;
+            text-align: center;
         }
 
             .btn-auth:hover {
@@ -277,43 +284,50 @@
         }
 
             .manager-hero-card img {
-                width: 90px;
-                height: 90px;
+                width: 80px;
+                height: 80px;
                 border-radius: 50%;
                 border: 3px solid var(--accent-gold);
                 object-fit: cover;
             }
 
-        .manager-info h2 {
-            font-family: 'Teko', sans-serif;
-            font-size: 32px;
-            color: var(--accent-gold);
-            line-height: 1;
+        .manager-info {
+            flex: 1;
+            min-width: 200px;
         }
 
-        /* SECTION TITLES */
+            .manager-info h2 {
+                font-family: 'Teko', sans-serif;
+                font-size: 32px;
+                color: var(--accent-gold);
+                line-height: 1;
+            }
+
+        /* SECTION TITLES & GRIDS */
         .section-title {
             font-family: 'Teko', sans-serif;
-            font-size: 28px;
+            font-size: 26px;
             text-transform: uppercase;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .players-list-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .player-mini-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -369,11 +383,6 @@
             transition: 0.2s;
         }
 
-            .btn-card-transfer:hover {
-                background: #fff;
-                box-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
-            }
-
         .manager-mini-card {
             background: var(--bg-card);
             border: 1px solid var(--accent-gold);
@@ -386,49 +395,51 @@
         }
 
             .manager-mini-card img {
-                width: 50px;
-                height: 50px;
+                width: 45px;
+                height: 45px;
                 border-radius: 50%;
                 object-fit: cover;
                 border: 2px solid var(--accent-gold);
                 flex-shrink: 0;
             }
 
-        /* MODAL STYLES */
+        /* MODAL RESPONSIVE STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.88);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            padding: 15px;
+            padding: 12px;
+            backdrop-filter: blur(4px);
         }
 
         .modal-body {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 20px;
+            padding: 20px 15px;
             max-width: 500px;
             width: 100%;
             text-align: center;
-            max-height: 90vh;
+            max-height: 88vh;
             overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .form-input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 12px;
             background: #090a0c;
             border: 1px solid var(--border-color);
             color: #fff;
             border-radius: 6px;
-            margin: 8px 0 16px 0;
+            margin: 6px 0 14px 0;
             outline: none;
             font-size: 14px;
         }
@@ -437,14 +448,14 @@
                 border-color: var(--accent-gold);
             }
 
-        /* FIXTURE GRAPHIC CARD */
+        /* FIXTURE GRAPHIC CARD RESPONSIVE */
         .fixture-card {
             width: 100%;
-            max-width: 460px;
+            max-width: 440px;
             background: linear-gradient(135deg, #090b10 0%, #151924 100%);
             border: 2px solid var(--primary-red);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             margin: 0 auto 15px auto;
             text-align: center;
             box-shadow: 0 0 25px rgba(229, 9, 20, 0.3);
@@ -452,7 +463,7 @@
 
         .fx-header {
             font-family: 'Teko', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             color: var(--accent-gold);
             line-height: 1.1;
             text-transform: uppercase;
@@ -462,14 +473,14 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin: 15px 0;
+            margin: 12px 0;
             border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         .fx-team-box img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid var(--accent-gold);
             object-fit: cover;
@@ -477,29 +488,29 @@
 
         .fx-team-box h4 {
             font-family: 'Teko', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: #fff;
             margin-top: 4px;
         }
 
         .fx-meta-info {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
             background: #07090e;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: left;
         }
 
         .fx-matchups-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 12px;
         }
 
         .fx-matchup-row {
@@ -507,15 +518,15 @@
             align-items: center;
             justify-content: space-between;
             background: rgba(255,255,255,0.03);
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            font-size: 13px;
+            font-size: 12px;
         }
 
             .fx-matchup-row img {
-                width: 30px;
-                height: 30px;
+                width: 26px;
+                height: 26px;
                 border-radius: 50%;
                 object-fit: cover;
             }
@@ -527,14 +538,15 @@
             padding: 10px;
             border-radius: 6px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
         }
 
         /* 1. MANAGER CARD: YELLOW & BLACK GRADIENT */
         .manager-royal-card {
-            width: 320px;
-            height: 450px;
+            width: 100%;
+            max-width: 310px;
+            height: 440px;
             background: linear-gradient(180deg, #ffb703 0%, #3a2a00 35%, #0d0a02 70%, #000000 100%) !important;
             border: 3px solid #ffd700;
             border-radius: 12px;
@@ -544,38 +556,38 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 15px;
+            padding: 15px 12px;
             color: #fff;
             box-shadow: 0 0 35px rgba(255, 183, 3, 0.5);
             text-align: center;
         }
 
         .mrc-crown {
-            font-size: 24px;
+            font-size: 22px;
             color: #ffd700;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .mrc-tournament-title {
             font-family: 'Teko', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: #ffffff;
             text-transform: uppercase;
             text-shadow: 0 2px 4px #000;
         }
 
         .mrc-avatar-box img {
-            width: 105px;
-            height: 105px;
+            width: 95px;
+            height: 95px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #ffd700;
-            margin: 15px 0 10px 0;
+            margin: 12px 0 8px 0;
         }
 
         .mrc-manager-name {
             font-family: 'Teko', sans-serif;
-            font-size: 30px;
+            font-size: 28px;
             color: #ffffff;
             text-transform: uppercase;
             line-height: 1;
@@ -583,7 +595,7 @@
 
         .mrc-role-badge {
             font-family: 'Teko', sans-serif;
-            font-size: 38px;
+            font-size: 34px;
             color: #ffd700;
             text-transform: uppercase;
             line-height: 1;
@@ -591,8 +603,9 @@
 
         /* 2. PLAYER ENTRY CARD: RED & BLACK GRADIENT */
         .player-entry-card {
-            width: 310px;
-            height: 430px;
+            width: 100%;
+            max-width: 300px;
+            height: 420px;
             background: linear-gradient(180deg, #e50914 0%, #4a0004 35%, #150002 70%, #000000 100%) !important;
             border: 2px solid #e50914;
             border-radius: 12px;
@@ -610,24 +623,24 @@
 
         .pec-tournament-title {
             font-family: 'Teko', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: #ffffff;
             text-transform: uppercase;
             text-shadow: 0 2px 4px #000;
         }
 
         .pec-avatar-box img {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #e50914;
-            margin: 15px 0 10px 0;
+            margin: 12px 0 8px 0;
         }
 
         .pec-player-name {
             font-family: 'Teko', sans-serif;
-            font-size: 32px;
+            font-size: 28px;
             color: #ffffff;
             text-transform: uppercase;
             line-height: 1;
@@ -635,7 +648,7 @@
 
         .pec-role-badge {
             font-family: 'Teko', sans-serif;
-            font-size: 36px;
+            font-size: 32px;
             color: #ff4d4d;
             text-transform: uppercase;
             line-height: 1;
@@ -643,8 +656,9 @@
 
         /* 3. TRANSFER/DONE DEAL CARD: BLUE & BLACK GRADIENT */
         .done-deal-card {
-            width: 320px;
-            height: 460px;
+            width: 100%;
+            max-width: 310px;
+            height: 440px;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -655,7 +669,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 20px 15px 55px 15px;
+            padding: 15px 12px 50px 12px;
             color: #fff;
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
             text-align: center;
@@ -663,7 +677,7 @@
 
         .dd-header {
             font-family: 'Teko', sans-serif;
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px #000;
@@ -676,7 +690,7 @@
             font-size: 10px;
             color: #ffffff;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             width: 100%;
             text-align: center;
             letter-spacing: 1px;
@@ -686,7 +700,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin: 10px 0;
             width: 100%;
         }
@@ -698,8 +712,8 @@
         }
 
             .dd-img-box img {
-                width: 80px;
-                height: 80px;
+                width: 75px;
+                height: 75px;
                 border-radius: 50%;
                 object-fit: cover;
                 border: 2px solid #00d2ff;
@@ -713,26 +727,26 @@
             }
 
         .dd-arrows {
-            font-size: 22px;
+            font-size: 20px;
             color: #00d2ff;
         }
 
         .dd-footer-box {
             width: 100%;
             text-align: center;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
             .dd-footer-box h3 {
                 font-family: 'Teko', sans-serif;
-                font-size: 28px;
+                font-size: 26px;
                 color: #fff;
                 line-height: 1;
                 text-transform: uppercase;
             }
 
             .dd-footer-box p {
-                font-size: 12px;
+                font-size: 11px;
                 color: #00d2ff;
                 margin-top: 2px;
             }
@@ -745,34 +759,62 @@
             width: 100%;
             background: rgba(0, 0, 0, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
             .card-brand-footer img {
-                width: 30px;
-                height: 30px;
+                width: 25px;
+                height: 25px;
                 object-fit: contain;
                 border-radius: 50%;
             }
 
             .card-brand-footer span {
                 font-family: 'Teko', sans-serif;
-                font-size: 22px;
+                font-size: 20px;
                 color: #ffffff;
                 letter-spacing: 1px;
             }
+
+        /* MOBILE MEDIA QUERIES ADJUSTMENTS */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .manager-hero-card {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+                .manager-hero-card .btn-group-responsive {
+                    width: 100%;
+                    justify-content: center;
+                }
+
+            .players-list-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fx-meta-info {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- HEADER -->
     <div class="hub-header">
-        <p style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Welcome To</p>
-        <h1>EBFC PRESENTS BID TOURNAMENT SEASON 1</h1>
+        <div>
+            <p style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Welcome To</p>
+            <h1>EBFC PRESENTS BID TOURNAMENT SEASON 1</h1>
+        </div>
         <div class="header-btn-group">
             <button class="btn-transfer-glow" onclick="handleTransferWindowClick()"><i class="fa-solid fa-bolt"></i> Transfer Window</button>
             <button class="btn-squad-sm" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> Captain / Admin</button>
@@ -787,19 +829,19 @@
         </div>
 
         <!-- ADMIN DASHBOARD PANEL -->
-        <div id="adminPanelSection" style="display: none; background: var(--bg-card); border: 1px solid var(--primary-red); border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+        <div id="adminPanelSection" style="display: none; background: var(--bg-card); border: 1px solid var(--primary-red); border-radius: 10px; padding: 15px; margin-bottom: 25px;">
             <div class="section-title" style="color: var(--primary-red); margin-bottom: 10px;">
                 <span><i class="fa-solid fa-shield-halved"></i> Captain / Admin Portal</span>
                 <button class="btn-danger-sm" onclick="logoutAdmin()">Logout Admin</button>
             </div>
 
             <!-- ADMIN CONTROLS BAR -->
-            <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
                 <button class="btn-gold-sm" onclick="openFixtureCreatorModal()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate New Match Fixture</button>
 
                 <!-- GLOBAL TRANSFER WINDOW SWITCH TOGGLE -->
                 <div class="switch-container">
-                    <span style="font-size: 13px; font-weight: 700; color: var(--accent-gold);">Transfer Window:</span>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--accent-gold);">Transfer Window:</span>
                     <label class="switch">
                         <input type="checkbox" id="transferWindowToggle" onchange="toggleTransferWindow(this.checked)">
                         <span class="slider"></span>
@@ -809,16 +851,16 @@
             </div>
 
             <!-- PENDING MANAGERS APPROVAL LIST -->
-            <div style="font-family: 'Teko'; font-size: 22px; color: var(--accent-gold); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Pending Manager Approvals</div>
-            <div id="pendingManagersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;"></div>
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Pending Manager Approvals</div>
+            <div id="pendingManagersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
             <!-- ADMIN PLAYERS DIRECTORY & FREE AGENT CONTROLLER -->
-            <div style="font-family: 'Teko'; font-size: 22px; color: var(--accent-gold); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Admin Player Directory Management</div>
-            <div id="adminPlayersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;"></div>
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Admin Player Directory Management</div>
+            <div id="adminPlayersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
             <!-- MULTIPLE GENERATED FIXTURES DISPLAY AREA -->
-            <div style="font-family: 'Teko'; font-size: 22px; color: var(--accent-gold); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Generated Fixtures Archive</div>
-            <div id="generatedFixturesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;"></div>
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Generated Fixtures Archive</div>
+            <div id="generatedFixturesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;"></div>
         </div>
 
         <!-- MANAGER PROFILE HERO -->
@@ -826,11 +868,11 @@
             <div class="manager-hero-card">
                 <img id="mAvatar" src="" alt="Manager">
                 <div class="manager-info">
-                    <p style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Official Manager</p>
+                    <p style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Official Manager</p>
                     <h2 id="mName">Manager Name</h2>
                     <p style="font-size: 13px; color: #fff;">Club: <strong style="color:var(--accent-gold)" id="mClubName">Squad Name</strong></p>
                 </div>
-                <div style="margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="btn-group-responsive" style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <button class="btn-squad-sm" onclick="openSquadModal()"><i class="fa-solid fa-users-rectangle"></i> My Squad</button>
                     <button class="btn-gold-sm" onclick="openSubmitSquadModal()"><i class="fa-solid fa-paper-plane"></i> Submit Squad</button>
                     <button class="btn-danger-sm" onclick="leaveRole()"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
@@ -839,7 +881,7 @@
         </div>
 
         <!-- ACTIVE MANAGERS SECTION -->
-        <div id="activeManagersSection" style="margin-bottom: 30px;">
+        <div id="activeManagersSection" style="margin-bottom: 25px;">
             <div class="section-title">
                 <span><i class="fa-solid fa-user-tie" style="color:var(--accent-gold)"></i> Tournament Registered Managers</span>
             </div>
@@ -858,12 +900,12 @@
 
     <!-- DYNAMIC TRANSFER WINDOW MODAL -->
     <div class="modal-overlay" id="transferWindowModal">
-        <div class="modal-body" style="max-width: 800px; border-color: var(--cyan-glow);">
-            <div style="text-align: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-                <p style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">EBFC PRESENTS BID TOURNAMENT SEASON 1</p>
-                <h1 style="font-family: 'Teko'; font-size: 36px; color: var(--cyan-glow); line-height: 1;">WELCOME TO TRANSFER WINDOW</h1>
+        <div class="modal-body" style="max-width: 750px; border-color: var(--cyan-glow);">
+            <div style="text-align: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                <p style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">EBFC PRESENTS BID TOURNAMENT SEASON 1</p>
+                <h1 style="font-family: 'Teko'; font-size: 32px; color: var(--cyan-glow); line-height: 1;">WELCOME TO TRANSFER WINDOW</h1>
             </div>
-            <div class="players-list-grid" id="transferWindowDirectory" style="margin-bottom: 20px;"></div>
+            <div class="players-list-grid" id="transferWindowDirectory" style="margin-bottom: 15px;"></div>
             <button class="btn-danger-sm" onclick="closeModal('transferWindowModal')">Close Window</button>
         </div>
     </div>
@@ -871,9 +913,9 @@
     <!-- ADMIN LOGIN MODAL -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--primary-red);">CAPTAIN / ADMIN LOGIN</h3>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--primary-red);">CAPTAIN / ADMIN LOGIN</h3>
             <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Checking logged in session privileges...</p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="verifyCaptainAccess()">Verify Captain Access</button>
                 <button class="btn-danger-sm" onclick="closeModal('adminLoginModal')">Cancel</button>
             </div>
@@ -883,9 +925,9 @@
     <!-- MANAGER SIGN-IN STEP 1 -->
     <div class="modal-overlay" id="squadNameModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold);">ENTER YOUR SQUAD NAME</h3>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">ENTER YOUR SQUAD NAME</h3>
             <input type="text" id="inputSquadName" class="form-input" placeholder="e.g. East Bengal Titans">
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" style="background:var(--bkash-color); color:#fff;" onclick="proceedToTrxIdModal()"><i class="fa-solid fa-wallet"></i> Next to Payment</button>
                 <button class="btn-danger-sm" onclick="closeModal('squadNameModal')">Cancel</button>
             </div>
@@ -895,12 +937,12 @@
     <!-- MANAGER SIGN-IN STEP 2 -->
     <div class="modal-overlay" id="trxIdModal">
         <div class="modal-body">
-            <div class="bkash-box" style="background:#e2136e; color:#fff; padding:15px; border-radius:8px; margin-bottom:15px;">
-                <div style="font-size:18px; font-weight:700; margin-bottom:6px;">bKash Send Money / Cash Out</div>
-                <p style="font-size:12px;">Send Entry Fee to Personal Number: <strong>01935834507</strong></p>
+            <div class="bkash-box" style="background:#e2136e; color:#fff; padding:12px; border-radius:8px; margin-bottom:12px;">
+                <div style="font-size:16px; font-weight:700; margin-bottom:4px;">bKash Send Money / Cash Out</div>
+                <p style="font-size:11px;">Send Entry Fee to Personal Number: <strong>01935834507</strong></p>
             </div>
             <input type="text" id="inputTrxId" class="form-input" placeholder="Enter bKash TrxID (e.g. 9N78X2...)">
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="submitManagerTrxId()">Submit For Approval</button>
                 <button class="btn-danger-sm" onclick="closeModal('trxIdModal')">Cancel</button>
             </div>
@@ -910,7 +952,7 @@
     <!-- ADMIN FIXTURE CREATOR MODAL -->
     <div class="modal-overlay" id="fixtureCreatorModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold);">CREATE MATCH FIXTURE</h3>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">CREATE MATCH FIXTURE</h3>
             <div style="text-align: left; font-size: 12px; color: var(--text-muted);">
                 <label>Select Team 1 (Manager):</label>
                 <select id="selectTeam1" class="form-input"></select>
@@ -925,7 +967,7 @@
                 <label>Match Admin Name:</label>
                 <input type="text" id="fxAdminName" class="form-input" placeholder="e.g. Admin Zawad">
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="generateFixtureCard()"><i class="fa-solid fa-bolt"></i> Generate Fixture</button>
                 <button class="btn-danger-sm" onclick="closeModal('fixtureCreatorModal')">Cancel</button>
             </div>
@@ -934,8 +976,8 @@
 
     <!-- FIXTURE DISPLAY MODAL -->
     <div class="modal-overlay" id="fixtureDisplayModal">
-        <div class="modal-body" style="max-width: 520px;">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold); margin-bottom: 10px;">GENERATED FIXTURE GRAPHIC</h3>
+        <div class="modal-body" style="max-width: 480px;">
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); margin-bottom: 8px;">GENERATED FIXTURE GRAPHIC</h3>
             <div class="fixture-card" id="fixtureCardToCapture">
                 <div class="fx-header">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
                 <div class="fx-teams-vs">
@@ -943,7 +985,7 @@
                         <img id="fxT1Img" src="" alt="" crossorigin="anonymous">
                         <h4 id="fxT1Name">Team 1</h4>
                     </div>
-                    <div style="font-family:'Teko'; font-size:32px; color:var(--primary-red); font-weight:700;">VS</div>
+                    <div style="font-family:'Teko'; font-size:28px; color:var(--primary-red); font-weight:700;">VS</div>
                     <div class="fx-team-box">
                         <img id="fxT2Img" src="" alt="" crossorigin="anonymous">
                         <h4 id="fxT2Name">Team 2</h4>
@@ -956,14 +998,14 @@
                     <div><strong>Admin:</strong> <span id="fxDispAdmin">---</span></div>
                 </div>
                 <div class="fx-matchups-list" id="fxMatchupsContainer"></div>
-                <div style="font-size:10px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">
+                <div style="font-size:9px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:4px;">
                     Official Fixture | East Bengal eFootball Club
                 </div>
             </div>
 
-            <div style="background:#090a0c; border:1px solid var(--border-color); padding:12px; border-radius:8px; margin-bottom:15px; text-align:left;">
-                <div style="font-size:12px; color:var(--accent-gold); font-weight:700; margin-bottom:6px;"><i class="fa-solid fa-trophy"></i> Match Scorekeeper</div>
-                <div style="display:flex; gap:10px; align-items:center;">
+            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:12px; text-align:left;">
+                <div style="font-size:11px; color:var(--accent-gold); font-weight:700; margin-bottom:4px;"><i class="fa-solid fa-trophy"></i> Match Scorekeeper</div>
+                <div style="display:flex; gap:8px; align-items:center;">
                     <input type="number" id="scoreTeam1" class="form-input" style="margin:0;" placeholder="T1 Score" value="0">
                     <span style="font-weight:700;">-</span>
                     <input type="number" id="scoreTeam2" class="form-input" style="margin:0;" placeholder="T2 Score" value="0">
@@ -981,9 +1023,9 @@
     <!-- TEXT FIXTURE MODAL -->
     <div class="modal-overlay" id="fixtureTextModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">TEXT FORMAT FIXTURE</h3>
-            <textarea id="fixtureTextarea" class="form-input" style="height: 220px; font-family: monospace; font-size: 13px;" readonly></textarea>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold);">TEXT FORMAT FIXTURE</h3>
+            <textarea id="fixtureTextarea" class="form-input" style="height: 180px; font-family: monospace; font-size: 12px;" readonly></textarea>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="copyFixtureText()"><i class="fa-solid fa-copy"></i> Copy Text</button>
                 <button class="btn-danger-sm" onclick="closeModal('fixtureTextModal')">Close</button>
             </div>
@@ -993,39 +1035,39 @@
     <!-- ROYAL MANAGER ENTRY CARD MODAL -->
     <div class="modal-overlay" id="managerCardModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:#ffd700; margin-bottom:10px;">ROYAL MANAGER ENTRY CARD</h3>
+            <h3 style="font-family:'Teko'; font-size:24px; color:#ffd700; margin-bottom:8px;">ROYAL MANAGER ENTRY CARD</h3>
             <div class="manager-royal-card" id="managerCardToCapture">
                 <div class="mrc-crown"><i class="fa-solid fa-crown"></i></div>
                 <div class="mrc-tournament-title">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
                 <div class="mrc-avatar-box"><img id="mrcAvatar" src="" alt="Manager" crossorigin="anonymous"></div>
                 <div class="mrc-manager-name" id="mrcName">MANAGER NAME</div>
-                <div style="font-size:11px; color:#ffd700; text-transform:uppercase;">signed in as</div>
+                <div style="font-size:10px; color:#ffd700; text-transform:uppercase;">signed in as</div>
                 <div class="mrc-role-badge">MANAGER</div>
                 <div class="card-brand-footer">
                     <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
                     <span style="color:#ffd700">EBFC</span>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" style="background:#ffd700;" onclick="downloadManagerCard()"><i class="fa-solid fa-download"></i> Download Card</button>
                 <button class="btn-gold-sm" id="btnConfirmManagerCard" style="background:#2ec4b6;" onclick="confirmManagerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
                 <button class="btn-danger-sm" onclick="closeModal('managerCardModal')">Cancel</button>
             </div>
-            <p id="managerNoticeText" style="font-size:11px; color:var(--primary-red); margin-top:8px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
+            <p id="managerNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
         </div>
     </div>
 
     <!-- SUBMIT SQUAD MODAL -->
     <div class="modal-overlay" id="submitSquadModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold);">SUBMIT TOURNAMENT SQUAD</h3>
-            <label style="font-size:12px; color:var(--text-muted); display:block; text-align:left;">Select Squad Format:</label>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">SUBMIT TOURNAMENT SQUAD</h3>
+            <label style="font-size:11px; color:var(--text-muted); display:block; text-align:left;">Select Squad Format:</label>
             <select id="squadTypeDropdown" class="form-input" onchange="loadSquadPlayersForSubmission()">
                 <option value="5">5-man Squad</option>
                 <option value="6">6-man Squad</option>
             </select>
-            <div id="submitSquadList" style="text-align:left; margin-bottom:15px; max-height:200px; overflow-y:auto;"></div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div id="submitSquadList" style="text-align:left; margin-bottom:12px; max-height:180px; overflow-y:auto;"></div>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="finalizeSquadSubmit()">Submit Final Squad</button>
                 <button class="btn-danger-sm" onclick="closeModal('submitSquadModal')">Cancel</button>
             </div>
@@ -1035,31 +1077,31 @@
     <!-- PLAYER SIGN IN CARD MODAL -->
     <div class="modal-overlay" id="playerCardModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); margin-bottom:10px;">PLAYER ENTRY CARD</h3>
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">PLAYER ENTRY CARD</h3>
             <div class="player-entry-card" id="playerEntryCardToCapture">
                 <div class="pec-tournament-title">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
                 <div class="pec-avatar-box"><img id="pecPlayerAvatar" src="" alt="Player" crossorigin="anonymous"></div>
                 <div class="pec-player-name" id="pecPlayerName">LOGGED USER NAME</div>
-                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">signed in as</div>
+                <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">signed in as</div>
                 <div class="pec-role-badge">PLAYER</div>
                 <div class="card-brand-footer">
                     <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
                     <span style="color:#ff4d4d">EBFC</span>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="downloadPlayerEntryCard()"><i class="fa-solid fa-download"></i> Download Card</button>
                 <button class="btn-gold-sm" id="btnConfirmPlayerCard" style="background:#2ec4b6;" onclick="confirmPlayerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
                 <button class="btn-danger-sm" onclick="closeModal('playerCardModal')">Cancel</button>
             </div>
-            <p id="playerNoticeText" style="font-size:11px; color:var(--primary-red); margin-top:8px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
+            <p id="playerNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
         </div>
     </div>
 
     <!-- DONE DEAL MODAL -->
     <div class="modal-overlay" id="transferModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); margin-bottom:10px;">TRANSFER GRAPHIC CARD</h3>
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">TRANSFER GRAPHIC CARD</h3>
 
             <div class="done-deal-card" id="cardToCapture">
                 <div class="dd-header">TRANSFER DONE DEAL</div>
@@ -1081,20 +1123,20 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn-gold-sm" onclick="downloadCard()"><i class="fa-solid fa-download"></i> Download Card</button>
                 <button class="btn-gold-sm" id="btnConfirmTransfer" style="background:#2ec4b6;" onclick="confirmTransfer()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
                 <button class="btn-danger-sm" onclick="closeModal('transferModal')">Cancel</button>
             </div>
-            <p id="downloadNoticeText" style="font-size:11px; color:var(--primary-red); margin-top:8px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
+            <p id="downloadNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
         </div>
     </div>
 
     <!-- SQUAD VIEW MODAL -->
     <div class="modal-overlay" id="squadModal">
         <div class="modal-body">
-            <h3 id="squadModalTitle" style="font-family:'Teko'; font-size:28px; color:var(--accent-gold); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom:15px;">SQUAD PLAYERS</h3>
-            <div class="players-list-grid" id="squadModalList" style="margin-bottom: 20px;"></div>
+            <h3 id="squadModalTitle" style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom:12px;">SQUAD PLAYERS</h3>
+            <div class="players-list-grid" id="squadModalList" style="margin-bottom: 15px;"></div>
             <button class="btn-danger-sm" onclick="closeModal('squadModal')">Close</button>
         </div>
     </div>
@@ -1186,17 +1228,17 @@
             try {
                 let userData = null;
 
-                // ১. প্রথমে Current User-এর UID দিয়ে সরাসরি চেক
+                // ১. প্রথমে Current User-এর UID দিয়ে সরাসরি চেক
                 let userDoc = await usersRef.doc(currentLoggedUser.id).get();
                 if (userDoc.exists) {
                     userData = userDoc.data();
                 } else {
-                    // ২. UID দিয়ে না পেলে 'users' কালেকশনে 'name' ফিল্ড দিয়ে সার্চ
+                    // ২. UID দিয়ে না পেলে 'users' কালেকশনে 'name' ফিল্ড দিয়ে সার্চ
                     let queryByName = await usersRef.where('name', '==', currentLoggedUser.name).get();
                     if (!queryByName.empty) {
                         userData = queryByName.docs[0].data();
                     } else {
-                        // ৩. Document ID হিসেবে User Name দিয়ে চেষ্টা
+                        // ৩. Document ID হিসেবে User Name দিয়ে চেষ্টা
                         userDoc = await usersRef.doc(currentLoggedUser.name).get();
                         if (userDoc.exists) {
                             userData = userDoc.data();
@@ -1204,7 +1246,7 @@
                     }
                 }
 
-                // userData পাওয়া গেলে Role চেক
+                // userData পাওয়া গেলে Role চেক
                 if (userData) {
                     const userRole = (userData.role || '').toLowerCase();
 
@@ -1220,7 +1262,7 @@
                         closeModal('adminLoginModal');
                     }
                 } else {
-                    // Database-এ ডাটা না পাওয়া গেলে
+                    // Database-এ ডাটা না পাওয়া গেলে
                     alert(`Access Denied: No record found in 'users' collection for ID/Name: "${currentLoggedUser.name}"!`);
                     closeModal('adminLoginModal');
                 }
@@ -1391,12 +1433,12 @@
                 snapshot.forEach((doc) => {
                     let m = doc.data();
                     container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:10px; border-radius:6px; border:1px solid var(--border-color);">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <img src="${m.avatar}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
                                     <div style="text-align:left;">
-                                        <h4 style="font-size:14px; color:#fff;">${m.name} (${m.club})</h4>
-                                        <p style="font-size:11px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
                                     </div>
                                 </div>
                                 <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${doc.id}')">Approve</button>
@@ -1425,7 +1467,7 @@
                 }
                 snapshot.forEach((doc) => {
                     let m = doc.data();
-                    let eliminateBtnHtml = isAdminLoggedIn ? `<button class="btn-danger-sm" style="font-size:11px; padding:4px 8px;" onclick="eliminateTeam('${doc.id}', '${m.club}')"><i class="fa-solid fa-user-xmark"></i> Eliminate</button>` : '';
+                    let eliminateBtnHtml = isAdminLoggedIn ? `<button class="btn-danger-sm" style="font-size:10px; padding:4px 6px;" onclick="eliminateTeam('${doc.id}', '${m.club}')"><i class="fa-solid fa-user-xmark"></i> Eliminate</button>` : '';
                     container.innerHTML += `
                             <div class="manager-mini-card">
                                 <img src="${m.avatar}" alt="${m.name}" crossorigin="anonymous">
@@ -1481,16 +1523,16 @@
                         ? `<span style="color:var(--accent-gold); font-weight:700;">Signed with ${p.signedClub} (${p.signedBy})</span>`
                         : `<span style="color:var(--accent-green); font-weight:700;">Free Agent</span>`;
                     let freeAgentBtn = p.isSigned
-                        ? `<button class="btn-danger-sm" style="font-size:11px; padding:4px 8px;" onclick="adminMakeFreeAgent('${doc.id}')"><i class="fa-solid fa-user-minus"></i> Make Free Agent</button>`
+                        ? `<button class="btn-danger-sm" style="font-size:10px; padding:4px 6px;" onclick="adminMakeFreeAgent('${doc.id}')"><i class="fa-solid fa-user-minus"></i> Make Free Agent</button>`
                         : '';
 
                     adminContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 12px; border-radius:6px; border:1px solid var(--border-color);">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <img src="${p.avatar}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
                                     <div style="text-align:left;">
-                                        <h4 style="font-size:14px; color:#fff;">${p.name} (${p.device})</h4>
-                                        <p style="font-size:11px;">Status: ${statusInfo}</p>
+                                        <h4 style="font-size:13px; color:#fff;">${p.name} (${p.device})</h4>
+                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
                                     </div>
                                 </div>
                                 ${freeAgentBtn}
@@ -1724,8 +1766,8 @@
                     container.innerHTML += `
                             <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
                                 <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${idx--}</span>
-                                <h4 style="font-size:15px; color:#fff;">${fx.team1} VS ${fx.team2}</h4>
-                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.matchDate}</p>
+                                <h4 style="font-size:14px; color:#fff;">${fx.team1} VS ${fx.team2}</h4>
+                                <p style="font-size:10px; color:var(--text-muted);">Date: ${fx.matchDate}</p>
                             </div>`;
                 });
             });
