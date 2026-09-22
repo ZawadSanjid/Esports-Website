@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1139,14 +1139,13 @@
         }
 
         // ----------------------------------------------------
-        // LOGGED USER INITIALIZATION (FIXED)
+        // LOGGED USER INITIALIZATION
         // ----------------------------------------------------
         let currentLoggedUser = {
             id: "p_" + Date.now(),
             name: "MD. ZAWADULLAH BHUIYAN",
             device: "POCO 2312FRAFDI",
-            hasCaptainAccess: true,
-            avatar: createSvgAvatar("Z", "e50914", "ffffff")
+            avatar: createSvgAvatar("M", "e50914", "ffffff")
         };
 
         let currentUserRole = null;
@@ -1169,7 +1168,7 @@
                 if (userDoc.exists) {
                     const userData = userDoc.data();
 
-                    // Check if role is captain or admin
+                    // Strict Check: Check if role is explicitly captain or admin
                     if (userData.role === 'captain' || userData.role === 'admin') {
                         isAdminLoggedIn = true;
                         document.getElementById('managerHeroSection').style.display = 'none';
@@ -1180,29 +1179,15 @@
                         alert("Access Denied: You Have No Captain Access!");
                         closeModal('adminLoginModal');
                     }
-                } else if (currentLoggedUser.hasCaptainAccess) {
-                    // Fallback local verify if record not yet added in Firestore
-                    isAdminLoggedIn = true;
-                    document.getElementById('managerHeroSection').style.display = 'none';
-                    document.getElementById('adminPanelSection').style.display = 'block';
-                    closeModal('adminLoginModal');
-                    alert(`Captain Access Granted for ${currentLoggedUser.name}`);
                 } else {
+                    // Strictly deny if user is not listed in Firestore users collection
                     alert("Access Denied: You Have No Access!");
                     closeModal('adminLoginModal');
                 }
             } catch (e) {
                 console.error("Error verifying access:", e);
-                // Fallback check on network/connection issue
-                if (currentLoggedUser.hasCaptainAccess) {
-                    isAdminLoggedIn = true;
-                    document.getElementById('managerHeroSection').style.display = 'none';
-                    document.getElementById('adminPanelSection').style.display = 'block';
-                    closeModal('adminLoginModal');
-                    alert(`Captain Access Granted!`);
-                } else {
-                    alert("Verification error! Database connection check korun.");
-                }
+                alert("Verification error! Please check database connection.");
+                closeModal('adminLoginModal');
             }
         }
 
@@ -1279,11 +1264,7 @@
         }
 
         function openAdminLoginModal() {
-            if (currentLoggedUser.hasCaptainAccess) {
-                verifyCaptainAccess();
-            } else {
-                document.getElementById('adminLoginModal').style.display = 'flex';
-            }
+            verifyCaptainAccess();
         }
 
         function logoutAdmin() {
@@ -1302,7 +1283,7 @@
                     let mgr = mgrDoc.data();
                     if (mgr.status === 'approved') {
                         currentUserRole = 'manager';
-                        document.getElementById('mAvatar').src = mgr.avatar;
+                        document.getElementById('mAvatar').src = mgr.avatar || currentLoggedUser.avatar;
                         document.getElementById('mName').innerText = mgr.name;
                         document.getElementById('mClubName').innerText = mgr.club;
                         if (!isAdminLoggedIn) document.getElementById('managerHeroSection').style.display = 'block';
@@ -1343,8 +1324,17 @@
                     avatar: currentLoggedUser.avatar,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
+                // Display dynamic manager card modal with user details
+                document.getElementById('mrcAvatar').src = currentLoggedUser.avatar;
+                document.getElementById('mrcName').innerText = currentLoggedUser.name;
+
+                isManagerCardDownloaded = false;
+                document.getElementById('btnConfirmManagerCard').disabled = true;
+                document.getElementById('managerNoticeText').style.display = 'block';
+
                 closeModal('trxIdModal');
-                alert("Waiting for admin approval. Your request has been submitted successfully!");
+                document.getElementById('managerCardModal').style.display = 'flex';
             } catch (e) {
                 console.error("Error submitting request:", e);
                 alert("Error submitting manager request.");
@@ -1522,6 +1512,7 @@
         }
 
         function handlePlayerSignIn() {
+            // Dynamic Player Card Population
             document.getElementById('pecPlayerAvatar').src = currentLoggedUser.avatar;
             document.getElementById('pecPlayerName').innerText = currentLoggedUser.name;
 
@@ -1581,6 +1572,7 @@
             }
             currentUserRole = 'manager';
             closeModal('managerCardModal');
+            alert("Waiting for admin approval. Your request has been submitted successfully!");
         }
 
         async function openFixtureCreatorModal() {
@@ -1795,7 +1787,8 @@
                 if (!mDoc.exists) return;
                 let activeMgr = mDoc.data();
 
-                document.getElementById('cardManagerImg').src = activeMgr.avatar;
+                // Dynamically populate Manager & Transferred Player details
+                document.getElementById('cardManagerImg').src = activeMgr.avatar || currentLoggedUser.avatar;
                 document.getElementById('cardPlayerImg').src = selectedPlayerForTransfer.avatar;
                 document.getElementById('cardPlayerName').innerText = selectedPlayerForTransfer.name;
                 document.getElementById('cardManagerBoldName').innerText = activeMgr.name;
