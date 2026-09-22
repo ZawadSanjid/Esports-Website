@@ -722,7 +722,7 @@
         </div>
         <div>
             <a href="home.html" class="btn-outline-sm"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="home.html" onclick="logoutUser()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            <a href="#" onclick="logoutUser()" class="btn-outline-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         </div>
     </nav>
 
@@ -753,11 +753,11 @@
             <div class="rankings-dual-wrapper">
                 <div class="rank-badge-box">
                     <div class="title">Official Rank</div>
-                    <div class="number" id="displayOfficialRank">#1</div>
+                    <div class="number" id="displayOfficialRank">#--</div>
                 </div>
                 <div class="rank-badge-box domestic">
                     <div class="title">Domestic Rank</div>
-                    <div class="number" id="displayDomesticRank">#1</div>
+                    <div class="number" id="displayDomesticRank">#--</div>
                 </div>
                 <!-- EDIT PROFILE BUTTON -->
                 <button onclick="openEditModal()" class="btn-gold-sm"><i class="fa-solid fa-pen-to-square"></i> Edit Info</button>
@@ -1028,19 +1028,42 @@
 
         // Realtime Firestore Listener
         function listenToFirestoreProfile(uid) {
-            db.collection('users').doc(uid).onSnapshot(doc => {
-                if (doc.exists) {
-                    currentUserData = doc.data();
-                    renderProfile(currentUserData);
-                } else {
-                    console.error("No user profile record found in Firestore!");
+            db.collection('users').onSnapshot(snapshot => {
+                let allPlayers = [];
+                snapshot.forEach(doc => {
+                    allPlayers.push({ uid: doc.id, ...doc.data() });
+                });
+
+                // Sort players by Official Points for Official Rank calculation
+                let officialSorted = [...allPlayers].sort((a, b) => {
+                    let ptsA = (a.official && a.official.pts) ? a.official.pts : 0;
+                    let ptsB = (b.official && b.official.pts) ? b.official.pts : 0;
+                    return ptsB - ptsA;
+                });
+
+                // Sort players by Domestic Points for Domestic Rank calculation
+                let domesticSorted = [...allPlayers].sort((a, b) => {
+                    let ptsA = (a.domestic && a.domestic.pts) ? a.domestic.pts : 0;
+                    let ptsB = (b.domestic && b.domestic.pts) ? b.domestic.pts : 0;
+                    return ptsB - ptsA;
+                });
+
+                // Find current logged-in user data and their ranks
+                let userDoc = allPlayers.find(p => p.uid === uid);
+                if (userDoc) {
+                    currentUserData = userDoc;
+                    
+                    let offRank = officialSorted.findIndex(p => p.uid === uid) + 1;
+                    let domRank = domesticSorted.findIndex(p => p.uid === uid) + 1;
+
+                    renderProfile(currentUserData, offRank, domRank);
                 }
             }, error => {
                 console.error("Error listening to Firestore profile: ", error);
             });
         }
 
-        function renderProfile(user) {
+        function renderProfile(user, offRank, domRank) {
             document.getElementById('displayName').innerText = user.name || "EBFC Player";
             document.getElementById('displayPhone').innerText = user.phone || "N/A";
             document.getElementById('displayGameId').innerText = user.gameId || "N/A";
@@ -1053,6 +1076,10 @@
             document.getElementById('displayOccupation').innerText = user.occupation || "N/A";
             document.getElementById('displayAddress').innerText = user.address || "N/A";
             document.getElementById('displayClub').innerText = user.club || "East Bengal";
+
+            // RENDER DUAL RANKS
+            document.getElementById('displayOfficialRank').innerText = `#${offRank || 1}`;
+            document.getElementById('displayDomesticRank').innerText = `#${domRank || 1}`;
 
             if (user.avatar) {
                 document.getElementById('displayAvatar').src = user.avatar;
