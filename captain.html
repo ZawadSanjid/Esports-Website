@@ -548,27 +548,27 @@
                 });
 
                 container.innerHTML += `
-                            <div class="squad-slot-card">
-                                <div class="form-group" style="margin:0;">
-                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                    <select class="form-control squad-player-id" required>${optionsHtml}</select>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GF (Goals)</label>
-                                    <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GA (Against)</label>
-                                    <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>MOTM / POTM?</label>
-                                    <select class="form-control squad-player-motm">
-                                        <option value="no">No</option>
-                                        <option value="yes">Yes</option>
-                                    </select>
-                                </div>
-                            </div>`;
+                                    <div class="squad-slot-card">
+                                        <div class="form-group" style="margin:0;">
+                                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                            <select class="form-control squad-player-id" required>${optionsHtml}</select>
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>GF (Goals)</label>
+                                            <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>GA (Against)</label>
+                                            <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>MOTM / POTM?</label>
+                                            <select class="form-control squad-player-motm">
+                                                <option value="no">No</option>
+                                                <option value="yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>`;
             }
         }
 
@@ -584,27 +584,27 @@
                 });
 
                 container.innerHTML += `
-                            <div class="squad-slot-card">
-                                <div class="form-group" style="margin:0;">
-                                    <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                    <select class="form-control dom-player-id">${optionsHtml}</select>
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GF (Goals)</label>
-                                    <input type="number" class="form-control dom-gf" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>GA (Against)</label>
-                                    <input type="number" class="form-control dom-ga" min="0" value="0">
-                                </div>
-                                <div class="form-group" style="margin:0;">
-                                    <label>MOTM / POTM?</label>
-                                    <select class="form-control dom-motm">
-                                        <option value="no">No</option>
-                                        <option value="yes">Yes</option>
-                                    </select>
-                                </div>
-                            </div>`;
+                                    <div class="squad-slot-card">
+                                        <div class="form-group" style="margin:0;">
+                                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                            <select class="form-control dom-player-id">${optionsHtml}</select>
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>GF (Goals)</label>
+                                            <input type="number" class="form-control dom-gf" min="0" value="0">
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>GA (Against)</label>
+                                            <input type="number" class="form-control dom-ga" min="0" value="0">
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>MOTM / POTM?</label>
+                                            <select class="form-control dom-motm">
+                                                <option value="no">No</option>
+                                                <option value="yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>`;
             }
         }
 
@@ -665,7 +665,7 @@
                 }
             });
 
-            // 2. If any Community Results are entered, send request to Community Win Approval Queue (Section 8.1)
+            // 2. Send overall community result request to Community Win Approval Queue
             if (resWin > 0 || resDraw > 0 || resLoss > 0 || resAuto > 0) {
                 let commWinRef = db.collection('pending_community_wins').doc();
                 batch.set(commWinRef, {
@@ -763,16 +763,16 @@
                 let matchTypeTag = item.matchType ? `Type: ${item.matchType.toUpperCase()} | ` : '';
 
                 container.innerHTML += `
-                            <div class="submission-item">
-                                <div>
-                                    <strong>${item.playerName}</strong>
-                                    <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
-                                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
-                                        ${matchTypeTag}GF: ${item.gf} | GA: ${item.ga} | POTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
-                                    </div>
-                                </div>
-                                <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                            </div>`;
+                                    <div class="submission-item">
+                                        <div>
+                                            <strong>${item.playerName}</strong>
+                                            <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
+                                            <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
+                                                ${matchTypeTag}GF: ${item.gf} | GA: ${item.ga} | POTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
+                                            </div>
+                                        </div>
+                                        <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
+                                    </div>`;
             });
         }
     </script>
