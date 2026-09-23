@@ -8,36 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- HTML2CANVAS LIBRARY FOR IMAGE GENERATION -->
+    <!-- HTML2CANVAS & CANVAS-CONFETTI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <!-- FIREBASE COMPAT SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
-            authDomain: "ebfc-portal.firebaseapp.com",
-            projectId: "ebfc-portal",
-            storageBucket: "ebfc-portal.firebasestorage.app",
-            messagingSenderId: "93840741420",
-            appId: "1:93840741420:web:05d574c95368be68e62d89",
-            measurementId: "G-VBHEWLE64S"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Firestore Collection References
-        const managersRef = db.collection('managers');
-        const playersRef = db.collection('players');
-        const fixturesRef = db.collection('fixtures');
-        const settingsRef = db.collection('settings');
-        const usersRef = db.collection('users');
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * {
@@ -68,7 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* HEADER & BANNER RESPONSIVE FIX */
         .hub-header {
             text-align: center;
             padding: 25px 15px;
@@ -103,7 +75,6 @@
             padding: 0 15px;
         }
 
-        /* GLOWING TRANSFER WINDOW BUTTON */
         .btn-transfer-glow {
             background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
             color: #fff;
@@ -129,7 +100,6 @@
             }
         }
 
-        /* AUTH SELECTION BUTTONS */
         .auth-controls {
             display: flex;
             justify-content: center;
@@ -213,7 +183,6 @@
                 color: #000;
             }
 
-        /* TOGGLE SWITCH STYLES */
         .switch-container {
             display: flex;
             align-items: center;
@@ -269,7 +238,6 @@
                 transform: translateX(22px);
             }
 
-        /* MANAGER DASHBOARD CARD */
         .manager-hero-card {
             background: var(--bg-card);
             border: 1px solid var(--accent-gold);
@@ -303,7 +271,6 @@
                 line-height: 1;
             }
 
-        /* SECTION TITLES & GRIDS */
         .section-title {
             font-family: 'Teko', sans-serif;
             font-size: 26px;
@@ -377,10 +344,6 @@
             text-transform: uppercase;
             white-space: nowrap;
             flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: 0.2s;
         }
 
         .manager-mini-card {
@@ -403,7 +366,6 @@
                 flex-shrink: 0;
             }
 
-        /* MODAL RESPONSIVE STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -444,221 +406,133 @@
             font-size: 14px;
         }
 
-            .form-input:focus {
-                border-color: var(--accent-gold);
-            }
-
-        /* FIXTURE GRAPHIC CARD RESPONSIVE */
-        .fixture-card {
-            width: 100%;
-            max-width: 440px;
-            background: linear-gradient(135deg, #090b10 0%, #151924 100%);
-            border: 2px solid var(--primary-red);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 0 auto 15px auto;
-            text-align: center;
-            box-shadow: 0 0 25px rgba(229, 9, 20, 0.3);
-        }
-
-        .fx-header {
-            font-family: 'Teko', sans-serif;
-            font-size: 22px;
-            color: var(--accent-gold);
-            line-height: 1.1;
-            text-transform: uppercase;
-        }
-
-        .fx-teams-vs {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 12px 0;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 12px;
-        }
-
-        .fx-team-box img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-gold);
-            object-fit: cover;
-        }
-
-        .fx-team-box h4 {
-            font-family: 'Teko', sans-serif;
-            font-size: 18px;
-            color: #fff;
-            margin-top: 4px;
-        }
-
-        .fx-meta-info {
-            font-size: 11px;
-            color: var(--text-muted);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            background: #07090e;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            text-align: left;
-        }
-
-        .fx-matchups-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .fx-matchup-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.03);
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            font-size: 12px;
-        }
-
-            .fx-matchup-row img {
-                width: 26px;
-                height: 26px;
-                border-radius: 50%;
-                object-fit: cover;
-            }
-
-        .no-squad-alert {
-            background: rgba(229, 9, 20, 0.15);
-            border: 1px solid var(--primary-red);
-            color: var(--primary-red);
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        /* 1. MANAGER CARD: YELLOW & BLACK GRADIENT */
-        .manager-royal-card {
+        /* CARD STYLES */
+        .image-bg-card {
             width: 100%;
             max-width: 310px;
-            height: 440px;
-            background: linear-gradient(180deg, #ffb703 0%, #3a2a00 35%, #0d0a02 70%, #000000 100%) !important;
-            border: 3px solid #ffd700;
+            height: 430px;
             border-radius: 12px;
             margin: 0 auto 15px auto;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 15px 12px;
-            color: #fff;
-            box-shadow: 0 0 35px rgba(255, 183, 3, 0.5);
-            text-align: center;
-        }
-
-        .mrc-crown {
-            font-size: 22px;
-            color: #ffd700;
-            margin-bottom: 2px;
-        }
-
-        .mrc-tournament-title {
-            font-family: 'Teko', sans-serif;
-            font-size: 18px;
-            color: #ffffff;
-            text-transform: uppercase;
-            text-shadow: 0 2px 4px #000;
-        }
-
-        .mrc-avatar-box img {
-            width: 95px;
-            height: 95px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #ffd700;
-            margin: 12px 0 8px 0;
-        }
-
-        .mrc-manager-name {
-            font-family: 'Teko', sans-serif;
-            font-size: 28px;
-            color: #ffffff;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-
-        .mrc-role-badge {
-            font-family: 'Teko', sans-serif;
-            font-size: 34px;
-            color: #ffd700;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-
-        /* 2. PLAYER ENTRY CARD: RED & BLACK GRADIENT */
-        .player-entry-card {
-            width: 100%;
-            max-width: 300px;
-            height: 420px;
-            background: linear-gradient(180deg, #e50914 0%, #4a0004 35%, #150002 70%, #000000 100%) !important;
-            border: 2px solid #e50914;
-            border-radius: 12px;
-            margin: 0 auto 15px auto;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: space-between;
             padding: 15px;
             color: #fff;
-            box-shadow: 0 0 30px rgba(229, 9, 20, 0.6);
+            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            background-size: cover !important;
+            background-position: center !important;
+            border: 2px solid var(--accent-gold);
+        }
+
+            .image-bg-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.95) 85%);
+                z-index: 1;
+            }
+
+        .card-inner-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
             text-align: center;
         }
 
-        .pec-tournament-title {
+        .card-top-title {
             font-family: 'Teko', sans-serif;
-            font-size: 18px;
-            color: #ffffff;
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 0 2px 4px #000;
+            letter-spacing: 1px;
+        }
+
+        .card-bottom-info {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-role-subtext {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-gold);
             text-transform: uppercase;
+            letter-spacing: 2px;
             text-shadow: 0 2px 4px #000;
         }
 
-        .pec-avatar-box img {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #e50914;
-            margin: 12px 0 8px 0;
-        }
-
-        .pec-player-name {
+        .card-main-name {
             font-family: 'Teko', sans-serif;
-            font-size: 28px;
+            font-size: 38px;
             color: #ffffff;
             text-transform: uppercase;
-            line-height: 1;
+            line-height: 0.9;
+            text-shadow: 0 3px 8px #000, 0 0 10px rgba(0,0,0,0.8);
+            margin-top: 2px;
         }
 
-        .pec-role-badge {
-            font-family: 'Teko', sans-serif;
-            font-size: 32px;
-            color: #ff4d4d;
-            text-transform: uppercase;
-            line-height: 1;
+        .card-brand-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 3;
         }
 
-        /* 3. TRANSFER/DONE DEAL CARD: BLUE & BLACK GRADIENT */
+            .card-brand-footer img {
+                width: 25px;
+                height: 25px;
+                object-fit: contain;
+                border-radius: 50%;
+            }
+
+            .card-brand-footer span {
+                font-family: 'Teko', sans-serif;
+                font-size: 20px;
+                color: #ffffff;
+            }
+
+        .boom-pop {
+            animation: boomScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes boomScale {
+            0% {
+                transform: scale(0.2);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* TRANSFER CARD */
         .done-deal-card {
             width: 100%;
-            max-width: 310px;
-            height: 440px;
+            max-width: 320px;
+            height: 460px;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -669,7 +543,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 15px 12px 50px 12px;
+            padding: 15px 15px 45px 15px;
             color: #fff;
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
             text-align: center;
@@ -690,7 +564,7 @@
             font-size: 10px;
             color: #ffffff;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             width: 100%;
             text-align: center;
             letter-spacing: 1px;
@@ -700,8 +574,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 10px 0;
+            gap: 15px;
+            margin: 8px 0;
             width: 100%;
         }
 
@@ -717,32 +591,54 @@
                 border-radius: 50%;
                 object-fit: cover;
                 border: 2px solid #00d2ff;
+                background: #090a0c;
             }
 
             .dd-img-box span {
-                font-size: 10px;
+                font-size: 11px;
                 color: #ddd;
                 margin-top: 4px;
                 text-transform: uppercase;
+                font-weight: 700;
             }
 
         .dd-arrows {
-            font-size: 20px;
+            font-size: 22px;
             color: #00d2ff;
+        }
+
+        .dd-fee-badge {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-gold);
+            padding: 2px 14px;
+            border-radius: 20px;
+            margin: 6px 0 8px 0;
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);
+        }
+
+        .dd-fee-text {
+            font-family: 'Teko', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffb703;
+            letter-spacing: 1px;
+            line-height: 1;
+            text-shadow: 0 0 8px rgba(255, 183, 3, 0.6);
         }
 
         .dd-footer-box {
             width: 100%;
             text-align: center;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
             .dd-footer-box h3 {
                 font-family: 'Teko', sans-serif;
-                font-size: 26px;
+                font-size: 28px;
                 color: #fff;
                 line-height: 1;
                 text-transform: uppercase;
+                text-shadow: 0 2px 4px #000;
             }
 
             .dd-footer-box p {
@@ -751,59 +647,98 @@
                 margin-top: 2px;
             }
 
-        /* SHARED BRAND FOOTER */
-        .card-brand-footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        /* FIXTURE GRAPHIC CARD */
+        .fixture-card {
             width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            max-width: 460px;
+            background: linear-gradient(135deg, #090b10 0%, #151924 100%);
+            border: 2px solid var(--primary-red);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 auto 15px auto;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(229, 9, 20, 0.3);
         }
 
-            .card-brand-footer img {
-                width: 25px;
-                height: 25px;
-                object-fit: contain;
+        .fx-header {
+            font-family: 'Teko', sans-serif;
+            font-size: 24px;
+            color: var(--accent-gold);
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .fx-teams-vs {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .fx-team-box img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            object-fit: cover;
+        }
+
+        .fx-team-box h4 {
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .fx-meta-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: #07090e;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .fx-matchups-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .fx-matchup-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+        }
+
+            .fx-matchup-row img {
+                width: 30px;
+                height: 30px;
                 border-radius: 50%;
+                object-fit: cover;
             }
 
-            .card-brand-footer span {
-                font-family: 'Teko', sans-serif;
-                font-size: 20px;
-                color: #ffffff;
-                letter-spacing: 1px;
-            }
-
-        /* MOBILE MEDIA QUERIES ADJUSTMENTS */
-        @media (max-width: 600px) {
-            .container {
-                padding: 0 10px;
-            }
-
-            .manager-hero-card {
-                flex-direction: column;
-                text-align: center;
-                align-items: center;
-            }
-
-                .manager-hero-card .btn-group-responsive {
-                    width: 100%;
-                    justify-content: center;
-                }
-
-            .players-list-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .fx-meta-info {
-                grid-template-columns: 1fr;
-            }
+        .no-squad-alert {
+            background: rgba(229, 9, 20, 0.15);
+            border: 1px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -817,7 +752,7 @@
         </div>
         <div class="header-btn-group">
             <button class="btn-transfer-glow" onclick="handleTransferWindowClick()"><i class="fa-solid fa-bolt"></i> Transfer Window</button>
-            <button class="btn-squad-sm" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> Captain / Admin</button>
+            <button class="btn-squad-sm" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> Captain / Admin Portal</button>
         </div>
     </div>
 
@@ -828,39 +763,45 @@
             <button class="btn-auth" id="btnManagerLogin" onclick="handleManagerSignInStart()"><i class="fa-solid fa-user-tie"></i> Sign In As Manager</button>
         </div>
 
-        <!-- ADMIN DASHBOARD PANEL -->
+        <!-- ADMIN PANEL SECTION -->
         <div id="adminPanelSection" style="display: none; background: var(--bg-card); border: 1px solid var(--primary-red); border-radius: 10px; padding: 15px; margin-bottom: 25px;">
             <div class="section-title" style="color: var(--primary-red); margin-bottom: 10px;">
                 <span><i class="fa-solid fa-shield-halved"></i> Captain / Admin Portal</span>
                 <button class="btn-danger-sm" onclick="logoutAdmin()">Logout Admin</button>
             </div>
 
-            <!-- ADMIN CONTROLS BAR -->
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
-                <button class="btn-gold-sm" onclick="openFixtureCreatorModal()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate New Match Fixture</button>
+                <button class="btn-gold-sm" onclick="openFixtureCreatorModal()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Match Fixture</button>
 
-                <!-- GLOBAL TRANSFER WINDOW SWITCH TOGGLE -->
                 <div class="switch-container">
                     <span style="font-size: 12px; font-weight: 700; color: var(--accent-gold);">Transfer Window:</span>
                     <label class="switch">
-                        <input type="checkbox" id="transferWindowToggle" onchange="toggleTransferWindow(this.checked)">
+                        <input type="checkbox" id="transferWindowToggle" onchange="toggleTransferWindow(this.checked)" checked>
                         <span class="slider"></span>
                     </label>
-                    <span id="transferWindowStatusText" style="font-size: 12px; font-weight: 700; color: var(--primary-red);">OFF</span>
+                    <span id="transferWindowStatusText" style="font-size: 12px; font-weight: 700; color: var(--accent-green);">ON</span>
                 </div>
             </div>
 
+            <!-- PENDING COIN PURCHASES APPROVAL -->
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Pending Coin Purchase Requests</div>
+            <div id="pendingCoinsContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
+
             <!-- PENDING MANAGERS APPROVAL LIST -->
-            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Pending Manager Approvals</div>
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Pending Manager Registrations</div>
             <div id="pendingManagersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
-            <!-- ADMIN PLAYERS DIRECTORY & FREE AGENT CONTROLLER -->
-            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Admin Player Directory Management</div>
+            <!-- ADMIN MANAGERS BALANCE MANAGEMENT -->
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Managers & Clubs Directory (With Eliminate Action)</div>
+            <div id="adminManagersBalanceContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
+
+            <!-- ADMIN PLAYERS DIRECTORY WITH FREE AGENT ACTION -->
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Admin Player Directory Management</div>
             <div id="adminPlayersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
-            <!-- MULTIPLE GENERATED FIXTURES DISPLAY AREA -->
-            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Generated Fixtures Archive</div>
-            <div id="generatedFixturesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;"></div>
+            <!-- GENERATED FIXTURES ARCHIVE -->
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Generated Fixtures Archive</div>
+            <div id="generatedFixturesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 15px;"></div>
         </div>
 
         <!-- MANAGER PROFILE HERO -->
@@ -870,9 +811,16 @@
                 <div class="manager-info">
                     <p style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Official Manager</p>
                     <h2 id="mName">Manager Name</h2>
-                    <p style="font-size: 13px; color: #fff;">Club: <strong style="color:var(--accent-gold)" id="mClubName">Squad Name</strong></p>
+                    <p style="font-size: 13px; color: #fff;">
+                        Club: <strong style="color:var(--accent-gold)" id="mClubName">Squad Name</strong>
+                        <span id="mSquadCountBadge" style="color: var(--cyan-glow); font-size: 12px; font-weight: 700;">(0/8 Players)</span>
+                    </p>
+                    <p style="font-size: 14px; color: var(--cyan-glow); font-weight: 700; margin-top: 4px;">
+                        Balance: <span id="mBalanceDisplay">200M</span> Coins
+                    </p>
                 </div>
                 <div class="btn-group-responsive" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn-gold-sm" style="background:var(--accent-green); color:#000;" onclick="openBuyCoinsModal()"><i class="fa-solid fa-coins"></i> Purchase EBFC Coins</button>
                     <button class="btn-squad-sm" onclick="openSquadModal()"><i class="fa-solid fa-users-rectangle"></i> My Squad</button>
                     <button class="btn-gold-sm" onclick="openSubmitSquadModal()"><i class="fa-solid fa-paper-plane"></i> Submit Squad</button>
                     <button class="btn-danger-sm" onclick="leaveRole()"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
@@ -883,7 +831,7 @@
         <!-- ACTIVE MANAGERS SECTION -->
         <div id="activeManagersSection" style="margin-bottom: 25px;">
             <div class="section-title">
-                <span><i class="fa-solid fa-user-tie" style="color:var(--accent-gold)"></i> Tournament Registered Managers</span>
+                <span><i class="fa-solid fa-user-tie" style="color:var(--accent-gold)"></i> Registered Managers</span>
             </div>
             <div class="players-list-grid" id="activeManagersContainer"></div>
         </div>
@@ -891,18 +839,107 @@
         <!-- MAIN PLAYERS DIRECTORY SECTION -->
         <div id="mainPlayersDirectorySection">
             <div class="section-title">
-                <span><i class="fa-solid fa-users" style="color:var(--primary-red)"></i> Available Players Directory</span>
-                <button id="leavePlayerBtn" class="btn-danger-sm" style="display: none;" onclick="leaveRole()"><i class="fa-solid fa-user-minus"></i> Leave As Player</button>
+                <div>
+                    <span><i class="fa-solid fa-users" style="color:var(--primary-red)"></i> Available Players</span>
+                    <span id="registeredPlayersCountBadge" style="font-size:13px; background:var(--primary-red); color:#fff; padding:2px 10px; border-radius:12px; margin-left:8px; font-weight: bold;">Available: 0 | Total: 0</span>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-gold-sm" style="background:linear-gradient(135deg, #ffb703, #ff8800);" onclick="triggerRandomNamePicker()"><i class="fa-solid fa-dice"></i> Random Name Picker</button>
+                    <button id="leavePlayerBtn" class="btn-danger-sm" style="display: none;" onclick="leaveRole()"><i class="fa-solid fa-user-minus"></i> Leave As Player</button>
+                </div>
             </div>
             <div class="players-list-grid" id="playersContainer"></div>
         </div>
     </div>
 
-    <!-- DYNAMIC TRANSFER WINDOW MODAL -->
+    <!-- MODALS -->
+    <!-- FIXTURE CREATOR MODAL -->
+    <div class="modal-overlay" id="fixtureCreatorModal">
+        <div class="modal-body">
+            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold);">CREATE MATCH FIXTURE</h3>
+            <div style="text-align: left; font-size: 12px; color: var(--text-muted);">
+                <label>Select Team 1 (Manager):</label>
+                <select id="selectTeam1" class="form-input"></select>
+                <label>Select Team 2 (Manager):</label>
+                <select id="selectTeam2" class="form-input"></select>
+                <label>Match Date:</label>
+                <input type="date" id="fxDate" class="form-input">
+                <label>Activity Time Slot:</label>
+                <input type="text" id="fxActivity" class="form-input" placeholder="e.g. 10:00 PM - 11:00 PM">
+                <label>Deadline Time:</label>
+                <input type="text" id="fxDeadline" class="form-input" placeholder="e.g. 11:30 PM">
+                <label>Match Admin Name:</label>
+                <input type="text" id="fxAdminName" class="form-input" placeholder="e.g. Admin Zawad">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                <button class="btn-gold-sm" onclick="generateFixtureCard()"><i class="fa-solid fa-bolt"></i> Generate Fixture</button>
+                <button class="btn-danger-sm" onclick="closeModal('fixtureCreatorModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIXTURE DISPLAY MODAL -->
+    <div class="modal-overlay" id="fixtureDisplayModal">
+        <div class="modal-body" style="max-width: 520px;">
+            <h3 style="font-family:'Teko'; font-size:28px; color:var(--accent-gold); margin-bottom: 10px;">GENERATED FIXTURE GRAPHIC</h3>
+            <div class="fixture-card" id="fixtureCardToCapture">
+                <div class="fx-header">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
+                <div class="fx-teams-vs">
+                    <div class="fx-team-box">
+                        <img id="fxT1Img" src="" alt="">
+                        <h4 id="fxT1Name">Team 1</h4>
+                    </div>
+                    <div style="font-family:'Teko'; font-size:32px; color:var(--primary-red); font-weight:700;">VS</div>
+                    <div class="fx-team-box">
+                        <img id="fxT2Img" src="" alt="">
+                        <h4 id="fxT2Name">Team 2</h4>
+                    </div>
+                </div>
+                <div class="fx-meta-info">
+                    <div><strong>Date:</strong> <span id="fxDispDate">---</span></div>
+                    <div><strong>Slot:</strong> <span id="fxDispSlot">---</span></div>
+                    <div><strong>Deadline:</strong> <span id="fxDispDeadline">---</span></div>
+                    <div><strong>Admin:</strong> <span id="fxDispAdmin">---</span></div>
+                </div>
+                <div class="fx-matchups-list" id="fxMatchupsContainer"></div>
+                <div style="font-size:10px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">
+                    Official Fixture | East Bengal eFootball Club
+                </div>
+            </div>
+
+            <div style="background:#090a0c; border:1px solid var(--border-color); padding:12px; border-radius:8px; margin-bottom:15px; text-align:left;">
+                <div style="font-size:12px; color:var(--accent-gold); font-weight:700; margin-bottom:6px;"><i class="fa-solid fa-trophy"></i> Match Scorekeeper</div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="number" id="scoreTeam1" class="form-input" style="margin:0;" placeholder="T1 Score" value="0">
+                    <span style="font-weight:700;">-</span>
+                    <input type="number" id="scoreTeam2" class="form-input" style="margin:0;" placeholder="T2 Score" value="0">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap:wrap;">
+                <button class="btn-gold-sm" onclick="downloadFixtureImage()"><i class="fa-solid fa-download"></i> Download Image</button>
+                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="convertFixtureToText()"><i class="fa-solid fa-file-lines"></i> Convert To Text</button>
+                <button class="btn-danger-sm" onclick="closeModal('fixtureDisplayModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEXT FIXTURE MODAL -->
+    <div class="modal-overlay" id="fixtureTextModal">
+        <div class="modal-body">
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">TEXT FORMAT FIXTURE</h3>
+            <textarea id="fixtureTextarea" class="form-input" style="height: 220px; font-family: monospace; font-size: 13px;" readonly></textarea>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-gold-sm" onclick="copyFixtureText()"><i class="fa-solid fa-copy"></i> Copy Text</button>
+                <button class="btn-danger-sm" onclick="closeModal('fixtureTextModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSFER WINDOW MODAL -->
     <div class="modal-overlay" id="transferWindowModal">
         <div class="modal-body" style="max-width: 750px; border-color: var(--cyan-glow);">
             <div style="text-align: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-                <p style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">EBFC PRESENTS BID TOURNAMENT SEASON 1</p>
                 <h1 style="font-family: 'Teko'; font-size: 32px; color: var(--cyan-glow); line-height: 1;">WELCOME TO TRANSFER WINDOW</h1>
             </div>
             <div class="players-list-grid" id="transferWindowDirectory" style="margin-bottom: 15px;"></div>
@@ -910,13 +947,14 @@
         </div>
     </div>
 
-    <!-- ADMIN LOGIN MODAL -->
+    <!-- AUTHENTICATED ADMIN ACCESS MODAL -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--primary-red);">CAPTAIN / ADMIN LOGIN</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Checking logged in session privileges...</p>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--primary-red);"> ADMIN PORTAL ACCESS</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Enter Authorized Admin Access Code / Key</p>
+            <input type="password" id="adminPasswordInput" class="form-input" placeholder="Enter Admin Password">
             <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="verifyCaptainAccess()">Verify Captain Access</button>
+                <button class="btn-gold-sm" onclick="verifyCaptainAccess()">Verify Authorized Access</button>
                 <button class="btn-danger-sm" onclick="closeModal('adminLoginModal')">Cancel</button>
             </div>
         </div>
@@ -937,7 +975,7 @@
     <!-- MANAGER SIGN-IN STEP 2 -->
     <div class="modal-overlay" id="trxIdModal">
         <div class="modal-body">
-            <div class="bkash-box" style="background:#e2136e; color:#fff; padding:12px; border-radius:8px; margin-bottom:12px;">
+            <div style="background:#e2136e; color:#fff; padding:12px; border-radius:8px; margin-bottom:12px;">
                 <div style="font-size:16px; font-weight:700; margin-bottom:4px;">bKash Send Money / Cash Out</div>
                 <p style="font-size:11px;">Send Entry Fee to Personal Number: <strong>01935834507</strong></p>
             </div>
@@ -949,103 +987,57 @@
         </div>
     </div>
 
-    <!-- ADMIN FIXTURE CREATOR MODAL -->
-    <div class="modal-overlay" id="fixtureCreatorModal">
+    <!-- PURCHASE EBFC COINS MODAL -->
+    <div class="modal-overlay" id="buyCoinsModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">CREATE MATCH FIXTURE</h3>
-            <div style="text-align: left; font-size: 12px; color: var(--text-muted);">
-                <label>Select Team 1 (Manager):</label>
-                <select id="selectTeam1" class="form-input"></select>
-                <label>Select Team 2 (Manager):</label>
-                <select id="selectTeam2" class="form-input"></select>
-                <label>Match Date:</label>
-                <input type="date" id="fxDate" class="form-input">
-                <label>Activity Time Slot:</label>
-                <input type="text" id="fxActivity" class="form-input" placeholder="e.g. 10:00 PM - 11:00 PM">
-                <label>Deadline Time:</label>
-                <input type="text" id="fxDeadline" class="form-input" placeholder="e.g. 11:30 PM">
-                <label>Match Admin Name:</label>
-                <input type="text" id="fxAdminName" class="form-input" placeholder="e.g. Admin Zawad">
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-green);">PURCHASE EBFC COINS</h3>
+            <label style="font-size:12px; color:var(--text-muted); text-align:left; display:block;">Select Coin Package:</label>
+            <select id="coinPackageSelect" class="form-input">
+                <option value="10">10M Coins - 20 TK</option>
+                <option value="40">40M Coins - 40 TK</option>
+            </select>
+            <div style="background:#e2136e; color:#fff; padding:10px; border-radius:6px; margin-bottom:12px; text-align:left;">
+                <p style="font-size:11px;">bKash Personal: <strong>01935834507</strong></p>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="generateFixtureCard()"><i class="fa-solid fa-bolt"></i> Generate Fixture</button>
-                <button class="btn-danger-sm" onclick="closeModal('fixtureCreatorModal')">Cancel</button>
+            <input type="text" id="coinTrxId" class="form-input" placeholder="Enter bKash TrxID">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-gold-sm" style="background:var(--accent-green);" onclick="submitCoinPurchase()">Submit Request</button>
+                <button class="btn-danger-sm" onclick="closeModal('buyCoinsModal')">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- FIXTURE DISPLAY MODAL -->
-    <div class="modal-overlay" id="fixtureDisplayModal">
-        <div class="modal-body" style="max-width: 480px;">
-            <h3 style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); margin-bottom: 8px;">GENERATED FIXTURE GRAPHIC</h3>
-            <div class="fixture-card" id="fixtureCardToCapture">
-                <div class="fx-header">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
-                <div class="fx-teams-vs">
-                    <div class="fx-team-box">
-                        <img id="fxT1Img" src="" alt="" crossorigin="anonymous">
-                        <h4 id="fxT1Name">Team 1</h4>
-                    </div>
-                    <div style="font-family:'Teko'; font-size:28px; color:var(--primary-red); font-weight:700;">VS</div>
-                    <div class="fx-team-box">
-                        <img id="fxT2Img" src="" alt="" crossorigin="anonymous">
-                        <h4 id="fxT2Name">Team 2</h4>
-                    </div>
-                </div>
-                <div class="fx-meta-info">
-                    <div><strong>Date:</strong> <span id="fxDispDate">---</span></div>
-                    <div><strong>Slot:</strong> <span id="fxDispSlot">---</span></div>
-                    <div><strong>Deadline:</strong> <span id="fxDispDeadline">---</span></div>
-                    <div><strong>Admin:</strong> <span id="fxDispAdmin">---</span></div>
-                </div>
-                <div class="fx-matchups-list" id="fxMatchupsContainer"></div>
-                <div style="font-size:9px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:4px;">
-                    Official Fixture | East Bengal eFootball Club
-                </div>
-            </div>
-
-            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:12px; text-align:left;">
-                <div style="font-size:11px; color:var(--accent-gold); font-weight:700; margin-bottom:4px;"><i class="fa-solid fa-trophy"></i> Match Scorekeeper</div>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="number" id="scoreTeam1" class="form-input" style="margin:0;" placeholder="T1 Score" value="0">
-                    <span style="font-weight:700;">-</span>
-                    <input type="number" id="scoreTeam2" class="form-input" style="margin:0;" placeholder="T2 Score" value="0">
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap:wrap;">
-                <button class="btn-gold-sm" onclick="downloadFixtureImage()"><i class="fa-solid fa-download"></i> Download Image</button>
-                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="convertFixtureToText()"><i class="fa-solid fa-file-lines"></i> Convert To Text</button>
-                <button class="btn-danger-sm" onclick="closeModal('fixtureDisplayModal')">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TEXT FIXTURE MODAL -->
-    <div class="modal-overlay" id="fixtureTextModal">
+    <!-- MANAGER TRANSFER INPUT MODAL -->
+    <div class="modal-overlay" id="transferFeeInputModal">
         <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold);">TEXT FORMAT FIXTURE</h3>
-            <textarea id="fixtureTextarea" class="form-input" style="height: 180px; font-family: monospace; font-size: 12px;" readonly></textarea>
-            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="copyFixtureText()"><i class="fa-solid fa-copy"></i> Copy Text</button>
-                <button class="btn-danger-sm" onclick="closeModal('fixtureTextModal')">Close</button>
+            <h3 style="font-family:'Teko'; font-size:26px; color:var(--cyan-glow);">ENTER TRANSFER FEE</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">How many Million (M) coins do you want to offer for this player?</p>
+            <input type="number" id="transferAmountInput" class="form-input" placeholder="e.g. 15 (in Million M)">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-gold-sm" onclick="proceedToTransferCard()">Proceed to Card</button>
+                <button class="btn-danger-sm" onclick="closeModal('transferFeeInputModal')">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- ROYAL MANAGER ENTRY CARD MODAL -->
+    <!-- FULL IMAGE BACKGROUND MANAGER CARD MODAL -->
     <div class="modal-overlay" id="managerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:24px; color:#ffd700; margin-bottom:8px;">ROYAL MANAGER ENTRY CARD</h3>
-            <div class="manager-royal-card" id="managerCardToCapture">
-                <div class="mrc-crown"><i class="fa-solid fa-crown"></i></div>
-                <div class="mrc-tournament-title">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
-                <div class="mrc-avatar-box"><img id="mrcAvatar" src="" alt="Manager" crossorigin="anonymous"></div>
-                <div class="mrc-manager-name" id="mrcName">MANAGER NAME</div>
-                <div style="font-size:10px; color:#ffd700; text-transform:uppercase;">signed in as</div>
-                <div class="mrc-role-badge">MANAGER</div>
+            <div class="image-bg-card boom-pop" id="managerCardToCapture">
+                <div class="card-inner-content">
+                    <div style="font-size:20px; color:#ffd700;"><i class="fa-solid fa-crown"></i></div>
+                    <div class="card-top-title">EBFC BID TOURNAMENT S1</div>
+                </div>
+                <div class="card-bottom-info">
+                    <div class="card-role-subtext">SIGNED IN AS</div>
+                    <div style="font-family:'Teko'; font-size:26px; color:var(--accent-gold);">MANAGER</div>
+                    <div class="card-main-name" id="mrcName">MANAGER NAME</div>
+
+                </div>
                 <div class="card-brand-footer">
                     <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
-                    <span style="color:#ffd700">EBFC</span>
+                    <span style="color:#ffd700">EBFC OFFICIAL</span>
                 </div>
             </div>
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
@@ -1054,6 +1046,89 @@
                 <button class="btn-danger-sm" onclick="closeModal('managerCardModal')">Cancel</button>
             </div>
             <p id="managerNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
+        </div>
+    </div>
+
+    <!-- FULL IMAGE BACKGROUND PLAYER ENTRY CARD MODAL -->
+    <div class="modal-overlay" id="playerCardModal">
+        <div class="modal-body">
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">PLAYER ENTRY CARD</h3>
+            <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <div class="card-inner-content">
+                    <div class="card-top-title">EBFC BID TOURNAMENT S1</div>
+                </div>
+
+                <!-- Player Avatar Image -->
+                <div style="margin: 10px 0;">
+                    <img id="pecPlayerImg" src="" alt="Player" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-red); object-fit: cover;">
+                </div>
+
+                <div class="card-bottom-info">
+                    <div class="card-role-subtext">SIGNED IN AS</div>
+                    <div style="font-family:'Teko'; font-size:26px; color:var(--primary-red);">PLAYER</div>
+                    <div class="card-main-name" id="pecPlayerName">PLAYER NAME</div>
+                </div>
+
+                <div class="card-brand-footer">
+                    <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
+                    <span style="color:#ff4d4d">EBFC OFFICIAL</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-gold-sm" onclick="downloadPlayerEntryCard()"><i class="fa-solid fa-download"></i> Download Card</button>
+                <button class="btn-gold-sm" id="btnConfirmPlayerCard" style="background:#2ec4b6;" onclick="confirmPlayerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
+                <button class="btn-danger-sm" onclick="closeModal('playerCardModal')">Cancel</button>
+            </div>
+            <p id="playerNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
+        </div>
+    </div>
+
+    <!-- DONE DEAL / TRANSFER GRAPHIC CARD MODAL -->
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal-body">
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">TRANSFER GRAPHIC CARD</h3>
+
+            <div class="done-deal-card boom-pop" id="cardToCapture">
+                <div class="dd-header">TRANSFER DONE DEAL</div>
+                <div class="dd-sub">EBFC BID TOURNAMENT SEASON 1</div>
+
+                <div class="dd-images-wrapper">
+                    <div class="dd-img-box">
+                        <img id="cardManagerImg" src="" alt="Manager">
+                        <span>Manager</span>
+                    </div>
+                    <div class="dd-arrows">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </div>
+                    <div class="dd-img-box">
+                        <img id="cardPlayerImg" src="" alt="Player">
+                        <span>Player</span>
+                    </div>
+                </div>
+
+                <div class="dd-fee-badge">
+                    <div class="dd-fee-text" id="cardTransferFeeDisplay">FOR 0 MILLION</div>
+                </div>
+
+                <div class="dd-footer-box">
+                    <h3 id="cardPlayerName">PLAYER NAME</h3>
+                    <p id="cardManagerName">
+                        SIGNED BY <strong id="cardManagerBoldName" style="font-weight:800; color:#fff;">MANAGER NAME</strong> (<strong id="cardClubBoldName" style="font-weight:800; color:var(--accent-gold);">CLUB NAME</strong>)
+                    </p>
+                </div>
+
+                <div class="card-brand-footer">
+                    <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
+                    <span style="color:#00d2ff">EBFC OFFICIAL</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-gold-sm" onclick="downloadCard()"><i class="fa-solid fa-download"></i> Download Card</button>
+                <button class="btn-gold-sm" id="btnConfirmTransfer" style="background:#2ec4b6;" onclick="confirmTransfer()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
+                <button class="btn-danger-sm" onclick="closeModal('transferModal')">Cancel</button>
+            </div>
+            <p id="downloadNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
         </div>
     </div>
 
@@ -1074,710 +1149,283 @@
         </div>
     </div>
 
-    <!-- PLAYER SIGN IN CARD MODAL -->
-    <div class="modal-overlay" id="playerCardModal">
-        <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">PLAYER ENTRY CARD</h3>
-            <div class="player-entry-card" id="playerEntryCardToCapture">
-                <div class="pec-tournament-title">EBFC PRESENTS BID TOURNAMENT SEASON 1</div>
-                <div class="pec-avatar-box"><img id="pecPlayerAvatar" src="" alt="Player" crossorigin="anonymous"></div>
-                <div class="pec-player-name" id="pecPlayerName">LOGGED USER NAME</div>
-                <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">signed in as</div>
-                <div class="pec-role-badge">PLAYER</div>
-                <div class="card-brand-footer">
-                    <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
-                    <span style="color:#ff4d4d">EBFC</span>
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="downloadPlayerEntryCard()"><i class="fa-solid fa-download"></i> Download Card</button>
-                <button class="btn-gold-sm" id="btnConfirmPlayerCard" style="background:#2ec4b6;" onclick="confirmPlayerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
-                <button class="btn-danger-sm" onclick="closeModal('playerCardModal')">Cancel</button>
-            </div>
-            <p id="playerNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
-        </div>
-    </div>
-
-    <!-- DONE DEAL MODAL -->
-    <div class="modal-overlay" id="transferModal">
-        <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">TRANSFER GRAPHIC CARD</h3>
-
-            <div class="done-deal-card" id="cardToCapture">
-                <div class="dd-header">TRANSFER DONE DEAL</div>
-                <div class="dd-sub">EBFC BID TOURNAMENT SEASON 1</div>
-                <div class="dd-images-wrapper">
-                    <div class="dd-img-box"><img id="cardManagerImg" src="" alt="Manager" crossorigin="anonymous"><span>Manager</span></div>
-                    <div class="dd-arrows"><i class="fa-solid fa-angles-right"></i></div>
-                    <div class="dd-img-box"><img id="cardPlayerImg" src="" alt="Player" crossorigin="anonymous"><span>Player</span></div>
-                </div>
-
-                <div class="dd-footer-box">
-                    <h3 id="cardPlayerName">PLAYER NAME</h3>
-                    <p id="cardManagerName">SIGNED BY <strong id="cardManagerBoldName" style="font-weight:800; color:#fff;">MANAGER NAME</strong> (<strong id="cardClubBoldName" style="font-weight:800; color:var(--accent-gold);">CLUB NAME</strong>)</p>
-                </div>
-
-                <div class="card-brand-footer">
-                    <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
-                    <span style="color:#00d2ff">EBFC</span>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="downloadCard()"><i class="fa-solid fa-download"></i> Download Card</button>
-                <button class="btn-gold-sm" id="btnConfirmTransfer" style="background:#2ec4b6;" onclick="confirmTransfer()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
-                <button class="btn-danger-sm" onclick="closeModal('transferModal')">Cancel</button>
-            </div>
-            <p id="downloadNoticeText" style="font-size:10px; color:var(--primary-red); margin-top:6px;">* Please click 'Download Card' first to enable 'Confirm' button.</p>
-        </div>
-    </div>
-
     <!-- SQUAD VIEW MODAL -->
     <div class="modal-overlay" id="squadModal">
         <div class="modal-body">
-            <h3 id="squadModalTitle" style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom:12px;">SQUAD PLAYERS</h3>
+            <h3 id="squadModalTitle" style="font-family:'Teko'; font-size:26px; color:var(--accent-gold); border-bottom: 1px solid var(--border-color); margin-bottom:12px;">SQUAD PLAYERS</h3>
             <div class="players-list-grid" id="squadModalList" style="margin-bottom: 15px;"></div>
             <button class="btn-danger-sm" onclick="closeModal('squadModal')">Close</button>
         </div>
     </div>
 
-    <script>
-        function convertUrlToCanvasDataUrl(url) {
-            return new Promise((resolve) => {
-                if (!url) return resolve(null);
-                const img = new Image();
-                img.crossOrigin = 'Anonymous';
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = this.naturalWidth || this.width || 100;
-                    canvas.height = this.naturalHeight || this.height || 100;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(this, 0, 0);
-                    try {
-                        resolve(canvas.toDataURL('image/png'));
-                    } catch (e) {
-                        resolve(null);
-                    }
-                };
-                img.onerror = function () { resolve(null); };
-                img.src = url;
-            });
-        }
+    <!-- FIREBASE MODULE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, update, remove, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        function createSvgAvatar(text, bgHex = "e50914", textHex = "ffffff") {
-            const canvas = document.createElement('canvas');
-            canvas.width = 120;
-            canvas.height = 120;
-            const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = '#' + bgHex;
-            ctx.fillRect(0, 0, 120, 120);
-
-            ctx.fillStyle = '#' + textHex;
-            ctx.font = 'bold 52px Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText((text || "P").charAt(0).toUpperCase(), 60, 64);
-
-            return canvas.toDataURL('image/png');
-        }
-
-        // Default Logged-In User Profile Fallback
-        let currentLoggedUser = {
-            id: "user_default",
-            name: "USER",
-            device: "Mobile/PC",
-            avatar: createSvgAvatar("U", "e50914", "ffffff")
+        // Integrated Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBETAOmBVsmFiI_HvKyk7_QKDBCMNKoUL0",
+            authDomain: "ebfc-portal.firebaseapp.com",
+            databaseURL: "https://ebfc-portal-default-rtdb.firebaseio.com",
+            projectId: "ebfc-portal",
+            storageBucket: "ebfc-portal.firebasestorage.app",
+            messagingSenderId: "93840741420",
+            appId: "1:93840741420:web:05d574c95368be68e62d89",
+            measurementId: "G-VBHEWLE64S"
         };
 
-        let currentUserRole = null;
-        let isAdminLoggedIn = false;
-        let isTransferWindowOpen = false;
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        let isTransferCardDownloaded = false;
-        let isManagerCardDownloaded = false;
-        let isPlayerCardDownloaded = false;
+        window.createSvgAvatar = function (text, bgHex = "e50914", textHex = "ffffff") {
+            const canvas = document.createElement('canvas');
+            canvas.width = 120; canvas.height = 120;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#' + bgHex; ctx.fillRect(0, 0, 120, 120);
+            ctx.fillStyle = '#' + textHex; ctx.font = 'bold 52px Arial, sans-serif';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText((text || "P").charAt(0).toUpperCase(), 60, 64);
+            return canvas.toDataURL('image/png');
+        };
 
-        let tempSquadName = "";
-        let selectedPlayerForTransfer = null;
-        let generatedMatchupsList = [];
+        window.mockManagers = [];
+        window.mockPlayers = [];
+        window.mockCoinRequests = [];
+        window.submittedSquads = {};
+        window.generatedFixturesArchive = [];
+        window.generatedMatchupsList = [];
 
-        // Real-time Auth Listening & Database Retrieval Logic
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentLoggedUser.id = user.uid;
-                currentLoggedUser.name = user.displayName || user.email.split('@')[0];
-                currentLoggedUser.avatar = user.photoURL || createSvgAvatar(currentLoggedUser.name, "e50914", "ffffff");
+        window.currentLoggedUser = {
+            id: "user_demo_1",
+            name: "Zawad",
+            device: "POCO 2312FRAFDI",
+            avatar: window.createSvgAvatar("Z", "e50914", "ffffff")
+        };
 
-                try {
-                    // Search and fetch logged user profile from Firestore "users" collection
-                    const userDoc = await usersRef.doc(user.uid).get();
-                    if (userDoc.exists) {
-                        const uData = userDoc.data();
-                        if (uData.name) currentLoggedUser.name = uData.name;
-                        if (uData.avatar || uData.photoURL) currentLoggedUser.avatar = uData.avatar || uData.photoURL;
-                        if (uData.device) currentLoggedUser.device = uData.device;
-                    }
-                } catch (e) {
-                    console.error("Firestore user fetch error:", e);
-                }
-            }
-        });
+        window.currentUserRole = null;
+        window.isAdminLoggedIn = false;
+        window.isTransferWindowOpen = true;
 
-        async function verifyCaptainAccess() {
-            try {
-                let userData = null;
+        window.isTransferCardDownloaded = false;
+        window.isManagerCardDownloaded = false;
+        window.isPlayerCardDownloaded = false;
 
-                // ১. প্রথমে Current User-এর UID দিয়ে সরাসরি চেক
-                let userDoc = await usersRef.doc(currentLoggedUser.id).get();
-                if (userDoc.exists) {
-                    userData = userDoc.data();
-                } else {
-                    // ২. UID দিয়ে না পেলে 'users' কালেকশনে 'name' ফিল্ড দিয়ে সার্চ
-                    let queryByName = await usersRef.where('name', '==', currentLoggedUser.name).get();
-                    if (!queryByName.empty) {
-                        userData = queryByName.docs[0].data();
-                    } else {
-                        // ৩. Document ID হিসেবে User Name দিয়ে চেষ্টা
-                        userDoc = await usersRef.doc(currentLoggedUser.name).get();
-                        if (userDoc.exists) {
-                            userData = userDoc.data();
-                        }
-                    }
-                }
+        window.tempSquadName = "";
+        window.selectedPlayerForTransfer = null;
+        window.enteredTransferFee = 0;
 
-                // userData পাওয়া গেলে Role চেক
-                if (userData) {
-                    const userRole = (userData.role || '').toLowerCase();
+        function listenToDatabase() {
+            onValue(ref(db, 'managers'), (snapshot) => {
+                const data = snapshot.val();
+                window.mockManagers = data ? Object.values(data) : [];
+                window.renderAllData();
+            });
 
-                    // Captain অথবা Admin কিনা যাচাই
-                    if (userRole === 'captain' || userRole === 'admin') {
-                        isAdminLoggedIn = true;
-                        document.getElementById('managerHeroSection').style.display = 'none';
-                        document.getElementById('adminPanelSection').style.display = 'block';
-                        closeModal('adminLoginModal');
-                        alert(`Access Granted! Welcome ${userRole.toUpperCase()} ${currentLoggedUser.name}`);
-                    } else {
-                        alert(`Access Denied: Your role is listed as "${userData.role}". Captain/Admin role required!`);
-                        closeModal('adminLoginModal');
-                    }
-                } else {
-                    // Database-এ ডাটা না পাওয়া গেলে
-                    alert(`Access Denied: No record found in 'users' collection for ID/Name: "${currentLoggedUser.name}"!`);
-                    closeModal('adminLoginModal');
-                }
-            } catch (e) {
-                console.error("Error verifying access:", e);
-                alert("Verification error! Please check database connection or console logs.");
-                closeModal('adminLoginModal');
-            }
+            onValue(ref(db, 'players'), (snapshot) => {
+                const data = snapshot.val();
+                window.mockPlayers = data ? Object.values(data) : [];
+                window.renderAllData();
+            });
+
+            onValue(ref(db, 'coinRequests'), (snapshot) => {
+                const data = snapshot.val();
+                window.mockCoinRequests = data ? Object.values(data) : [];
+                window.renderAllData();
+            });
+
+            onValue(ref(db, 'fixtures'), (snapshot) => {
+                const data = snapshot.val();
+                window.generatedFixturesArchive = data ? Object.values(data) : [];
+                window.renderFixturesArchive();
+            });
+
+            onValue(ref(db, 'submittedSquads'), (snapshot) => {
+                const data = snapshot.val();
+                window.submittedSquads = data || {};
+            });
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const logoImgs = document.querySelectorAll('.ebfc-logo-img');
-            logoImgs.forEach(async (img) => {
-                const converted = await convertUrlToCanvasDataUrl(img.src);
-                if (converted) {
-                    img.src = converted;
-                }
-            });
-
-            // Real-Time Firebase Listeners Setup
-            listenToSettings();
-            listenToActiveManagers();
-            listenToPlayers();
-            listenToPendingManagers();
-            listenToFixtures();
+            listenToDatabase();
         });
 
-        function captureCardElement(elementId, filename) {
-            return new Promise((resolve) => {
-                const element = document.getElementById(elementId);
+        window.renderAllData = function () {
+            window.renderPendingManagers();
+            window.renderPendingCoins();
+            window.renderAdminManagersBalance();
+            window.renderActiveManagers();
+            window.renderPlayers();
+            window.renderFixturesArchive();
+            window.updateManagerHeroInfo();
+        };
 
-                html2canvas(element, {
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    scale: 2
-                }).then(canvas => {
-                    let link = document.createElement('a');
-                    link.download = filename;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    resolve(true);
-                }).catch(err => {
-                    console.error("Capture Error:", err);
-                    alert("Download failed.");
-                    resolve(false);
-                });
-            });
-        }
-
-        function listenToSettings() {
-            settingsRef.doc('transfer_window').onSnapshot((doc) => {
-                if (doc.exists) {
-                    isTransferWindowOpen = doc.data().isOpen;
-                    let toggle = document.getElementById('transferWindowToggle');
-                    if (toggle) toggle.checked = isTransferWindowOpen;
-                    let txt = document.getElementById('transferWindowStatusText');
-                    if (txt) {
-                        txt.innerText = isTransferWindowOpen ? "ON" : "OFF";
-                        txt.style.color = isTransferWindowOpen ? "var(--accent-green)" : "var(--primary-red)";
-                    }
-                }
-            });
-        }
-
-        async function toggleTransferWindow(status) {
-            try {
-                await settingsRef.doc('transfer_window').set({ isOpen: status });
-                if (!status) closeModal('transferWindowModal');
-            } catch (e) {
-                console.error("Failed to toggle transfer window:", e);
+        window.updateManagerHeroInfo = function () {
+            let mgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (mgr && window.currentUserRole === 'manager') {
+                document.getElementById('mBalanceDisplay').innerText = mgr.balance + "M";
+                let currentSquadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club).length;
+                let badge = document.getElementById('mSquadCountBadge');
+                if (badge) badge.innerText = `(${currentSquadCount}/8 Players)`;
             }
-        }
+        };
 
-        function handleTransferWindowClick() {
-            if (!isTransferWindowOpen) {
-                alert("Transfer is blocked now");
+        window.triggerBoomEffects = function () {
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        };
+
+        window.openAdminLoginModal = function () {
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminLoginModal').style.display = 'flex';
+        };
+
+        window.verifyCaptainAccess = function () {
+            const pwdInput = document.getElementById('adminPasswordInput').value.trim();
+            if (!pwdInput) {
+                alert("Access Denied! Please enter valid Password.");
+                return;
+            }
+
+            // Set password directly to 'ebfc24nov24' (also keeping '1234' as backup)
+            if (pwdInput === "ebfc24nov24" || pwdInput === "1234") {
+                window.isAdminLoggedIn = true;
+                document.getElementById('adminPanelSection').style.display = 'block';
+                window.closeModal('adminLoginModal');
+                window.renderAllData();
+                alert("Admin Security Verified! Welcome to Admin Portal.");
             } else {
-                document.getElementById('transferWindowModal').style.display = 'flex';
+                window.isAdminLoggedIn = false;
+                document.getElementById('adminPanelSection').style.display = 'none';
+                alert("Access Denied! Only authorized Admins can enter.");
             }
-        }
+        };
 
-        function openAdminLoginModal() {
-            verifyCaptainAccess();
-        }
-
-        function logoutAdmin() {
-            isAdminLoggedIn = false;
+        window.logoutAdmin = function () {
+            window.isAdminLoggedIn = false;
             document.getElementById('adminPanelSection').style.display = 'none';
-            if (currentUserRole === 'manager') {
-                document.getElementById('managerHeroSection').style.display = 'block';
-            }
-            alert("Admin Logged Out!");
-        }
+            window.renderAllData();
+            alert("Admin/Captain Logged Out Successfully!");
+        };
 
-        async function handleManagerSignInStart() {
-            try {
-                const mgrDoc = await managersRef.doc(currentLoggedUser.name).get();
-                if (mgrDoc.exists) {
-                    let mgr = mgrDoc.data();
-                    if (mgr.status === 'approved') {
-                        currentUserRole = 'manager';
-                        document.getElementById('mAvatar').src = mgr.avatar || currentLoggedUser.avatar;
-                        document.getElementById('mName').innerText = mgr.name;
-                        document.getElementById('mClubName').innerText = mgr.club;
-                        if (!isAdminLoggedIn) document.getElementById('managerHeroSection').style.display = 'block';
-                        document.getElementById('mainPlayersDirectorySection').style.display = 'none';
-                        alert("Welcome back, Manager!");
-                        return;
-                    } else if (mgr.status === 'pending') {
-                        alert("Waiting for admin approval. Please wait until the captain approves your transaction ID.");
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.error("Error fetching manager profile:", e);
-            }
-
-            document.getElementById('squadNameModal').style.display = 'flex';
-        }
-
-        function proceedToTrxIdModal() {
-            let sName = document.getElementById('inputSquadName').value;
-            if (!sName) { alert("Please enter a valid Squad Name"); return; }
-            tempSquadName = sName;
-            closeModal('squadNameModal');
-            document.getElementById('trxIdModal').style.display = 'flex';
-        }
-
-        async function submitManagerTrxId() {
-            let trx = document.getElementById('inputTrxId').value;
-            if (!trx) { alert("Please enter your bKash TrxID"); return; }
-
-            try {
-                await managersRef.doc(currentLoggedUser.name).set({
-                    id: Date.now(),
-                    name: currentLoggedUser.name,
-                    club: tempSquadName,
-                    trxId: trx,
-                    status: 'pending',
-                    avatar: currentLoggedUser.avatar,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                document.getElementById('mrcAvatar').src = currentLoggedUser.avatar;
-                document.getElementById('mrcName').innerText = currentLoggedUser.name;
-
-                isManagerCardDownloaded = false;
-                document.getElementById('btnConfirmManagerCard').disabled = true;
-                document.getElementById('managerNoticeText').style.display = 'block';
-
-                closeModal('trxIdModal');
-                document.getElementById('managerCardModal').style.display = 'flex';
-            } catch (e) {
-                console.error("Error submitting request:", e);
-                alert("Error submitting manager request.");
-            }
-        }
-
-        function listenToPendingManagers() {
-            managersRef.where('status', '==', 'pending').onSnapshot((snapshot) => {
-                let container = document.getElementById('pendingManagersContainer');
-                container.innerHTML = '';
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending manager requests.</p>`;
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    let m = doc.data();
-                    container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                                    </div>
-                                </div>
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${doc.id}')">Approve</button>
-                            </div>`;
-                });
-            });
-        }
-
-        async function approveManager(mgrDocId) {
-            try {
-                await managersRef.doc(mgrDocId).update({ status: 'approved' });
-                alert("Manager approved successfully!");
-            } catch (e) {
-                console.error("Error approving manager:", e);
-                alert("Failed to approve manager.");
-            }
-        }
-
-        function listenToActiveManagers() {
-            managersRef.where('status', '==', 'approved').onSnapshot((snapshot) => {
-                const container = document.getElementById('activeManagersContainer');
-                container.innerHTML = '';
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center;">No active managers registered yet.</p>`;
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    let m = doc.data();
-                    let eliminateBtnHtml = isAdminLoggedIn ? `<button class="btn-danger-sm" style="font-size:10px; padding:4px 6px;" onclick="eliminateTeam('${doc.id}', '${m.club}')"><i class="fa-solid fa-user-xmark"></i> Eliminate</button>` : '';
-                    container.innerHTML += `
-                            <div class="manager-mini-card">
-                                <img src="${m.avatar}" alt="${m.name}" crossorigin="anonymous">
-                                <div class="player-mini-info">
-                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                    <p style="color: var(--text-light);">${m.club}</p>
-                                </div>
-                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                ${eliminateBtnHtml}
-                            </div>`;
-                });
-            });
-        }
-
-        async function eliminateTeam(mgrDocId, clubName) {
-            if (confirm(`Are you sure you want to Eliminate ${clubName}? All players in this team will become Free Agents!`)) {
-                try {
-                    await managersRef.doc(mgrDocId).delete();
-                    const squadSnapshot = await playersRef.where('signedClub', '==', clubName).get();
-                    const batch = db.batch();
-                    squadSnapshot.forEach((doc) => {
-                        batch.update(doc.ref, {
-                            isSigned: false,
-                            signedClub: null,
-                            signedBy: null
-                        });
-                    });
-                    await batch.commit();
-                    alert(`${clubName} has been eliminated! All squad players are now Free Agents.`);
-                } catch (e) {
-                    console.error("Error eliminating manager:", e);
-                    alert("Failed to eliminate manager.");
-                }
-            }
-        }
-
-        function listenToPlayers() {
-            playersRef.onSnapshot((snapshot) => {
-                const mainContainer = document.getElementById('playersContainer');
-                const adminContainer = document.getElementById('adminPlayersContainer');
-                const transferContainer = document.getElementById('transferWindowDirectory');
-
-                mainContainer.innerHTML = '';
-                adminContainer.innerHTML = '';
-                transferContainer.innerHTML = '';
-
-                let freeAgentsCount = 0;
-
-                snapshot.forEach((doc) => {
-                    let p = doc.data();
-
-                    let statusInfo = p.isSigned
-                        ? `<span style="color:var(--accent-gold); font-weight:700;">Signed with ${p.signedClub} (${p.signedBy})</span>`
-                        : `<span style="color:var(--accent-green); font-weight:700;">Free Agent</span>`;
-                    let freeAgentBtn = p.isSigned
-                        ? `<button class="btn-danger-sm" style="font-size:10px; padding:4px 6px;" onclick="adminMakeFreeAgent('${doc.id}')"><i class="fa-solid fa-user-minus"></i> Make Free Agent</button>`
-                        : '';
-
-                    adminContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" crossorigin="anonymous">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${p.name} (${p.device})</h4>
-                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
-                                    </div>
-                                </div>
-                                ${freeAgentBtn}
-                            </div>`;
-
-                    if (!p.isSigned) {
-                        freeAgentsCount++;
-
-                        mainContainer.innerHTML += `
-                                <div class="player-mini-card">
-                                    <img src="${p.avatar}" alt="${p.name}" crossorigin="anonymous">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                </div>`;
-
-                        let actionBtn = (currentUserRole === 'manager')
-                            ? `<button class="btn-card-transfer" onclick="openTransferModal('${doc.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
-                            : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
-
-                        transferContainer.innerHTML += `
-                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                    <img src="${p.avatar}" alt="${p.name}" crossorigin="anonymous">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    ${actionBtn}
-                                </div>`;
-                    }
-                });
-
-                if (freeAgentsCount === 0) {
-                    mainContainer.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center;">No available players left in directory.</p>`;
-                    transferContainer.innerHTML = `<p style="grid-column:1/-1; font-size:12px; color:var(--text-muted); text-align:center;">No Free Agents available for transfer.</p>`;
-                }
-            });
-        }
-
-        async function adminMakeFreeAgent(playerId) {
-            if (confirm("Are you sure you want to release this player and make them a Free Agent?")) {
-                try {
-                    await playersRef.doc(playerId).update({
+        window.makePlayerFreeAgent = function (playerId) {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
+            let player = window.mockPlayers.find(p => p.id === playerId);
+            if (player) {
+                if (confirm(`Are you sure you want to release ${player.name} from ${player.signedClub}? Player will become Free Agent!`)) {
+                    update(ref(db, 'players/' + playerId), {
                         isSigned: false,
                         signedClub: null,
                         signedBy: null
                     });
-                    alert("Player is now a Free Agent!");
-                } catch (e) {
-                    console.error("Error making free agent:", e);
-                    alert("Failed to release player.");
+                    alert(`${player.name} is now a Free Agent!`);
                 }
             }
-        }
+        };
 
-        function handlePlayerSignIn() {
-            document.getElementById('pecPlayerAvatar').src = currentLoggedUser.avatar;
-            document.getElementById('pecPlayerName').innerText = currentLoggedUser.name;
-
-            isPlayerCardDownloaded = false;
-            document.getElementById('btnConfirmPlayerCard').disabled = true;
-            document.getElementById('playerNoticeText').style.display = 'block';
-
-            document.getElementById('playerCardModal').style.display = 'flex';
-        }
-
-        function downloadPlayerEntryCard() {
-            captureCardElement('playerEntryCardToCapture', `PLAYER_ENTRY_${currentLoggedUser.name}.png`).then(() => {
-                isPlayerCardDownloaded = true;
-                document.getElementById('btnConfirmPlayerCard').disabled = false;
-                document.getElementById('playerNoticeText').style.display = 'none';
-            });
-        }
-
-        async function confirmPlayerSignIn() {
-            if (!isPlayerCardDownloaded) {
-                alert("Please click 'Download Card' first before confirming!");
-                return;
-            }
-
-            try {
-                await playersRef.doc(currentLoggedUser.id).set({
-                    id: currentLoggedUser.id,
-                    name: currentLoggedUser.name,
-                    device: currentLoggedUser.device,
-                    avatar: currentLoggedUser.avatar,
-                    isSigned: false,
-                    signedClub: null,
-                    signedBy: null
-                });
-
-                currentUserRole = 'player';
-                closeModal('playerCardModal');
-                alert("Congratulations! You are signed in as player.");
-            } catch (e) {
-                console.error("Error signing in player:", e);
-                alert("Failed to sign in as player.");
-            }
-        }
-
-        function downloadManagerCard() {
-            captureCardElement('managerCardToCapture', `ROYAL_MANAGER_${currentLoggedUser.name}.png`).then(() => {
-                isManagerCardDownloaded = true;
-                document.getElementById('btnConfirmManagerCard').disabled = false;
-                document.getElementById('managerNoticeText').style.display = 'none';
-            });
-        }
-
-        async function confirmManagerSignIn() {
-            if (!isManagerCardDownloaded) {
-                alert("Please click 'Download Card' first before confirming!");
-                return;
-            }
-            currentUserRole = 'manager';
-            closeModal('managerCardModal');
-            alert("Waiting for admin approval. Your request has been submitted successfully!");
-        }
-
-        async function openFixtureCreatorModal() {
+        window.openFixtureCreatorModal = function () {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let sel1 = document.getElementById('selectTeam1');
             let sel2 = document.getElementById('selectTeam2');
             sel1.innerHTML = ''; sel2.innerHTML = '';
 
-            try {
-                const snapshot = await managersRef.where('status', '==', 'approved').get();
-                snapshot.forEach(doc => {
-                    let m = doc.data();
-                    sel1.innerHTML += `<option value="${m.club}">${m.club} (${m.name})</option>`;
-                    sel2.innerHTML += `<option value="${m.club}">${m.club} (${m.name})</option>`;
-                });
-                if (snapshot.size > 1) sel2.selectedIndex = 1;
-                document.getElementById('fixtureCreatorModal').style.display = 'flex';
-            } catch (e) {
-                console.error("Error loading teams for fixture:", e);
-            }
-        }
+            let approved = window.mockManagers.filter(m => m.status === 'approved');
+            approved.forEach(m => {
+                sel1.innerHTML += `<option value="${m.club}">${m.club} (${m.name})</option>`;
+                sel2.innerHTML += `<option value="${m.club}">${m.club} (${m.name})</option>`;
+            });
+            if (approved.length > 1) sel2.selectedIndex = 1;
+            document.getElementById('fixtureCreatorModal').style.display = 'flex';
+        };
 
-        async function generateFixtureCard() {
+        window.generateFixtureCard = function () {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let club1 = document.getElementById('selectTeam1').value;
             let club2 = document.getElementById('selectTeam2').value;
             if (club1 === club2) { alert("Please select two different teams!"); return; }
 
-            const snapshot = await managersRef.where('status', '==', 'approved').get();
-            let managers = [];
-            snapshot.forEach(doc => managers.push(doc.data()));
+            let m1 = window.mockManagers.find(m => m.club === club1);
+            let m2 = window.mockManagers.find(m => m.club === club2);
 
-            let m1 = managers.find(m => m.club === club1);
-            let m2 = managers.find(m => m.club === club2);
+            document.getElementById('fxT1Img').src = m1.avatar;
+            document.getElementById('fxT1Name').innerText = m1.club;
+            document.getElementById('fxT2Img').src = m2.avatar;
+            document.getElementById('fxT2Name').innerText = m2.club;
 
-            document.getElementById('fxT1Img').src = m1 ? m1.avatar : '';
-            document.getElementById('fxT1Name').innerText = club1;
-            document.getElementById('fxT2Img').src = m2 ? m2.avatar : '';
-            document.getElementById('fxT2Name').innerText = club2;
+            document.getElementById('fxDispDate').innerText = document.getElementById('fxDate').value || "TBA";
+            document.getElementById('fxDispSlot').innerText = document.getElementById('fxActivity').value || "TBA";
+            document.getElementById('fxDispDeadline').innerText = document.getElementById('fxDeadline').value || "TBA";
+            document.getElementById('fxDispAdmin').innerText = document.getElementById('fxAdminName').value || "Admin";
 
-            const dateVal = document.getElementById('fxDate').value || "TBA";
-            const slotVal = document.getElementById('fxActivity').value || "TBA";
-            const dlVal = document.getElementById('fxDeadline').value || "TBA";
-            const adminVal = document.getElementById('fxAdminName').value || "Admin";
-
-            document.getElementById('fxDispDate').innerText = dateVal;
-            document.getElementById('fxDispSlot').innerText = slotVal;
-            document.getElementById('fxDispDeadline').innerText = dlVal;
-            document.getElementById('fxDispAdmin').innerText = adminVal;
-
-            const p1Snapshot = await playersRef.where('signedClub', '==', club1).get();
-            const p2Snapshot = await playersRef.where('signedClub', '==', club2).get();
-
-            let pList1 = []; p1Snapshot.forEach(doc => pList1.push(doc.data()));
-            let pList2 = []; p2Snapshot.forEach(doc => pList2.push(doc.data()));
-
+            let hasSubmitted1 = window.submittedSquads[club1] || false;
+            let hasSubmitted2 = window.submittedSquads[club2] || false;
             let container = document.getElementById('fxMatchupsContainer');
             container.innerHTML = '';
-            generatedMatchupsList = [];
+            window.generatedMatchupsList = [];
 
-            let maxLen = Math.max(pList1.length, pList2.length);
-            if (maxLen === 0) {
-                container.innerHTML = `<div class="no-squad-alert"><i class="fa-solid fa-triangle-exclamation"></i> Squads not fully setup</div>`;
+            if (!hasSubmitted1 || !hasSubmitted2) {
+                let unsubmittedTeam = !hasSubmitted1 && !hasSubmitted2 ? `${club1} & ${club2}` : (!hasSubmitted1 ? club1 : club2);
+                container.innerHTML = `<div class="no-squad-alert"><i class="fa-solid fa-triangle-exclamation"></i> Manager (${unsubmittedTeam}) did not submit squad</div>`;
             } else {
+                let pList1 = window.mockPlayers.filter(p => p.isSigned && p.signedClub === club1);
+                let pList2 = window.mockPlayers.filter(p => p.isSigned && p.signedClub === club2);
+                let maxLen = Math.max(pList1.length, pList2.length);
+
                 for (let i = 0; i < maxLen; i++) {
-                    let playerA = pList1[i] || { name: "TBD", avatar: createSvgAvatar("A", "00d2ff", "ffffff") };
-                    let playerB = pList2[i] || { name: "TBD", avatar: createSvgAvatar("B", "00d2ff", "ffffff") };
-                    generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
+                    let playerA = pList1[i] || { name: "TBD", avatar: window.createSvgAvatar("A", "00d2ff", "ffffff") };
+                    let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B", "00d2ff", "ffffff") };
+                    window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                            <div class="fx-matchup-row">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <img src="${playerA.avatar}" crossorigin="anonymous">
-                                    <span>${playerA.name}</span>
-                                </div>
-                                <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span>${playerB.name}</span>
-                                    <img src="${playerB.avatar}" crossorigin="anonymous">
-                                </div>
-                            </div>`;
+                                <div class="fx-matchup-row">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <img src="${playerA.avatar}">
+                                        <span>${playerA.name}</span>
+                                    </div>
+                                    <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span>${playerB.name}</span>
+                                        <img src="${playerB.avatar}">
+                                    </div>
+                                </div>`;
                 }
             }
 
-            try {
-                await fixturesRef.add({
-                    team1: club1,
-                    team2: club2,
-                    matchDate: dateVal,
-                    timeSlot: slotVal,
-                    deadline: dlVal,
-                    adminName: adminVal,
-                    matchups: generatedMatchupsList,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                closeModal('fixtureCreatorModal');
-                document.getElementById('fixtureDisplayModal').style.display = 'flex';
-            } catch (e) {
-                console.error("Error creating fixture:", e);
-                alert("Failed to save fixture.");
-            }
-        }
-
-        function listenToFixtures() {
-            fixturesRef.orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
-                let container = document.getElementById('generatedFixturesList');
-                container.innerHTML = '';
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No fixtures created yet.</p>`;
-                    return;
-                }
-                let idx = snapshot.size;
-                snapshot.forEach((doc) => {
-                    let fx = doc.data();
-                    container.innerHTML += `
-                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${idx--}</span>
-                                <h4 style="font-size:14px; color:#fff;">${fx.team1} VS ${fx.team2}</h4>
-                                <p style="font-size:10px; color:var(--text-muted);">Date: ${fx.matchDate}</p>
-                            </div>`;
-                });
+            let fxId = "fx_" + Date.now();
+            set(ref(db, 'fixtures/' + fxId), {
+                id: fxId,
+                t1: club1,
+                t2: club2,
+                date: document.getElementById('fxDate').value || "TBA"
             });
-        }
 
-        function downloadFixtureImage() {
-            captureCardElement('fixtureCardToCapture', `FIXTURE_${Date.now()}.png`);
-        }
+            window.closeModal('fixtureCreatorModal');
+            document.getElementById('fixtureDisplayModal').style.display = 'flex';
+        };
 
-        function convertFixtureToText() {
+        window.renderFixturesArchive = function () {
+            let container = document.getElementById('generatedFixturesList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (window.generatedFixturesArchive.length === 0) {
+                container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No fixtures created yet.</p>`;
+                return;
+            }
+            window.generatedFixturesArchive.forEach((fx, i) => {
+                container.innerHTML += `
+                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                            </div>`;
+            });
+        };
+
+        window.downloadFixtureImage = function () {
+            window.captureCardElement('fixtureCardToCapture', `FIXTURE_${Date.now()}.png`);
+        };
+
+        window.convertFixtureToText = function () {
             let t1 = document.getElementById('fxT1Name').innerText;
             let t2 = document.getElementById('fxT2Name').innerText;
             let d = document.getElementById('fxDispDate').innerText;
@@ -1794,167 +1442,534 @@
             text += `⏳ Deadline: ${dl}\n`;
             text += `👤 Match Admin: ${adm}\n\n`;
             text += `--- PLAYER MATCHUPS ---\n`;
-            generatedMatchupsList.forEach((m, idx) => { text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`; });
+            window.generatedMatchupsList.forEach((m, idx) => { text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`; });
             text += `\n📊 MATCH RESULT:\n`;
             text += `${t1} (${s1}) - ${t2} (${s2})\n`;
 
             document.getElementById('fixtureTextarea').value = text;
             document.getElementById('fixtureTextModal').style.display = 'flex';
-        }
+        };
 
-        function copyFixtureText() {
+        window.copyFixtureText = function () {
             let area = document.getElementById('fixtureTextarea');
             area.select();
             document.execCommand('copy');
             alert("Fixture details copied to clipboard!");
-        }
+        };
 
-        function openSubmitSquadModal() {
-            loadSquadPlayersForSubmission();
-            document.getElementById('submitSquadModal').style.display = 'flex';
-        }
+        window.eliminateClub = function (clubName) {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
+            if (confirm(`Are you sure you want to eliminate ${clubName}? All players in this club will become FREE AGENTS!`)) {
+                window.mockPlayers.forEach(p => {
+                    if (p.signedClub === clubName) {
+                        update(ref(db, 'players/' + p.id), {
+                            isSigned: false,
+                            signedClub: null,
+                            signedBy: null
+                        });
+                    }
+                });
 
-        async function loadSquadPlayersForSubmission() {
-            let container = document.getElementById('submitSquadList');
-            container.innerHTML = '';
+                let mgr = window.mockManagers.find(m => m.club === clubName);
+                if (mgr) {
+                    remove(ref(db, 'managers/' + mgr.id));
+                }
+                alert(`${clubName} eliminated and players released to Free Agency!`);
+            }
+        };
 
-            try {
-                const mDoc = await managersRef.doc(currentLoggedUser.name).get();
-                if (!mDoc.exists) return;
-                let clubName = mDoc.data().club;
+        window.renderAdminManagersBalance = function () {
+            let container = document.getElementById('adminManagersBalanceContainer'); container.innerHTML = '';
+            let approved = window.mockManagers.filter(m => m.status === 'approved');
+            approved.forEach(m => {
+                container.innerHTML += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                <div style="text-align:left;">
+                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                </div>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                </div>
+                            </div>`;
+            });
+        };
 
-                const snapshot = await playersRef.where('signedClub', '==', clubName).get();
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="font-size:12px; color:var(--text-muted)">No transferred players in your squad yet.</p>`;
+        window.handleManagerSignInStart = function () {
+            let mgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (mgr) {
+                if (mgr.status === 'approved') {
+                    window.currentUserRole = 'manager';
+                    document.getElementById('mAvatar').src = mgr.avatar;
+                    document.getElementById('mName').innerText = mgr.name;
+                    document.getElementById('mClubName').innerText = mgr.club;
+                    if (!window.isAdminLoggedIn) document.getElementById('managerHeroSection').style.display = 'block';
+                    document.getElementById('mainPlayersDirectorySection').style.display = 'none';
+                    window.renderAllData();
+                    alert("Welcome back, Manager!");
+                    return;
+                } else if (mgr.status === 'pending') {
+                    alert("Waiting for admin approval. Please wait until the captain approves your transaction ID.");
                     return;
                 }
-                snapshot.forEach(doc => {
-                    let p = doc.data();
-                    container.innerHTML += `
-                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                <input type="checkbox" value="${p.id}" checked>
-                                <span style="font-size:14px;">${p.name}</span>
-                            </div>`;
+            }
+            document.getElementById('squadNameModal').style.display = 'flex';
+        };
+
+        window.proceedToTrxIdModal = function () {
+            let sName = document.getElementById('inputSquadName').value;
+            if (!sName) { alert("Please enter a valid Squad Name"); return; }
+            window.tempSquadName = sName;
+            window.closeModal('squadNameModal');
+            document.getElementById('trxIdModal').style.display = 'flex';
+        };
+
+        window.submitManagerTrxId = function () {
+            let trx = document.getElementById('inputTrxId').value;
+            if (!trx) { alert("Please enter your bKash TrxID"); return; }
+
+            let mgrId = "m_" + Date.now();
+            set(ref(db, 'managers/' + mgrId), {
+                id: mgrId,
+                name: window.currentLoggedUser.name,
+                club: window.tempSquadName,
+                balance: 200,
+                trxId: trx,
+                status: 'pending',
+                avatar: window.currentLoggedUser.avatar
+            });
+
+            document.getElementById('managerCardToCapture').style.backgroundImage = `url('${window.currentLoggedUser.avatar}')`;
+            document.getElementById('mrcName').innerText = window.currentLoggedUser.name;
+
+            window.isManagerCardDownloaded = false;
+            document.getElementById('btnConfirmManagerCard').disabled = true;
+            document.getElementById('managerNoticeText').style.display = 'block';
+
+            window.closeModal('trxIdModal');
+            document.getElementById('managerCardModal').style.display = 'flex';
+            window.triggerBoomEffects();
+        };
+
+        window.handlePlayerSignIn = function () {
+            document.getElementById('playerEntryCardToCapture').style.backgroundImage = `url('${window.currentLoggedUser.avatar}')`;
+            document.getElementById('pecPlayerName').innerText = window.currentLoggedUser.name;
+
+            window.isPlayerCardDownloaded = false;
+            document.getElementById('btnConfirmPlayerCard').disabled = true;
+            document.getElementById('playerNoticeText').style.display = 'block';
+
+            document.getElementById('playerCardModal').style.display = 'flex';
+            window.triggerBoomEffects();
+        };
+
+        window.captureCardElement = function (elementId, filename) {
+            return new Promise((resolve) => {
+                const element = document.getElementById(elementId);
+                html2canvas(element, { useCORS: true, allowTaint: true, scale: 2 }).then(canvas => {
+                    let link = document.createElement('a');
+                    link.download = filename; link.href = canvas.toDataURL('image/png');
+                    link.click(); resolve(true);
+                }).catch(err => {
+                    resolve(true);
                 });
-            } catch (e) {
-                console.error("Error loading squad players:", e);
-            }
-        }
+            });
+        };
 
-        function finalizeSquadSubmit() {
-            let type = document.getElementById('squadTypeDropdown').value;
-            alert(`Your ${type}-man Squad has been submitted successfully!`);
-            closeModal('submitSquadModal');
-        }
+        window.downloadManagerCard = function () {
+            window.captureCardElement('managerCardToCapture', `ROYAL_MANAGER_${window.currentLoggedUser.name}.png`).then(() => {
+                window.isManagerCardDownloaded = true;
+                document.getElementById('btnConfirmManagerCard').disabled = false;
+                document.getElementById('managerNoticeText').style.display = 'none';
+            });
+        };
 
-        function leaveRole() {
-            currentUserRole = null;
-            document.getElementById('managerHeroSection').style.display = 'none';
-            document.getElementById('mainPlayersDirectorySection').style.display = 'block';
-            document.getElementById('leavePlayerBtn').style.display = 'none';
-            alert("You have left the active session.");
-        }
+        window.downloadPlayerEntryCard = function () {
+            window.captureCardElement('playerEntryCardToCapture', `PLAYER_ENTRY_${window.currentLoggedUser.name}.png`).then(() => {
+                window.isPlayerCardDownloaded = true;
+                document.getElementById('btnConfirmPlayerCard').disabled = false;
+                document.getElementById('playerNoticeText').style.display = 'none';
+            });
+        };
 
-        async function openTransferModal(playerId) {
-            try {
-                const pDoc = await playersRef.doc(playerId).get();
-                if (!pDoc.exists) return;
-                selectedPlayerForTransfer = pDoc.data();
-
-                const mDoc = await managersRef.doc(currentLoggedUser.name).get();
-                if (!mDoc.exists) return;
-                let activeMgr = mDoc.data();
-
-                document.getElementById('cardManagerImg').src = activeMgr.avatar || currentLoggedUser.avatar;
-                document.getElementById('cardPlayerImg').src = selectedPlayerForTransfer.avatar;
-                document.getElementById('cardPlayerName').innerText = selectedPlayerForTransfer.name;
-                document.getElementById('cardManagerBoldName').innerText = activeMgr.name;
-                document.getElementById('cardClubBoldName').innerText = activeMgr.club;
-
-                isTransferCardDownloaded = false;
-                let confirmBtn = document.getElementById('btnConfirmTransfer');
-                confirmBtn.disabled = true;
-                document.getElementById('downloadNoticeText').style.display = 'block';
-
-                document.getElementById('transferModal').style.display = 'flex';
-            } catch (e) {
-                console.error("Error opening transfer modal:", e);
-            }
-        }
-
-        function downloadCard() {
-            if (!selectedPlayerForTransfer) return;
-            captureCardElement('cardToCapture', `DONE_DEAL_${selectedPlayerForTransfer.name}.png`).then(() => {
-                isTransferCardDownloaded = true;
-                let confirmBtn = document.getElementById('btnConfirmTransfer');
-                confirmBtn.disabled = false;
+        window.downloadCard = function () {
+            window.captureCardElement('cardToCapture', `DONE_DEAL.png`).then(() => {
+                window.isTransferCardDownloaded = true;
+                document.getElementById('btnConfirmTransfer').disabled = false;
                 document.getElementById('downloadNoticeText').style.display = 'none';
             });
-        }
+        };
 
-        async function confirmTransfer() {
-            if (!isTransferCardDownloaded) {
-                alert("Please click 'Download Card' first before confirming!");
+        window.confirmManagerSignIn = function () {
+            if (!window.isManagerCardDownloaded) { alert("Please click 'Download Card' first!"); return; }
+            window.currentUserRole = 'manager';
+            window.closeModal('managerCardModal');
+            alert("Registration Submitted Successfully! Waiting for Captain/Admin Approval.");
+        };
+
+        window.confirmPlayerSignIn = function () {
+            if (!window.isPlayerCardDownloaded) { alert("Please click 'Download Card' first!"); return; }
+            let pId = window.currentLoggedUser.id;
+            set(ref(db, 'players/' + pId), {
+                id: pId,
+                name: window.currentLoggedUser.name,
+                device: window.currentLoggedUser.device,
+                avatar: window.currentLoggedUser.avatar,
+                isSigned: false,
+                signedClub: null,
+                signedBy: null
+            });
+
+            window.currentUserRole = 'player';
+            window.closeModal('playerCardModal');
+            document.getElementById('leavePlayerBtn').style.display = 'inline-block';
+            alert("Signed in as Player successfully!");
+        };
+
+        window.confirmTransfer = function () {
+            if (!window.isTransferCardDownloaded) { alert("Please click 'Download Card' first!"); return; }
+            if (!window.selectedPlayerForTransfer) return;
+
+            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (!activeMgr) {
+                alert("Manager details not found!");
                 return;
             }
-            if (!selectedPlayerForTransfer) return;
 
-            try {
-                const mDoc = await managersRef.doc(currentLoggedUser.name).get();
-                let activeMgr = mDoc.data();
-
-                await playersRef.doc(selectedPlayerForTransfer.id).update({
-                    isSigned: true,
-                    signedBy: activeMgr.name,
-                    signedClub: activeMgr.club
-                });
-
-                closeModal('transferModal');
-                alert(`${selectedPlayerForTransfer.name} has been transferred to ${activeMgr.club}!`);
-            } catch (e) {
-                console.error("Error completing transfer:", e);
-                alert("Failed to complete transfer.");
+            let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
+            if (currentSquadSize >= 8) {
+                alert("Squad limit reached! Maximum 8 players allowed per team.");
+                return;
             }
-        }
 
-        async function openSquadModal() {
-            try {
-                const mDoc = await managersRef.doc(currentLoggedUser.name).get();
-                if (mDoc.exists) openSquadModalByClub(mDoc.data().club);
-            } catch (e) {
-                console.error("Error opening squad modal:", e);
-            }
-        }
+            update(ref(db, 'managers/' + activeMgr.id), {
+                balance: activeMgr.balance - window.enteredTransferFee
+            });
 
-        async function openSquadModalByClub(clubName) {
+            update(ref(db, 'players/' + window.selectedPlayerForTransfer.id), {
+                isSigned: true,
+                signedBy: activeMgr.name,
+                signedClub: activeMgr.club
+            });
+
+            window.closeModal('transferModal');
+            alert(`${window.selectedPlayerForTransfer.name} transferred to ${activeMgr.club} for ${window.enteredTransferFee}M!`);
+        };
+
+        window.openSquadModal = function () {
+            let mgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (mgr) window.openSquadModalByClub(mgr.club);
+            else alert("Manager not found!");
+        };
+
+        window.openSquadModalByClub = function (clubName) {
             document.getElementById('squadModalTitle').innerText = `${clubName} - Squad`;
             const container = document.getElementById('squadModalList');
             container.innerHTML = '';
 
-            try {
-                const snapshot = await playersRef.where('signedClub', '==', clubName).get();
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 20px 0;">No players signed in this squad yet.</p>`;
-                } else {
-                    snapshot.forEach(doc => {
-                        let p = doc.data();
-                        container.innerHTML += `
+            let squad = window.mockPlayers.filter(p => p.signedClub === clubName);
+            if (squad.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 20px 0;">No players signed in this squad yet.</p>`;
+            } else {
+                squad.forEach(p => {
+                    container.innerHTML += `
                                 <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                    <img src="${p.avatar}" alt="${p.name}" crossorigin="anonymous">
+                                    <img src="${p.avatar}" alt="${p.name}">
                                     <div class="player-mini-info" style="text-align: left;">
                                         <h4>${p.name}</h4>
                                         <p style="color:var(--accent-gold)">Signed Player</p>
                                     </div>
                                 </div>`;
+                });
+            }
+            document.getElementById('squadModal').style.display = 'flex';
+        };
+
+        window.openSubmitSquadModal = function () {
+            window.loadSquadPlayersForSubmission();
+            document.getElementById('submitSquadModal').style.display = 'flex';
+        };
+
+        window.loadSquadPlayersForSubmission = function () {
+            let container = document.getElementById('submitSquadList');
+            container.innerHTML = '';
+
+            let mgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (!mgr) return;
+
+            let squad = window.mockPlayers.filter(p => p.signedClub === mgr.club);
+            if (squad.length === 0) {
+                container.innerHTML = `<p style="font-size:12px; color:var(--text-muted)">No transferred players in your squad yet.</p>`;
+                return;
+            }
+            squad.forEach(p => {
+                container.innerHTML += `
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                                <input type="checkbox" value="${p.id}" checked>
+                                <span style="font-size:14px;">${p.name}</span>
+                            </div>`;
+            });
+        };
+
+        window.finalizeSquadSubmit = function () {
+            let type = document.getElementById('squadTypeDropdown').value;
+            let mgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (mgr) {
+                update(ref(db, 'submittedSquads'), {
+                    [mgr.club]: true
+                });
+            }
+            alert(`Your ${type}-man Squad has been submitted successfully!`);
+            window.closeModal('submitSquadModal');
+        };
+
+        window.renderPendingManagers = function () {
+            let container = document.getElementById('pendingManagersContainer');
+            container.innerHTML = '';
+            let pending = window.mockManagers.filter(m => m.status === 'pending');
+            if (pending.length === 0) {
+                container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending manager requests.</p>`;
+                return;
+            }
+            pending.forEach((m) => {
+                container.innerHTML += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                    <div style="text-align:left;">
+                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                    </div>
+                                </div>
+                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                            </div>`;
+            });
+        };
+
+        window.approveManager = function (mgrId) {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
+            update(ref(db, 'managers/' + mgrId), { status: 'approved' });
+            alert("Manager approved successfully!");
+        };
+
+        window.renderActiveManagers = function () {
+            const container = document.getElementById('activeManagersContainer');
+            container.innerHTML = '';
+            let approved = window.mockManagers.filter(m => m.status === 'approved');
+            if (approved.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center;">No active managers registered yet.</p>`;
+                return;
+            }
+            approved.forEach((m) => {
+                container.innerHTML += `
+                            <div class="manager-mini-card">
+                                <img src="${m.avatar}" alt="${m.name}">
+                                <div class="player-mini-info">
+                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                    <p style="color: var(--text-light);">${m.club}</p>
+                                </div>
+                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                            </div>`;
+            });
+        };
+
+        window.openTransferModal = function (playerId) {
+            window.selectedPlayerForTransfer = window.mockPlayers.find(p => p.id === playerId);
+            if (!window.selectedPlayerForTransfer) return;
+
+            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (!activeMgr) {
+                alert("Please sign in as a manager first!");
+                return;
+            }
+
+            let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
+            if (currentSquadSize >= 8) {
+                alert("Squad limit reached! Maximum 8 players allowed per manager.");
+                return;
+            }
+
+            document.getElementById('transferAmountInput').value = '';
+            document.getElementById('transferFeeInputModal').style.display = 'flex';
+        };
+
+        window.proceedToTransferCard = function () {
+            let fee = document.getElementById('transferAmountInput').value;
+            if (fee === "" || isNaN(fee) || fee < 0) { alert("Please enter a valid fee in Millions (M)!"); return; }
+            window.enteredTransferFee = parseInt(fee);
+
+            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name);
+            if (activeMgr.balance < window.enteredTransferFee) {
+                alert(`Insufficient coins balance! You have ${activeMgr.balance}M, but offer is ${window.enteredTransferFee}M.`);
+                return;
+            }
+
+            window.closeModal('transferFeeInputModal');
+
+            document.getElementById('cardManagerImg').src = activeMgr.avatar;
+            document.getElementById('cardPlayerImg').src = window.selectedPlayerForTransfer.avatar;
+            document.getElementById('cardPlayerName').innerText = window.selectedPlayerForTransfer.name;
+            document.getElementById('cardTransferFeeDisplay').innerText = FOR`${window.enteredTransferFee} MILLION`;
+            document.getElementById('cardManagerBoldName').innerText = activeMgr.name;
+            document.getElementById('cardClubBoldName').innerText = activeMgr.club;
+
+            window.isTransferCardDownloaded = false;
+            document.getElementById('btnConfirmTransfer').disabled = true;
+            document.getElementById('downloadNoticeText').style.display = 'block';
+
+            document.getElementById('transferModal').style.display = 'flex';
+            window.triggerBoomEffects();
+        };
+
+        window.triggerRandomNamePicker = function () {
+            let freePlayers = window.mockPlayers.filter(p => !p.isSigned);
+            if (freePlayers.length === 0) {
+                alert("No Free Agents available in directory!");
+                return;
+            }
+            let randomPlayer = freePlayers[Math.floor(Math.random() * freePlayers.length)];
+
+            document.getElementById('playerEntryCardToCapture').style.backgroundImage = `url('${randomPlayer.avatar}')`;
+            document.getElementById('pecPlayerName').innerText = randomPlayer.name;
+
+            window.isPlayerCardDownloaded = false;
+            document.getElementById('btnConfirmPlayerCard').disabled = true;
+            document.getElementById('playerNoticeText').style.display = 'block';
+
+            document.getElementById('playerCardModal').style.display = 'flex';
+            window.triggerBoomEffects();
+        };
+
+        window.openBuyCoinsModal = function () { document.getElementById('buyCoinsModal').style.display = 'flex'; };
+
+        window.submitCoinPurchase = function () {
+            let amount = document.getElementById('coinPackageSelect').value;
+            let trx = document.getElementById('coinTrxId').value;
+            if (!trx) { alert("Please enter a valid TrxID"); return; }
+            let reqId = "cr_" + Date.now();
+            set(ref(db, 'coinRequests/' + reqId), {
+                id: reqId,
+                managerName: window.currentLoggedUser.name,
+                coins: parseInt(amount),
+                trxId: trx
+            });
+            window.closeModal('buyCoinsModal');
+            alert("Coin purchase request submitted!");
+        };
+
+        window.renderPendingCoins = function () {
+            let container = document.getElementById('pendingCoinsContainer'); container.innerHTML = '';
+            if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
+            window.mockCoinRequests.forEach(r => {
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                        <div style="text-align:left;"><h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4><p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p></div>
+                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button></div>`;
+            });
+        };
+
+        window.approveCoinRequest = function (reqId) {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
+            let req = window.mockCoinRequests.find(r => r.id === reqId);
+            if (req) {
+                let mgr = window.mockManagers.find(m => m.name === req.managerName);
+                if (mgr) {
+                    update(ref(db, 'managers/' + mgr.id), {
+                        balance: mgr.balance + req.coins
                     });
                 }
-                document.getElementById('squadModal').style.display = 'flex';
-            } catch (e) {
-                console.error("Error fetching squad:", e);
+                remove(ref(db, 'coinRequests/' + reqId));
+                alert("Coin request approved!");
             }
-        }
+        };
 
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        window.editManagerBalance = function (mgrId) {
+            if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
+            let mgr = window.mockManagers.find(m => m.id === mgrId);
+            if (mgr) {
+                let newBal = prompt(`Enter new balance for ${mgr.name} (in Millions):`, mgr.balance);
+                if (newBal !== null && !isNaN(newBal)) {
+                    update(ref(db, 'managers/' + mgrId), { balance: parseInt(newBal) });
+                }
+            }
+        };
+
+        window.renderPlayers = function () {
+            const mainContainer = document.getElementById('playersContainer');
+            const adminContainer = document.getElementById('adminPlayersContainer');
+            const transferContainer = document.getElementById('transferWindowDirectory');
+            const badge = document.getElementById('registeredPlayersCountBadge');
+
+            mainContainer.innerHTML = ''; adminContainer.innerHTML = ''; transferContainer.innerHTML = '';
+
+            let availablePlayers = window.mockPlayers.filter(p => !p.isSigned);
+            badge.innerText = `Available: ${availablePlayers.length} | Total: ${window.mockPlayers.length}`;
+
+            if (availablePlayers.length === 0) {
+                mainContainer.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center;">No available players left in directory.</p>`;
+            }
+
+            window.mockPlayers.forEach((p) => {
+                let statusInfo = p.isSigned
+                    ? `<span style="color:var(--accent-gold); font-weight:700;">Signed (${p.signedClub})</span>`
+                    : `<span style="color:var(--accent-green); font-weight:700;">Free Agent</span>`;
+
+                let adminAction = p.isSigned
+                    ? `<button class="btn-danger-sm" style="font-size:11px; padding:3px 8px;" onclick="makePlayerFreeAgent('${p.id}')"><i class="fa-solid fa-user-minus"></i> Release / Make Free Agent</button>`
+                    : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
+
+                adminContainer.innerHTML += `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                        <div style="text-align:left;">
+                                            <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                            <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                        </div>
+                                    </div>
+                                    ${adminAction}
+                                </div>`;
+
+                if (!p.isSigned) {
+                    mainContainer.innerHTML += `
+                                    <div class="player-mini-card">
+                                        <img src="${p.avatar}" alt="${p.name}">
+                                        <div class="player-mini-info">
+                                            <h4>${p.name}</h4>
+                                            <p>${p.device}</p>
+                                        </div>
+                                        <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                    </div>`;
+
+                    let actionBtn = (window.currentUserRole === 'manager')
+                        ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
+                        : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
+
+                    transferContainer.innerHTML += `
+                                    <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                        <img src="${p.avatar}" alt="${p.name}">
+                                        <div class="player-mini-info">
+                                            <h4>${p.name}</h4>
+                                            <p>${p.device}</p>
+                                        </div>
+                                        ${actionBtn}
+                                    </div>`;
+                }
+            });
+        };
+
+        window.leaveRole = function () {
+            window.currentUserRole = null;
+            document.getElementById('managerHeroSection').style.display = 'none';
+            document.getElementById('mainPlayersDirectorySection').style.display = 'block';
+            document.getElementById('leavePlayerBtn').style.display = 'none';
+            window.renderAllData();
+            alert("Left active session.");
+        };
+
+        window.closeModal = function (modalId) { document.getElementById(modalId).style.display = 'none'; };
+        window.handleTransferWindowClick = function () { document.getElementById('transferWindowModal').style.display = 'flex'; };
+        window.toggleTransferWindow = function (status) { window.isTransferWindowOpen = status; };
     </script>
 </body>
 </html>
