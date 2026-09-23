@@ -408,7 +408,7 @@
             font-size: 14px;
         }
 
-        /* ===== FULL BACKGROUND CARD & FIXED ASPECT RATIO FIXES ===== */
+        /* ===== MOBILE RESPONSIVE CARD IMAGE FIXES ===== */
         .profile-card-image-layer {
             position: absolute;
             inset: 0;
@@ -416,7 +416,6 @@
             overflow: hidden;
             border-radius: inherit;
             background: #090b10;
-            pointer-events: auto;
             touch-action: none;
             cursor: grab;
         }
@@ -445,7 +444,7 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 6px;
-            width: min(100%, 360px);
+            width: min(100%, 320px);
             margin: 4px auto 8px;
             padding: 7px 8px;
             border: 1px solid var(--border-color);
@@ -484,11 +483,10 @@
                 color: var(--text-muted);
             }
 
-        /* Fixed export-friendly card sizing to prevent squishing on download */
         .image-bg-card {
-            width: 320px;
-            max-width: 100%;
-            height: 450px;
+            width: 100%;
+            max-width: 300px;
+            height: 420px;
             border-radius: 12px;
             margin: 0 auto 12px auto;
             position: relative;
@@ -662,11 +660,11 @@
             }
         }
 
-        /* TRANSFER CARD FIXED DIMENSIONS */
+        /* TRANSFER CARD FIXED STYLING */
         .done-deal-card {
-            width: 320px;
-            max-width: 100%;
-            height: 480px;
+            width: 100%;
+            max-width: 300px;
+            height: 440px;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -685,7 +683,7 @@
 
         .dd-header {
             font-family: 'Teko', sans-serif;
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px #000;
@@ -752,7 +750,7 @@
 
         .dd-fee-text {
             font-family: 'Teko', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #ffb703;
             letter-spacing: 1px;
@@ -768,7 +766,7 @@
 
             .dd-footer-box h3 {
                 font-family: 'Teko', sans-serif;
-                font-size: 26px;
+                font-size: 24px;
                 color: #fff;
                 line-height: 1;
                 text-transform: uppercase;
@@ -1512,7 +1510,7 @@
         window.moveCardImage = function (type, dx, dy) {
             const state = window.cardImageState[type];
             if (!state) return;
-            const limit = type === 'manager' || type === 'player' ? 180 : 70;
+            const limit = 150;
             state.x = Math.max(-limit, Math.min(limit, state.x + dx));
             state.y = Math.max(-limit, Math.min(limit, state.y + dy));
             window.applyCardImageTransform(type);
@@ -1541,29 +1539,38 @@
             let lastX = 0;
             let lastY = 0;
 
-            target.addEventListener("pointerdown", (event) => {
-                if (event.target.closest('button')) return;
+            const startDrag = (clientX, clientY, pointerId) => {
                 dragging = true;
-                lastX = event.clientX;
-                lastY = event.clientY;
-                target.setPointerCapture?.(event.pointerId);
-                event.preventDefault();
-            });
+                lastX = clientX;
+                lastY = clientY;
+                target.setPointerCapture?.(pointerId);
+            };
 
-            target.addEventListener("pointermove", (event) => {
+            const moveDrag = (clientX, clientY) => {
                 if (!dragging) return;
-                const dx = event.clientX - lastX;
-                const dy = event.clientY - lastY;
-                lastX = event.clientX;
-                lastY = event.clientY;
+                const dx = clientX - lastX;
+                const dy = clientY - lastY;
+                lastX = clientX;
+                lastY = clientY;
                 window.moveCardImage(type, dx, dy);
-                event.preventDefault();
+            };
+
+            const endDrag = () => { dragging = false; };
+
+            target.addEventListener("pointerdown", (e) => {
+                if (e.target.closest('button')) return;
+                startDrag(e.clientX, e.clientY, e.pointerId);
+                e.preventDefault();
             });
 
-            const stop = () => { dragging = false; };
-            target.addEventListener("pointerup", stop);
-            target.addEventListener("pointercancel", stop);
-            target.addEventListener("pointerleave", stop);
+            target.addEventListener("pointermove", (e) => {
+                moveDrag(e.clientX, e.clientY);
+                e.preventDefault();
+            });
+
+            target.addEventListener("pointerup", endDrag);
+            target.addEventListener("pointercancel", endDrag);
+            target.addEventListener("pointerleave", endDrag);
         };
 
         window.setupAllCardImages = function () {
@@ -1974,7 +1981,7 @@
                 return false;
             }
 
-            const controls = document.querySelectorAll('.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls');
+            const controls = document.querySelectorAll('.profile-card-adjust-controls, .transfer-image-controls');
 
             try {
                 await window.waitForCardImages(element);
@@ -1984,7 +1991,7 @@
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 3, // High scale for crisp details
+                    scale: 3,
                     imageTimeout: 15000,
                     logging: false
                 });
