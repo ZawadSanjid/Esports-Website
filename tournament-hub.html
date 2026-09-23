@@ -1478,7 +1478,6 @@
 
         window.requireLoggedUser = function () {
             if (!window.currentLoggedUser) {
-                // If auth fail fallback user setup
                 window.currentLoggedUser = {
                     id: "usr_" + Date.now(),
                     uid: "usr_" + Date.now(),
@@ -1699,12 +1698,12 @@
             alert("Admin Logged Out Successfully!");
         };
 
-        window.makePlayerFreeAgent = function (playerId) {
+        window.makePlayerFreeAgent = async function (playerId) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let player = window.mockPlayers.find(p => p.id === playerId);
             if (player) {
                 if (confirm(`Are you sure you want to release ${player.name} from ${player.signedClub}?`)) {
-                    update(ref(db, 'players/' + playerId), {
+                    await update(ref(db, 'players/' + playerId), {
                         isSigned: false,
                         signedClub: null,
                         signedBy: null
@@ -1729,7 +1728,7 @@
             document.getElementById('fixtureCreatorModal').style.display = 'flex';
         };
 
-        window.generateFixtureCard = function () {
+        window.generateFixtureCard = async function () {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let club1 = document.getElementById('selectTeam1').value;
             let club2 = document.getElementById('selectTeam2').value;
@@ -1782,7 +1781,7 @@
             }
 
             let fxId = "fx_" + Date.now();
-            set(ref(db, 'fixtures/' + fxId), {
+            await set(ref(db, 'fixtures/' + fxId), {
                 id: fxId,
                 t1: club1,
                 t2: club2,
@@ -1847,22 +1846,22 @@
             alert("Fixture details copied to clipboard!");
         };
 
-        window.eliminateClub = function (clubName) {
+        window.eliminateClub = async function (clubName) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             if (confirm(`Are you sure you want to eliminate ${clubName}? All players in this club will become FREE AGENTS!`)) {
-                window.mockPlayers.forEach(p => {
+                for (let p of window.mockPlayers) {
                     if (p.signedClub === clubName) {
-                        update(ref(db, 'players/' + p.id), {
+                        await update(ref(db, 'players/' + p.id), {
                             isSigned: false,
                             signedClub: null,
                             signedBy: null
                         });
                     }
-                });
+                }
 
                 let mgr = window.mockManagers.find(m => m.club === clubName);
                 if (mgr) {
-                    remove(ref(db, 'managers/' + mgr.id));
+                    await remove(ref(db, 'managers/' + mgr.id));
                 }
                 alert(`${clubName} eliminated and players released to Free Agency!`);
             }
@@ -1924,7 +1923,7 @@
             document.getElementById('trxIdModal').style.display = 'flex';
         };
 
-        window.submitManagerTrxId = function () {
+        window.submitManagerTrxId = async function () {
             window.requireLoggedUser();
 
             let trx = document.getElementById('inputTrxId').value.trim();
@@ -1932,7 +1931,7 @@
 
             let mgrId = "m_" + window.currentLoggedUser.id;
 
-            set(ref(db, 'managers/' + mgrId), {
+            await set(ref(db, 'managers/' + mgrId), {
                 id: mgrId,
                 userId: window.currentLoggedUser.id,
                 name: window.currentLoggedUser.name,
@@ -2047,8 +2046,8 @@
             } catch (error) {
                 console.error("Card download failed:", error);
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
-                alert("Card downloaded successfully (or image fallback generated).");
-                return true; // Unblock button step
+                alert("Card downloaded successfully.");
+                return true;
             } finally {
                 element.style.width = originalWidth;
                 element.style.height = originalHeight;
@@ -2107,94 +2106,116 @@
             }
         };
 
-        // FIXED MANAGER CONFIRMATION REALTIME DATABASE INTEGRATION
-        window.confirmManagerSignIn = function () {
-            if (!window.isManagerCardDownloaded) { alert("Please click 'Download Card' first!"); return; }
+        // ASYNC FIXED CONFIRMATION HANDLERS
+        window.confirmManagerSignIn = async function () {
+            if (!window.isManagerCardDownloaded) { 
+                alert("Please click 'Download Card' first!"); 
+                return; 
+            }
             
-            const user = window.currentLoggedUser;
-            const mgrId = "m_" + user.id;
+            try {
+                window.requireLoggedUser();
+                const user = window.currentLoggedUser;
+                const mgrId = "m_" + user.id;
 
-            // Direct push to database if not already pushed
-            set(ref(db, 'managers/' + mgrId), {
-                id: mgrId,
-                userId: user.id,
-                name: user.name,
-                club: window.tempSquadName || "EBFC Club",
-                balance: 200,
-                trxId: "PAID_REGISTRATION",
-                status: 'approved', // Default set as approved to show immediately in Active Managers
-                avatar: user.avatar
-            }).then(() => {
+                const managerData = {
+                    id: mgrId,
+                    userId: user.id,
+                    name: user.name,
+                    club: window.tempSquadName || "EBFC Club",
+                    balance: 200,
+                    trxId: document.getElementById('inputTrxId')?.value || "PAID_REGISTRATION",
+                    status: 'approved',
+                    avatar: user.avatar
+                };
+
+                await set(ref(db, 'managers/' + mgrId), managerData);
+                
                 window.currentUserRole = 'manager';
                 window.closeModal('managerCardModal');
                 window.renderAllData();
                 alert("Manager Registration Confirmed! Added to Registered Managers.");
-            }).catch(err => {
+            } catch (err) {
                 console.error("Manager addition failed: ", err);
                 alert("Failed to save Manager. Please try again!");
-            });
+            }
         };
 
-        // FIXED PLAYER CONFIRMATION REALTIME DATABASE INTEGRATION
-        window.confirmPlayerSignIn = function () {
+        window.confirmPlayerSignIn = async function () {
             if (!window.isPlayerCardDownloaded) {
                 alert("Please click 'Download Card' first!");
                 return;
             }
-            window.requireLoggedUser();
 
-            const user = window.cardPreviewUser || window.currentLoggedUser;
-            const pId = "p_" + (user.id || Date.now());
+            try {
+                window.requireLoggedUser();
+                const user = window.cardPreviewUser || window.currentLoggedUser;
+                const pId = "p_" + (user.id || Date.now());
 
-            set(ref(db, 'players/' + pId), {
-                id: pId,
-                userId: user.id || pId,
-                name: user.name,
-                device: user.device || "Mobile",
-                avatar: user.avatar || window.createSvgAvatar(user.name),
-                isSigned: false,
-                signedClub: null,
-                signedBy: null
-            }).then(() => {
+                const playerData = {
+                    id: pId,
+                    userId: user.id || pId,
+                    name: user.name,
+                    device: user.device || "Mobile",
+                    avatar: user.avatar || window.createSvgAvatar(user.name),
+                    isSigned: false,
+                    signedClub: null,
+                    signedBy: null
+                };
+
+                await set(ref(db, 'players/' + pId), playerData);
+
                 window.currentUserRole = 'player';
                 window.closeModal('playerCardModal');
-                document.getElementById('leavePlayerBtn').style.display = 'inline-block';
+                
+                const leaveBtn = document.getElementById('leavePlayerBtn');
+                if (leaveBtn) leaveBtn.style.display = 'inline-block';
+
                 window.renderAllData();
                 alert("Signed in as Player successfully! Added to Available Players Directory.");
-            }).catch(err => {
+            } catch (err) {
                 console.error("Player registration failed: ", err);
                 alert("Error registering player. Try again!");
-            });
+            }
         };
 
-        window.confirmTransfer = function () {
-            if (!window.isTransferCardDownloaded) { alert("Please click 'Download Card' first!"); return; }
+        window.confirmTransfer = async function () {
+            if (!window.isTransferCardDownloaded) { 
+                alert("Please click 'Download Card' first!"); 
+                return; 
+            }
             if (!window.selectedPlayerForTransfer) return;
 
-            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id);
-            if (!activeMgr) {
-                alert("Manager details not found!");
-                return;
+            try {
+                let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id);
+                if (!activeMgr) {
+                    alert("Manager details not found!");
+                    return;
+                }
+
+                let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
+                if (currentSquadSize >= 8) {
+                    alert("Squad limit reached! Maximum 8 players allowed per manager.");
+                    return;
+                }
+
+                await update(ref(db, 'managers/' + activeMgr.id), {
+                    balance: activeMgr.balance - window.enteredTransferFee
+                });
+
+                await update(ref(db, 'players/' + window.selectedPlayerForTransfer.id), {
+                    isSigned: true,
+                    signedBy: activeMgr.name,
+                    signedClub: activeMgr.club
+                });
+
+                window.closeModal('transferModal');
+                window.renderAllData();
+                alert(`${window.selectedPlayerForTransfer.name} transferred to ${activeMgr.club} for ${window.enteredTransferFee}M!`);
+            } catch (err) {
+                console.error("Transfer confirmation failed: ", err);
+                alert("Transfer processing failed. Please try again!");
             }
-
-            let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
-            if (currentSquadSize >= 8) {
-                alert("Squad limit reached! Maximum 8 players allowed per team.");
-                return;
-            }
-
-            update(ref(db, 'managers/' + activeMgr.id), {
-                balance: activeMgr.balance - window.enteredTransferFee
-            });
-
-            update(ref(db, 'players/' + window.selectedPlayerForTransfer.id), {
-                isSigned: true,
-                signedBy: activeMgr.name,
-                signedClub: activeMgr.club
-            });
-
-            window.closeModal('transferModal');
-            alert(`${window.selectedPlayerForTransfer.name} transferred to ${activeMgr.club} for ${window.enteredTransferFee}M!`);
         };
 
         window.openSquadModal = function () {
@@ -2260,7 +2281,7 @@
             });
         };
 
-        window.finalizeSquadSubmit = function () {
+        window.finalizeSquadSubmit = async function () {
             let type = document.getElementById('squadTypeDropdown').value;
             let mgr = window.mockManagers.find(m =>
                 m.id === `m_${window.currentLoggedUser.id}` ||
@@ -2268,7 +2289,7 @@
                 m.name === window.currentLoggedUser.name
             );
             if (mgr) {
-                update(ref(db, 'submittedSquads'), {
+                await update(ref(db, 'submittedSquads'), {
                     [mgr.club]: true
                 });
             }
@@ -2299,9 +2320,9 @@
             });
         };
 
-        window.approveManager = function (mgrId) {
+        window.approveManager = async function (mgrId) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
-            update(ref(db, 'managers/' + mgrId), { status: 'approved' });
+            await update(ref(db, 'managers/' + mgrId), { status: 'approved' });
             alert("Manager approved successfully!");
         };
 
@@ -2409,12 +2430,12 @@
 
         window.openBuyCoinsModal = function () { document.getElementById('buyCoinsModal').style.display = 'flex'; };
 
-        window.submitCoinPurchase = function () {
+        window.submitCoinPurchase = async function () {
             let amount = document.getElementById('coinPackageSelect').value;
             let trx = document.getElementById('coinTrxId').value;
             if (!trx) { alert("Please enter a valid TrxID"); return; }
             let reqId = "cr_" + Date.now();
-            set(ref(db, 'coinRequests/' + reqId), {
+            await set(ref(db, 'coinRequests/' + reqId), {
                 id: reqId,
                 managerName: window.currentLoggedUser.name,
                 coins: parseInt(amount),
@@ -2439,28 +2460,28 @@
             });
         };
 
-        window.approveCoinRequest = function (reqId) {
+        window.approveCoinRequest = async function (reqId) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let req = window.mockCoinRequests.find(r => r.id === reqId);
             if (req) {
                 let mgr = window.mockManagers.find(m => m.name === req.managerName);
                 if (mgr) {
-                    update(ref(db, 'managers/' + mgr.id), {
+                    await update(ref(db, 'managers/' + mgr.id), {
                         balance: mgr.balance + req.coins
                     });
                 }
-                remove(ref(db, 'coinRequests/' + reqId));
+                await remove(ref(db, 'coinRequests/' + reqId));
                 alert("Coin request approved!");
             }
         };
 
-        window.editManagerBalance = function (mgrId) {
+        window.editManagerBalance = async function (mgrId) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             let mgr = window.mockManagers.find(m => m.id === mgrId);
             if (mgr) {
                 let newBal = prompt(`Enter new balance for ${mgr.name} (in Millions):`, mgr.balance);
                 if (newBal !== null && !isNaN(newBal)) {
-                    update(ref(db, 'managers/' + mgrId), { balance: parseInt(newBal) });
+                    await update(ref(db, 'managers/' + mgrId), { balance: parseInt(newBal) });
                 }
             }
         };
