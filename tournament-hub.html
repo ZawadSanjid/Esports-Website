@@ -2018,13 +2018,16 @@
 
         window.waitForCardImages = async function (element) {
             const images = Array.from(element.querySelectorAll('img'));
-            await Promise.all(images.map(img => {
+            await Promise.all(images.map(async (img) => {
                 if (img.complete && img.naturalWidth > 0) {
                     try { await img.decode(); } catch (_) {}
-                    return Promise.resolve();
+                    return;
                 }
-                return new Promise(resolve => {
-                    const done = async () => { try { await img.decode(); } catch (_) {} resolve(); }
+                await new Promise(resolve => {
+                    const done = async () => {
+                        try { await img.decode(); } catch (_) {}
+                        resolve();
+                    };
                     img.addEventListener('load', done, { once: true });
                     img.addEventListener('error', done, { once: true });
                 });
