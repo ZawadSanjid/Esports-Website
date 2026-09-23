@@ -406,7 +406,7 @@
             font-size: 14px;
         }
 
-        /* CARD STYLES UPDATED FOR FULL BACKGROUND IMAGE */
+        /* CARD STYLES FIXED FOR FULL BACKGROUND IMAGE */
         .image-bg-card {
             width: 100%;
             max-width: 310px;
@@ -422,36 +422,11 @@
             padding: 15px;
             color: #fff;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
-            background: #090b10;
+            background-color: #090b10;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border: 2px solid var(--accent-gold);
-        }
-
-        .card-bg-image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-            cursor: grab;
-            touch-action: none;
-        }
-
-        .card-bg-image-container:active {
-            cursor: grabbing;
-        }
-
-        .card-bg-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: translate(0, 0) scale(1);
-            transform-origin: center center;
-            user-select: none;
-            -webkit-user-drag: none;
-            pointer-events: auto;
-            filter: brightness(0.75); /* Darkens slightly so text remains readable */
         }
 
         .card-bg-overlay {
@@ -460,14 +435,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(7,9,14,0.6) 0%, rgba(7,9,14,0.2) 50%, rgba(7,9,14,0.9) 100%);
-            z-index: 2;
+            background: linear-gradient(180deg, rgba(7,9,14,0.7) 0%, rgba(7,9,14,0.3) 40%, rgba(7,9,14,0.95) 100%);
+            z-index: 1;
             pointer-events: none;
         }
 
         .card-inner-content {
             position: relative;
-            z-index: 3;
+            z-index: 2;
             width: 100%;
             text-align: center;
         }
@@ -575,7 +550,7 @@
 
         .card-bottom-info {
             position: relative;
-            z-index: 3;
+            z-index: 2;
             width: 100%;
             text-align: center;
             margin-bottom: 25px;
@@ -1145,10 +1120,7 @@
     <div class="modal-overlay" id="managerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:24px; color:#ffd700; margin-bottom:8px;">ROYAL MANAGER ENTRY CARD</h3>
-            <div class="image-bg-card boom-pop" id="managerCardToCapture">
-                <div class="card-bg-image-container">
-                    <img id="mrcManagerImg" src="" alt="Manager" crossorigin="anonymous" draggable="false">
-                </div>
+            <div class="image-bg-card boom-pop" id="managerCardToCapture" style="background-image: url('');">
                 <div class="card-bg-overlay"></div>
 
                 <div class="card-inner-content">
@@ -1168,13 +1140,6 @@
                 </div>
             </div>
 
-            <div class="image-adjust-controls">
-                <button type="button" onclick="adjustCardImage('manager', -0.1)" title="Zoom out">−</button>
-                <span>ZOOM / DRAG IMAGE</span>
-                <button type="button" onclick="adjustCardImage('manager', 0.1)" title="Zoom in">+</button>
-                <button type="button" onclick="resetCardImage('manager')" title="Reset">↻</button>
-            </div>
-
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
                 <button class="btn-gold-sm" style="background:#ffd700;" onclick="downloadManagerCard()"><i class="fa-solid fa-download"></i> Download Card</button>
                 <button class="btn-gold-sm" id="btnConfirmManagerCard" style="background:#2ec4b6;" onclick="confirmManagerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
@@ -1188,10 +1153,7 @@
     <div class="modal-overlay" id="playerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold); margin-bottom:8px;">PLAYER ENTRY CARD</h3>
-            <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red);">
-                <div class="card-bg-image-container">
-                    <img id="pecPlayerImg" src="" alt="Player" crossorigin="anonymous" draggable="false">
-                </div>
+            <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red); background-image: url('');">
                 <div class="card-bg-overlay"></div>
 
                 <div class="card-inner-content">
@@ -1208,13 +1170,6 @@
                     <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
                     <span style="color:#ff4d4d">EBFC OFFICIAL</span>
                 </div>
-            </div>
-
-            <div class="image-adjust-controls">
-                <button type="button" onclick="adjustCardImage('player', -0.1)" title="Zoom out">−</button>
-                <span>ZOOM / DRAG IMAGE</span>
-                <button type="button" onclick="adjustCardImage('player', 0.1)" title="Zoom in">+</button>
-                <button type="button" onclick="resetCardImage('player')" title="Reset">↻</button>
             </div>
 
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
@@ -1361,12 +1316,6 @@
         window.currentUserRole = null;
         window.cardPreviewUser = null;
 
-        window.cardImageState = {
-            manager: { scale: 1, x: 0, y: 0 },
-            player: { scale: 1, x: 0, y: 0 },
-            transferManager: { scale: 1, x: 0, y: 0 },
-            transferPlayer: { scale: 1, x: 0, y: 0 }
-        };
         window.isAdminLoggedIn = false;
         window.isTransferWindowOpen = true;
 
@@ -1463,15 +1412,18 @@
             return true;
         };
 
-        const CARD_IMAGE_IDS = {
-            manager: "mrcManagerImg",
-            player: "pecPlayerImg",
+        const TRANSFER_IMAGE_IDS = {
             transferManager: "cardManagerImg",
             transferPlayer: "cardPlayerImg"
         };
 
+        window.cardImageState = {
+            transferManager: { scale: 1, x: 0, y: 0 },
+            transferPlayer: { scale: 1, x: 0, y: 0 }
+        };
+
         window.applyCardImageTransform = function (type) {
-            const img = document.getElementById(CARD_IMAGE_IDS[type]);
+            const img = document.getElementById(TRANSFER_IMAGE_IDS[type]);
             const state = window.cardImageState[type];
             if (!img || !state) return;
             img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
@@ -1487,8 +1439,8 @@
         window.moveCardImage = function (type, dx, dy) {
             const state = window.cardImageState[type];
             if (!state) return;
-            state.x = Math.max(-100, Math.min(100, state.x + dx));
-            state.y = Math.max(-100, Math.min(100, state.y + dy));
+            state.x = Math.max(-50, Math.min(50, state.x + dx));
+            state.y = Math.max(-50, Math.min(50, state.y + dy));
             window.applyCardImageTransform(type);
         };
 
@@ -1498,7 +1450,7 @@
         };
 
         window.setupDraggableCardImage = function (type) {
-            const img = document.getElementById(CARD_IMAGE_IDS[type]);
+            const img = document.getElementById(TRANSFER_IMAGE_IDS[type]);
             if (!img || img.dataset.dragReady === "1") return;
 
             img.dataset.dragReady = "1";
@@ -1528,17 +1480,16 @@
         };
 
         window.setupAllCardImages = function () {
-            Object.keys(CARD_IMAGE_IDS).forEach(type => window.setupDraggableCardImage(type));
+            Object.keys(TRANSFER_IMAGE_IDS).forEach(type => window.setupDraggableCardImage(type));
         };
 
-        window.setCardImage = function (type, src) {
-            const img = document.getElementById(CARD_IMAGE_IDS[type]);
+        window.setTransferCardImage = function (type, src) {
+            const img = document.getElementById(TRANSFER_IMAGE_IDS[type]);
             if (!img) return;
 
             img.onerror = function () {
                 this.onerror = null;
-                const fallbackLetter =
-                    (type === "manager" || type === "transferManager") ? "M" : "P";
+                const fallbackLetter = type === "transferManager" ? "M" : "P";
                 this.src = window.createSvgAvatar(fallbackLetter, "e50914", "ffffff");
             };
 
@@ -1546,17 +1497,31 @@
             window.resetCardImage(type);
         };
 
+        window.setCardBackgroundImage = function (elementId, src) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            
+            // Fallback image check
+            let imgTest = new Image();
+            imgTest.crossOrigin = "anonymous";
+            imgTest.onload = function() {
+                el.style.backgroundImage = `url('${src}')`;
+            };
+            imgTest.onerror = function() {
+                el.style.backgroundImage = `url('${window.createSvgAvatar("P", "e50914", "ffffff")}')`;
+            };
+            imgTest.src = src || window.createSvgAvatar("P", "e50914", "ffffff");
+        };
+
         window.syncCurrentUserIntoCards = function () {
             if (!window.currentLoggedUser) return;
             const user = window.currentLoggedUser;
 
-            window.setCardImage("player", user.avatar);
+            window.setCardBackgroundImage("playerEntryCardToCapture", user.avatar);
             document.getElementById("pecPlayerName").innerText = user.name;
 
-            window.setCardImage("manager", user.avatar);
+            window.setCardBackgroundImage("managerCardToCapture", user.avatar);
             document.getElementById("mrcName").innerText = user.name;
-
-            window.setupAllCardImages();
         };
 
         window.renderAllData = function () {
@@ -1867,7 +1832,7 @@
                 avatar: window.currentLoggedUser.avatar
             });
 
-            window.setCardImage('manager', window.currentLoggedUser.avatar);
+            window.setCardBackgroundImage('managerCardToCapture', window.currentLoggedUser.avatar);
             document.getElementById('mrcName').innerText = window.currentLoggedUser.name;
 
             window.isManagerCardDownloaded = false;
@@ -1883,7 +1848,7 @@
             if (!window.requireLoggedUser()) return;
 
             window.cardPreviewUser = { ...window.currentLoggedUser };
-            window.setCardImage('player', window.cardPreviewUser.avatar);
+            window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
             document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
 
             window.isPlayerCardDownloaded = false;
@@ -2224,8 +2189,8 @@
 
             window.closeModal('transferFeeInputModal');
 
-            window.setCardImage('transferManager', activeMgr.avatar || window.currentLoggedUser.avatar);
-            window.setCardImage('transferPlayer', window.selectedPlayerForTransfer.avatar);
+            window.setTransferCardImage('transferManager', activeMgr.avatar || window.currentLoggedUser.avatar);
+            window.setTransferCardImage('transferPlayer', window.selectedPlayerForTransfer.avatar);
             document.getElementById('cardPlayerName').innerText = window.selectedPlayerForTransfer.name;
             document.getElementById('cardTransferFeeDisplay').innerText = `FOR ${window.enteredTransferFee} MILLION`;
             document.getElementById('cardManagerBoldName').innerText = activeMgr.name || window.currentLoggedUser.name;
@@ -2254,7 +2219,7 @@
                 device: randomPlayer.device || "Unknown Device",
                 avatar: randomPlayer.avatar
             };
-            window.setCardImage('player', randomPlayer.avatar);
+            window.setCardBackgroundImage('playerEntryCardToCapture', randomPlayer.avatar);
             document.getElementById('pecPlayerName').innerText = randomPlayer.name;
 
             window.isPlayerCardDownloaded = false;
