@@ -806,6 +806,132 @@
             font-size: 12px;
             text-transform: uppercase;
         }
+    
+
+        /* ===== FINAL RESPONSIVE CARD + HIGH QUALITY EXPORT FIX ===== */
+        .profile-card-image-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            border-radius: inherit;
+            background: #090b10;
+            pointer-events: auto;
+            touch-action: none;
+            cursor: grab;
+        }
+
+        .profile-card-image-layer:active { cursor: grabbing; }
+
+        .profile-card-image-layer img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            inset: 0;
+            object-fit: cover;
+            object-position: center center;
+            transform: translate3d(0,0,0) scale(1);
+            transform-origin: center center;
+            user-select: none;
+            -webkit-user-drag: none;
+            will-change: transform;
+            image-rendering: auto;
+        }
+
+        .profile-card-adjust-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            width: min(100%, 360px);
+            margin: 4px auto 8px;
+            padding: 7px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 7px;
+            background: rgba(0,0,0,.45);
+        }
+
+        .profile-card-adjust-controls span {
+            width: 100%;
+            font-size: 9px;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .profile-card-adjust-controls button {
+            width: 32px;
+            height: 28px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 4px;
+            background: #090a0c;
+            color: var(--accent-gold);
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .profile-card-adjust-controls button:hover {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .profile-card-adjust-controls small {
+            width: 100%;
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        /* Fixed export-friendly card ratio. The visual card remains responsive on screen. */
+        .image-bg-card {
+            width: min(88vw, 360px);
+            max-width: 360px;
+            aspect-ratio: 360 / 500;
+            height: auto;
+            min-height: 0;
+            padding: 14px;
+        }
+
+        .done-deal-card {
+            width: min(88vw, 360px);
+            max-width: 360px;
+            aspect-ratio: 360 / 520;
+            height: auto;
+            min-height: 0;
+        }
+
+        .card-top-title { font-size: clamp(17px, 4.8vw, 20px); }
+        .card-main-name { font-size: clamp(28px, 8vw, 38px); line-height: .92; }
+
+        .dd-header { font-size: clamp(27px, 8vw, 32px); }
+        .dd-fee-text { font-size: clamp(22px, 6vw, 26px); }
+        .dd-footer-box h3 { font-size: clamp(23px, 7vw, 28px); }
+
+        .modal-body { width: min(100%, 480px); }
+
+        @media (max-width: 600px) {
+            .modal-overlay { padding: 8px; align-items: flex-start; }
+            .modal-body {
+                margin-top: 8px;
+                max-height: calc(100vh - 16px);
+                padding: 12px 8px;
+                border-radius: 9px;
+            }
+            .image-bg-card { width: min(92vw, 360px); }
+            .done-deal-card { width: min(92vw, 360px); }
+            .card-brand-footer span { font-size: 16px; }
+            .card-brand-footer img { width: 20px; height: 20px; }
+            .profile-card-adjust-controls { width: min(92vw, 360px); }
+        }
+
+        @media (min-width: 601px) {
+            .modal-overlay { padding: 20px; }
+        }
+
+        .card-capture-hide,
+        [data-capture-hide="true"].card-capture-hide { display: none !important; }
+
     </style>
 </head>
 <body>
@@ -1090,7 +1216,8 @@
     <div class="modal-overlay" id="managerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:22px; color:#ffd700; margin-bottom:6px;">ROYAL MANAGER ENTRY CARD</h3>
-            <div class="image-bg-card boom-pop" id="managerCardToCapture" style="background-image: url('');">
+            <div class="image-bg-card boom-pop" id="managerCardToCapture" style="background-image: none;">
+                <div class="profile-card-image-layer"><img id="managerCardProfileImg" src="" alt="Manager profile" crossorigin="anonymous" draggable="false"></div>
                 <div class="card-bg-overlay"></div>
 
                 <div class="card-inner-content">
@@ -1110,6 +1237,14 @@
                 </div>
             </div>
 
+            <div class="profile-card-adjust-controls" data-capture-hide="true">
+                <span>ADJUST IMAGE</span>
+                <button type="button" onclick="adjustProfileCardImage('manager', -0.1)" title="Zoom out">−</button>
+                <button type="button" onclick="adjustProfileCardImage('manager', 0.1)" title="Zoom in">+</button>
+                <button type="button" onclick="resetProfileCardImage('manager')" title="Reset">↻</button>
+                <small>Drag image to reposition</small>
+            </div>
+
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px;">
                 <button class="btn-gold-sm" style="background:#ffd700;" onclick="downloadManagerCard()"><i class="fa-solid fa-download"></i> Download Card</button>
                 <button class="btn-gold-sm" id="btnConfirmManagerCard" style="background:#2ec4b6;" onclick="confirmManagerSignIn()" disabled><i class="fa-solid fa-check"></i> Confirm</button>
@@ -1123,7 +1258,8 @@
     <div class="modal-overlay" id="playerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:22px; color:var(--accent-gold); margin-bottom:6px;">PLAYER ENTRY CARD</h3>
-            <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red); background-image: url('');">
+            <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red); background-image: none;">
+                <div class="profile-card-image-layer"><img id="playerCardProfileImg" src="" alt="Player profile" crossorigin="anonymous" draggable="false"></div>
                 <div class="card-bg-overlay"></div>
 
                 <div class="card-inner-content">
@@ -1140,6 +1276,14 @@
                     <img class="ebfc-logo-img" src="https://i.postimg.cc/G3JPQCjK/image1-jpg.png" alt="EBFC" crossorigin="anonymous">
                     <span style="color:#ff4d4d">EBFC OFFICIAL</span>
                 </div>
+            </div>
+
+            <div class="profile-card-adjust-controls" data-capture-hide="true">
+                <span>ADJUST IMAGE</span>
+                <button type="button" onclick="adjustProfileCardImage('player', -0.1)" title="Zoom out">−</button>
+                <button type="button" onclick="adjustProfileCardImage('player', 0.1)" title="Zoom in">+</button>
+                <button type="button" onclick="resetProfileCardImage('player')" title="Reset">↻</button>
+                <small>Drag image to reposition</small>
             </div>
 
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px;">
@@ -1330,6 +1474,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             listenToDatabase();
+            window.setupAllCardImages();
             onAuthStateChanged(auth, async (firebaseUser) => {
                 await window.loadCurrentFirebaseUser(firebaseUser);
             });
@@ -1387,16 +1532,24 @@
             transferPlayer: "cardPlayerImg"
         };
 
+        const PROFILE_CARD_IMAGE_IDS = {
+            manager: "managerCardProfileImg",
+            player: "playerCardProfileImg"
+        };
+
         window.cardImageState = {
             transferManager: { scale: 1, x: 0, y: 0 },
-            transferPlayer: { scale: 1, x: 0, y: 0 }
+            transferPlayer: { scale: 1, x: 0, y: 0 },
+            manager: { scale: 1, x: 0, y: 0 },
+            player: { scale: 1, x: 0, y: 0 }
         };
 
         window.applyCardImageTransform = function (type) {
-            const img = document.getElementById(TRANSFER_IMAGE_IDS[type]);
+            const ids = { ...TRANSFER_IMAGE_IDS, ...PROFILE_CARD_IMAGE_IDS };
+            const img = document.getElementById(ids[type]);
             const state = window.cardImageState[type];
             if (!img || !state) return;
-            img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+            img.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`;
         };
 
         window.adjustCardImage = function (type, amount) {
@@ -1406,11 +1559,16 @@
             window.applyCardImageTransform(type);
         };
 
+        window.adjustProfileCardImage = function (type, amount) {
+            window.adjustCardImage(type, amount);
+        };
+
         window.moveCardImage = function (type, dx, dy) {
             const state = window.cardImageState[type];
             if (!state) return;
-            state.x = Math.max(-50, Math.min(50, state.x + dx));
-            state.y = Math.max(-50, Math.min(50, state.y + dy));
+            const limit = type === 'manager' || type === 'player' ? 180 : 70;
+            state.x = Math.max(-limit, Math.min(limit, state.x + dx));
+            state.y = Math.max(-limit, Math.min(limit, state.y + dy));
             window.applyCardImageTransform(type);
         };
 
@@ -1419,38 +1577,55 @@
             window.applyCardImageTransform(type);
         };
 
+        window.resetProfileCardImage = function (type) {
+            window.resetCardImage(type);
+        };
+
         window.setupDraggableCardImage = function (type) {
-            const img = document.getElementById(TRANSFER_IMAGE_IDS[type]);
+            const ids = { ...TRANSFER_IMAGE_IDS, ...PROFILE_CARD_IMAGE_IDS };
+            const img = document.getElementById(ids[type]);
             if (!img || img.dataset.dragReady === "1") return;
 
-            img.dataset.dragReady = "1";
+            const target = (type === 'manager' || type === 'player')
+                ? img.parentElement
+                : img;
+
+            if (!target) return;
+            target.dataset.dragReady = "1";
+            target.style.touchAction = "none";
+
             let dragging = false;
             let lastX = 0;
             let lastY = 0;
 
-            img.addEventListener("pointerdown", (event) => {
+            target.addEventListener("pointerdown", (event) => {
+                if (event.target.closest('button')) return;
                 dragging = true;
                 lastX = event.clientX;
                 lastY = event.clientY;
-                img.setPointerCapture?.(event.pointerId);
+                target.setPointerCapture?.(event.pointerId);
+                event.preventDefault();
             });
 
-            img.addEventListener("pointermove", (event) => {
+            target.addEventListener("pointermove", (event) => {
                 if (!dragging) return;
                 const dx = event.clientX - lastX;
                 const dy = event.clientY - lastY;
                 lastX = event.clientX;
                 lastY = event.clientY;
                 window.moveCardImage(type, dx, dy);
+                event.preventDefault();
             });
 
             const stop = () => { dragging = false; };
-            img.addEventListener("pointerup", stop);
-            img.addEventListener("pointercancel", stop);
+            target.addEventListener("pointerup", stop);
+            target.addEventListener("pointercancel", stop);
+            target.addEventListener("pointerleave", stop);
         };
 
         window.setupAllCardImages = function () {
-            Object.keys(TRANSFER_IMAGE_IDS).forEach(type => window.setupDraggableCardImage(type));
+            [...Object.keys(TRANSFER_IMAGE_IDS), ...Object.keys(PROFILE_CARD_IMAGE_IDS)]
+                .forEach(type => window.setupDraggableCardImage(type));
         };
 
         window.setTransferCardImage = function (type, src) {
@@ -1468,18 +1643,29 @@
         };
 
         window.setCardBackgroundImage = function (elementId, src) {
-            const el = document.getElementById(elementId);
-            if (!el) return;
-            
-            let imgTest = new Image();
-            imgTest.crossOrigin = "anonymous";
-            imgTest.onload = function() {
-                el.style.backgroundImage = `url('${src}')`;
+            const map = {
+                playerEntryCardToCapture: "playerCardProfileImg",
+                managerCardToCapture: "managerCardProfileImg"
             };
-            imgTest.onerror = function() {
-                el.style.backgroundImage = `url('${window.createSvgAvatar("P", "e50914", "ffffff")}')`;
+            const img = document.getElementById(map[elementId]);
+            if (!img) return;
+
+            const fallback = window.createSvgAvatar(
+                elementId === 'managerCardToCapture' ? 'M' : 'P',
+                'e50914',
+                'ffffff'
+            );
+
+            img.onerror = function () {
+                this.onerror = null;
+                this.src = fallback;
             };
-            imgTest.src = src || window.createSvgAvatar("P", "e50914", "ffffff");
+
+            img.onload = function () {
+                window.resetCardImage(elementId === 'managerCardToCapture' ? 'manager' : 'player');
+            };
+
+            img.src = src || fallback;
         };
 
         window.syncCurrentUserIntoCards = function () {
@@ -1491,6 +1677,8 @@
 
             window.setCardBackgroundImage("managerCardToCapture", user.avatar);
             document.getElementById("mrcName").innerText = user.name;
+
+            window.setupAllCardImages();
         };
 
         window.renderAllData = function () {
@@ -1625,17 +1813,17 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B", "00d2ff", "ffffff") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                                    <div class="fx-matchup-row">
-                                        <div style="display:flex; align-items:center; gap:6px;">
-                                            <img src="${playerA.avatar}">
-                                            <span>${playerA.name}</span>
-                                        </div>
-                                        <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                        <div style="display:flex; align-items:center; gap:6px;">
-                                            <span>${playerB.name}</span>
-                                            <img src="${playerB.avatar}">
-                                        </div>
-                                    </div>`;
+                                        <div class="fx-matchup-row">
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <img src="${playerA.avatar}">
+                                                <span>${playerA.name}</span>
+                                            </div>
+                                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <span>${playerB.name}</span>
+                                                <img src="${playerB.avatar}">
+                                            </div>
+                                        </div>`;
                 }
             }
 
@@ -1661,11 +1849,11 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                                <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                    <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                    <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                    <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                                </div>`;
+                                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                    </div>`;
             });
         };
 
@@ -1731,16 +1919,16 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                        <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                    </div>
-                                    <div style="display:flex; gap:6px;">
-                                        <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                        <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                    </div>
-                                </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="text-align:left;">
+                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                        </div>
+                                        <div style="display:flex; gap:6px;">
+                                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                        </div>
+                                    </div>`;
             });
         };
 
@@ -1838,6 +2026,10 @@
                     img.addEventListener('error', done, { once: true });
                 });
             }));
+
+            if (document.fonts && document.fonts.ready) {
+                try { await document.fonts.ready; } catch (_) {}
+            }
         };
 
         window.captureCardElement = async function (elementId, filename) {
@@ -1847,35 +2039,83 @@
                 return false;
             }
 
-            const controls = document.querySelectorAll('.image-adjust-controls, .transfer-image-controls');
+            const controls = document.querySelectorAll(
+                '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
+            );
+            const animationClass = 'boom-pop';
+            const originalWidth = element.style.width;
+            const originalHeight = element.style.height;
+            const originalAspect = element.style.aspectRatio;
+            const originalAnimation = element.style.animation;
+            const originalTransform = element.style.transform;
 
             try {
-                await window.waitForCardImages(element);
+                /*
+                 * IMPORTANT:
+                 * Always capture at a fixed 360px logical card width.
+                 * This prevents a phone's small CSS viewport from producing
+                 * a low-resolution downloaded card.
+                 */
+                const isTransfer = elementId === 'cardToCapture';
+                element.style.width = '360px';
+                element.style.maxWidth = '360px';
+                element.style.height = isTransfer ? '520px' : '500px';
+                element.style.aspectRatio = 'auto';
+
+                // Do not capture the entrance animation/transform.
+                element.classList.remove(animationClass);
+                element.style.animation = 'none';
+                element.style.transform = 'none';
+
                 controls.forEach(control => control.classList.add('card-capture-hide'));
+
+                await window.waitForCardImages(element);
+
+                // Let layout/fonts/images settle before rasterizing.
+                await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
                 const canvas = await html2canvas(element, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 4, // High scale factor to ensure image never gets blurry or pixelated
-                    imageTimeout: 15000,
-                    logging: false
+                    scale: 4,
+                    width: 360,
+                    height: isTransfer ? 520 : 500,
+                    windowWidth: 360,
+                    windowHeight: isTransfer ? 520 : 500,
+                    imageTimeout: 20000,
+                    logging: false,
+                    foreignObjectRendering: false,
+                    removeContainer: true
                 });
 
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
 
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
+                if (!blob) throw new Error('Could not create PNG blob');
+
+                const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = filename;
-                link.href = canvas.toDataURL('image/png', 1.0);
+                link.href = url;
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1500);
+
                 return true;
             } catch (error) {
                 console.error("Card download failed:", error);
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
-                alert("Card image could not be downloaded. Please check the profile image URL/CORS settings.");
+                alert("Card download failed. Please try again. If the profile image is from an external host without CORS support, use a Firebase-hosted/profile image URL.");
                 return false;
+            } finally {
+                element.style.width = originalWidth;
+                element.style.height = originalHeight;
+                element.style.aspectRatio = originalAspect;
+                element.style.animation = originalAnimation;
+                element.style.transform = originalTransform;
+                element.classList.add(animationClass);
             }
         };
 
@@ -2012,13 +2252,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                    <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                        <img src="${p.avatar}" alt="${p.name}">
-                                        <div class="player-mini-info" style="text-align: left;">
-                                            <h4>${p.name}</h4>
-                                            <p style="color:var(--accent-gold)">Signed Player</p>
-                                        </div>
-                                    </div>`;
+                                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info" style="text-align: left;">
+                                                <h4>${p.name}</h4>
+                                                <p style="color:var(--accent-gold)">Signed Player</p>
+                                            </div>
+                                        </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2047,10 +2287,10 @@
             }
             squad.forEach(p => {
                 container.innerHTML += `
-                                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                    <input type="checkbox" value="${p.id}" checked>
-                                    <span style="font-size:14px;">${p.name}</span>
-                                </div>`;
+                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                                        <input type="checkbox" value="${p.id}" checked>
+                                        <span style="font-size:14px;">${p.name}</span>
+                                    </div>`;
             });
         };
 
@@ -2080,16 +2320,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                </div>`;
+                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                    </div>`;
             });
         };
 
@@ -2109,14 +2349,14 @@
             }
             approved.forEach((m) => {
                 container.innerHTML += `
-                                <div class="manager-mini-card">
-                                    <img src="${m.avatar}" alt="${m.name}">
-                                    <div class="player-mini-info">
-                                        <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                        <p style="color: var(--text-light);">${m.club}</p>
-                                    </div>
-                                    <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                </div>`;
+                                    <div class="manager-mini-card">
+                                        <img src="${m.avatar}" alt="${m.name}">
+                                        <div class="player-mini-info">
+                                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                            <p style="color: var(--text-light);">${m.club}</p>
+                                        </div>
+                                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                    </div>`;
             });
         };
 
@@ -2221,13 +2461,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                    </div>
-                                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                        <div style="text-align:left;">
+                                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                        </div>
+                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                    </div>`;
             });
         };
 
@@ -2282,41 +2522,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                            <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    ${adminAction}
-                                </div>`;
+                                        ${adminAction}
+                                    </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                    <div class="player-mini-card">
-                                        <img src="${p.avatar}" alt="${p.name}">
-                                        <div class="player-mini-info">
-                                            <h4>${p.name}</h4>
-                                            <p>${p.device}</p>
-                                        </div>
-                                        <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                    </div>`;
+                                        <div class="player-mini-card">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info">
+                                                <h4>${p.name}</h4>
+                                                <p>${p.device}</p>
+                                            </div>
+                                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                        </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                    <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                        <img src="${p.avatar}" alt="${p.name}">
-                                        <div class="player-mini-info">
-                                            <h4>${p.name}</h4>
-                                            <p>${p.device}</p>
-                                        </div>
-                                        ${actionBtn}
-                                    </div>`;
+                                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info">
+                                                <h4>${p.name}</h4>
+                                                <p>${p.device}</p>
+                                            </div>
+                                            ${actionBtn}
+                                        </div>`;
                 }
             });
         };
