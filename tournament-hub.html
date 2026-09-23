@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
+
+    
     <!-- HTML2CANVAS & CANVAS-CONFETTI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -1934,84 +1937,98 @@
         };
 
         /* ULTIMATE NO-STRETCH CAPTURE FUNCTION (CLONING TECHNIQUE) */
-        window.captureCardElement = async function (elementId, filename) {
-            const originalElement = document.getElementById(elementId);
-            if (!originalElement) {
-                alert("Card element not found!");
-                return false;
-            }
+       /* FIXED CAPTURE FUNCTION - PREVENTS IMAGE STRETCHING/DISTORTION */
+window.captureCardElement = async function (elementId, filename) {
+    const originalElement = document.getElementById(elementId);
+    if (!originalElement) {
+        alert("Card element not found!");
+        return false;
+    }
 
-            const isTransfer = elementId === 'cardToCapture';
-            const targetWidth = 360;
-            const targetHeight = isTransfer ? 520 : 500;
+    const isTransfer = elementId === 'cardToCapture';
+    const targetWidth = 360;
+    const targetHeight = isTransfer ? 520 : 500;
 
-            // Create an off-screen container with fixed desktop dimensions to prevent mobile layout distortion
-            const offscreenContainer = document.createElement('div');
-            offscreenContainer.style.position = 'fixed';
-            offscreenContainer.style.left = '-9999px';
-            offscreenContainer.style.top = '-9999px';
-            offscreenContainer.style.width = targetWidth + 'px';
-            offscreenContainer.style.height = targetHeight + 'px';
-            offscreenContainer.style.zIndex = '-9999';
+    // ১. অফ-স্ক্রিন কন্টেইনার তৈরি করা হচ্ছে (মেমোরিতে ফিক্সড ডাইমেনশন নিশ্চিত করতে)
+    const offscreenContainer = document.createElement('div');
+    offscreenContainer.style.position = 'fixed';
+    offscreenContainer.style.left = '-9999px';
+    offscreenContainer.style.top = '-9999px';
+    offscreenContainer.style.width = targetWidth + 'px';
+    offscreenContainer.style.height = targetHeight + 'px';
+    offscreenContainer.style.zIndex = '-9999';
 
-            // Clone the original element
-            const clone = originalElement.cloneNode(true);
-            clone.style.width = targetWidth + 'px';
-            clone.style.height = targetHeight + 'px';
-            clone.style.maxWidth = 'none';
-            clone.style.transform = 'none';
-            clone.style.animation = 'none';
-            clone.style.margin = '0';
+    // ২. কার্ড এলিমেন্ট ক্লোন করা
+    const clone = originalElement.cloneNode(true);
+    clone.style.width = targetWidth + 'px';
+    clone.style.height = targetHeight + 'px';
+    clone.style.maxWidth = 'none';
+    clone.style.transform = 'none';
+    clone.style.animation = 'none';
+    clone.style.margin = '0';
 
-            // Hide capture-restricted controls inside the clone
-            const controls = clone.querySelectorAll(
-                '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
-            );
-            controls.forEach(c => c.style.display = 'none');
+    // ৩. ছবিতে চ্যাপ্টা হওয়ার সমস্যা আটকানোর জন্য ইনলাইন কভার স্টাইল প্রয়োগ
+    const cloneImages = clone.querySelectorAll('img');
+    cloneImages.forEach(img => {
+        if (img.classList.contains('ebfc-logo-img')) return; // লোগো বাদ দিয়ে
+        
+        // ছবিকে ইনলাইন ফিক্সড ডাইমেনশন ও কভার ফিল দেওয়া
+        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('object-position', 'center center', 'important');
+        img.style.width = '100%';
+        img.style.height = '100%';
+    });
 
-            offscreenContainer.appendChild(clone);
-            document.body.appendChild(offscreenContainer);
+    // ৪. কন্ট্রোল বাটনগুলো ক্লোন থেকে লুকিয়ে ফেলা
+    const controls = clone.querySelectorAll(
+        '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
+    );
+    controls.forEach(c => c.style.display = 'none');
 
-            try {
-                await window.waitForCardImages(clone);
-                await new Promise(resolve => setTimeout(resolve, 150));
+    offscreenContainer.appendChild(clone);
+    document.body.appendChild(offscreenContainer);
 
-                const canvas = await html2canvas(clone, {
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: null,
-                    scale: 3,
-                    width: targetWidth,
-                    height: targetHeight,
-                    windowWidth: targetWidth,
-                    windowHeight: targetHeight,
-                    logging: false
-                });
+    try {
+        await window.waitForCardImages(clone);
+        await new Promise(resolve => setTimeout(resolve, 200));
 
-                document.body.removeChild(offscreenContainer);
+        // ৫. HTML2CANVAS ক্যাপচার করা
+        const canvas = await html2canvas(clone, {
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: null,
+            scale: 3, // হাই রেজোলিউশন
+            width: targetWidth,
+            height: targetHeight,
+            windowWidth: targetWidth,
+            windowHeight: targetHeight,
+            logging: false
+        });
 
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
-                if (!blob) throw new Error('Could not create PNG blob');
+        document.body.removeChild(offscreenContainer);
 
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = url;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                setTimeout(() => URL.revokeObjectURL(url), 1500);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
+        if (!blob) throw new Error('Could not create PNG blob');
 
-                return true;
-            } catch (error) {
-                console.error("Card download failed:", error);
-                if (document.body.contains(offscreenContainer)) {
-                    document.body.removeChild(offscreenContainer);
-                }
-                alert("Card download failed. Please try again.");
-                return false;
-            }
-        };
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+        return true;
+    } catch (error) {
+        console.error("Card download failed:", error);
+        if (document.body.contains(offscreenContainer)) {
+            document.body.removeChild(offscreenContainer);
+        }
+        alert("Card download failed. Please try again.");
+        return false;
+    }
+};
 
         window.safeFileName = function (name) {
             return String(name || 'EBFC_USER')
