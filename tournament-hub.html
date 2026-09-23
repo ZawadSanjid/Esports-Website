@@ -52,14 +52,14 @@
             gap: 15px;
         }
 
-            .hub-header h1 {
-                font-family: 'Teko', sans-serif;
-                font-size: clamp(26px, 5vw, 42px);
-                color: var(--accent-gold);
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                line-height: 1.1;
-            }
+        .hub-header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: clamp(26px, 5vw, 42px);
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
 
         .header-btn-group {
             display: flex;
@@ -91,13 +91,8 @@
         }
 
         @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
-            }
-
-            100% {
-                box-shadow: 0 0 20px rgba(0, 210, 255, 0.9);
-            }
+            0% { box-shadow: 0 0 8px rgba(0, 210, 255, 0.4); }
+            100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.9); }
         }
 
         .auth-controls {
@@ -124,10 +119,10 @@
             text-align: center;
         }
 
-            .btn-auth:hover {
-                border-color: var(--primary-red);
-                color: var(--primary-red);
-            }
+        .btn-auth:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
 
         .btn-danger-sm {
             background: rgba(229, 9, 20, 0.15);
@@ -141,10 +136,10 @@
             transition: 0.3s;
         }
 
-            .btn-danger-sm:hover {
-                background: var(--primary-red);
-                color: #fff;
-            }
+        .btn-danger-sm:hover {
+            background: var(--primary-red);
+            color: #fff;
+        }
 
         .btn-gold-sm {
             background: var(--accent-gold);
@@ -158,12 +153,12 @@
             text-transform: uppercase;
         }
 
-            .btn-gold-sm:disabled {
-                background: #4a4a4a !important;
-                color: #8a8a8a !important;
-                cursor: not-allowed;
-                border: none !important;
-            }
+        .btn-gold-sm:disabled {
+            background: #4a4a4a !important;
+            color: #8a8a8a !important;
+            cursor: not-allowed;
+            border: none !important;
+        }
 
         .btn-squad-sm {
             background: rgba(255, 183, 3, 0.15);
@@ -178,10 +173,10 @@
             transition: 0.3s;
         }
 
-            .btn-squad-sm:hover {
-                background: var(--accent-gold);
-                color: #000;
-            }
+        .btn-squad-sm:hover {
+            background: var(--accent-gold);
+            color: #000;
+        }
 
         .switch-container {
             display: flex;
@@ -200,43 +195,33 @@
             height: 22px;
         }
 
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: #333;
             transition: .4s;
             border-radius: 22px;
         }
 
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 16px;
-                width: 16px;
-                left: 3px;
-                bottom: 3px;
-                background-color: white;
-                transition: .4s;
-                border-radius: 50%;
-            }
-
-        input:checked + .slider {
-            background-color: var(--accent-green);
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
 
-            input:checked + .slider:before {
-                transform: translateX(22px);
-            }
+        input:checked + .slider { background-color: var(--accent-green); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
         .manager-hero-card {
             background: var(--bg-card);
@@ -251,25 +236,20 @@
             flex-wrap: wrap;
         }
 
-            .manager-hero-card img {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                border: 3px solid var(--accent-gold);
-                object-fit: cover;
-            }
-
-        .manager-info {
-            flex: 1;
-            min-width: 200px;
+        .manager-hero-card img {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-gold);
+            object-fit: cover;
         }
 
-            .manager-info h2 {
-                font-family: 'Teko', sans-serif;
-                font-size: 32px;
-                color: var(--accent-gold);
-                line-height: 1;
-            }
+        .manager-info { flex: 1; min-width: 200px; }
+        .manager-info h2 {
+            font-family: 'Teko', sans-serif;
+            font-size: 32px;
+            color: var(--accent-gold);
+            line-height: 1;
+        }
 
         .section-title {
             font-family: 'Teko', sans-serif;
@@ -301,36 +281,23 @@
             overflow: hidden;
         }
 
-            .player-mini-card img {
-                width: 45px;
-                height: 45px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 2px solid var(--primary-red);
-                flex-shrink: 0;
-            }
-
-        .player-mini-info {
-            flex: 1;
-            min-width: 0;
-            text-align: left;
+        .player-mini-card img {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-red);
+            flex-shrink: 0;
         }
 
-            .player-mini-info h4 {
-                font-size: 14px;
-                font-weight: 700;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .player-mini-info p {
-                font-size: 11px;
-                color: var(--text-muted);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
+        .player-mini-info { flex: 1; min-width: 0; text-align: left; }
+        .player-mini-info h4 {
+            font-size: 14px; font-weight: 700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .player-mini-info p {
+            font-size: 11px; color: var(--text-muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
         .btn-card-transfer {
             background: var(--cyan-glow);
@@ -357,21 +324,18 @@
             box-shadow: 0 0 10px rgba(255, 183, 3, 0.1);
         }
 
-            .manager-mini-card img {
-                width: 45px;
-                height: 45px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 2px solid var(--accent-gold);
-                flex-shrink: 0;
-            }
+        .manager-mini-card img {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+            flex-shrink: 0;
+        }
 
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.88);
             display: none;
             justify-content: center;
@@ -408,11 +372,11 @@
             font-size: 14px;
         }
 
-        /* FIXED RESPONSIVE FULL BACKGROUND CARD STYLES */
+        /* CARD DISPLAY SPECIFIC CSS STYLING FIX */
         .image-bg-card {
-            width: 100%;
-            max-width: 280px;
-            height: 390px;
+            width: min(88vw, 360px);
+            max-width: 360px;
+            aspect-ratio: 360 / 500;
             border-radius: 12px;
             margin: 0 auto 12px auto;
             position: relative;
@@ -421,23 +385,18 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
+            padding: 14px;
             color: #fff;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
             background-color: #090b10;
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
             border: 2px solid var(--accent-gold);
-            transform: translateZ(0); /* Fixes mobile rendering glitch */
+            transform: translateZ(0);
         }
 
         .card-bg-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(180deg, rgba(7,9,14,0.75) 0%, rgba(7,9,14,0.3) 40%, rgba(7,9,14,0.96) 100%);
             z-index: 1;
             pointer-events: none;
@@ -452,15 +411,14 @@
 
         .card-top-title {
             font-family: 'Teko', sans-serif;
-            font-size: 18px;
+            font-size: clamp(17px, 4.8vw, 20px);
             color: #fff;
             text-shadow: 0 2px 4px #000;
             letter-spacing: 1px;
         }
 
         .transfer-avatar-wrapper {
-            width: 65px;
-            height: 65px;
+            width: 65px; height: 65px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid var(--cyan-glow);
@@ -472,19 +430,16 @@
             touch-action: none;
         }
 
-            .transfer-avatar-wrapper:active {
-                cursor: grabbing;
-            }
+        .transfer-avatar-wrapper:active { cursor: grabbing; }
 
-            .transfer-avatar-wrapper img {
-                width: 65px;
-                height: 65px;
-                object-fit: cover;
-                transform: translate(0, 0) scale(1);
-                transform-origin: center center;
-                user-select: none;
-                -webkit-user-drag: none;
-            }
+        .transfer-avatar-wrapper img {
+            width: 65px; height: 65px;
+            object-fit: cover;
+            transform: translate(0, 0) scale(1);
+            transform-origin: center center;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
 
         .transfer-image-controls {
             display: flex;
@@ -495,27 +450,24 @@
             z-index: 20;
         }
 
-            .transfer-image-controls button {
-                width: 21px;
-                height: 19px;
-                padding: 0;
-                border: 1px solid var(--cyan-glow);
-                background: #07131b;
-                color: var(--cyan-glow);
-                border-radius: 3px;
-                cursor: pointer;
-                font-size: 10px;
-                font-weight: 700;
-            }
-
-                .transfer-image-controls button:hover {
-                    background: var(--cyan-glow);
-                    color: #000;
-                }
-
-        .card-capture-hide {
-            display: none !important;
+        .transfer-image-controls button {
+            width: 21px; height: 19px;
+            padding: 0;
+            border: 1px solid var(--cyan-glow);
+            background: #07131b;
+            color: var(--cyan-glow);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
         }
+
+        .transfer-image-controls button:hover {
+            background: var(--cyan-glow);
+            color: #000;
+        }
+
+        .card-capture-hide { display: none !important; }
 
         .card-bottom-info {
             position: relative;
@@ -536,10 +488,10 @@
 
         .card-main-name {
             font-family: 'Teko', sans-serif;
-            font-size: 34px;
+            font-size: clamp(28px, 8vw, 38px);
             color: #ffffff;
             text-transform: uppercase;
-            line-height: 0.9;
+            line-height: .92;
             text-shadow: 0 3px 8px #000;
             margin-top: 2px;
             word-break: break-word;
@@ -547,8 +499,7 @@
 
         .card-brand-footer {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            bottom: 0; left: 0;
             width: 100%;
             background: rgba(0, 0, 0, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -560,45 +511,32 @@
             z-index: 3;
         }
 
-            .card-brand-footer img {
-                width: 22px;
-                height: 22px;
-                object-fit: contain;
-                border-radius: 50%;
-            }
+        .card-brand-footer img {
+            width: 22px; height: 22px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
 
-            .card-brand-footer span {
-                font-family: 'Teko', sans-serif;
-                font-size: 18px;
-                color: #ffffff;
-            }
+        .card-brand-footer span {
+            font-family: 'Teko', sans-serif;
+            font-size: 18px;
+            color: #ffffff;
+        }
 
         .boom-pop {
             animation: boomScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes boomScale {
-            0% {
-                transform: scale(0.2);
-                opacity: 0;
-            }
-
-            70% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(0.2); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        /* TRANSFER CARD */
         .done-deal-card {
-            width: 100%;
-            max-width: 290px;
-            height: 420px;
+            width: min(88vw, 360px);
+            max-width: 360px;
+            aspect-ratio: 360 / 520;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -617,7 +555,7 @@
 
         .dd-header {
             font-family: 'Teko', sans-serif;
-            font-size: 30px;
+            font-size: clamp(27px, 8vw, 32px);
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px #000;
@@ -651,27 +589,23 @@
             align-items: center;
         }
 
-            .dd-img-box img {
-                width: 65px;
-                height: 65px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 2px solid #00d2ff;
-                background: #090a0c;
-            }
-
-            .dd-img-box span {
-                font-size: 10px;
-                color: #ddd;
-                margin-top: 3px;
-                text-transform: uppercase;
-                font-weight: 700;
-            }
-
-        .dd-arrows {
-            font-size: 20px;
-            color: #00d2ff;
+        .dd-img-box img {
+            width: 65px; height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00d2ff;
+            background: #090a0c;
         }
+
+        .dd-img-box span {
+            font-size: 10px;
+            color: #ddd;
+            margin-top: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .dd-arrows { font-size: 20px; color: #00d2ff; }
 
         .dd-fee-badge {
             background: rgba(0, 0, 0, 0.6);
@@ -684,7 +618,7 @@
 
         .dd-fee-text {
             font-family: 'Teko', sans-serif;
-            font-size: 24px;
+            font-size: clamp(22px, 6vw, 26px);
             font-weight: 700;
             color: #ffb703;
             letter-spacing: 1px;
@@ -698,22 +632,21 @@
             margin-top: 2px;
         }
 
-            .dd-footer-box h3 {
-                font-family: 'Teko', sans-serif;
-                font-size: 26px;
-                color: #fff;
-                line-height: 1;
-                text-transform: uppercase;
-                text-shadow: 0 2px 4px #000;
-            }
+        .dd-footer-box h3 {
+            font-family: 'Teko', sans-serif;
+            font-size: clamp(23px, 7vw, 28px);
+            color: #fff;
+            line-height: 1;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px #000;
+        }
 
-            .dd-footer-box p {
-                font-size: 10px;
-                color: #00d2ff;
-                margin-top: 2px;
-            }
+        .dd-footer-box p {
+            font-size: 10px;
+            color: #00d2ff;
+            margin-top: 2px;
+        }
 
-        /* FIXTURE GRAPHIC CARD */
         .fixture-card {
             width: 100%;
             max-width: 420px;
@@ -744,8 +677,7 @@
         }
 
         .fx-team-box img {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border-radius: 50%;
             border: 2px solid var(--accent-gold);
             object-fit: cover;
@@ -789,12 +721,11 @@
             font-size: 12px;
         }
 
-            .fx-matchup-row img {
-                width: 26px;
-                height: 26px;
-                border-radius: 50%;
-                object-fit: cover;
-            }
+        .fx-matchup-row img {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
         .no-squad-alert {
             background: rgba(229, 9, 20, 0.15);
@@ -806,9 +737,7 @@
             font-size: 12px;
             text-transform: uppercase;
         }
-    
 
-        /* ===== FINAL RESPONSIVE CARD + HIGH QUALITY EXPORT FIX ===== */
         .profile-card-image-layer {
             position: absolute;
             inset: 0;
@@ -825,8 +754,7 @@
 
         .profile-card-image-layer img {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             inset: 0;
             object-fit: cover;
             object-position: center center;
@@ -861,8 +789,7 @@
         }
 
         .profile-card-adjust-controls button {
-            width: 32px;
-            height: 28px;
+            width: 32px; height: 28px;
             border: 1px solid var(--accent-gold);
             border-radius: 4px;
             background: #090a0c;
@@ -883,33 +810,6 @@
             color: var(--text-muted);
         }
 
-        /* Fixed export-friendly card ratio. The visual card remains responsive on screen. */
-        .image-bg-card {
-            width: min(88vw, 360px);
-            max-width: 360px;
-            aspect-ratio: 360 / 500;
-            height: auto;
-            min-height: 0;
-            padding: 14px;
-        }
-
-        .done-deal-card {
-            width: min(88vw, 360px);
-            max-width: 360px;
-            aspect-ratio: 360 / 520;
-            height: auto;
-            min-height: 0;
-        }
-
-        .card-top-title { font-size: clamp(17px, 4.8vw, 20px); }
-        .card-main-name { font-size: clamp(28px, 8vw, 38px); line-height: .92; }
-
-        .dd-header { font-size: clamp(27px, 8vw, 32px); }
-        .dd-fee-text { font-size: clamp(22px, 6vw, 26px); }
-        .dd-footer-box h3 { font-size: clamp(23px, 7vw, 28px); }
-
-        .modal-body { width: min(100%, 480px); }
-
         @media (max-width: 600px) {
             .modal-overlay { padding: 8px; align-items: flex-start; }
             .modal-body {
@@ -925,13 +825,11 @@
             .profile-card-adjust-controls { width: min(92vw, 360px); }
         }
 
-        @media (min-width: 601px) {
-            .modal-overlay { padding: 20px; }
+        @media (min-width: 601px) { .modal-overlay { padding: 20px; } }
+
+        .card-capture-hide, [data-capture-hide="true"].card-capture-hide {
+            display: none !important;
         }
-
-        .card-capture-hide,
-        [data-capture-hide="true"].card-capture-hide { display: none !important; }
-
     </style>
 </head>
 <body>
@@ -1813,17 +1711,17 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B", "00d2ff", "ffffff") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                                        <div class="fx-matchup-row">
-                                            <div style="display:flex; align-items:center; gap:6px;">
-                                                <img src="${playerA.avatar}">
-                                                <span>${playerA.name}</span>
-                                            </div>
-                                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                            <div style="display:flex; align-items:center; gap:6px;">
-                                                <span>${playerB.name}</span>
-                                                <img src="${playerB.avatar}">
-                                            </div>
-                                        </div>`;
+                        <div class="fx-matchup-row">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <img src="${playerA.avatar}">
+                                <span>${playerA.name}</span>
+                            </div>
+                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span>${playerB.name}</span>
+                                <img src="${playerB.avatar}">
+                            </div>
+                        </div>`;
                 }
             }
 
@@ -1849,11 +1747,11 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                                    </div>`;
+                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                    </div>`;
             });
         };
 
@@ -1919,16 +1817,16 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                        </div>
-                                        <div style="display:flex; gap:6px;">
-                                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                        </div>
-                                    </div>`;
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                        <div style="text-align:left;">
+                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                        </div>
+                    </div>`;
             });
         };
 
@@ -2028,10 +1926,11 @@
             }));
 
             if (document.fonts && document.fonts.ready) {
-                try { await document.fonts.ready; } catch (_) {}
+                try { await document.fonts.ready; } catch (_) { }
             }
         };
 
+        /* PERFECT IMAGE DIMENSION FIT CAPTURE FUNCTION */
         window.captureCardElement = async function (elementId, filename) {
             const element = document.getElementById(elementId);
             if (!element) {
@@ -2043,26 +1942,24 @@
                 '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
             );
             const animationClass = 'boom-pop';
+            
+            // Save initial inline styles
             const originalWidth = element.style.width;
             const originalHeight = element.style.height;
+            const originalMaxWidth = element.style.maxWidth;
             const originalAspect = element.style.aspectRatio;
             const originalAnimation = element.style.animation;
             const originalTransform = element.style.transform;
 
             try {
-                /*
-                 * IMPORTANT:
-                 * Always capture at a fixed 360px logical card width.
-                 * This prevents a phone's small CSS viewport from producing
-                 * a low-resolution downloaded card.
-                 */
                 const isTransfer = elementId === 'cardToCapture';
+                
+                // Force fixed strict width and height during render to stop image distortion
                 element.style.width = '360px';
                 element.style.maxWidth = '360px';
                 element.style.height = isTransfer ? '520px' : '500px';
-                element.style.aspectRatio = 'auto';
+                element.style.aspectRatio = 'unset';
 
-                // Do not capture the entrance animation/transform.
                 element.classList.remove(animationClass);
                 element.style.animation = 'none';
                 element.style.transform = 'none';
@@ -2070,15 +1967,13 @@
                 controls.forEach(control => control.classList.add('card-capture-hide'));
 
                 await window.waitForCardImages(element);
-
-                // Let layout/fonts/images settle before rasterizing.
                 await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
                 const canvas = await html2canvas(element, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 4,
+                    scale: 3,
                     width: 360,
                     height: isTransfer ? 520 : 500,
                     windowWidth: 360,
@@ -2107,11 +2002,13 @@
             } catch (error) {
                 console.error("Card download failed:", error);
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
-                alert("Card download failed. Please try again. If the profile image is from an external host without CORS support, use a Firebase-hosted/profile image URL.");
+                alert("Card download failed. Please try again.");
                 return false;
             } finally {
+                // Restore responsive styles
                 element.style.width = originalWidth;
                 element.style.height = originalHeight;
+                element.style.maxWidth = originalMaxWidth;
                 element.style.aspectRatio = originalAspect;
                 element.style.animation = originalAnimation;
                 element.style.transform = originalTransform;
@@ -2252,13 +2149,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info" style="text-align: left;">
-                                                <h4>${p.name}</h4>
-                                                <p style="color:var(--accent-gold)">Signed Player</p>
-                                            </div>
-                                        </div>`;
+                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                            <img src="${p.avatar}" alt="${p.name}">
+                            <div class="player-mini-info" style="text-align: left;">
+                                <h4>${p.name}</h4>
+                                <p style="color:var(--accent-gold)">Signed Player</p>
+                            </div>
+                        </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2287,10 +2184,10 @@
             }
             squad.forEach(p => {
                 container.innerHTML += `
-                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                        <input type="checkbox" value="${p.id}" checked>
-                                        <span style="font-size:14px;">${p.name}</span>
-                                    </div>`;
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                        <input type="checkbox" value="${p.id}" checked>
+                        <span style="font-size:14px;">${p.name}</span>
+                    </div>`;
             });
         };
 
@@ -2320,16 +2217,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                                            </div>
-                                        </div>
-                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                    </div>`;
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                            <div style="text-align:left;">
+                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                            </div>
+                        </div>
+                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                    </div>`;
             });
         };
 
@@ -2349,14 +2246,14 @@
             }
             approved.forEach((m) => {
                 container.innerHTML += `
-                                    <div class="manager-mini-card">
-                                        <img src="${m.avatar}" alt="${m.name}">
-                                        <div class="player-mini-info">
-                                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                            <p style="color: var(--text-light);">${m.club}</p>
-                                        </div>
-                                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                    </div>`;
+                    <div class="manager-mini-card">
+                        <img src="${m.avatar}" alt="${m.name}">
+                        <div class="player-mini-info">
+                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                            <p style="color: var(--text-light);">${m.club}</p>
+                        </div>
+                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                    </div>`;
             });
         };
 
@@ -2461,13 +2358,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                        </div>
-                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                    </div>`;
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                        <div style="text-align:left;">
+                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                        </div>
+                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                    </div>`;
             });
         };
 
@@ -2522,41 +2419,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                                <p style="font-size:10px;">Status: ${statusInfo}</p>
-                                            </div>
-                                        </div>
-                                        ${adminAction}
-                                    </div>`;
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                            <div style="text-align:left;">
+                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                <p style="font-size:10px;">Status: ${statusInfo}</p>
+                            </div>
+                        </div>
+                        ${adminAction}
+                    </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                        <div class="player-mini-card">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info">
-                                                <h4>${p.name}</h4>
-                                                <p>${p.device}</p>
-                                            </div>
-                                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                        </div>`;
+                        <div class="player-mini-card">
+                            <img src="${p.avatar}" alt="${p.name}">
+                            <div class="player-mini-info">
+                                <h4>${p.name}</h4>
+                                <p>${p.device}</p>
+                            </div>
+                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                        </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info">
-                                                <h4>${p.name}</h4>
-                                                <p>${p.device}</p>
-                                            </div>
-                                            ${actionBtn}
-                                        </div>`;
+                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                            <img src="${p.avatar}" alt="${p.name}">
+                            <div class="player-mini-info">
+                                <h4>${p.name}</h4>
+                                <p>${p.device}</p>
+                            </div>
+                            ${actionBtn}
+                        </div>`;
                 }
             });
         };
