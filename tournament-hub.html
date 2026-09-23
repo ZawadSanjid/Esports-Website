@@ -372,11 +372,11 @@
             font-size: 14px;
         }
 
-        /* CARD DISPLAY SPECIFIC CSS STYLING FIX */
+        /* FIXED CARD DISPLAY STYLING (DISTORTION & OVERLAY FIX) */
         .image-bg-card {
-            width: min(88vw, 360px);
-            max-width: 360px;
-            aspect-ratio: 360 / 500;
+            width: 360px;
+            height: 500px;
+            max-width: 100%;
             border-radius: 12px;
             margin: 0 auto 12px auto;
             position: relative;
@@ -397,7 +397,13 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(7,9,14,0.75) 0%, rgba(7,9,14,0.3) 40%, rgba(7,9,14,0.96) 100%);
+            background: linear-gradient(
+                180deg, 
+                rgba(7, 9, 14, 0.4) 0%, 
+                rgba(7, 9, 14, 0.1) 40%, 
+                rgba(7, 9, 14, 0.85) 85%,
+                rgba(7, 9, 14, 0.98) 100%
+            );
             z-index: 1;
             pointer-events: none;
         }
@@ -534,9 +540,9 @@
         }
 
         .done-deal-card {
-            width: min(88vw, 360px);
-            max-width: 360px;
-            aspect-ratio: 360 / 520;
+            width: 360px;
+            height: 520px;
+            max-width: 100%;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -754,12 +760,11 @@
 
         .profile-card-image-layer img {
             position: absolute;
-            width: 100%; height: 100%;
+            width: 100% !important; 
+            height: 100% !important;
             inset: 0;
-            object-fit: cover;
-            object-position: center center;
-            transform: translate3d(0,0,0) scale(1);
-            transform-origin: center center;
+            object-fit: cover !important;
+            object-position: center center !important;
             user-select: none;
             -webkit-user-drag: none;
             will-change: transform;
@@ -818,8 +823,8 @@
                 padding: 12px 8px;
                 border-radius: 9px;
             }
-            .image-bg-card { width: min(92vw, 360px); }
-            .done-deal-card { width: min(92vw, 360px); }
+            .image-bg-card { max-width: min(92vw, 360px); }
+            .done-deal-card { max-width: min(92vw, 360px); }
             .card-brand-footer span { font-size: 16px; }
             .card-brand-footer img { width: 20px; height: 20px; }
             .profile-card-adjust-controls { width: min(92vw, 360px); }
@@ -1930,7 +1935,7 @@
             }
         };
 
-        /* PERFECT IMAGE DIMENSION FIT CAPTURE FUNCTION */
+        /* PERFECT DIMENSION & STRETCH-FREE CAPTURE FUNCTION */
         window.captureCardElement = async function (elementId, filename) {
             const element = document.getElementById(elementId);
             if (!element) {
@@ -1943,23 +1948,10 @@
             );
             const animationClass = 'boom-pop';
             
-            // Save initial inline styles
-            const originalWidth = element.style.width;
-            const originalHeight = element.style.height;
-            const originalMaxWidth = element.style.maxWidth;
-            const originalAspect = element.style.aspectRatio;
             const originalAnimation = element.style.animation;
             const originalTransform = element.style.transform;
 
             try {
-                const isTransfer = elementId === 'cardToCapture';
-                
-                // Force fixed strict width and height during render to stop image distortion
-                element.style.width = '360px';
-                element.style.maxWidth = '360px';
-                element.style.height = isTransfer ? '520px' : '500px';
-                element.style.aspectRatio = 'unset';
-
                 element.classList.remove(animationClass);
                 element.style.animation = 'none';
                 element.style.transform = 'none';
@@ -1973,15 +1965,10 @@
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 3,
-                    width: 360,
-                    height: isTransfer ? 520 : 500,
-                    windowWidth: 360,
-                    windowHeight: isTransfer ? 520 : 500,
-                    imageTimeout: 20000,
+                    scale: 2,
+                    imageTimeout: 15000,
                     logging: false,
-                    foreignObjectRendering: false,
-                    removeContainer: true
+                    foreignObjectRendering: false
                 });
 
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
@@ -2005,11 +1992,6 @@
                 alert("Card download failed. Please try again.");
                 return false;
             } finally {
-                // Restore responsive styles
-                element.style.width = originalWidth;
-                element.style.height = originalHeight;
-                element.style.maxWidth = originalMaxWidth;
-                element.style.aspectRatio = originalAspect;
                 element.style.animation = originalAnimation;
                 element.style.transform = originalTransform;
                 element.classList.add(animationClass);
