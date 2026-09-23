@@ -1468,7 +1468,7 @@
             });
         });
 
-        window.loadCurrentFirebaseUser = async function (firebaseUser) {
+window.loadCurrentFirebaseUser = async function (firebaseUser) {
             if (!firebaseUser) {
                 window.currentLoggedUser = null;
                 window.cardPreviewUser = null;
@@ -1476,6 +1476,7 @@
             }
 
             try {
+                // Firestore থেকে ইউজারের নিজস্ব ডকুমেন্ট ফেচ করা হচ্ছে
                 const userRef = doc(firestoreDb, "users", firebaseUser.uid);
                 const userDoc = await getDoc(userRef);
 
@@ -1484,6 +1485,7 @@
                     profile = userDoc.data() || {};
                 }
 
+                // ফায়ারস্টোর বা ফায়ারবেস অথ থেকে নাম ও ছবি নেওয়া
                 const name = (profile.name || firebaseUser.displayName || "MD. ZAWADULLAH BHUIYAN").toString().trim();
                 const avatar = profile.avatar || firebaseUser.photoURL || window.createSvgAvatar(name);
 
@@ -1497,11 +1499,13 @@
                 };
 
                 window.cardPreviewUser = { ...window.currentLoggedUser };
+                
+                // কার্ডের ভেতর নাম ও ছবি পারফেক্টলি সেট করা
                 window.syncCurrentUserIntoCards();
                 window.renderAllData();
 
             } catch (error) {
-                console.error("Failed to load profile:", error);
+                console.error("Failed to load profile from Firestore:", error);
                 window.currentLoggedUser = {
                     id: firebaseUser.uid,
                     uid: firebaseUser.uid,
@@ -1510,6 +1514,8 @@
                     avatar: firebaseUser.photoURL || window.createSvgAvatar("Z"),
                     role: "player"
                 };
+                window.cardPreviewUser = { ...window.currentLoggedUser };
+                window.syncCurrentUserIntoCards();
                 window.renderAllData();
             }
         };
