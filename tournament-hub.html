@@ -372,10 +372,10 @@
             font-size: 14px;
         }
 
-        /* FIXED CARD DISPLAY STYLING (DISTORTION & OVERLAY FIX) */
+        /* FIXED CARD CONTAINER STYLING */
         .image-bg-card {
-            width: 500px;
-            height: 350px;
+            width: 360px !important;
+            height: 500px !important;
             max-width: 100%;
             border-radius: 12px;
             margin: 0 auto 12px auto;
@@ -417,7 +417,7 @@
 
         .card-top-title {
             font-family: 'Teko', sans-serif;
-            font-size: clamp(17px, 4.8vw, 20px);
+            font-size: 20px;
             color: #fff;
             text-shadow: 0 2px 4px #000;
             letter-spacing: 1px;
@@ -494,7 +494,7 @@
 
         .card-main-name {
             font-family: 'Teko', sans-serif;
-            font-size: clamp(28px, 8vw, 38px);
+            font-size: 36px;
             color: #ffffff;
             text-transform: uppercase;
             line-height: .92;
@@ -540,8 +540,8 @@
         }
 
         .done-deal-card {
-            width: 360px;
-            height: 520px;
+            width: 360px !important;
+            height: 520px !important;
             max-width: 100%;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
@@ -561,7 +561,7 @@
 
         .dd-header {
             font-family: 'Teko', sans-serif;
-            font-size: clamp(27px, 8vw, 32px);
+            font-size: 32px;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px #000;
@@ -624,7 +624,7 @@
 
         .dd-fee-text {
             font-family: 'Teko', sans-serif;
-            font-size: clamp(22px, 6vw, 26px);
+            font-size: 26px;
             font-weight: 700;
             color: #ffb703;
             letter-spacing: 1px;
@@ -640,7 +640,7 @@
 
         .dd-footer-box h3 {
             font-family: 'Teko', sans-serif;
-            font-size: clamp(23px, 7vw, 28px);
+            font-size: 28px;
             color: #fff;
             line-height: 1;
             text-transform: uppercase;
@@ -823,8 +823,6 @@
                 padding: 12px 8px;
                 border-radius: 9px;
             }
-            .image-bg-card { max-width: min(92vw, 360px); }
-            .done-deal-card { max-width: min(92vw, 360px); }
             .card-brand-footer span { font-size: 16px; }
             .card-brand-footer img { width: 20px; height: 20px; }
             .profile-card-adjust-controls { width: min(92vw, 360px); }
@@ -1935,43 +1933,62 @@
             }
         };
 
-        /* PERFECT DIMENSION & STRETCH-FREE CAPTURE FUNCTION */
+        /* ULTIMATE NO-STRETCH CAPTURE FUNCTION (CLONING TECHNIQUE) */
         window.captureCardElement = async function (elementId, filename) {
-            const element = document.getElementById(elementId);
-            if (!element) {
+            const originalElement = document.getElementById(elementId);
+            if (!originalElement) {
                 alert("Card element not found!");
                 return false;
             }
 
-            const controls = document.querySelectorAll(
+            const isTransfer = elementId === 'cardToCapture';
+            const targetWidth = 360;
+            const targetHeight = isTransfer ? 520 : 500;
+
+            // Create an off-screen container with fixed desktop dimensions to prevent mobile layout distortion
+            const offscreenContainer = document.createElement('div');
+            offscreenContainer.style.position = 'fixed';
+            offscreenContainer.style.left = '-9999px';
+            offscreenContainer.style.top = '-9999px';
+            offscreenContainer.style.width = targetWidth + 'px';
+            offscreenContainer.style.height = targetHeight + 'px';
+            offscreenContainer.style.zIndex = '-9999';
+
+            // Clone the original element
+            const clone = originalElement.cloneNode(true);
+            clone.style.width = targetWidth + 'px';
+            clone.style.height = targetHeight + 'px';
+            clone.style.maxWidth = 'none';
+            clone.style.transform = 'none';
+            clone.style.animation = 'none';
+            clone.style.margin = '0';
+
+            // Hide capture-restricted controls inside the clone
+            const controls = clone.querySelectorAll(
                 '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
             );
-            const animationClass = 'boom-pop';
-            
-            const originalAnimation = element.style.animation;
-            const originalTransform = element.style.transform;
+            controls.forEach(c => c.style.display = 'none');
+
+            offscreenContainer.appendChild(clone);
+            document.body.appendChild(offscreenContainer);
 
             try {
-                element.classList.remove(animationClass);
-                element.style.animation = 'none';
-                element.style.transform = 'none';
+                await window.waitForCardImages(clone);
+                await new Promise(resolve => setTimeout(resolve, 150));
 
-                controls.forEach(control => control.classList.add('card-capture-hide'));
-
-                await window.waitForCardImages(element);
-                await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-                const canvas = await html2canvas(element, {
+                const canvas = await html2canvas(clone, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 2,
-                    imageTimeout: 15000,
-                    logging: false,
-                    foreignObjectRendering: false
+                    scale: 3,
+                    width: targetWidth,
+                    height: targetHeight,
+                    windowWidth: targetWidth,
+                    windowHeight: targetHeight,
+                    logging: false
                 });
 
-                controls.forEach(control => control.classList.remove('card-capture-hide'));
+                document.body.removeChild(offscreenContainer);
 
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
                 if (!blob) throw new Error('Could not create PNG blob');
@@ -1988,13 +2005,11 @@
                 return true;
             } catch (error) {
                 console.error("Card download failed:", error);
-                controls.forEach(control => control.classList.remove('card-capture-hide'));
+                if (document.body.contains(offscreenContainer)) {
+                    document.body.removeChild(offscreenContainer);
+                }
                 alert("Card download failed. Please try again.");
                 return false;
-            } finally {
-                element.style.animation = originalAnimation;
-                element.style.transform = originalTransform;
-                element.classList.add(animationClass);
             }
         };
 
