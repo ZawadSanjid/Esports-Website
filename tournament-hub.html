@@ -1934,6 +1934,7 @@
 
         /* ULTIMATE NO-STRETCH CAPTURE FUNCTION (CLONING TECHNIQUE) */
        /* FIXED CAPTURE FUNCTION - PREVENTS IMAGE STRETCHING/DISTORTION */
+/* UPDATED CAPTURE FUNCTION WITH BIGGER CANVAS & HD NO-STRETCH DIMENSIONS */
 window.captureCardElement = async function (elementId, filename) {
     const originalElement = document.getElementById(elementId);
     if (!originalElement) {
@@ -1942,10 +1943,11 @@ window.captureCardElement = async function (elementId, filename) {
     }
 
     const isTransfer = elementId === 'cardToCapture';
-    const targetWidth = 360;
-    const targetHeight = isTransfer ? 520 : 500;
+    // বড় ডাইমেনশন সেট করা হয়েছে যাতে মোবাইলে ছবি স্পষ্ট ও বড় দেখায়
+    const targetWidth = 450; 
+    const targetHeight = isTransfer ? 650 : 625;
 
-    // ১. অফ-স্ক্রিন কন্টেইনার তৈরি করা হচ্ছে (মেমোরিতে ফিক্সড ডাইমেনশন নিশ্চিত করতে)
+    // ১. অফ-স্ক্রিন কন্টেইনার তৈরি করা (বড় ফিক্সড ডাইমেনশনে)
     const offscreenContainer = document.createElement('div');
     offscreenContainer.style.position = 'fixed';
     offscreenContainer.style.left = '-9999px';
@@ -1954,7 +1956,7 @@ window.captureCardElement = async function (elementId, filename) {
     offscreenContainer.style.height = targetHeight + 'px';
     offscreenContainer.style.zIndex = '-9999';
 
-    // ২. কার্ড এলিমেন্ট ক্লোন করা
+    // ২. অরিজিনাল কার্ড এলিমেন্ট ক্লোন করা
     const clone = originalElement.cloneNode(true);
     clone.style.width = targetWidth + 'px';
     clone.style.height = targetHeight + 'px';
@@ -1963,19 +1965,25 @@ window.captureCardElement = async function (elementId, filename) {
     clone.style.animation = 'none';
     clone.style.margin = '0';
 
-    // ৩. ছবিতে চ্যাপ্টা হওয়ার সমস্যা আটকানোর জন্য ইনলাইন কভার স্টাইল প্রয়োগ
+    // ৩. ছবি চ্যাপ্টা হওয়া প্রতিরোধ করতে ইনলাইন অবজেক্ট-ফিট এবং কভার স্টাইল দেওয়া
     const cloneImages = clone.querySelectorAll('img');
     cloneImages.forEach(img => {
-        if (img.classList.contains('ebfc-logo-img')) return; // লোগো বাদ দিয়ে
-        
-        // ছবিকে ইনলাইন ফিক্সড ডাইমেনশন ও কভার ফিল দেওয়া
-        img.style.setProperty('object-fit', 'cover', 'important');
-        img.style.setProperty('object-position', 'center center', 'important');
-        img.style.width = '100%';
-        img.style.height = '100%';
+        if (!img.classList.contains('ebfc-logo-img')) {
+            img.style.setProperty('object-fit', 'cover', 'important');
+            img.style.setProperty('object-position', 'center center', 'important');
+            img.style.width = '100%';
+            img.style.height = '100%';
+        }
     });
 
-    // ৪. কন্ট্রোল বাটনগুলো ক্লোন থেকে লুকিয়ে ফেলা
+    // ৪. টেক্সট ও টাইটেল সাইজ অনুপাতে সামান্য বড় করে দেওয়া যাতে দেখতে সুন্দর লাগে
+    const cloneMainName = clone.querySelector('.card-main-name');
+    if (cloneMainName) cloneMainName.style.fontSize = '44px';
+
+    const cloneTopTitle = clone.querySelector('.card-top-title');
+    if (cloneTopTitle) cloneTopTitle.style.fontSize = '24px';
+
+    // ৫. অ্যাডজাস্ট কন্ট্রোল বাটনগুলো ডাউনলোডের ছবি থেকে লুকিয়ে ফেলা
     const controls = clone.querySelectorAll(
         '.image-adjust-controls, .transfer-image-controls, .profile-card-adjust-controls'
     );
@@ -1988,12 +1996,12 @@ window.captureCardElement = async function (elementId, filename) {
         await window.waitForCardImages(clone);
         await new Promise(resolve => setTimeout(resolve, 200));
 
-        // ৫. HTML2CANVAS ক্যাপচার করা
+        // ৬. HTML2CANVAS ক্যাপচার (HD 3x Scale)
         const canvas = await html2canvas(clone, {
             useCORS: true,
             allowTaint: false,
             backgroundColor: null,
-            scale: 3, // হাই রেজোলিউশন
+            scale: 3, 
             width: targetWidth,
             height: targetHeight,
             windowWidth: targetWidth,
