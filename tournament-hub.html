@@ -2018,13 +2018,16 @@
 
         window.waitForCardImages = async function (element) {
             const images = Array.from(element.querySelectorAll('img'));
-            await Promise.all(images.map(img => {
+            await Promise.all(images.map(async (img) => {
                 if (img.complete && img.naturalWidth > 0) {
                     try { await img.decode(); } catch (_) {}
-                    return Promise.resolve();
+                    return;
                 }
-                return new Promise(resolve => {
-                    const done = async () => { try { await img.decode(); } catch (_) {} resolve(); }
+                await new Promise(resolve => {
+                    const done = async () => {
+                        try { await img.decode(); } catch (_) {}
+                        resolve();
+                    };
                     img.addEventListener('load', done, { once: true });
                     img.addEventListener('error', done, { once: true });
                 });
@@ -2102,24 +2105,56 @@
                 // Let layout/fonts/images settle before rasterizing.
                 await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
+                /*
+                 * Render at a predictable high-resolution export size.
+                 * A very large html2canvas scale can be downsampled by some
+                 * mobile browsers, which is why the previous 6x export could
+                 * still produce a ~1K image. 3x gives us a stable 1080px-wide
+                 * master image while keeping memory usage reasonable.
+                 */
+                const exportScale = 3;
+                const logicalWidth = 360;
+                const logicalHeight = isTransfer ? 520 : 500;
+
                 const canvas = await html2canvas(element, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: 6,
-                    width: 360,
-                    height: isTransfer ? 520 : 500,
-                    windowWidth: 360,
-                    windowHeight: isTransfer ? 520 : 500,
+                    scale: exportScale,
+                    width: logicalWidth,
+                    height: logicalHeight,
+                    windowWidth: logicalWidth,
+                    windowHeight: logicalHeight,
                     imageTimeout: 20000,
                     logging: false,
                     foreignObjectRendering: false,
                     removeContainer: true
                 });
 
+                /*
+                 * Guarantee the final PNG dimensions even if the browser or
+                 * html2canvas internally returns a smaller backing canvas.
+                 * High-quality interpolation prevents an unnecessarily soft
+                 * result when a browser has reduced the backing resolution.
+                 */
+                const targetWidth = logicalWidth * exportScale;
+                const targetHeight = logicalHeight * exportScale;
+                let exportCanvas = canvas;
+
+                if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+                    const hiRes = document.createElement('canvas');
+                    hiRes.width = targetWidth;
+                    hiRes.height = targetHeight;
+                    const ctx = hiRes.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+                    exportCanvas = hiRes;
+                }
+
                 controls.forEach(control => control.classList.remove('card-capture-hide'));
 
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
+                const blob = await new Promise(resolve => exportCanvas.toBlob(resolve, 'image/png', 1.0));
                 if (!blob) throw new Error('Could not create PNG blob');
 
                 const url = URL.createObjectURL(blob);
