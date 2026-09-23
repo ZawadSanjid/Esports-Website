@@ -1303,6 +1303,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, update, remove, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Integrated Firebase Configuration
         const firebaseConfig = {
@@ -1319,10 +1320,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
-
-        // Firebase Realtime Database path used by the main EBFC account system.
-        // Change this to your actual profile root if your login page uses another path.
-        const USER_PROFILE_ROOT = "users";
+        const firestoreDb = getFirestore(app);
 
         window.createSvgAvatar = function (text, bgHex = "e50914", textHex = "ffffff") {
             const canvas = document.createElement('canvas');
@@ -1404,68 +1402,57 @@
         });
 
         // ============================================================
-        // FIREBASE ACCOUNT PROFILE
+        // EBFC ACCOUNT PROFILE - SAME SOURCE AS YOUR OLD WEBSITE
         // ============================================================
-        // Expected structure:
-        // users/{firebaseUid}/name
-        // users/{firebaseUid}/avatar (or image/photoURL)
-        // users/{firebaseUid}/device
+        // Your old EBFC code uses: auth.onAuthStateChanged(user)
+        // then: db.collection("users").doc(user.uid).get()
+        // and reads name/avatar from that Firestore document.
+        // We use the same Firebase Authentication + Firestore flow here.
         window.loadCurrentFirebaseUser = async function (firebaseUser) {
             if (!firebaseUser) {
+                // Some EBFC pages also keep a small session object in localStorage.
+                // It is NOT used as the profile source; Firestore remains the source of truth.
                 window.currentLoggedUser = null;
                 window.cardPreviewUser = null;
                 return;
             }
 
             try {
-                const snapshot = await get(ref(db, `${USER_PROFILE_ROOT}/${firebaseUser.uid}`));
-                const profile = snapshot.exists() ? (snapshot.val() || {}) : {};
+                const userRef = doc(firestoreDb, "users", firebaseUser.uid);
+                const userDoc = await getDoc(userRef);
 
-                const name = String(
-                    profile.name ||
-                    profile.displayName ||
-                    profile.username ||
-                    profile.fullName ||
-                    firebaseUser.displayName ||
-                    "UNKNOWN USER"
-                ).trim();
+                if (!userDoc.exists()) {
+                    console.error("EBFC user document not found for UID:", firebaseUser.uid);
+                    window.currentLoggedUser = null;
+                    return;
+                }
 
-                const avatar =
-                    profile.avatar ||
-                    profile.image ||
-                    profile.profileImage ||
-                    profile.photoURL ||
-                    firebaseUser.photoURL ||
-                    window.createSvgAvatar(name.charAt(0) || "P");
+                const profile = userDoc.data() || {};
+
+                // These are the actual fields used by your old EBFC profile/ranking pages.
+                const name = (profile.name || "EBFC Player").toString().trim();
+                const avatar = profile.avatar || "Image/player1.webp";
 
                 window.currentLoggedUser = {
                     id: firebaseUser.uid,
-                    name,
-                    device: profile.device || profile.phoneModel || "Unknown Device",
-                    avatar
+                    uid: firebaseUser.uid,
+                    name: name,
+                    device: profile.device || "Unknown Device",
+                    avatar: avatar,
+                    role: profile.role || "player"
                 };
 
                 window.cardPreviewUser = { ...window.currentLoggedUser };
+
+                // Put the authenticated Firebase profile directly into the cards.
                 window.syncCurrentUserIntoCards();
                 window.renderAllData();
 
-                console.log("EBFC Firebase profile loaded:", window.currentLoggedUser);
+                console.log("EBFC logged-in profile:", window.currentLoggedUser);
+
             } catch (error) {
-                console.error("Could not load Firebase profile:", error);
-
-                const name = String(firebaseUser.displayName || "UNKNOWN USER").trim();
-                const avatar = firebaseUser.photoURL || window.createSvgAvatar(name.charAt(0) || "P");
-
-                window.currentLoggedUser = {
-                    id: firebaseUser.uid,
-                    name,
-                    device: "Unknown Device",
-                    avatar
-                };
-
-                window.cardPreviewUser = { ...window.currentLoggedUser };
-                window.syncCurrentUserIntoCards();
-                window.renderAllData();
+                console.error("Failed to load EBFC Firestore profile:", error);
+                window.currentLoggedUser = null;
             }
         };
 
