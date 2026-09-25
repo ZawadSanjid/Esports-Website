@@ -964,7 +964,6 @@
         .done-deal-card {
             width: min(100%, calc((100vh - 185px) * 0.6923077));
         }
-        }
     </style>
 </head>
 <body>
@@ -1529,7 +1528,7 @@
                 window.renderAllData();
 
             } catch (error) {
-                console.error("Failed to load profile from Firestore:", error);
+                console.error("Failed to load profile :", error);
                 window.currentLoggedUser = {
                     id: firebaseUser.uid,
                     uid: firebaseUser.uid,
@@ -1708,7 +1707,7 @@
                 m.userId === window.currentLoggedUser.id ||
                 m.name === window.currentLoggedUser.name
             );
-            if (mgr && window.currentUserRole === 'manager') {
+            if (mgr && mgr.status === 'approved' && window.currentUserRole === 'manager') {
                 document.getElementById('mBalanceDisplay').innerText = mgr.balance + "M";
                 let currentSquadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club).length;
                 let badge = document.getElementById('mSquadCountBadge');
@@ -1813,15 +1812,15 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                                            <div class="fx-matchup-row">
-                                                <div style="display:flex; align-items:center; gap:6px;">
-                                                    <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                                                </div>
-                                                <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                                <div style="display:flex; align-items:center; gap:6px;">
-                                                    <span>${playerB.name}</span><img src="${playerB.avatar}">
-                                                </div>
-                                            </div>`;
+                                                <div class="fx-matchup-row">
+                                                    <div style="display:flex; align-items:center; gap:6px;">
+                                                        <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                                    </div>
+                                                    <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                                    <div style="display:flex; align-items:center; gap:6px;">
+                                                        <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                                    </div>
+                                                </div>`;
                 }
             }
 
@@ -1847,23 +1846,20 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                                        <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                            <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                            <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                            <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                                        </div>`;
+                                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                            </div>`;
             });
         };
 
-        // Wait until Google Fonts are fully loaded before exporting.
-        // dom-to-image-more 3.10.x will then embed the webfonts into the generated PNG.
         window.waitForExportFonts = async function () {
             try {
                 if (document.fonts && document.fonts.ready) {
                     await document.fonts.ready;
                 }
 
-                // Explicitly make sure both fonts used by the cards are available.
                 if (document.fonts && document.fonts.load) {
                     await Promise.all([
                         document.fonts.load("600 20px 'Teko'"),
@@ -1878,8 +1874,6 @@
         };
 
         const exportFontOptions = {
-            // IMPORTANT: Google Fonts is cross-origin. This makes dom-to-image-more
-            // fetch the external stylesheet and embed its @font-face rules in the image.
             loadExternalStyleSheet: (href) => href.includes('fonts.googleapis.com'),
             ignoreCSSRuleErrors: true,
             cacheBust: true,
@@ -1887,8 +1881,6 @@
             styleCaching: 'strict'
         };
 
-        // Reliable PNG download helper. Uses a Blob/Object URL so the
-        // Download Now button works more reliably across desktop and mobile browsers.
         window.downloadGeneratedImage = async function (dataUrl, fileName) {
             try {
                 const response = await fetch(dataUrl);
@@ -1911,10 +1903,10 @@
                     const fallbackWindow = window.open();
                     if (fallbackWindow) {
                         fallbackWindow.document.write(`
-                                <title>EBFC Image</title>
-                                <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
-                                <img src="${dataUrl}" alt="EBFC Generated Image">
-                            `);
+                                    <title>EBFC Image</title>
+                                    <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
+                                    <img src="${dataUrl}" alt="EBFC Generated Image">
+                                `);
                         fallbackWindow.document.close();
                         return true;
                     }
@@ -1997,19 +1989,20 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                            </div>
-                                            <div style="display:flex; gap:6px;">
-                                                <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                                <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                            </div>
-                                        </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                                </div>
+                                                <div style="display:flex; gap:6px;">
+                                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                                </div>
+                                            </div>`;
             });
         };
 
+        /* FIX: Manager Approval flow handled properly */
         window.handleManagerSignInStart = function () {
             window.requireLoggedUser();
 
@@ -2031,7 +2024,7 @@
                     alert("Welcome back, Manager!");
                     return;
                 } else if (mgr.status === 'pending') {
-                    alert("Waiting for admin approval.");
+                    alert("Your manager application is currently pending admin approval. You cannot access the dashboard until approved.");
                     return;
                 }
             }
@@ -2067,39 +2060,35 @@
             window.triggerBoomEffects();
         };
 
-window.handlePlayerSignIn = function () {
-    window.requireLoggedUser();
+        window.handlePlayerSignIn = function () {
+            window.requireLoggedUser();
 
-    // ১. চেক করা হচ্ছে প্লেয়ারটি অলরেডি সাইন ইন / ডেটাবেজে নিবন্ধিত কিনা
-    let existingPlayer = window.mockPlayers.find(p => 
-        p.id === `p_${window.currentLoggedUser.id}` || 
-        p.userId === window.currentLoggedUser.id || 
-        p.name === window.currentLoggedUser.name
-    );
+            let existingPlayer = window.mockPlayers.find(p =>
+                p.id === `p_${window.currentLoggedUser.id}` ||
+                p.userId === window.currentLoggedUser.id ||
+                p.name === window.currentLoggedUser.name
+            );
 
-    // ২. প্লেয়ার অলরেডি নিবন্ধিত হলে সতর্কবার্তা দেখাবে এবং সাইন-ইন কার্ড খুলবে না
-    if (existingPlayer) {
-        alert("Already Signed In as Player!");
-        window.currentUserRole = 'player';
-        const leaveBtn = document.getElementById('leavePlayerBtn');
-        if (leaveBtn) leaveBtn.style.display = 'inline-block';
-        return;
-    }
+            if (existingPlayer) {
+                alert("Already Signed In as Player!");
+                window.currentUserRole = 'player';
+                const leaveBtn = document.getElementById('leavePlayerBtn');
+                if (leaveBtn) leaveBtn.style.display = 'inline-block';
+                return;
+            }
 
-    // ৩. নতুন প্লেয়ার হলে কার্ড পপ-আপ দেখাবে
-    window.cardPreviewUser = { ...window.currentLoggedUser };
-    window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
-    document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
+            window.cardPreviewUser = { ...window.currentLoggedUser };
+            window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
+            document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
 
-    window.isPlayerCardDownloaded = false;
-    document.getElementById('btnConfirmPlayerCard').disabled = true;
-    document.getElementById('playerNoticeText').style.display = 'block';
+            window.isPlayerCardDownloaded = false;
+            document.getElementById('btnConfirmPlayerCard').disabled = true;
+            document.getElementById('playerNoticeText').style.display = 'block';
 
-    document.getElementById('playerCardModal').style.display = 'flex';
-    window.triggerBoomEffects();
-};
+            document.getElementById('playerCardModal').style.display = 'flex';
+            window.triggerBoomEffects();
+        };
 
-        /* REPLACED WITH DOM-TO-IMAGE RENDERER TO PREVENT IMAGE SQUISH / STRETCH */
         window.showImagePreviewForSave = async function (elementId, cardType) {
             const element = document.getElementById(elementId);
             if (!element) return;
@@ -2129,15 +2118,15 @@ window.handlePlayerSignIn = function () {
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                    👉 Press & Hold on image or click 'Download Now' 👈
-                </p>
-                <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                    <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                </div>
-            `;
+                    <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                        👉 Press & Hold on image or click 'Download Now' 👈
+                    </p>
+                    <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                        <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                    </div>
+                `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2179,6 +2168,7 @@ window.handlePlayerSignIn = function () {
             }
         };
 
+        /* FIX: Saved with status 'pending' until Admin Approves */
         window.confirmManagerSignIn = async function () {
             if (!window.isManagerCardDownloaded) {
                 alert("Please click 'Download' first before confirming!");
@@ -2196,18 +2186,17 @@ window.handlePlayerSignIn = function () {
                 club: window.tempSquadName || "EBFC Club",
                 balance: 200,
                 trxId: window.tempTrxId || "PAID_REGISTRATION",
-                status: 'approved',
+                status: 'pending', // Save as pending for admin approval
                 avatar: user.avatar || window.createSvgAvatar("M")
             };
 
             try {
                 await setDoc(doc(firestoreDb, 'managers', mgrId), managerData);
-                window.currentUserRole = 'manager';
                 window.closeModal('managerCardModal');
                 window.renderAllData();
-                alert("Manager Registration Confirmed in Firestore!");
+                alert("Manager request submitted successfully! Waiting for Admin Approval before dashboard access.");
             } catch (err) {
-                console.error("Firestore Manager save error: ", err);
+                console.error(" Manager save error: ", err);
                 alert("Database save error: " + err.message);
             }
         };
@@ -2242,9 +2231,9 @@ window.handlePlayerSignIn = function () {
                 if (leaveBtn) leaveBtn.style.display = 'inline-block';
 
                 window.renderAllData();
-                alert("Signed in as Player successfully in Firestore!");
+                alert("Signed in as Player successfully!");
             } catch (err) {
-                console.error("Firestore Player save error: ", err);
+                console.error("Player save error: ", err);
                 alert("Database save error: " + err.message);
             }
         };
@@ -2282,7 +2271,7 @@ window.handlePlayerSignIn = function () {
 
                 window.closeModal('transferModal');
                 window.renderAllData();
-                alert(`${window.selectedPlayerForTransfer.name} transferred to ${activeMgr.club} in Firestore!`);
+                alert(`${window.selectedPlayerForTransfer.name} transferred to ${activeMgr.club} !`);
             } catch (err) {
                 console.error("Transfer failed: ", err);
                 alert("Transfer error: " + err.message);
@@ -2310,13 +2299,13 @@ window.handlePlayerSignIn = function () {
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                            <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info" style="text-align: left;">
-                                                    <h4>${p.name}</h4>
-                                                    <p style="color:var(--accent-gold)">Signed Player</p>
-                                                </div>
-                                            </div>`;
+                                                <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info" style="text-align: left;">
+                                                        <h4>${p.name}</h4>
+                                                        <p style="color:var(--accent-gold)">Signed Player</p>
+                                                    </div>
+                                                </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2345,10 +2334,10 @@ window.handlePlayerSignIn = function () {
             }
             squad.forEach(p => {
                 container.innerHTML += `
-                                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                            <input type="checkbox" value="${p.id}" checked>
-                                            <span style="font-size:14px;">${p.name}</span>
-                                        </div>`;
+                                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                                                <input type="checkbox" value="${p.id}" checked>
+                                                <span style="font-size:14px;">${p.name}</span>
+                                            </div>`;
             });
         };
 
@@ -2378,23 +2367,23 @@ window.handlePlayerSignIn = function () {
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                <div style="text-align:left;">
-                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                        </div>`;
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
         window.approveManager = async function (mgrId) {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
             await updateDoc(doc(firestoreDb, 'managers', mgrId), { status: 'approved' });
-            alert("Manager approved successfully in Firestore!");
+            alert("Manager approved successfully !");
         };
 
         window.renderActiveManagers = function () {
@@ -2408,15 +2397,15 @@ window.handlePlayerSignIn = function () {
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                                        <div class="manager-mini-card">
-                                            <img src="${m.avatar}" alt="${m.name}">
-                                            <div class="player-mini-info">
-                                                <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                                <p style="color: var(--text-light);">${m.club}</p>
-                                                <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
-                                            </div>
-                                            <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                        </div>`;
+                                            <div class="manager-mini-card">
+                                                <img src="${m.avatar}" alt="${m.name}">
+                                                <div class="player-mini-info">
+                                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                                    <p style="color: var(--text-light);">${m.club}</p>
+                                                    <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
+                                                </div>
+                                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                            </div>`;
             });
         };
 
@@ -2424,9 +2413,9 @@ window.handlePlayerSignIn = function () {
             window.selectedPlayerForTransfer = window.mockPlayers.find(p => p.id === playerId);
             if (!window.selectedPlayerForTransfer) return;
 
-            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id);
+            let activeMgr = window.mockManagers.find(m => (m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id) && m.status === 'approved');
             if (!activeMgr) {
-                alert("Please sign in as a manager first!");
+                alert("Please sign in as an approved manager first!");
                 return;
             }
 
@@ -2445,8 +2434,8 @@ window.handlePlayerSignIn = function () {
             if (fee === "" || isNaN(fee) || fee < 0) { alert("Please enter a valid fee!"); return; }
             window.enteredTransferFee = parseInt(fee);
 
-            let activeMgr = window.mockManagers.find(m => m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id);
-            if (!activeMgr) { alert("Manager details not found!"); return; }
+            let activeMgr = window.mockManagers.find(m => (m.name === window.currentLoggedUser.name || m.userId === window.currentLoggedUser.id) && m.status === 'approved');
+            if (!activeMgr) { alert("Manager details not found or not approved!"); return; }
 
             if (activeMgr.balance < window.enteredTransferFee) {
                 alert(`Insufficient coins balance! You have ${activeMgr.balance}M.`);
@@ -2518,13 +2507,13 @@ window.handlePlayerSignIn = function () {
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                            </div>
-                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                        </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                                </div>
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
@@ -2579,41 +2568,41 @@ window.handlePlayerSignIn = function () {
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                <div style="text-align:left;">
-                                                    <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                                    <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            ${adminAction}
-                                        </div>`;
+                                                ${adminAction}
+                                            </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                            <div class="player-mini-card">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info">
-                                                    <h4>${p.name}</h4>
-                                                    <p>${p.device}</p>
-                                                </div>
-                                                <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                            </div>`;
+                                                <div class="player-mini-card">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                                </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                            <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info">
-                                                    <h4>${p.name}</h4>
-                                                    <p>${p.device}</p>
-                                                </div>
-                                                ${actionBtn}
-                                            </div>`;
+                                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    ${actionBtn}
+                                                </div>`;
                 }
             });
         };
