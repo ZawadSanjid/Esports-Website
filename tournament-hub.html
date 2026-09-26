@@ -1950,7 +1950,6 @@
         };
 
         /* HIGH-RESOLUTION CRISP EXPORT ENGINE */
-        /* ULTRA-CRISP HD CARD GENERATOR (BLUR FIX) */
         window.showImagePreviewForSave = async function (elementId, cardType) {
             const element = document.getElementById(elementId);
             if (!element) return;
@@ -1958,26 +1957,15 @@
             const isTransfer = (elementId === 'cardToCapture');
             const targetWidth = 320;
             const targetHeight = isTransfer ? 460 : 440;
-
-            // 3x Scale for Ultra High-Definition (Ultra-HD / Retina Sharpness)
-            const scale = 3;
+            const scale = 2; // HD Images
 
             try {
                 await window.waitForExportFonts();
 
-                // 1. Force Image Sharpness CSS on all card images before capture
-                const cardImages = element.querySelectorAll('img');
-                cardImages.forEach(img => {
-                    img.style.imageRendering = '-webkit-optimize-contrast';
-                    img.style.imageRendering = 'crisp-edges';
-                });
-
-                // 2. Generate PNG with Ultra-HD Settings
                 const dataUrl = await domtoimage.toPng(element, {
                     ...exportFontOptions,
                     width: targetWidth * scale,
                     height: targetHeight * scale,
-                    quality: 1.0,
                     style: {
                         transform: `scale(${scale})`,
                         transformOrigin: 'top left',
@@ -1993,20 +1981,18 @@
                 });
 
                 const fileName = `EBFC_${cardType}_${Date.now()}.png`;
-
-                // Preview overlay with HD Display
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-            <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                👉 HD Card Ready! Press & Hold on image or click 'Download Now' 👈
-            </p>
-            <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4); image-rendering: -webkit-optimize-contrast;">
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download HD Image</button>
-                <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-            </div>
-        `;
+                        <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                            👉 Press & Hold on image or click 'Download Now' 👈
+                        </p>
+                        <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                        <div style="display:flex; gap:10px; margin-top:15px;">
+                            <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                            <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                        </div>
+                    `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2014,15 +2000,18 @@
                 downloadButton.addEventListener('click', async () => {
                     const originalHtml = downloadButton.innerHTML;
                     downloadButton.disabled = true;
-                    downloadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading HD...';
+                    downloadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading...';
 
                     const success = await window.downloadGeneratedImage(dataUrl, fileName);
 
                     downloadButton.disabled = false;
-                    downloadButton.innerHTML = success ? '<i class="fa-solid fa-check"></i> Downloaded' : originalHtml;
+                    downloadButton.innerHTML = success
+                        ? '<i class="fa-solid fa-check"></i> Downloaded'
+                        : originalHtml;
                 });
 
                 closeButton.addEventListener('click', () => overlay.remove());
+
                 document.body.appendChild(overlay);
 
                 if (cardType === 'manager') {
@@ -2040,8 +2029,8 @@
                 }
 
             } catch (err) {
-                console.error("HD Image Export failed:", err);
-                alert("Failed to generate HD card. Please check image permissions.");
+                console.error("DOM-to-Image Preview failed:", err);
+                alert("Failed to generate preview image.");
             }
         };
 
