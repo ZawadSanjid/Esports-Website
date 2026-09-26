@@ -429,26 +429,27 @@
             font-size: 14px;
         }
 
-        /* --- BASE CARD & OVERLAY --- */
+        /* --- UPDATED COMPACT BASE CARD WITH SHARP CLEAR BACKGROUND & ALIGNED TEXT --- */
         .image-bg-card {
             width: 320px;
             height: 440px;
-            padding: 16px 14px 35px 14px;
+            padding: 16px 14px 35px 14px; /* Footer জায়গা ছেড়ে পারফেক্ট প্যাডিং */
             border-radius: 12px;
             margin: 0 auto 12px auto;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-between; /* ওপর ও নিচের এলাইনমেন্ট ঠিক রাখবে */
             align-items: center;
             color: #fff;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
-            background-color: transparent;
+            background-color: transparent; /* ডার্ক ব্যাকগ্রাউন্ড ক্লিয়ার করা হলো */
             border: 2px solid var(--accent-gold);
             box-sizing: border-box;
         }
 
+        /* ডার্ক গ্র্যাডিয়েন্ট ওভারলে বাতিল করা হয়েছে যেন ফুল ইমেজ ব্রাইট ও ক্লিয়ার দেখায় */
         .card-bg-overlay {
             display: none !important;
         }
@@ -500,14 +501,16 @@
                 pointer-events: none;
             }
 
+        /* শুধু নিচের টেক্সট স্পষ্ট করার জন্য হালকা স্মুথ শ্যাডো সেকশন */
         .card-bottom-info {
             position: absolute;
-            bottom: 30px;
+            bottom: 30px; /* ব্র্যান্ড ফুটারের ঠিক ওপরে পারফেক্ট এলাইনমেন্ট */
             left: 0;
             width: 100%;
             padding: 25px 12px 10px 12px;
             z-index: 2;
             text-align: center;
+            /* শুধুমাত্র নিচের লেখার পেছনে চমৎকার ক্লিয়ার ডার্ক শ্যাডো */
             background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 65%, transparent 100%);
             box-sizing: border-box;
         }
@@ -792,7 +795,7 @@
             text-transform: uppercase;
         }
 
-        /* --- SHARP PROFILE IMAGE LAYER --- */
+        /* --- UPDATED SHARP PROFILE IMAGE LAYER --- */
         .profile-card-image-layer {
             position: absolute;
             top: 0;
@@ -802,7 +805,7 @@
             z-index: 0;
             overflow: hidden;
             border-radius: inherit;
-            background: transparent;
+            background: transparent; /* ক্লিয়ার ব্যাকগ্রাউন্ড */
             pointer-events: auto;
             touch-action: none;
             cursor: grab;
@@ -818,55 +821,17 @@
                 height: 100%;
                 top: 0;
                 left: 0;
-                object-fit: cover; /* Default cover */
+                object-fit: cover;
                 object-position: center center;
                 transform: translate3d(0, 0, 0) scale(1);
                 transform-origin: center center;
                 user-select: none;
                 -webkit-user-drag: none;
                 pointer-events: none;
+                /* ইমেজের শার্পনেস বাড়ানো ও ঝাপসা ভাব কমানোর ফিল্টার */
                 image-rendering: -webkit-optimize-contrast;
                 image-rendering: crisp-edges;
             }
-
-        /* IMAGE CROP & ADJUSTMENT TOOLBAR */
-        .card-edit-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid var(--border-color);
-            padding: 6px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-
-            .card-edit-controls select {
-                background: #090a0c;
-                color: var(--accent-gold);
-                border: 1px solid var(--border-color);
-                border-radius: 4px;
-                padding: 4px 6px;
-                font-size: 11px;
-                outline: none;
-            }
-
-            .card-edit-controls button {
-                background: var(--bg-card);
-                border: 1px solid var(--border-color);
-                color: #fff;
-                padding: 4px 8px;
-                font-size: 11px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-
-                .card-edit-controls button:hover {
-                    border-color: var(--accent-gold);
-                    color: var(--accent-gold);
-                }
 
         @media (max-width: 600px) {
             .modal-overlay {
@@ -913,6 +878,7 @@
             }
         }
 
+        /* CARD MODAL LAYOUT */
         .card-action-buttons {
             display: flex;
             gap: 8px;
@@ -1311,20 +1277,6 @@
     <div class="modal-overlay" id="managerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:22px; color:#ffd700; margin-bottom:6px;">ROYAL MANAGER ENTRY CARD</h3>
-
-            <!-- IMAGE FIT & CROP CONTROL BAR -->
-            <div class="card-edit-controls">
-                <span style="font-size:11px; color:var(--accent-gold);"><i class="fa-solid fa-crop-simple"></i> Image Fit:</span>
-                <select onchange="changeImageFitMode('manager', this.value)">
-                    <option value="cover">Auto Fit / Crop (Cover)</option>
-                    <option value="contain">Full Image (No Crop)</option>
-                    <option value="fill">Stretch to Fill</option>
-                </select>
-                <button type="button" onclick="adjustCardImage('manager', -0.1)"><i class="fa-solid fa-minus"></i></button>
-                <button type="button" onclick="adjustCardImage('manager', 0.1)"><i class="fa-solid fa-plus"></i></button>
-                <button type="button" onclick="resetCardImage('manager')"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-            </div>
-
             <div class="image-bg-card boom-pop" id="managerCardToCapture">
                 <div class="profile-card-image-layer"><img id="managerCardProfileImg" src="" alt="Manager profile" crossorigin="anonymous" draggable="false"></div>
 
@@ -1357,20 +1309,6 @@
     <div class="modal-overlay" id="playerCardModal">
         <div class="modal-body">
             <h3 style="font-family:'Teko'; font-size:22px; color:var(--accent-gold); margin-bottom:6px;">PLAYER ENTRY CARD</h3>
-
-            <!-- IMAGE FIT & CROP CONTROL BAR -->
-            <div class="card-edit-controls">
-                <span style="font-size:11px; color:var(--accent-gold);"><i class="fa-solid fa-crop-simple"></i> Image Fit:</span>
-                <select onchange="changeImageFitMode('player', this.value)">
-                    <option value="cover">Auto Fit / Crop (Cover)</option>
-                    <option value="contain">Full Image (No Crop)</option>
-                    <option value="fill">Stretch to Fill</option>
-                </select>
-                <button type="button" onclick="adjustCardImage('player', -0.1)"><i class="fa-solid fa-minus"></i></button>
-                <button type="button" onclick="adjustCardImage('player', 0.1)"><i class="fa-solid fa-plus"></i></button>
-                <button type="button" onclick="resetCardImage('player')"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-            </div>
-
             <div class="image-bg-card boom-pop" id="playerEntryCardToCapture" style="border-color:var(--primary-red);">
                 <div class="profile-card-image-layer"><img id="playerCardProfileImg" src="" alt="Player profile" crossorigin="anonymous" draggable="false"></div>
 
@@ -1661,16 +1599,6 @@
             player: { scale: 1, x: 0, y: 0 }
         };
 
-        /* IMAGE FIT MODE CHANGER FUNCTION (COVER / CONTAIN / FILL) */
-        window.changeImageFitMode = function (type, mode) {
-            const ids = { ...TRANSFER_IMAGE_IDS, ...PROFILE_CARD_IMAGE_IDS };
-            const img = document.getElementById(ids[type]);
-            if (img) {
-                img.style.objectFit = mode;
-                window.resetCardImage(type);
-            }
-        };
-
         window.applyCardImageTransform = function (type) {
             const ids = { ...TRANSFER_IMAGE_IDS, ...PROFILE_CARD_IMAGE_IDS };
             const img = document.getElementById(ids[type]);
@@ -1682,7 +1610,7 @@
         window.adjustCardImage = function (type, amount) {
             const state = window.cardImageState[type];
             if (!state) return;
-            state.scale = Math.max(0.5, Math.min(3, +(state.scale + amount).toFixed(2)));
+            state.scale = Math.max(1, Math.min(3, +(state.scale + amount).toFixed(2)));
             window.applyCardImageTransform(type);
         };
 
@@ -1916,15 +1844,15 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                                <div class="fx-matchup-row">
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                                    </div>
-                                    <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span>${playerB.name}</span><img src="${playerB.avatar}">
-                                    </div>
-                                </div>`;
+                            <div class="fx-matchup-row">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                </div>
+                                <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                </div>
+                            </div>`;
                 }
             }
 
@@ -1950,11 +1878,11 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                            </div>`;
+                        <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                            <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                            <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                            <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                        </div>`;
             });
         };
 
@@ -2006,10 +1934,10 @@
                     const fallbackWindow = window.open();
                     if (fallbackWindow) {
                         fallbackWindow.document.write(`
-                                    <title>EBFC Image</title>
-                                    <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
-                                    <img src="${dataUrl}" alt="EBFC Generated Image">
-                                `);
+                                <title>EBFC Image</title>
+                                <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
+                                <img src="${dataUrl}" alt="EBFC Generated Image">
+                            `);
                         fallbackWindow.document.close();
                         return true;
                     }
@@ -2056,15 +1984,15 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                            <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                                👉 Press & Hold on image or click 'Download Now' 👈
-                            </p>
-                            <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                            <div style="display:flex; gap:10px; margin-top:15px;">
-                                <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                                <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                            </div>
-                        `;
+                        <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                            👉 Press & Hold on image or click 'Download Now' 👈
+                        </p>
+                        <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                        <div style="display:flex; gap:10px; margin-top:15px;">
+                            <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                            <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                        </div>
+                    `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2185,16 +2113,16 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="text-align:left;">
-                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                </div>
-                                <div style="display:flex; gap:6px;">
-                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                </div>
-                            </div>`;
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                            <div style="text-align:left;">
+                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                            </div>
+                            <div style="display:flex; gap:6px;">
+                                <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                            </div>
+                        </div>`;
             });
         };
 
@@ -2414,13 +2342,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info" style="text-align: left;">
-                                        <h4>${p.name}</h4>
-                                        <p style="color:var(--accent-gold)">Signed Player</p>
-                                    </div>
-                                </div>`;
+                            <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                <img src="${p.avatar}" alt="${p.name}">
+                                <div class="player-mini-info" style="text-align: left;">
+                                    <h4>${p.name}</h4>
+                                    <p style="color:var(--accent-gold)">Signed Player</p>
+                                </div>
+                            </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2449,10 +2377,10 @@
             }
             squad.forEach(p => {
                 container.innerHTML += `
-                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                <input type="checkbox" value="${p.id}" checked>
-                                <span style="font-size:14px;">${p.name}</span>
-                            </div>`;
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                            <input type="checkbox" value="${p.id}" checked>
+                            <span style="font-size:14px;">${p.name}</span>
+                        </div>`;
             });
         };
 
@@ -2482,16 +2410,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                                    </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                <div style="text-align:left;">
+                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
                                 </div>
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                            </div>`;
+                            </div>
+                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                        </div>`;
             });
         };
 
@@ -2512,15 +2440,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                            <div class="manager-mini-card">
-                                <img src="${m.avatar}" alt="${m.name}">
-                                <div class="player-mini-info">
-                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                    <p style="color: var(--text-light);">${m.club}</p>
-                                    <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
-                                </div>
-                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                            </div>`;
+                        <div class="manager-mini-card">
+                            <img src="${m.avatar}" alt="${m.name}">
+                            <div class="player-mini-info">
+                                <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                <p style="color: var(--text-light);">${m.club}</p>
+                                <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
+                            </div>
+                            <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                        </div>`;
             });
         };
 
@@ -2622,13 +2550,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                <div style="text-align:left;">
-                                    <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                </div>
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                            </div>`;
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                            <div style="text-align:left;">
+                                <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                            </div>
+                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                        </div>`;
             });
         };
 
@@ -2683,41 +2611,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
-                                    </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                <div style="text-align:left;">
+                                    <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                    <p style="font-size:10px;">Status: ${statusInfo}</p>
                                 </div>
-                                ${adminAction}
-                            </div>`;
+                            </div>
+                            ${adminAction}
+                        </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                <div class="player-mini-card">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                </div>`;
+                            <div class="player-mini-card">
+                                <img src="${p.avatar}" alt="${p.name}">
+                                <div class="player-mini-info">
+                                    <h4>${p.name}</h4>
+                                    <p>${p.device}</p>
+                                </div>
+                                <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                            </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    ${actionBtn}
-                                </div>`;
+                            <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                <img src="${p.avatar}" alt="${p.name}">
+                                <div class="player-mini-info">
+                                    <h4>${p.name}</h4>
+                                    <p>${p.device}</p>
+                                </div>
+                                ${actionBtn}
+                            </div>`;
                 }
             });
         };
