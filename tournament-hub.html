@@ -54,7 +54,13 @@
             box-sizing: border-box;
         }
 
-           
+            #cardToCapture img,
+            #managerCardToCapture img,
+            #playerEntryCardToCapture img,
+            #fixtureCardToCapture img {
+                image-rendering: -webkit-optimize-contrast;
+                object-fit: cover;
+            }
 
         .hub-header {
             text-align: center;
@@ -823,7 +829,8 @@
                 -webkit-user-drag: none;
                 pointer-events: none;
                 /* ইমেজের শার্পনেস বাড়ানো ও ঝাপসা ভাব কমানোর ফিল্টার */
-               
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
             }
 
         @media (max-width: 600px) {
