@@ -2100,8 +2100,21 @@
             try {
                 await window.waitForExportFonts();
 
+                // High-resolution export for Manager/Player/Transfer cards.
+                // A 4x pixel ratio keeps the downloaded PNG sharp without changing
+                // the card's on-screen dimensions or layout.
+                const cardImages = Array.from(element.querySelectorAll('img'));
+                await Promise.all(cardImages.map((img) => {
+                    if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+                    return new Promise((resolve) => {
+                        img.addEventListener('load', resolve, { once: true });
+                        img.addEventListener('error', resolve, { once: true });
+                    });
+                }));
+
                 const dataUrl = await domtoimage.toPng(element, {
                     ...exportFontOptions,
+                    pixelRatio: 4,
                     width: targetWidth,
                     height: targetHeight,
                     filter: (node) => {
