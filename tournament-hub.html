@@ -41,27 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* CARD RENDER OPTIMIZATION FOR CRISP HD DOWNLOADS */
-        #cardToCapture, 
-        #managerCardToCapture, 
-        #playerEntryCardToCapture, 
-        #fixtureCardToCapture {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            box-sizing: border-box;
-        }
-
-        #cardToCapture img, 
-        #managerCardToCapture img, 
-        #playerEntryCardToCapture img, 
-        #fixtureCardToCapture img {
-            image-rendering: -webkit-optimize-contrast;
-            object-fit: cover;
-        }
-
         .hub-header {
             text-align: center;
             padding: 25px 15px;
@@ -73,14 +52,14 @@
             gap: 15px;
         }
 
-        .hub-header h1 {
-            font-family: 'Teko', sans-serif;
-            font-size: clamp(26px, 5vw, 42px);
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            line-height: 1.1;
-        }
+            .hub-header h1 {
+                font-family: 'Teko', sans-serif;
+                font-size: clamp(26px, 5vw, 42px);
+                color: var(--accent-gold);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.1;
+            }
 
         .header-btn-group {
             display: flex;
@@ -112,8 +91,13 @@
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 8px rgba(0, 210, 255, 0.4); }
-            100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.9); }
+            0% {
+                box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(0, 210, 255, 0.9);
+            }
         }
 
         .auth-controls {
@@ -140,10 +124,10 @@
             text-align: center;
         }
 
-        .btn-auth:hover {
-            border-color: var(--primary-red);
-            color: var(--primary-red);
-        }
+            .btn-auth:hover {
+                border-color: var(--primary-red);
+                color: var(--primary-red);
+            }
 
         .btn-danger-sm {
             background: rgba(229, 9, 20, 0.15);
@@ -157,10 +141,10 @@
             transition: 0.3s;
         }
 
-        .btn-danger-sm:hover {
-            background: var(--primary-red);
-            color: #fff;
-        }
+            .btn-danger-sm:hover {
+                background: var(--primary-red);
+                color: #fff;
+            }
 
         .btn-gold-sm {
             background: var(--accent-gold);
@@ -174,12 +158,12 @@
             text-transform: uppercase;
         }
 
-        .btn-gold-sm:disabled {
-            background: #4a4a4a !important;
-            color: #8a8a8a !important;
-            cursor: not-allowed;
-            border: none !important;
-        }
+            .btn-gold-sm:disabled {
+                background: #4a4a4a !important;
+                color: #8a8a8a !important;
+                cursor: not-allowed;
+                border: none !important;
+            }
 
         .btn-squad-sm {
             background: rgba(255, 183, 3, 0.15);
@@ -194,10 +178,10 @@
             transition: 0.3s;
         }
 
-        .btn-squad-sm:hover {
-            background: var(--accent-gold);
-            color: #000;
-        }
+            .btn-squad-sm:hover {
+                background: var(--accent-gold);
+                color: #000;
+            }
 
         .switch-container {
             display: flex;
@@ -216,40 +200,43 @@
             height: 22px;
         }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
 
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background-color: #333;
             transition: .4s;
             border-radius: 22px;
         }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 16px;
+                width: 16px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
 
         input:checked + .slider {
             background-color: var(--accent-green);
         }
 
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
 
         .manager-hero-card {
             background: var(--bg-card);
@@ -264,25 +251,25 @@
             flex-wrap: wrap;
         }
 
-        .manager-hero-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid var(--accent-gold);
-            object-fit: cover;
-        }
+            .manager-hero-card img {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                border: 3px solid var(--accent-gold);
+                object-fit: cover;
+            }
 
         .manager-info {
             flex: 1;
             min-width: 200px;
         }
 
-        .manager-info h2 {
-            font-family: 'Teko', sans-serif;
-            font-size: 32px;
-            color: var(--accent-gold);
-            line-height: 1;
-        }
+            .manager-info h2 {
+                font-family: 'Teko', sans-serif;
+                font-size: 32px;
+                color: var(--accent-gold);
+                line-height: 1;
+            }
 
         .section-title {
             font-family: 'Teko', sans-serif;
@@ -314,14 +301,14 @@
             overflow: hidden;
         }
 
-        .player-mini-card img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-red);
-            flex-shrink: 0;
-        }
+            .player-mini-card img {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--primary-red);
+                flex-shrink: 0;
+            }
 
         .player-mini-info {
             flex: 1;
@@ -329,21 +316,21 @@
             text-align: left;
         }
 
-        .player-mini-info h4 {
-            font-size: 14px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+            .player-mini-info h4 {
+                font-size: 14px;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-        .player-mini-info p {
-            font-size: 11px;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+            .player-mini-info p {
+                font-size: 11px;
+                color: var(--text-muted);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
         .btn-card-transfer {
             background: var(--cyan-glow);
@@ -370,19 +357,21 @@
             box-shadow: 0 0 10px rgba(255, 183, 3, 0.1);
         }
 
-        .manager-mini-card img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-gold);
-            flex-shrink: 0;
-        }
+            .manager-mini-card img {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--accent-gold);
+                flex-shrink: 0;
+            }
 
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.88);
             display: none;
             justify-content: center;
@@ -419,10 +408,9 @@
             font-size: 14px;
         }
 
-        /* COMPACT BASE CARD SIZES FOR PERFECT IMAGE ALIGNMENT */
         .image-bg-card {
-            width: 320px;
-            height: 440px;
+            width: 360px;
+            height: 500px;
             padding: 14px;
             border-radius: 12px;
             margin: 0 auto 12px auto;
@@ -438,8 +426,16 @@
             border: 2px solid var(--accent-gold);
         }
 
-       
-
+        .card-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(7,9,14,0.75) 0%, rgba(7,9,14,0.3) 40%, rgba(7,9,14,0.96) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
 
         .card-inner-content {
             position: relative;
@@ -471,20 +467,20 @@
             position: relative;
         }
 
-        .transfer-avatar-wrapper:active {
-            cursor: grabbing;
-        }
+            .transfer-avatar-wrapper:active {
+                cursor: grabbing;
+            }
 
-        .transfer-avatar-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: translate3d(0, 0, 0) scale(1);
-            transform-origin: center center;
-            user-select: none;
-            -webkit-user-drag: none;
-            pointer-events: none;
-        }
+            .transfer-avatar-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: translate3d(0, 0, 0) scale(1);
+                transform-origin: center center;
+                user-select: none;
+                -webkit-user-drag: none;
+                pointer-events: none;
+            }
 
         .card-bottom-info {
             position: relative;
@@ -505,7 +501,7 @@
 
         .card-main-name {
             font-family: 'Teko', sans-serif;
-            font-size: 34px;
+            font-size: 38px;
             color: #ffffff;
             text-transform: uppercase;
             line-height: .92;
@@ -516,7 +512,8 @@
 
         .card-brand-footer {
             position: absolute;
-            bottom: 0; left: 0;
+            bottom: 0;
+            left: 0;
             width: 100%;
             background: rgba(0, 0, 0, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -528,32 +525,43 @@
             z-index: 3;
         }
 
-        .card-brand-footer img {
-            width: 22px;
-            height: 22px;
-            object-fit: contain;
-            border-radius: 50%;
-        }
+            .card-brand-footer img {
+                width: 22px;
+                height: 22px;
+                object-fit: contain;
+                border-radius: 50%;
+            }
 
-        .card-brand-footer span {
-            font-family: 'Teko', sans-serif;
-            font-size: 18px;
-            color: #ffffff;
-        }
+            .card-brand-footer span {
+                font-family: 'Teko', sans-serif;
+                font-size: 18px;
+                color: #ffffff;
+            }
 
         .boom-pop {
             animation: boomScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes boomScale {
-            0% { transform: scale(0.2); opacity: 0; }
-            70% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.2);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .done-deal-card {
-            width: 320px;
-            height: 460px;
+            width: 360px;
+            height: 520px;
             background: linear-gradient(180deg, #00d2ff 0%, #003e6b 35%, #001220 70%, #000000 100%) !important;
             border: 2px solid #00d2ff;
             border-radius: 12px;
@@ -572,7 +580,7 @@
 
         .dd-header {
             font-family: 'Teko', sans-serif;
-            font-size: 30px;
+            font-size: 32px;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px #000;
@@ -606,22 +614,22 @@
             align-items: center;
         }
 
-        .dd-img-box img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #00d2ff;
-            background: #090a0c;
-        }
+            .dd-img-box img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #00d2ff;
+                background: #090a0c;
+            }
 
-        .dd-img-box span {
-            font-size: 10px;
-            color: #ddd;
-            margin-top: 3px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
+            .dd-img-box span {
+                font-size: 10px;
+                color: #ddd;
+                margin-top: 3px;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
 
         .dd-arrows {
             font-size: 20px;
@@ -639,7 +647,7 @@
 
         .dd-fee-text {
             font-family: 'Teko', sans-serif;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             color: #ffb703;
             letter-spacing: 1px;
@@ -653,20 +661,20 @@
             margin-top: 2px;
         }
 
-        .dd-footer-box h3 {
-            font-family: 'Teko', sans-serif;
-            font-size: 26px;
-            color: #fff;
-            line-height: 1;
-            text-transform: uppercase;
-            text-shadow: 0 2px 4px #000;
-        }
+            .dd-footer-box h3 {
+                font-family: 'Teko', sans-serif;
+                font-size: 28px;
+                color: #fff;
+                line-height: 1;
+                text-transform: uppercase;
+                text-shadow: 0 2px 4px #000;
+            }
 
-        .dd-footer-box p {
-            font-size: 10px;
-            color: #00d2ff;
-            margin-top: 2px;
-        }
+            .dd-footer-box p {
+                font-size: 10px;
+                color: #00d2ff;
+                margin-top: 2px;
+            }
 
         .fixture-card {
             width: 100%;
@@ -743,12 +751,12 @@
             font-size: 12px;
         }
 
-        .fx-matchup-row img {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+            .fx-matchup-row img {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
 
         .no-squad-alert {
             background: rgba(229, 9, 20, 0.15);
@@ -770,28 +778,30 @@
             z-index: 0;
             overflow: hidden;
             border-radius: inherit;
-            background: transparent; /* ব্যাকগ্রাউন্ড কালার সরালো */
+            background: #090b10;
             pointer-events: auto;
             touch-action: none;
             cursor: grab;
         }
 
-        .profile-card-image-layer:active {
-            cursor: grabbing;
-        }
+            .profile-card-image-layer:active {
+                cursor: grabbing;
+            }
 
-        .profile-card-image-layer img {
-            position: absolute;
-            width: 100%; height: 100%;
-            top: 0; left: 0;
-            object-fit: cover;
-            object-position: center center;
-            transform: translate3d(0, 0, 0) scale(1);
-            transform-origin: center center;
-            user-select: none;
-            -webkit-user-drag: none;
-            pointer-events: none;
-        }
+            .profile-card-image-layer img {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                object-fit: cover;
+                object-position: center center;
+                transform: translate3d(0, 0, 0) scale(1);
+                transform-origin: center center;
+                user-select: none;
+                -webkit-user-drag: none;
+                pointer-events: none;
+            }
 
         @media (max-width: 600px) {
             .modal-overlay {
@@ -806,8 +816,14 @@
                 border-radius: 9px;
             }
 
-            .card-brand-footer span { font-size: 16px; }
-            .card-brand-footer img { width: 20px; height: 20px; }
+            .card-brand-footer span {
+                font-size: 16px;
+            }
+
+            .card-brand-footer img {
+                width: 20px;
+                height: 20px;
+            }
 
             #mainPlayersDirectorySection .section-title > div:first-child {
                 display: flex;
@@ -832,7 +848,7 @@
             }
         }
 
-        /* CARD MODAL LAYOUT */
+        /* CARD MODAL LAYOUT - desktop + mobile */
         .card-action-buttons {
             display: flex;
             gap: 8px;
@@ -843,12 +859,12 @@
             margin-top: 8px;
         }
 
-        .card-action-buttons button {
-            min-width: 110px;
-            min-height: 38px;
-            box-sizing: border-box;
-            white-space: nowrap;
-        }
+            .card-action-buttons button {
+                min-width: 110px;
+                min-height: 38px;
+                box-sizing: border-box;
+                white-space: nowrap;
+            }
 
         @media (max-width: 600px) {
             .modal-overlay {
@@ -870,27 +886,19 @@
             }
 
             .image-bg-card {
-                width: 320px;
-                height: 440px;
-                padding: 14px;
-                border-radius: 12px;
-                margin: 0 auto 12px auto;
-                position: relative;
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-                color: #fff;
-                box-shadow: 0 0 25px rgba(0,0,0,0.8);
-                background-color: transparent; /* ব্যাকগ্রাউন্ড কালো রঙ সরানো হলো */
-                border: 2px solid var(--accent-gold);
+                width: min(360px, calc(100vw - 28px), 360px);
+                height: auto;
+                aspect-ratio: 360 / 500;
+                box-sizing: border-box;
+                transform: none !important;
+                animation: none !important;
+                margin: 0 auto 10px;
             }
 
             .done-deal-card {
-                width: min(320px, calc(100vw - 28px));
+                width: min(360px, calc(100vw - 28px), 360px);
                 height: auto;
-                aspect-ratio: 320 / 460;
+                aspect-ratio: 360 / 520;
                 box-sizing: border-box;
                 transform: none !important;
                 animation: none !important;
@@ -903,15 +911,15 @@
                 flex-wrap: nowrap;
             }
 
-            .card-action-buttons button {
-                flex: 1 1 0;
-                min-width: 0;
-                width: auto;
-                min-height: 40px;
-                padding: 8px 9px !important;
-                font-size: 12px !important;
-                white-space: nowrap;
-            }
+                .card-action-buttons button {
+                    flex: 1 1 0;
+                    min-width: 0;
+                    width: auto;
+                    min-height: 40px;
+                    padding: 8px 9px !important;
+                    font-size: 12px !important;
+                    white-space: nowrap;
+                }
 
             .modal-body > h3 {
                 margin-top: 0 !important;
@@ -927,17 +935,22 @@
         }
 
         @media (max-width: 360px) {
-            .card-action-buttons { gap: 5px; }
-            .card-action-buttons button {
-                font-size: 11px !important;
-                padding: 8px 5px !important;
+            .card-action-buttons {
+                gap: 5px;
             }
+
+                .card-action-buttons button {
+                    font-size: 11px !important;
+                    padding: 8px 5px !important;
+                }
         }
 
         .image-preview-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.92);
             z-index: 9999;
             display: flex;
@@ -946,6 +959,10 @@
             justify-content: center;
             padding: 15px;
             backdrop-filter: blur(5px);
+        }
+
+        .done-deal-card {
+            width: min(100%, calc((100vh - 185px) * 0.6923077));
         }
     </style>
 </head>
@@ -973,7 +990,7 @@
         <!-- ADMIN PANEL SECTION -->
         <div id="adminPanelSection" style="display: none; background: var(--bg-card); border: 1px solid var(--primary-red); border-radius: 10px; padding: 15px; margin-bottom: 25px;">
             <div class="section-title" style="color: var(--primary-red); margin-bottom: 10px;">
-                <span><i class="fa-solid fa-shield-halved"></i> Admin Portal</span>
+                <span><i class="fa-solid fa-shield-halved"></i>  Admin Portal</span>
                 <button class="btn-danger-sm" onclick="logoutAdmin()">Logout Admin</button>
             </div>
 
@@ -1795,15 +1812,15 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                        <div class="fx-matchup-row">
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                            </div>
-                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <span>${playerB.name}</span><img src="${playerB.avatar}">
-                            </div>
-                        </div>`;
+                                                <div class="fx-matchup-row">
+                                                    <div style="display:flex; align-items:center; gap:6px;">
+                                                        <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                                    </div>
+                                                    <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                                    <div style="display:flex; align-items:center; gap:6px;">
+                                                        <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                                    </div>
+                                                </div>`;
                 }
             }
 
@@ -1829,11 +1846,11 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                    </div>`;
+                                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                            </div>`;
             });
         };
 
@@ -1846,7 +1863,7 @@
                 if (document.fonts && document.fonts.load) {
                     await Promise.all([
                         document.fonts.load("600 20px 'Teko'"),
-                        document.fonts.load("700 34px 'Teko'"),
+                        document.fonts.load("700 38px 'Teko'"),
                         document.fonts.load("600 14px 'Rajdhani'"),
                         document.fonts.load("700 14px 'Rajdhani'")
                     ]);
@@ -1860,6 +1877,7 @@
             loadExternalStyleSheet: (href) => href.includes('fonts.googleapis.com'),
             ignoreCSSRuleErrors: true,
             cacheBust: true,
+            pixelRatio: Math.max(2, window.devicePixelRatio || 1),
             styleCaching: 'strict'
         };
 
@@ -1885,10 +1903,10 @@
                     const fallbackWindow = window.open();
                     if (fallbackWindow) {
                         fallbackWindow.document.write(`
-                            <title>EBFC Image</title>
-                            <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
-                            <img src="${dataUrl}" alt="EBFC Generated Image">
-                        `);
+                                    <title>EBFC Image</title>
+                                    <style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style>
+                                    <img src="${dataUrl}" alt="EBFC Generated Image">
+                                `);
                         fallbackWindow.document.close();
                         return true;
                     }
@@ -1900,109 +1918,16 @@
             }
         };
 
-        /* HIGH-RESOLUTION CRISP EXPORT ENGINE (COMPACT 320px BASE + SCALE 2) */
-        window.showImagePreviewForSave = async function (elementId, cardType) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-
-            const isTransfer = (elementId === 'cardToCapture');
-            const targetWidth = 320;
-            const targetHeight = isTransfer ? 460 : 440;
-            const scale = 2; // Produces crisp 640px HD Images
-
-            try {
-                await window.waitForExportFonts();
-
-                const dataUrl = await domtoimage.toPng(element, {
-                    ...exportFontOptions,
-                    width: targetWidth * scale,
-                    height: targetHeight * scale,
-                    style: {
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
-                        width: targetWidth + 'px',
-                        height: targetHeight + 'px',
-                        margin: '0',
-                        padding: '0',
-                        fontFamily: "'Rajdhani', sans-serif"
-                    },
-                    filter: (node) => {
-                        return !(node.getAttribute && node.getAttribute('data-capture-hide') === 'true');
-                    }
-                });
-
-                const fileName = `EBFC_${cardType}_${Date.now()}.png`;
-                const overlay = document.createElement('div');
-                overlay.className = 'image-preview-overlay';
-                overlay.innerHTML = `
-                    <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                        👉 Press & Hold on image or click 'Download Now' 👈
-                    </p>
-                    <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                    <div style="display:flex; gap:10px; margin-top:15px;">
-                        <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                        <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                    </div>
-                `;
-
-                const downloadButton = overlay.querySelector('.download-now-btn');
-                const closeButton = overlay.querySelector('.close-preview-btn');
-
-                downloadButton.addEventListener('click', async () => {
-                    const originalHtml = downloadButton.innerHTML;
-                    downloadButton.disabled = true;
-                    downloadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading...';
-
-                    const success = await window.downloadGeneratedImage(dataUrl, fileName);
-
-                    downloadButton.disabled = false;
-                    downloadButton.innerHTML = success
-                        ? '<i class="fa-solid fa-check"></i> Downloaded'
-                        : originalHtml;
-                });
-
-                closeButton.addEventListener('click', () => overlay.remove());
-
-                document.body.appendChild(overlay);
-
-                if (cardType === 'manager') {
-                    window.isManagerCardDownloaded = true;
-                    document.getElementById('btnConfirmManagerCard').disabled = false;
-                    document.getElementById('managerNoticeText').style.display = 'none';
-                } else if (cardType === 'player') {
-                    window.isPlayerCardDownloaded = true;
-                    document.getElementById('btnConfirmPlayerCard').disabled = false;
-                    document.getElementById('playerNoticeText').style.display = 'none';
-                } else if (cardType === 'transfer') {
-                    window.isTransferCardDownloaded = true;
-                    document.getElementById('btnConfirmTransfer').disabled = false;
-                    document.getElementById('downloadNoticeText').style.display = 'none';
-                }
-
-            } catch (err) {
-                console.error("DOM-to-Image Preview failed:", err);
-                alert("Failed to generate preview image.");
-            }
-        };
-
         window.downloadFixtureImage = async function () {
             const node = document.getElementById('fixtureCardToCapture');
             if (!node) return;
-
-            const scale = 2;
 
             try {
                 await window.waitForExportFonts();
                 const dataUrl = await domtoimage.toPng(node, {
                     ...exportFontOptions,
-                    width: node.offsetWidth * scale,
-                    height: node.offsetHeight * scale,
-                    style: {
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
-                        width: node.offsetWidth + 'px',
-                        height: node.offsetHeight + 'px'
-                    }
+                    width: node.offsetWidth,
+                    height: node.offsetHeight
                 });
                 await window.downloadGeneratedImage(dataUrl, `FIXTURE_${Date.now()}.png`);
             } catch (e) {
@@ -2064,19 +1989,20 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                        <div style="text-align:left;">
-                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                        </div>
-                        <div style="display:flex; gap:6px;">
-                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                        </div>
-                    </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                                </div>
+                                                <div style="display:flex; gap:6px;">
+                                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                                </div>
+                                            </div>`;
             });
         };
 
+        /* FIX: Manager Approval flow handled properly */
         window.handleManagerSignInStart = function () {
             window.requireLoggedUser();
 
@@ -2163,6 +2089,86 @@
             window.triggerBoomEffects();
         };
 
+        window.showImagePreviewForSave = async function (elementId, cardType) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const isTransfer = (elementId === 'cardToCapture');
+            const targetWidth = 360;
+            const targetHeight = isTransfer ? 520 : 500;
+
+            try {
+                await window.waitForExportFonts();
+
+                const dataUrl = await domtoimage.toPng(element, {
+                    ...exportFontOptions,
+                    width: targetWidth,
+                    height: targetHeight,
+                    filter: (node) => {
+                        return !(node.getAttribute && node.getAttribute('data-capture-hide') === 'true');
+                    },
+                    style: {
+                        transform: 'none',
+                        margin: '0',
+                        fontFamily: "'Rajdhani', sans-serif"
+                    }
+                });
+
+                const fileName = `EBFC_${cardType}_${Date.now()}.png`;
+                const overlay = document.createElement('div');
+                overlay.className = 'image-preview-overlay';
+                overlay.innerHTML = `
+                    <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                        👉 Press & Hold on image or click 'Download Now' 👈
+                    </p>
+                    <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                        <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                    </div>
+                `;
+
+                const downloadButton = overlay.querySelector('.download-now-btn');
+                const closeButton = overlay.querySelector('.close-preview-btn');
+
+                downloadButton.addEventListener('click', async () => {
+                    const originalHtml = downloadButton.innerHTML;
+                    downloadButton.disabled = true;
+                    downloadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading...';
+
+                    const success = await window.downloadGeneratedImage(dataUrl, fileName);
+
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = success
+                        ? '<i class="fa-solid fa-check"></i> Downloaded'
+                        : originalHtml;
+                });
+
+                closeButton.addEventListener('click', () => overlay.remove());
+
+                document.body.appendChild(overlay);
+
+                if (cardType === 'manager') {
+                    window.isManagerCardDownloaded = true;
+                    document.getElementById('btnConfirmManagerCard').disabled = false;
+                    document.getElementById('managerNoticeText').style.display = 'none';
+                } else if (cardType === 'player') {
+                    window.isPlayerCardDownloaded = true;
+                    document.getElementById('btnConfirmPlayerCard').disabled = false;
+                    document.getElementById('playerNoticeText').style.display = 'none';
+                } else if (cardType === 'transfer') {
+                    window.isTransferCardDownloaded = true;
+                    document.getElementById('btnConfirmTransfer').disabled = false;
+                    document.getElementById('downloadNoticeText').style.display = 'none';
+                }
+
+            } catch (err) {
+                console.error("DOM-to-Image Preview failed:", err);
+                alert("Failed to generate preview image.");
+            }
+        };
+
+        /* FIX: Saved with status 'pending' until Admin Approves */
         window.confirmManagerSignIn = async function () {
             if (!window.isManagerCardDownloaded) {
                 alert("Please click 'Download' first before confirming!");
@@ -2180,7 +2186,7 @@
                 club: window.tempSquadName || "EBFC Club",
                 balance: 200,
                 trxId: window.tempTrxId || "PAID_REGISTRATION",
-                status: 'pending',
+                status: 'pending', // Save as pending for admin approval
                 avatar: user.avatar || window.createSvgAvatar("M")
             };
 
@@ -2293,13 +2299,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                            <img src="${p.avatar}" alt="${p.name}">
-                            <div class="player-mini-info" style="text-align: left;">
-                                <h4>${p.name}</h4>
-                                <p style="color:var(--accent-gold)">Signed Player</p>
-                            </div>
-                        </div>`;
+                                                <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info" style="text-align: left;">
+                                                        <h4>${p.name}</h4>
+                                                        <p style="color:var(--accent-gold)">Signed Player</p>
+                                                    </div>
+                                                </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2328,10 +2334,10 @@
             }
             squad.forEach(p => {
                 container.innerHTML += `
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                        <input type="checkbox" value="${p.id}" checked>
-                        <span style="font-size:14px;">${p.name}</span>
-                    </div>`;
+                                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                                                <input type="checkbox" value="${p.id}" checked>
+                                                <span style="font-size:14px;">${p.name}</span>
+                                            </div>`;
             });
         };
 
@@ -2361,16 +2367,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                            <div style="text-align:left;">
-                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                            </div>
-                        </div>
-                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                    </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                                    </div>
+                                                </div>
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
@@ -2391,15 +2397,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                    <div class="manager-mini-card">
-                        <img src="${m.avatar}" alt="${m.name}">
-                        <div class="player-mini-info">
-                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                            <p style="color: var(--text-light);">${m.club}</p>
-                            <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
-                        </div>
-                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                    </div>`;
+                                            <div class="manager-mini-card">
+                                                <img src="${m.avatar}" alt="${m.name}">
+                                                <div class="player-mini-info">
+                                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                                    <p style="color: var(--text-light);">${m.club}</p>
+                                                    <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
+                                                </div>
+                                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                            </div>`;
             });
         };
 
@@ -2501,13 +2507,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                        <div style="text-align:left;">
-                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                        </div>
-                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                    </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                                </div>
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
@@ -2562,41 +2568,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                            <div style="text-align:left;">
-                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                <p style="font-size:10px;">Status: ${statusInfo}</p>
-                            </div>
-                        </div>
-                        ${adminAction}
-                    </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                                    </div>
+                                                </div>
+                                                ${adminAction}
+                                            </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                        <div class="player-mini-card">
-                            <img src="${p.avatar}" alt="${p.name}">
-                            <div class="player-mini-info">
-                                <h4>${p.name}</h4>
-                                <p>${p.device}</p>
-                            </div>
-                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                        </div>`;
+                                                <div class="player-mini-card">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                                </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                            <img src="${p.avatar}" alt="${p.name}">
-                            <div class="player-mini-info">
-                                <h4>${p.name}</h4>
-                                <p>${p.device}</p>
-                            </div>
-                            ${actionBtn}
-                        </div>`;
+                                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    ${actionBtn}
+                                                </div>`;
                 }
             });
         };
