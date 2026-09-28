@@ -471,6 +471,104 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        .captain-batch-card {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px
+        }
+
+        .captain-batch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 14px
+        }
+
+        .captain-batch-meta {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 4px
+        }
+
+        .batch-player-row {
+            display: grid;
+            grid-template-columns: minmax(230px,2fr) 90px 90px 110px;
+            gap: 10px;
+            align-items: end;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05)
+        }
+
+            .batch-player-row:last-child {
+                border-bottom: none
+            }
+
+            .batch-player-row label {
+                display: block;
+                color: var(--text-muted);
+                font-size: 11px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+                font-weight: 700
+            }
+
+            .batch-player-row .slot-num {
+                color: var(--accent-gold);
+                font-family: 'Teko',sans-serif;
+                font-size: 18px;
+                margin-right: 7px
+            }
+
+        .batch-community-box {
+            margin-top: 15px;
+            padding: 14px;
+            border: 1px solid #00bcd4;
+            border-radius: 6px;
+            background: rgba(0,188,212,.04)
+        }
+
+        .batch-community-grid {
+            display: grid;
+            grid-template-columns: repeat(4,minmax(90px,1fr));
+            gap: 10px
+        }
+
+        .batch-action-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        @media(max-width:768px) {
+            .batch-player-row {
+                grid-template-columns: 1fr 1fr
+            }
+
+                .batch-player-row .player-field {
+                    grid-column: 1/-1
+                }
+
+            .batch-community-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .batch-action-bar {
+                justify-content: stretch
+            }
+
+                .batch-action-bar button {
+                    flex: 1
+                }
+        }
     </style>
 
     <!-- FIREBASE SYSTEM BACKEND LIBRARIES -->
@@ -523,8 +621,7 @@
                 <option value="sec-past-tournaments">5. Manage Past Tournaments (Hall of Fame Showcase)</option>
                 <option value="sec-player-history">6. Add / Remove Tournament History Badges</option>
                 <option value="sec-achievements">7. Add / Remove Special Achievement Badges</option>
-                <option value="sec-captain-queue">8. Captain Single Match Score Queue</option>
-                <option value="sec-community-queue">8.1. Community Wins Approval Queue (Squad Submit)</option>
+                <option value="sec-captain-queue">8. Captain Squad Score Submission Approval Queue</option>
                 <option value="sec-captain-roles">9. Manage Captain Access Roles</option>
                 <option value="sec-direct-score">10. Direct Admin Match Score Input</option>
                 <option value="sec-tournament-generator">11. Persistent Tournament Bracket Generator</option>
@@ -852,52 +949,11 @@
             </div>
         </div>
 
-        <!-- SECTION 4: CAPTAIN APPROVALS QUEUE (SINGLE MATCHES) -->
+        <!-- SECTION 4: CAPTAIN APPROVALS QUEUE (BATCH / SQUAD SUBMISSIONS) -->
         <div id="sec-captain-queue" class="section-card admin-feature-sec" style="border-top: 4px solid var(--accent-gold);">
-            <div class="section-title">
-                <span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span>
-                <span id="queueBadge" style="font-size: 14px; color: var(--accent-gold);">0 Requests Pending</span>
-            </div>
-
-            <div class="table-responsive">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Player Name</th>
-                            <th>Target Community</th>
-                            <th>Squad Format</th>
-                            <th>GF - GA</th>
-                            <th>Type</th>
-                            <th>MOTM?</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="captainQueueBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECTION 4.1: COMMUNITY WINS APPROVAL PANEL (SQUAD SUBMIT) -->
-        <div id="sec-community-queue" class="section-card admin-feature-sec" style="border-top: 4px solid #00bcd4;">
-            <div class="section-title">
-                <span><i class="fa-solid fa-shield-halved"></i> Community Wins Approval Queue (Squad Submit)</span>
-                <span id="commQueueBadge" style="font-size: 14px; color: #00bcd4;">0 Pending Submissions</span>
-            </div>
-
-            <div class="table-responsive">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Submitted By (Captain)</th>
-                            <th>Target Community</th>
-                            <th>Results (W - D - L - Auto)</th>
-                            <th>Submitted Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="communityQueueBody"></tbody>
-                </table>
-            </div>
+            <div class="section-title"><span><i class="fa-solid fa-clock-rotate-left"></i> Captain Score Submission Approval Queue</span><span id="queueBadge" style="font-size:14px;color:var(--accent-gold);">0 Squad Submissions Pending</span></div>
+            <p style="color:var(--text-muted);margin:-8px 0 18px 0;">Each captain submission appears as one complete squad. Admin can change any player from the registered-player database, edit GF/GA/POTM and community results, then approve the entire squad with one click.</p>
+            <div id="captainQueueContainer"></div>
         </div>
 
         <!-- SECTION 5: CAPTAIN ACCESS MANAGER -->
@@ -1128,20 +1184,11 @@
                 renderExistingPlayerAchievements();
             });
 
-            db.collection('pending_scores').onSnapshot(snapshot => {
+            db.collection('pending_squad_submissions').onSnapshot(snapshot => {
                 let pendingList = [];
-                snapshot.forEach(doc => {
-                    pendingList.push({ reqId: doc.id, ...doc.data() });
-                });
+                snapshot.forEach(doc => pendingList.push({ reqId: doc.id, ...doc.data() }));
+                pendingList.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                 renderCaptainQueue(pendingList);
-            });
-
-            db.collection('pending_community_wins').onSnapshot(snapshot => {
-                let commPendingList = [];
-                snapshot.forEach(doc => {
-                    commPendingList.push({ reqId: doc.id, ...doc.data() });
-                });
-                renderCommunityWinQueue(commPendingList);
             });
 
             db.collection('tournaments').doc('active_tournament').onSnapshot(doc => {
@@ -1205,17 +1252,17 @@
             cachedPlayers.forEach(p => {
                 const avatarUrl = p.avatar || 'Image/player1.webp';
                 tbody.innerHTML += `
-                                            <tr>
-                                                <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
-                                                <td><strong>${p.name || 'N/A'}</strong></td>
-                                                <td>${p.gameId || 'N/A'}</td>
-                                                <td>${p.club || 'EBFC'}</td>
-                                                <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
-                                                <td>
-                                                    <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
-                                                    <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
-                                                </td>
-                                            </tr>`;
+                                                    <tr>
+                                                        <td><img src="${avatarUrl}" class="player-img-table" onerror="this.src='Image/player1.webp'"></td>
+                                                        <td><strong>${p.name || 'N/A'}</strong></td>
+                                                        <td>${p.gameId || 'N/A'}</td>
+                                                        <td>${p.club || 'EBFC'}</td>
+                                                        <td><span style="color:var(--accent-gold); font-weight:700;">${(p.role || 'player').toUpperCase()}</span></td>
+                                                        <td>
+                                                            <button onclick="downloadImage('${avatarUrl}', '${p.name || 'player'}')" class="btn-green" title="Download Image"><i class="fa-solid fa-download"></i> Photo</button>
+                                                            <button onclick="selectPlayerForEdit('${p.uid}')" class="btn-action" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-pen"></i> Edit</button>
+                                                        </td>
+                                                    </tr>`;
             });
         }
 
@@ -1588,16 +1635,16 @@
             tournaments.forEach(t => {
                 const logoImg = t.logo || 'Image/image1.jpg.jpg';
                 tbody.innerHTML += `
-                                            <tr>
-                                                <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
-                                                <td><strong>${t.title}</strong></td>
-                                                <td>${t.date}</td>
-                                                <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
-                                                <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
-                                                <td>
-                                                    <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
-                                                </td>
-                                            </tr>`;
+                                                    <tr>
+                                                        <td><img src="${logoImg}" style="width:35px; height:35px; object-fit:contain; border-radius:4px; border:1px solid var(--border-color);"></td>
+                                                        <td><strong>${t.title}</strong></td>
+                                                        <td>${t.date}</td>
+                                                        <td><span style="color:var(--accent-gold); font-weight:700;">👑 ${t.champion ? t.champion.name : 'N/A'}</span></td>
+                                                        <td><span>🥈 ${t.runnerup ? t.runnerup.name : 'N/A'}</span></td>
+                                                        <td>
+                                                            <button onclick="deletePastTournament('${t.id}')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+                                                        </td>
+                                                    </tr>`;
             });
         }
 
@@ -1715,14 +1762,14 @@
 
             historyList.forEach((item, index) => {
                 tbody.innerHTML += `
-                                            <tr>
-                                                <td><strong>${item.title}</strong></td>
-                                                <td>${item.subtitle}</td>
-                                                <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
-                                                <td>
-                                                    <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                                                </td>
-                                            </tr>`;
+                                                    <tr>
+                                                        <td><strong>${item.title}</strong></td>
+                                                        <td>${item.subtitle}</td>
+                                                        <td><span style="color:var(--accent-gold); font-weight:700;">${item.tag}</span></td>
+                                                        <td>
+                                                            <button onclick="removeTournamentHistoryBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                                        </td>
+                                                    </tr>`;
             });
         }
 
@@ -1792,14 +1839,14 @@
 
             achList.forEach((item, index) => {
                 tbody.innerHTML += `
-                                            <tr>
-                                                <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
-                                                <td><strong>${item.title}</strong></td>
-                                                <td>${item.desc}</td>
-                                                <td>
-                                                    <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
-                                                </td>
-                                            </tr>`;
+                                                    <tr>
+                                                        <td><i class="fa-solid fa-${item.icon}" style="color:var(--accent-gold); font-size:18px;"></i></td>
+                                                        <td><strong>${item.title}</strong></td>
+                                                        <td>${item.desc}</td>
+                                                        <td>
+                                                            <button onclick="removeAchievementBadge('${uid}', ${index})" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Badge</button>
+                                                        </td>
+                                                    </tr>`;
             });
         }
 
@@ -1888,14 +1935,14 @@
 
             captains.forEach(c => {
                 tbody.innerHTML += `
-                                            <tr>
-                                                <td>#${c.uid.substring(0, 6)}</td>
-                                                <td><strong>${c.name || 'Captain'}</strong></td>
-                                                <td>${c.club || 'EBFC'}</td>
-                                                <td>${c.email || 'N/A'}</td>
-                                                <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
-                                                <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
-                                            </tr>`;
+                                                    <tr>
+                                                        <td>#${c.uid.substring(0, 6)}</td>
+                                                        <td><strong>${c.name || 'Captain'}</strong></td>
+                                                        <td>${c.club || 'EBFC'}</td>
+                                                        <td>${c.email || 'N/A'}</td>
+                                                        <td><span style="color: var(--accent-gold); font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Captain</span></td>
+                                                        <td><button onclick="revokeCaptain('${c.uid}')" class="btn-danger">Revoke Access</button></td>
+                                                    </tr>`;
             });
         }
 
@@ -1909,209 +1956,43 @@
             }
         }
 
+        function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch])); }
         function renderCaptainQueue(pendingList) {
-            let tbody = document.getElementById('captainQueueBody');
-            let badge = document.getElementById('queueBadge');
-            tbody.innerHTML = '';
-            badge.innerText = `${pendingList.length} Requests Pending`;
-
-            if (pendingList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No pending captain submissions available.</td></tr>`;
-                return;
-            }
-
-            pendingList.forEach((req) => {
-                const commCode = req.community || 'cobeg';
-
-                tbody.innerHTML += `
-                                            <tr>
-                                                <td><strong>${req.playerName || 'Unknown'}</strong></td>
-                                                <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
-                                                <td>${req.squadFormat || '1v1'}</td>
-                                                <td><strong>${req.gf} - ${req.ga}</strong></td>
-                                                <td>${(req.matchType || 'official').toUpperCase()}</td>
-                                                <td><span style="color:${req.awardMotm ? 'var(--accent-gold)' : 'inherit'}; font-weight:700;">${req.awardMotm ? 'YES (POTM)' : 'No'}</span></td>
-                                                <td>
-                                                    <button onclick="approveCaptainScore('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve & Sync Rank</button>
-                                                    <button onclick="rejectCaptainScore('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                                                </td>
-                                            </tr>`;
+            const box = document.getElementById('captainQueueContainer'), badge = document.getElementById('queueBadge'); box.innerHTML = '';
+            badge.innerText = `${pendingList.length} Squad Submission${pendingList.length === 1 ? '' : 's'} Pending`;
+            if (!pendingList.length) { box.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:25px;">No pending captain squad submissions available.</p>'; return; }
+            pendingList.forEach(req => {
+                const players = Array.isArray(req.playerResults) ? req.playerResults : [], comm = (req.community || 'cobeg').toUpperCase(), type = (req.matchType || 'official').toUpperCase(), created = req.createdAt?.seconds ? new Date(req.createdAt.seconds * 1000).toLocaleString() : 'Recent';
+                const rows = players.map((p, i) => { let opts = '<option value="">-- Select Registered Player --</option>'; cachedPlayers.forEach(x => { opts += `<option value="${escapeHtml(x.uid)}"${x.uid === p.playerId ? ' selected' : ''}>${escapeHtml(x.name || 'Unknown Player')} (${escapeHtml(x.club || 'EBFC')})</option>` }); return `<div class="batch-player-row"><div class="form-group player-field" style="margin:0"><label><span class="slot-num">#${i + 1}</span> Player</label><select id="batch-player-${req.reqId}-${i}" class="form-control">${opts}</select></div><div class="form-group" style="margin:0"><label>GF</label><input id="batch-gf-${req.reqId}-${i}" type="number" min="0" class="form-control" value="${Number(p.gf) || 0}"></div><div class="form-group" style="margin:0"><label>GA</label><input id="batch-ga-${req.reqId}-${i}" type="number" min="0" class="form-control" value="${Number(p.ga) || 0}"></div><div class="form-group" style="margin:0"><label>POTM / MOTM</label><select id="batch-motm-${req.reqId}-${i}" class="form-control"><option value="no"${p.awardMotm ? '' : ' selected'}>No</option><option value="yes"${p.awardMotm ? ' selected' : ''}>Yes</option></select></div></div>` }).join('');
+                const communityBox = type !== 'DOMESTIC' ? `<div class="batch-community-box"><div style="font-weight:700;color:#00bcd4;margin-bottom:10px;text-transform:uppercase"><i class="fa-solid fa-chart-line"></i> Community Result — Editable Before Approval</div><div class="batch-community-grid"><div class="form-group" style="margin:0"><label style="color:#4caf50">Win</label><input id="batch-win-${req.reqId}" type="number" min="0" class="form-control" value="${Number(req.win) || 0}"></div><div class="form-group" style="margin:0"><label style="color:#ffb703">Draw</label><input id="batch-draw-${req.reqId}" type="number" min="0" class="form-control" value="${Number(req.draw) || 0}"></div><div class="form-group" style="margin:0"><label style="color:#e50914">Loss</label><input id="batch-loss-${req.reqId}" type="number" min="0" class="form-control" value="${Number(req.loss) || 0}"></div><div class="form-group" style="margin:0"><label style="color:#00bcd4">Auto Win</label><input id="batch-auto-${req.reqId}" type="number" min="0" class="form-control" value="${Number(req.auto) || 0}"></div></div></div>` : '';
+                box.innerHTML += `<div class="captain-batch-card"><div class="captain-batch-header"><div><div style="font-size:20px;font-weight:700;color:var(--accent-gold)">${escapeHtml(comm)} — ${escapeHtml(req.squadFormat || players.length + ' Man Squad')}</div><div class="captain-batch-meta">Captain: <strong style="color:#fff">${escapeHtml(req.captainName || 'Team Captain')}</strong> | Type: ${escapeHtml(type)} | Players: ${players.length} | Submitted: ${escapeHtml(created)}</div></div><span class="status-badge status-pending">PENDING</span></div>${rows || '<p style="color:var(--text-muted)">No players in this submission.</p>'}${communityBox}<div class="batch-action-bar"><button onclick="rejectCaptainSquad('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject Squad</button><button onclick="approveCaptainSquad('${req.reqId}')" class="btn-green" style="padding:10px 18px"><i class="fa-solid fa-check-double"></i> Approve Entire Squad & Sync Ranking</button></div></div>`;
             });
         }
-
-        function renderCommunityWinQueue(commPendingList) {
-            let tbody = document.getElementById('communityQueueBody');
-            let badge = document.getElementById('commQueueBadge');
-            tbody.innerHTML = '';
-            badge.innerText = `${commPendingList.length} Pending Submissions`;
-
-            if (commPendingList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No pending community result submissions available.</td></tr>`;
-                return;
-            }
-
-            commPendingList.forEach((req) => {
-                const commCode = req.community || 'cobeg';
-                const formattedDate = req.submittedAt ? new Date(req.submittedAt.seconds * 1000).toLocaleDateString() : 'Recent';
-                const resText = `[W:${req.win || 0}, D:${req.draw || 0}, L:${req.loss || 0}, Auto:${req.auto || 0}]`;
-
-                tbody.innerHTML += `
-                                            <tr>
-                                                <td><strong>${req.captainName || 'Team Captain'}</strong></td>
-                                                <td><span style="color:var(--accent-gold); font-weight:700;">${commCode.toUpperCase()}</span></td>
-                                                <td><span style="color:#00bcd4; font-weight:700;">${resText}</span></td>
-                                                <td>${formattedDate}</td>
-                                                <td>
-                                                    <button onclick="approveCommunityWin('${req.reqId}')" class="btn-green"><i class="fa-solid fa-check"></i> Approve Result</button>
-                                                    <button onclick="rejectCommunityWin('${req.reqId}')" class="btn-danger"><i class="fa-solid fa-xmark"></i> Reject</button>
-                                                </td>
-                                            </tr>`;
-            });
-        }
-
-        async function approveCommunityWin(reqId) {
+        async function approveCaptainSquad(reqId) {
             try {
-                const pendingRef = db.collection('pending_community_wins').doc(reqId);
-
-                await db.runTransaction(async (transaction) => {
-                    const pendingDoc = await transaction.get(pendingRef);
-                    if (!pendingDoc.exists) {
-                        throw new Error("Community result request no longer exists.");
-                    }
-
-                    const req = pendingDoc.data();
-                    const commCode = (req.community || 'cobeg').toLowerCase();
-                    const winDelta = Number(req.win) || 0;
-                    const drawDelta = Number(req.draw) || 0;
-                    const lossDelta = Number(req.loss) || 0;
-                    const autoDelta = Number(req.auto) || 0;
-
-                    const commRef = db.collection('communities').doc(commCode);
-                    const commDoc = await transaction.get(commRef);
-
-                    let globalCommStats = commDoc.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, auto: 0, pts: 0, winRate: "0.0" };
-                    let matchCountDelta = winDelta + drawDelta + lossDelta + autoDelta;
-
-                    globalCommStats.w = (Number(globalCommStats.w) || 0) + winDelta;
-                    globalCommStats.d = (Number(globalCommStats.d) || 0) + drawDelta;
-                    globalCommStats.l = (Number(globalCommStats.l) || 0) + lossDelta;
-                    globalCommStats.auto = (Number(globalCommStats.auto) || 0) + autoDelta;
-                    globalCommStats.mp = (Number(globalCommStats.mp) || 0) + matchCountDelta;
-                    globalCommStats.pts = (Number(globalCommStats.pts) || 0) + (winDelta * 3) + drawDelta;
-                    globalCommStats.winRate = globalCommStats.mp > 0 ? (((globalCommStats.w + globalCommStats.auto) / globalCommStats.mp) * 100).toFixed(1) : "0.0";
-
-                    transaction.set(commRef, globalCommStats, { merge: true });
-                    transaction.delete(pendingRef);
+                const pendingRef = db.collection('pending_squad_submissions').doc(reqId), pendingDoc = await pendingRef.get(); if (!pendingDoc.exists) throw new Error('Pending squad submission no longer exists.');
+                const req = pendingDoc.data(), original = Array.isArray(req.playerResults) ? req.playerResults : []; if (!original.length) throw new Error('This submission contains no players.');
+                const edited = original.map((p, i) => { const id = document.getElementById(`batch-player-${reqId}-${i}`)?.value || '', gf = Number(document.getElementById(`batch-gf-${reqId}-${i}`)?.value) || 0, ga = Number(document.getElementById(`batch-ga-${reqId}-${i}`)?.value) || 0, motm = (document.getElementById(`batch-motm-${reqId}-${i}`)?.value || 'no') === 'yes'; if (!id) throw new Error(`Player #${i + 1} must be selected.`); return { playerId: id, gf, ga, awardMotm: motm } });
+                const community = (req.community || 'cobeg').toLowerCase(), type = (req.matchType || 'official').toLowerCase(), win = Number(document.getElementById(`batch-win-${reqId}`)?.value) || 0, draw = Number(document.getElementById(`batch-draw-${reqId}`)?.value) || 0, loss = Number(document.getElementById(`batch-loss-${reqId}`)?.value) || 0, auto = Number(document.getElementById(`batch-auto-${reqId}`)?.value) || 0;
+                const refs = [...new Map(edited.map(x => { const r = db.collection('users').doc(x.playerId); return [r.path, r] })).values()];
+                const commRef = db.collection('communities').doc(community);
+                await db.runTransaction(async tx => {
+                    if (!(await tx.get(pendingRef)).exists) throw new Error('This squad was already approved or removed.');
+                    const docs = []; for (const r of refs) docs.push(await tx.get(r));
+                    const users = new Map(docs.map(d => [d.id, d]));
+                    edited.forEach(x => { if (!users.get(x.playerId)?.exists) throw new Error('Player profile not found: ' + x.playerId) });
+                    const commDoc = type === 'domestic' ? null : await tx.get(commRef);
+                    const init = () => ({ mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: '0.0', motm: 0 });
+                    const add = (e, w, d, l, gf, ga, m) => { const st = { ...init(), ...(e || {}) }; st.mp = (+st.mp || 0) + w + d + l; st.w = (+st.w || 0) + w; st.d = (+st.d || 0) + d; st.l = (+st.l || 0) + l; st.gf = (+st.gf || 0) + gf; st.ga = (+st.ga || 0) + ga; st.gd = st.gf - st.ga; st.pts = st.w * 3 + st.d; st.winRate = st.mp ? ((st.w / st.mp) * 100).toFixed(1) : '0.0'; if (m) st.motm = (+st.motm || 0) + 1; return st };
+                    const updates = new Map(); edited.forEach(x => { const p = users.get(x.playerId).data(), w = x.gf > x.ga ? 1 : 0, d = x.gf === x.ga ? 1 : 0, l = x.gf < x.ga ? 1 : 0, cur = updates.get(x.playerId) || { official: p.official || init(), domestic: p.domestic || init(), potm: p.potm || init(), communities: { ...(p.communities || {}) } }; if (type === 'domestic') cur.domestic = add(cur.domestic, w, d, l, x.gf, x.ga, x.awardMotm); else { cur.official = add(cur.official, w, d, l, x.gf, x.ga, x.awardMotm); cur.potm = add(cur.potm, w, d, l, x.gf, x.ga, x.awardMotm) }; const cs = cur.communities[community] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, winRate: '0.0' }; cs.mp = (+cs.mp || 0) + 1; cs.w = (+cs.w || 0) + w; cs.d = (+cs.d || 0) + d; cs.l = (+cs.l || 0) + l; cs.gf = (+cs.gf || 0) + x.gf; cs.ga = (+cs.ga || 0) + x.ga; cs.pts = cs.w * 3 + cs.d; cs.winRate = cs.mp ? ((cs.w / cs.mp) * 100).toFixed(1) : '0.0'; cur.communities[community] = cs; updates.set(x.playerId, cur) });
+                    updates.forEach((v, id) => tx.update(db.collection('users').doc(id), v));
+                    if (type !== 'domestic' && (win + draw + loss + auto > 0)) { const e = commDoc?.exists ? commDoc.data() : { mp: 0, w: 0, d: 0, l: 0, auto: 0, pts: 0, winRate: '0.0' }, g = { ...e, w: (+e.w || 0) + win, d: (+e.d || 0) + draw, l: (+e.l || 0) + loss, auto: (+e.auto || 0) + auto, mp: (+e.mp || 0) + win + draw + loss + auto, pts: (+e.pts || 0) + win * 3 + draw }; g.winRate = g.mp ? (((g.w + g.auto) / g.mp) * 100).toFixed(1) : '0.0'; tx.set(commRef, g, { merge: true }); }
+                    tx.delete(pendingRef);
                 });
-
-                alert("Community Result Approved! Stats successfully synced.");
-            } catch (err) {
-                console.error("Error approving community win: ", err);
-                alert("Failed to approve result: " + err.message);
-            }
+                alert(`Squad approved successfully! ${edited.length} player(s) synced to ranking and profiles.`);
+            } catch (err) { console.error('Error approving squad:', err); alert('Failed to approve squad: ' + err.message) }
         }
-
-        async function rejectCommunityWin(reqId) {
-            if (confirm("Reject this community result submission?")) {
-                try {
-                    await db.collection('pending_community_wins').doc(reqId).delete();
-                } catch (err) {
-                    console.error("Error rejecting result: ", err);
-                }
-            }
-        }
-
-        async function approveCaptainScore(reqId) {
-            try {
-                const pendingRef = db.collection('pending_scores').doc(reqId);
-
-                await db.runTransaction(async (transaction) => {
-                    const pendingDoc = await transaction.get(pendingRef);
-                    if (!pendingDoc.exists) {
-                        throw new Error("Pending request no longer exists.");
-                    }
-
-                    const req = pendingDoc.data();
-                    const { playerId, gf, ga, community, awardMotm, matchType } = req;
-                    const commCode = (community || 'cobeg').toLowerCase();
-
-                    // 1. Player Data fetch
-                    const userRef = db.collection('users').doc(playerId);
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists) throw new Error("Player profile not found in database.");
-
-                    let player = userDoc.data();
-                    let pWins = gf > ga ? 1 : 0;
-                    let pDraws = gf === ga ? 1 : 0;
-                    let pLosses = gf < ga ? 1 : 0;
-                    let goalsFor = Number(gf) || 0;
-                    let goalsAgainst = Number(ga) || 0;
-
-                    // 2. Helper to Update Player's Individual Official / Domestic / POTM Stats
-                    const updateStatsMap = (existing, deltaW, deltaD, deltaL, deltaGF, deltaGA, isMotm) => {
-                        let st = existing || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, winRate: "0.0", motm: 0 };
-                        let mpAdd = deltaW + deltaD + deltaL;
-
-                        st.mp = (Number(st.mp) || 0) + mpAdd;
-                        st.w = (Number(st.w) || 0) + deltaW;
-                        st.d = (Number(st.d) || 0) + deltaD;
-                        st.l = (Number(st.l) || 0) + deltaL;
-                        st.gf = (Number(st.gf) || 0) + deltaGF;
-                        st.ga = (Number(st.ga) || 0) + deltaGA;
-                        st.gd = st.gf - st.ga;
-                        st.pts = (st.w * 3) + st.d;
-                        st.winRate = st.mp > 0 ? ((st.w / st.mp) * 100).toFixed(1) : "0.0";
-                        if (isMotm) st.motm = (Number(st.motm) || 0) + 1;
-
-                        return st;
-                    };
-
-                    let updatePayload = {};
-                    const selectedType = matchType || 'official';
-
-                    if (selectedType === 'domestic') {
-                        updatePayload.domestic = updateStatsMap(player.domestic, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
-                    } else {
-                        // Update official and syncing potm ranking
-                        updatePayload.official = updateStatsMap(player.official, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
-                        updatePayload.potm = updateStatsMap(player.potm, pWins, pDraws, pLosses, goalsFor, goalsAgainst, awardMotm);
-                    }
-
-                    // 3. Player profile specific community stats update (Update stats only in player's personal profile)
-                    let playerCommunities = player.communities || {};
-                    let commStats = playerCommunities[commCode] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, winRate: "0.0" };
-
-                    commStats.mp = (Number(commStats.mp) || 0) + 1;
-                    commStats.w = (Number(commStats.w) || 0) + pWins;
-                    commStats.d = (Number(commStats.d) || 0) + pDraws;
-                    commStats.l = (Number(commStats.l) || 0) + pLosses;
-                    commStats.gf = (Number(commStats.gf) || 0) + goalsFor;
-                    commStats.ga = (Number(commStats.ga) || 0) + goalsAgainst;
-                    commStats.pts = (commStats.w * 3) + commStats.d;
-                    commStats.winRate = commStats.mp > 0 ? ((commStats.w / commStats.mp) * 100).toFixed(1) : "0.0";
-
-                    playerCommunities[commCode] = commStats;
-                    updatePayload.communities = playerCommunities;
-
-                    // Database Operations inside Transaction
-                    transaction.update(userRef, updatePayload);
-                    transaction.delete(pendingRef);
-                });
-
-                alert("Score Approved Successfully! Player Official & POTM Ranking and Individual Profile Stats updated.");
-            } catch (err) {
-                console.error("Error approving score: ", err);
-                alert("Failed to approve score: " + err.message);
-            }
-        }
-
-        async function rejectCaptainScore(reqId) {
-            try {
-                await db.collection('pending_scores').doc(reqId).delete();
-            } catch (err) {
-                console.error("Error rejecting score: ", err);
-            }
-        }
+        async function rejectCaptainSquad(reqId) { if (!confirm('Reject this complete squad submission?')) return; try { await db.collection('pending_squad_submissions').doc(reqId).delete(); alert('Squad submission rejected.') } catch (err) { console.error(err); alert('Failed to reject squad: ' + err.message) } }
 
         document.getElementById('singlePlayerScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -2184,10 +2065,10 @@
                 });
 
                 container.innerHTML += `
-                                            <div class="form-group">
-                                                <label>Slot ${i + 1}</label>
-                                                <select class="form-control tournament-player-select">${optionsHtml}</select>
-                                            </div>`;
+                                                    <div class="form-group">
+                                                        <label>Slot ${i + 1}</label>
+                                                        <select class="form-control tournament-player-select">${optionsHtml}</select>
+                                                    </div>`;
             }
         }
 
@@ -2280,37 +2161,37 @@
                 const isP2Win = m.winner && m.winner.id === m.p2.id;
 
                 roundHtml += `
-                                            <div class="match-card">
-                                                <div class="player-vs-box">
-                                                    <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
-                                                        <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                                        <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
-                                                    </div>
-                                                    <span class="vs">VS</span>
-                                                    <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
-                                                        <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
-                                                        <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                                    </div>
-                                                </div>
+                                                    <div class="match-card">
+                                                        <div class="player-vs-box">
+                                                            <div class="player-profile-item ${isP1Win ? 'winner-active' : ''}">
+                                                                <img src="${m.p1.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                                <span style="${isP1Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p1.name}</span>
+                                                            </div>
+                                                            <span class="vs">VS</span>
+                                                            <div class="player-profile-item ${isP2Win ? 'winner-active' : ''}">
+                                                                <span style="${isP2Win ? 'color: var(--accent-gold); font-weight:700;' : ''}">${m.p2.name}</span>
+                                                                <img src="${m.p2.avatar}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                            </div>
+                                                        </div>
 
-                                                ${!isCompleted ? `
-                                                    <div class="score-inputs">
-                                                        <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
-                                                        <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
-                                                        <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
-                                                        ${isDoubleLeg ? `
-                                                            <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
-                                                            <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
-                                                            <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
-                                                        ` : ''}
-                                                        <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
-                                                    </div>
-                                                ` : `
-                                                    <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
-                                                        Winner: ${m.winner.name}
-                                                    </div>
-                                                `}
-                                            </div>`;
+                                                        ${!isCompleted ? `
+                                                            <div class="score-inputs">
+                                                                <span style="font-size: 11px; color: var(--text-muted);">L1:</span>
+                                                                <input type="number" id="l1_p1_${idx}" class="score-input" placeholder="0">
+                                                                <input type="number" id="l1_p2_${idx}" class="score-input" placeholder="0">
+                                                                ${isDoubleLeg ? `
+                                                                    <span style="font-size: 11px; color: var(--text-muted); margin-left:4px;">L2:</span>
+                                                                    <input type="number" id="l2_p1_${idx}" class="score-input" placeholder="0">
+                                                                    <input type="number" id="l2_p2_${idx}" class="score-input" placeholder="0">
+                                                                ` : ''}
+                                                                <button onclick="submitScore(${idx})" class="btn-submit-score">Advance & Sync Rank</button>
+                                                            </div>
+                                                        ` : `
+                                                            <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: var(--accent-gold);">
+                                                                Winner: ${m.winner.name}
+                                                            </div>
+                                                        `}
+                                                    </div>`;
             });
 
             roundHtml += `</div>`;
