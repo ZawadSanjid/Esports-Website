@@ -389,18 +389,25 @@
                         <label>Squad Format</label>
                         <select id="squadFormatSelect" class="form-control" onchange="generateSquadSlots()" required>
                             <option value="6">6 Man Squad</option>
-                            <option value="8">8 Man Squad</option>
+                            <option value="11">11 Man Squad</option>
                             <option value="10">10 Man Squad</option>
                             <option value="12" selected>12 Man Squad</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- OVERALL COMMUNITY RESULT INPUT FIELDS -->
+                <!-- OVERALL COMMUNITY RESULT INPUT FIELDS WITH AUTO-WIN TICKBOX -->
                 <div class="result-input-box">
-                    <label style="display:block; font-weight:700; color:var(--accent-gold); margin-bottom:10px; font-size:14px; text-transform:uppercase;">
-                        <i class="fa-solid fa-chart-line"></i> Overall Community Result Submission (Admin Queue)
-                    </label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <label style="font-weight:700; color:var(--accent-gold); font-size:14px; text-transform:uppercase; margin:0;">
+                            <i class="fa-solid fa-chart-line"></i> Overall Community Result Submission
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 8px; background: rgba(0, 188, 212, 0.1); border: 1px solid #00bcd4; padding: 4px 12px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="autoWinToggle" onchange="toggleAutoWinMode()" style="width: 16px; height: 16px; cursor: pointer;">
+                            <label for="autoWinToggle" style="color: #00bcd4; font-weight: 700; font-size: 13px; cursor: pointer; margin: 0; text-transform: uppercase;">Auto Win Mode</label>
+                        </div>
+                    </div>
+
                     <div class="result-input-grid">
                         <div class="form-group" style="margin:0;">
                             <label style="color:#4caf50;">Win (W)</label>
@@ -526,13 +533,57 @@
                 generateDomesticSlots();
             });
 
-            db.collection('pending_scores').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            db.collection('pending_squad_submissions').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
                 let pendingList = [];
                 snapshot.forEach(doc => {
                     pendingList.push({ id: doc.id, ...doc.data() });
                 });
                 renderPendingLogs(pendingList);
             });
+        }
+
+        // AUTO-WIN TOGGLE HANDLER
+        function toggleAutoWinMode() {
+            const isAutoWin = document.getElementById('autoWinToggle').checked;
+            const perfWrapper = document.getElementById('playerPerformanceWrapper');
+            const winInput = document.getElementById('resWin');
+            const autoInput = document.getElementById('resAuto');
+
+            if (isAutoWin) {
+                perfWrapper.style.display = 'none';
+                winInput.value = '1';
+                autoInput.value = '1';
+            } else {
+                perfWrapper.style.display = 'block';
+                winInput.value = '0';
+                autoInput.value = '0';
+            }
+        }
+
+        // PLAYER SEARCH FILTER HELPER
+        function filterPlayerDropdown(slotIndex, type = 'squad') {
+            const searchInput = document.getElementById(`${type}_search_${slotIndex}`);
+            const selectDropdown = document.getElementById(`${type}_select_${slotIndex}`);
+            const filterText = searchInput.value.toLowerCase().trim();
+
+            const options = selectDropdown.options;
+            let firstMatchIndex = -1;
+
+            for (let i = 0; i < options.length; i++) {
+                const optText = options[i].text.toLowerCase();
+                if (optText.includes(filterText) || options[i].value === "") {
+                    options[i].style.display = "";
+                    if (firstMatchIndex === -1 && options[i].value !== "") {
+                        firstMatchIndex = i;
+                    }
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+
+            if (filterText !== "" && firstMatchIndex !== -1) {
+                selectDropdown.selectedIndex = firstMatchIndex;
+            }
         }
 
         function generateSquadSlots() {
@@ -548,27 +599,28 @@
                 });
 
                 container.innerHTML += `
-                                    <div class="squad-slot-card">
-                                        <div class="form-group" style="margin:0;">
-                                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                            <select class="form-control squad-player-id" required>${optionsHtml}</select>
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>GF (Goals)</label>
-                                            <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>GA (Against)</label>
-                                            <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>MOTM / POTM?</label>
-                                            <select class="form-control squad-player-motm">
-                                                <option value="no">No</option>
-                                                <option value="yes">Yes</option>
-                                            </select>
-                                        </div>
-                                    </div>`;
+                        <div class="squad-slot-card">
+                            <div class="form-group" style="margin:0;">
+                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                <input type="text" id="squad_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'squad')" style="margin-bottom: 5px;">
+                                <select id="squad_select_${i}" class="form-control squad-player-id" required>${optionsHtml}</select>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GF (Goals)</label>
+                                <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GA (Against)</label>
+                                <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>MOTM / POTM?</label>
+                                <select class="form-control squad-player-motm">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>`;
             }
         }
 
@@ -584,196 +636,98 @@
                 });
 
                 container.innerHTML += `
-                                    <div class="squad-slot-card">
-                                        <div class="form-group" style="margin:0;">
-                                            <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                            <select class="form-control dom-player-id">${optionsHtml}</select>
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>GF (Goals)</label>
-                                            <input type="number" class="form-control dom-gf" min="0" value="0">
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>GA (Against)</label>
-                                            <input type="number" class="form-control dom-ga" min="0" value="0">
-                                        </div>
-                                        <div class="form-group" style="margin:0;">
-                                            <label>MOTM / POTM?</label>
-                                            <select class="form-control dom-motm">
-                                                <option value="no">No</option>
-                                                <option value="yes">Yes</option>
-                                            </select>
-                                        </div>
-                                    </div>`;
+                        <div class="squad-slot-card">
+                            <div class="form-group" style="margin:0;">
+                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                <input type="text" id="dom_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'dom')" style="margin-bottom: 5px;">
+                                <select id="dom_select_${i}" class="form-control dom-player-id">${optionsHtml}</select>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GF (Goals)</label>
+                                <input type="number" class="form-control dom-gf" min="0" value="0">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>GA (Against)</label>
+                                <input type="number" class="form-control dom-ga" min="0" value="0">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>MOTM / POTM?</label>
+                                <select class="form-control dom-motm">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>`;
             }
         }
 
-        // SUBMIT SQUAD SCORE & COMMUNITY RESULTS FORM
+        // SUBMIT COMPLETE OFFICIAL SQUAD AS ONE BATCH APPROVAL DOCUMENT
         document.getElementById('captainScoreForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+            const btn = document.getElementById('submitBtn'); btn.disabled = true;
+            try {
+                const community = document.getElementById('communitySelect').value.trim().toLowerCase();
+                const squadFormat = document.getElementById('squadFormatSelect').value + ' Man';
+                const win = parseInt(document.getElementById('resWin').value) || 0, draw = parseInt(document.getElementById('resDraw').value) || 0, loss = parseInt(document.getElementById('resLoss').value) || 0, auto = parseInt(document.getElementById('resAuto').value) || 0;
+                const isAutoWin = document.getElementById('autoWinToggle').checked;
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-
-            let community = document.getElementById('communitySelect').value.trim().toLowerCase();
-            let squadFormat = document.getElementById('squadFormatSelect').value + " Man";
-
-            let resWin = parseInt(document.getElementById('resWin').value) || 0;
-            let resDraw = parseInt(document.getElementById('resDraw').value) || 0;
-            let resLoss = parseInt(document.getElementById('resLoss').value) || 0;
-            let resAuto = parseInt(document.getElementById('resAuto').value) || 0;
-
-            let playerNodes = document.querySelectorAll('.squad-player-id');
-            let gfNodes = document.querySelectorAll('.squad-player-gf');
-            let gaNodes = document.querySelectorAll('.squad-player-ga');
-            let motmNodes = document.querySelectorAll('.squad-player-motm');
-
-            let playerResultsList = [];
-            let batch = db.batch();
-            let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            // 1. Send individual match scores to single match approval queue
-            playerNodes.forEach((node, idx) => {
-                let pUid = node.value;
-                let pObj = cachedPlayers.find(p => p.uid === pUid);
-
-                if (pObj) {
-                    let gf = parseInt(gfNodes[idx].value) || 0;
-                    let ga = parseInt(gaNodes[idx].value) || 0;
-
-                    playerResultsList.push({
-                        playerId: pUid,
-                        playerName: pObj.name || 'Unknown Player',
-                        gf: gf,
-                        ga: ga
-                    });
-
-                    let docRef = db.collection('pending_scores').doc();
-                    batch.set(docRef, {
-                        playerId: pUid,
-                        playerName: pObj.name || 'Unknown Player',
-                        community: community,
-                        matchType: 'official',
-                        squadFormat: squadFormat,
-                        gf: gf,
-                        ga: ga,
-                        awardMotm: motmNodes[idx].value === 'yes',
-                        submittedBy: currentCaptainUid || 'captain',
-                        timestamp: currentTime,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                const players = [];
+                if (!isAutoWin) {
+                    const ps = document.querySelectorAll('.squad-player-id'), gf = document.querySelectorAll('.squad-player-gf'), ga = document.querySelectorAll('.squad-player-ga'), motm = document.querySelectorAll('.squad-player-motm');
+                    ps.forEach((node, i) => { const id = node.value, p = cachedPlayers.find(x => x.uid === id); if (!p) throw new Error(`Player #${i + 1} is not selected.`); players.push({ playerId: id, playerName: p.name || 'Unknown Player', gf: parseInt(gf[i].value) || 0, ga: parseInt(ga[i].value) || 0, awardMotm: motm[i].value === 'yes' }) });
+                    if (!players.length) throw new Error('At least one player is required.');
                 }
-            });
 
-            // 2. Send overall community result request to Community Win Approval Queue
-            if (resWin > 0 || resDraw > 0 || resLoss > 0 || resAuto > 0) {
-                let commWinRef = db.collection('pending_community_wins').doc();
-                batch.set(commWinRef, {
+                await db.collection('pending_squad_submissions').add({
                     captainUid: currentCaptainUid || 'captain',
-                    captainName: currentCaptainName,
-                    community: community,
-                    squadFormat: squadFormat,
-                    win: resWin,
-                    draw: resDraw,
-                    loss: resLoss,
-                    auto: resAuto,
-                    playerResults: playerResultsList,
+                    captainName: currentCaptainName || 'Captain',
+                    community,
+                    squadFormat: isAutoWin ? 'Auto Win' : squadFormat,
+                    matchType: 'official',
+                    win,
+                    draw,
+                    loss,
+                    auto,
+                    isAutoWin,
+                    playerResults: players,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     submittedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            }
 
-            try {
-                await batch.commit();
-                alert(`Success! Squad match scores and Community Results sent to Admin Panel Queue.`);
-            } catch (err) {
-                console.error("Submission Error: ", err);
-                alert("Failed to send scores. Please try again.");
-            } finally {
-                submitBtn.disabled = false;
-            }
+                alert(isAutoWin ? `Success! Auto Win for ${community.toUpperCase()} submitted for admin approval.` : `Success! Complete ${players.length}-man squad submitted as ONE approval request to Admin.`);
+
+                document.getElementById('captainScoreForm').reset();
+                document.getElementById('communitySelect').value = 'cobeg';
+                document.getElementById('squadFormatSelect').value = '12';
+                document.getElementById('autoWinToggle').checked = false;
+                toggleAutoWinMode();
+                generateSquadSlots();
+            } catch (err) { console.error(err); alert('Failed to send squad: ' + err.message) } finally { btn.disabled = false }
         });
 
-        // SUBMIT DOMESTIC MATCH BATCH FORM
+        // SUBMIT DOMESTIC BATCH AS ONE APPROVAL DOCUMENT
         document.getElementById('domesticBatchForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
-            const domBtn = document.getElementById('domSubmitBtn');
-            let playerNodes = document.querySelectorAll('.dom-player-id');
-            let gfNodes = document.querySelectorAll('.dom-gf');
-            let gaNodes = document.querySelectorAll('.dom-ga');
-            let motmNodes = document.querySelectorAll('.dom-motm');
-
-            let batch = db.batch();
-            let submittedCount = 0;
-
-            playerNodes.forEach((node, idx) => {
-                let pUid = node.value;
-                if (pUid) {
-                    let pObj = cachedPlayers.find(p => p.uid === pUid);
-                    let docRef = db.collection('pending_scores').doc();
-                    let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                    batch.set(docRef, {
-                        playerId: pUid,
-                        playerName: pObj ? (pObj.name || 'Unknown Player') : 'Unknown Player',
-                        community: 'Domestic League',
-                        squadFormat: 'Domestic Solo',
-                        matchType: 'domestic',
-                        gf: parseInt(gfNodes[idx].value) || 0,
-                        ga: parseInt(gaNodes[idx].value) || 0,
-                        awardMotm: motmNodes[idx].value === 'yes',
-                        submittedBy: currentCaptainUid || 'captain',
-                        timestamp: currentTime,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-
-                    submittedCount++;
-                }
-            });
-
-            if (submittedCount === 0) {
-                return alert("At least select 1 player to submit domestic scores!");
-            }
-
-            domBtn.disabled = true;
-
+            const btn = document.getElementById('domSubmitBtn'); btn.disabled = true;
             try {
-                await batch.commit();
-                alert(`Success! Sent ${submittedCount} domestic player scores to Admin Panel for approval.`);
-                generateDomesticSlots();
-            } catch (err) {
-                console.error("Domestic Batch Submission Error:", err);
-                alert("Failed to submit domestic scores.");
-            } finally {
-                domBtn.disabled = false;
-            }
+                const ps = document.querySelectorAll('.dom-player-id'), gf = document.querySelectorAll('.dom-gf'), ga = document.querySelectorAll('.dom-ga'), motm = document.querySelectorAll('.dom-motm'), players = [];
+                ps.forEach((node, i) => { if (!node.value) return; const p = cachedPlayers.find(x => x.uid === node.value); if (p) players.push({ playerId: node.value, playerName: p.name || 'Unknown Player', gf: parseInt(gf[i].value) || 0, ga: parseInt(ga[i].value) || 0, awardMotm: motm[i].value === 'yes' }) });
+                if (!players.length) { alert('At least select 1 player to submit domestic scores!'); return }
+                await db.collection('pending_squad_submissions').add({ captainUid: currentCaptainUid || 'captain', captainName: currentCaptainName || 'Captain', community: 'domestic', squadFormat: 'Domestic Batch', matchType: 'domestic', win: 0, draw: 0, loss: 0, auto: 0, playerResults: players, createdAt: firebase.firestore.FieldValue.serverTimestamp(), submittedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                alert(`Success! Sent ${players.length} domestic player score(s) as ONE approval request.`); generateDomesticSlots();
+            } catch (err) { console.error(err); alert('Failed to submit domestic batch: ' + err.message) } finally { btn.disabled = false }
         });
 
         // RENDER PENDING QUEUE LOGS
         function renderPendingLogs(pendingList) {
-            let container = document.getElementById('pendingLogsContainer');
-            container.innerHTML = '';
-
-            if (!pendingList || pendingList.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">No pending submissions in queue.</p>`;
-                return;
-            }
-
+            const box = document.getElementById('pendingLogsContainer'); box.innerHTML = '';
+            if (!pendingList?.length) { box.innerHTML = '<p style="color:var(--text-muted);text-align:center;">No pending submissions in queue.</p>'; return }
             pendingList.forEach(item => {
-                let matchTypeTag = item.matchType ? `Type: ${item.matchType.toUpperCase()} | ` : '';
-
-                container.innerHTML += `
-                                    <div class="submission-item">
-                                        <div>
-                                            <strong>${item.playerName}</strong>
-                                            <span style="color: var(--accent-gold);">[${(item.community || 'EBFC').toUpperCase()} - ${item.squadFormat}]</span>
-                                            <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">
-                                                ${matchTypeTag}GF: ${item.gf} | GA: ${item.ga} | POTM: ${item.awardMotm ? 'Yes' : 'No'} | Time: ${item.timestamp || 'N/A'}
-                                            </div>
-                                        </div>
-                                        <span class="status-badge status-pending"><i class="fa-solid fa-hourglass-half"></i> Pending Approval</span>
-                                    </div>`;
-            });
+                const players = Array.isArray(item.playerResults) ? item.playerResults : [];
+                const res = item.matchType === 'official' ? `W:${item.win || 0} / D:${item.draw || 0} / L:${item.loss || 0} / Auto:${item.auto || 0}` : 'Domestic Batch';
+                const subType = item.isAutoWin ? ' [AUTO WIN]' : ` [${item.squadFormat || players.length + ' Man Squad'}]`;
+                box.innerHTML += `<div class="submission-item"><div><strong>${item.community === 'domestic' ? 'Domestic League' : (item.community || 'EBFC').toUpperCase()}</strong><span style="color:var(--accent-gold)">${subType}</span><div style="font-size:12px;color:var(--text-muted);margin-top:4px">${players.length} player(s) | ${res}</div></div><span class="status-badge status-pending">PENDING ADMIN APPROVAL</span></div>`
+            })
         }
     </script>
 </body>
