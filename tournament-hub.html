@@ -911,7 +911,7 @@
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
                 <button class="btn-gold-sm" onclick="openFixtureCreatorModal()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Match Fixture</button>
-                <button class="btn-danger-sm" onclick="#" style="background:#b00020; border:1px solid #ff4d4d;">
+                <button class="btn-danger-sm" onclick="resetDomesticRankingTemporary()" style="background:#b00020; border:1px solid #ff4d4d;">
                     <i class="fa-solid fa-rotate-left"></i> TEMP: RESET DOMESTIC RANKING
                 </button>
 
@@ -1461,6 +1461,8 @@
             });
         }
 
+        window.userProfileCache = window.userProfileCache || {};
+
         document.addEventListener("DOMContentLoaded", () => {
             listenToDatabase();
             window.setupAllCardImages();
@@ -1498,46 +1500,56 @@
                 return;
             }
 
+            // FAST AUTH PATH: make the Firebase Auth user available immediately.
+            // Do not block the UI on Firestore. The profile is refreshed in the background.
+            const uid = firebaseUser.uid;
+            const cached = window.userProfileCache?.[uid] || {};
+            const fastName = (cached.name || firebaseUser.displayName || "MD. ZAWADULLAH BHUIYAN").toString().trim();
+            const fastAvatar = cached.avatar || firebaseUser.photoURL || window.createSvgAvatar(fastName);
+
+            window.currentLoggedUser = {
+                id: uid,
+                uid: uid,
+                name: fastName,
+                device: cached.device || "POCO 2312FRAFDI",
+                avatar: fastAvatar,
+                role: cached.role || "player"
+            };
+
+            window.cardPreviewUser = { ...window.currentLoggedUser };
+            window.syncCurrentUserIntoCards();
+            window.renderAllData();
+            window.updateAuthButtonStates();
+
+            // Background refresh: Firestore can update the profile without delaying sign-in.
             try {
-                const userRef = doc(firestoreDb, "users", firebaseUser.uid);
-                const userDoc = await getDoc(userRef);
+                const userDoc = await getDoc(doc(firestoreDb, "users", uid));
+                if (!userDoc.exists()) return;
 
-                let profile = {};
-                if (userDoc.exists()) {
-                    profile = userDoc.data() || {};
-                }
+                const profile = userDoc.data() || {};
+                window.userProfileCache = window.userProfileCache || {};
+                window.userProfileCache[uid] = profile;
 
-                const name = (profile.name || firebaseUser.displayName || "MD. ZAWADULLAH BHUIYAN").toString().trim();
+                const name = (profile.name || firebaseUser.displayName || fastName).toString().trim();
                 const avatar = profile.avatar || firebaseUser.photoURL || window.createSvgAvatar(name);
 
-                window.currentLoggedUser = {
-                    id: firebaseUser.uid,
-                    uid: firebaseUser.uid,
-                    name: name,
-                    device: profile.device || "POCO 2312FRAFDI",
-                    avatar: avatar,
-                    role: profile.role || "player"
-                };
-
-                window.cardPreviewUser = { ...window.currentLoggedUser };
-                window.syncCurrentUserIntoCards();
-                window.renderAllData();
-                window.updateAuthButtonStates();
-
+                // Only update if this is still the currently signed-in user.
+                if (window.currentLoggedUser?.uid === uid) {
+                    window.currentLoggedUser = {
+                        ...window.currentLoggedUser,
+                        name,
+                        device: profile.device || window.currentLoggedUser.device,
+                        avatar,
+                        role: profile.role || window.currentLoggedUser.role
+                    };
+                    window.cardPreviewUser = { ...window.currentLoggedUser };
+                    window.syncCurrentUserIntoCards();
+                    window.renderAllData();
+                    window.updateAuthButtonStates();
+                }
             } catch (error) {
-                console.error("Failed to load profile :", error);
-                window.currentLoggedUser = {
-                    id: firebaseUser.uid,
-                    uid: firebaseUser.uid,
-                    name: firebaseUser.displayName || "MD. ZAWADULLAH BHUIYAN",
-                    device: "POCO 2312FRAFDI",
-                    avatar: firebaseUser.photoURL || window.createSvgAvatar("Z"),
-                    role: "player"
-                };
-                window.cardPreviewUser = { ...window.currentLoggedUser };
-                window.syncCurrentUserIntoCards();
-                window.renderAllData();
-                window.updateAuthButtonStates();
+                // Auth is already usable; Firestore profile refresh failure should not block login.
+                console.warn("Background profile refresh failed:", error);
             }
         };
 
