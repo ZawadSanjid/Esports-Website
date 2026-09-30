@@ -858,6 +858,27 @@
             padding: 15px;
             backdrop-filter: blur(5px);
         }
+
+        /* PERFORMANCE / MOBILE INPUT OPTIMIZATION */
+        button, a, input, select, textarea {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            -webkit-appearance: none;
+        }
+
+        @media (max-width: 768px) {
+            .modal-overlay {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+
+            .btn-transfer-glow {
+                animation: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -890,6 +911,9 @@
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
                 <button class="btn-gold-sm" onclick="openFixtureCreatorModal()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Match Fixture</button>
+                <button class="btn-danger-sm" onclick="#" style="background:#b00020; border:1px solid #ff4d4d;">
+                    <i class="fa-solid fa-rotate-left"></i> TEMP: RESET DOMESTIC RANKING
+                </button>
 
                 <div class="switch-container">
                     <span style="font-size: 12px; font-weight: 700; color: var(--accent-gold);">Transfer Window:</span>
@@ -913,6 +937,34 @@
             <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Admin Player Directory Management</div>
             <div id="adminPlayersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
+
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin: 18px 0 8px; border-bottom: 1px solid var(--border-color);">
+                <i class="fa-solid fa-ranking-star"></i> Domestic Score Submission (6v6)
+            </div>
+            <div style="background:#090a0c; border:1px solid var(--border-color); padding:12px; border-radius:8px; margin-bottom:15px;">
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">
+                    Enter one player matchup per line. Example: <strong style="color:#fff;">Arifur Rahman 2-3 Hilan AM</strong>.
+                    The system finds both players by name and updates their Domestic Ranking automatically.
+                </p>
+                <textarea id="adminScoreText" class="form-input" style="height:150px; font-family:monospace; margin-bottom:8px;"
+                          placeholder="Arifur Rahman 2-3 Hilan AM&#10;Player 3 1-1 Player 4&#10;Player 5 3-0 Player 6"></textarea>
+
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <label style="font-size:11px; color:var(--text-muted);">MOTM:</label>
+                    <select id="adminMotmPlayer" class="form-input" style="width:auto; min-width:220px; margin:0;">
+                        <option value="">No MOTM</option>
+                    </select>
+                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="previewAdminScoreSubmission()">
+                        <i class="fa-solid fa-eye"></i> Preview / Submit
+                    </button>
+                </div>
+
+                <div id="adminScorePreview" style="display:none; margin-top:12px;"></div>
+            </div>
+
+            <div style="font-family: 'Teko'; font-size: 18px; color: var(--text-light); margin: 12px 0 8px; border-bottom: 1px solid var(--border-color);">Submitted Score History</div>
+            <div id="adminScoreSubmissionHistory" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;"></div>
+
             <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin-bottom: 8px; border-bottom: 1px solid var(--border-color);">Generated Fixtures Archive</div>
             <div id="generatedFixturesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 15px;"></div>
         </div>
@@ -926,7 +978,7 @@
                     <h2 id="mName">Manager Name</h2>
                     <p style="font-size: 13px; color: #fff;">
                         Club: <strong style="color:var(--accent-gold)" id="mClubName">Squad Name</strong>
-                        <span id="mSquadCountBadge" style="color: var(--cyan-glow); font-size: 12px; font-weight: 700;">(0/8 Players)</span>
+                        <span id="mSquadCountBadge" style="color: var(--cyan-glow); font-size: 12px; font-weight: 700;">(0/11 Players)</span>
                     </p>
                     <p style="font-size: 14px; color: var(--cyan-glow); font-weight: 700; margin-top: 4px;">
                         Balance: <span id="mBalanceDisplay">200M</span> Coins
@@ -1107,7 +1159,7 @@
             <label style="font-size:12px; color:var(--text-muted); text-align:left; display:block;">Select Coin Package:</label>
             <select id="coinPackageSelect" class="form-input">
                 <option value="10">10M Coins - 20 TK</option>
-                <option value="40">40M Coins - 40 TK</option>
+                <option value="20">20M Coins - 40 TK</option>
                 <option value="30">30M Coins - 60 TK</option>
                 <option value="50">50M Coins - 100 TK</option>
             </select>
@@ -1277,6 +1329,24 @@
         </div>
     </div>
 
+
+    <!-- ADMIN SCORE EDITOR MODAL -->
+    <div class="modal-overlay" id="adminScoreEditorModal">
+        <div class="modal-body" style="max-width:700px;">
+            <h3 style="font-family:'Teko'; font-size:25px; color:var(--accent-gold);">EDIT 6v6 SCORE SUBMISSION</h3>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">
+                Select a player to edit their score. Saving recalculates the complete submission so Domestic Ranking is never double-counted.
+            </p>
+            <div id="adminScoreEditorList" style="display:flex; flex-direction:column; gap:8px; text-align:left; max-height:55vh; overflow:auto;"></div>
+            <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="saveAdminScoreEdits()">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Score Changes
+                </button>
+                <button class="btn-danger-sm" onclick="closeModal('adminScoreEditorModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1286,6 +1356,8 @@
             collection,
             doc,
             getDoc,
+            getDocs,
+            writeBatch,
             setDoc,
             updateDoc,
             deleteDoc,
@@ -1328,6 +1400,11 @@
         window.submittedSquads = {};
         window.generatedFixturesArchive = [];
         window.generatedMatchupsList = [];
+        window.adminScoreSubmissions = [];
+        window.mockUsers = [];
+        window.adminScoreDraft = [];
+        window.adminScoreSubmissionId = null;
+        window.renderScheduled = false;
 
         window.currentLoggedUser = null;
         window.currentUserRole = null;
@@ -1344,17 +1421,21 @@
         function listenToDatabase() {
             onSnapshot(collection(firestoreDb, 'managers'), (snapshot) => {
                 window.mockManagers = snapshot.docs.map(doc => doc.data());
-                window.renderAllData();
+                window.scheduleRenderAllData();
             });
 
             onSnapshot(collection(firestoreDb, 'players'), (snapshot) => {
                 window.mockPlayers = snapshot.docs.map(doc => doc.data());
-                window.renderAllData();
+                window.scheduleRenderAllData();
             });
 
             onSnapshot(collection(firestoreDb, 'coinRequests'), (snapshot) => {
                 window.mockCoinRequests = snapshot.docs.map(doc => doc.data());
-                window.renderAllData();
+                window.scheduleRenderAllData();
+            });
+            onSnapshot(collection(firestoreDb, 'adminScoreSubmissions'), (snapshot) => {
+                window.adminScoreSubmissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                window.renderAdminScoreSubmissionHistory();
             });
 
             onSnapshot(collection(firestoreDb, 'fixtures'), (snapshot) => {
@@ -1604,6 +1685,19 @@
             window.renderPlayers();
             window.renderFixturesArchive();
             window.updateManagerHeroInfo();
+            window.updateAdminMotmDropdown();
+            window.renderAdminScoreSubmissionHistory();
+        };
+
+        // Coalesce multiple Firestore onSnapshot callbacks into one paint.
+        // This prevents a burst of database events from rebuilding the whole UI repeatedly.
+        window.scheduleRenderAllData = function () {
+            if (window.renderScheduled) return;
+            window.renderScheduled = true;
+            requestAnimationFrame(() => {
+                window.renderScheduled = false;
+                window.renderAllData();
+            });
         };
 
         window.updateManagerHeroInfo = function () {
@@ -1618,7 +1712,7 @@
                 document.getElementById('mBalanceDisplay').innerText = mgr.balance + "M";
                 let currentSquadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club).length;
                 let badge = document.getElementById('mSquadCountBadge');
-                if (badge) badge.innerText = `(${currentSquadCount}/8 Players)`;
+                if (badge) badge.innerText = `(${currentSquadCount}/11 Players)`;
             }
         };
 
@@ -1643,6 +1737,51 @@
                 alert("Admin Security Verified!");
             } else {
                 alert("Access Denied!");
+            }
+        };
+
+        // TEMPORARY: Reset only Domestic Ranking stats for every user.
+        // Remove this button/function after the ranking reset is completed.
+        window.resetDomesticRankingTemporary = async function () {
+            if (!window.isAdminLoggedIn) {
+                alert("Admin Access Required!");
+                return;
+            }
+
+            const confirmed = confirm(
+                "WARNING: This will RESET ONLY Domestic Ranking stats (MP/W/D/L/GF/GA/PTS/MOTM) for ALL users.\n\n" +
+                "Player profiles, clubs, coins, fixtures and score submission history will NOT be deleted.\n\n" +
+                "Continue?"
+            );
+            if (!confirmed) return;
+
+            try {
+                const usersSnap = await getDocs(collection(firestoreDb, 'users'));
+                const batch = writeBatch(firestoreDb);
+                let count = 0;
+
+                usersSnap.docs.forEach(userDoc => {
+                    batch.update(userDoc.ref, {
+                        domestic: {
+                            mp: 0,
+                            w: 0,
+                            d: 0,
+                            l: 0,
+                            gf: 0,
+                            ga: 0,
+                            pts: 0,
+                            motm: 0
+                        }
+                    });
+                    count++;
+                });
+
+                await batch.commit();
+                alert(`Domestic Ranking reset successfully for ${count} user(s).`);
+                window.renderAllData();
+            } catch (error) {
+                console.error('Domestic Ranking reset failed:', error);
+                alert('Domestic Ranking reset failed: ' + (error?.message || error));
             }
         };
 
@@ -1719,15 +1858,15 @@
                     let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B") };
                     window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
                     container.innerHTML += `
-                                <div class="fx-matchup-row">
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                                    </div>
-                                    <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span>${playerB.name}</span><img src="${playerB.avatar}">
-                                    </div>
-                                </div>`;
+                                        <div class="fx-matchup-row">
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                            </div>
+                                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                            </div>
+                                        </div>`;
                 }
             }
 
@@ -1753,11 +1892,11 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                            </div>`;
+                                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                    </div>`;
             });
         };
 
@@ -1833,15 +1972,15 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                            <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                                👉 Press & Hold on image or click 'Download Now' 👈
-                            </p>
-                            <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                            <div style="display:flex; gap:10px; margin-top:15px;">
-                                <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                                <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                            </div>
-                        `;
+                                    <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                                        👉 Press & Hold on image or click 'Download Now' 👈
+                                    </p>
+                                    <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                                    <div style="display:flex; gap:10px; margin-top:15px;">
+                                        <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                                        <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                                    </div>
+                                `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -1951,21 +2090,585 @@
             }
         };
 
+
+        /* ========================= DOMESTIC 6v6 SCORE SYSTEM ========================= */
+
+        function normalizePlayerName(name) {
+            return (name || '').toString().trim().replace(/\s+/g, ' ').toLowerCase();
+        }
+
+        // Canonical UID resolver for score/ranking updates.
+        // IMPORTANT: players/{playerId}.userId can become stale when a player
+        // account is recreated or linked to a different Firebase Auth account.
+        // Domestic Ranking MUST use the UID of the corresponding users/{UID}
+        // document, because that is where the domestic stats are stored.
+        window.canonicalPlayerUidMap = window.canonicalPlayerUidMap || new Map();
+
+        window.refreshCanonicalPlayerUidMap = async function () {
+            const userSnap = await getDocs(collection(firestoreDb, 'users'));
+            const usersById = new Map();
+            const usersByName = new Map();
+
+            userSnap.docs.forEach(userDoc => {
+                const data = userDoc.data() || {};
+                const record = { uid: userDoc.id, name: data.name || '' };
+                usersById.set(userDoc.id, record);
+
+                const key = normalizePlayerName(data.name);
+                if (key) {
+                    if (!usersByName.has(key)) usersByName.set(key, []);
+                    usersByName.get(key).push(record);
+                }
+            });
+
+            window.canonicalPlayerUidMap = new Map();
+
+            // Reconcile every tournament player to the real users/{UID} record.
+            // If the existing player.userId is already a valid users document ID,
+            // keep it. Otherwise resolve by exact normalized player name.
+            for (const p of (window.mockPlayers || [])) {
+                let canonicalUid = null;
+
+                if (p?.userId && usersById.has(p.userId)) {
+                    canonicalUid = p.userId;
+                } else {
+                    const candidates = usersByName.get(normalizePlayerName(p?.name)) || [];
+                    if (candidates.length === 1) canonicalUid = candidates[0].uid;
+                }
+
+                if (canonicalUid) {
+                    window.canonicalPlayerUidMap.set(normalizePlayerName(p.name), canonicalUid);
+
+                    // Repair the tournament player record so future features use
+                    // the same UID as the Firebase user/ranking document.
+                    if (p.id && p.userId !== canonicalUid) {
+                        try {
+                            await updateDoc(doc(firestoreDb, 'players', p.id), {
+                                userId: canonicalUid
+                            });
+                            p.userId = canonicalUid;
+                        } catch (repairError) {
+                            console.warn('Could not repair player userId:', p.name, repairError);
+                        }
+                    }
+                }
+            }
+
+            return window.canonicalPlayerUidMap;
+        };
+
+        function findUserForPlayerName(name) {
+            const needle = normalizePlayerName(name);
+            if (!needle) return null;
+
+            const canonicalUid = window.canonicalPlayerUidMap?.get(needle);
+            if (canonicalUid) {
+                const tournamentPlayer = window.mockPlayers.find(p => normalizePlayerName(p.name) === needle);
+                return { uid: canonicalUid, name: tournamentPlayer?.name || name };
+            }
+
+            // Tournament player records fallback.
+            const tournamentPlayer = window.mockPlayers.find(p => normalizePlayerName(p.name) === needle);
+            if (tournamentPlayer) {
+                return {
+                    uid: tournamentPlayer.userId || tournamentPlayer.id,
+                    name: tournamentPlayer.name
+                };
+            }
+
+            // Fallback for any separately cached user record.
+            return window.mockUsers.find(u => normalizePlayerName(u.name) === needle) || null;
+        }
+
+        async function parseSixVsSixScoreText(text) {
+            const lines = (text || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+            const results = [];
+            const errors = [];
+
+            // IMPORTANT: Always resolve the player UID from Firestore `players`
+            // at score-submission time. Do not trust a cached/mock UID here.
+            const playersSnapshot = await getDocs(collection(firestoreDb, 'players'));
+            const firestorePlayers = playersSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            const findFirestorePlayerByName = (name) => {
+                const needle = normalizePlayerName(name);
+                return firestorePlayers.find(p => normalizePlayerName(p.name) === needle) || null;
+            };
+
+            for (let index = 0; index < lines.length; index++) {
+                const line = lines[index];
+                // Accept: "Player A 2-3 Player B"
+                // Also accepts a separator such as "Player A: 2-3 - Player B".
+                let m = line.match(/^(.+?)\s+(\d+)\s*-\s*(\d+)\s+(.+?)$/);
+                if (!m) {
+                    errors.push(`Line ${index + 1}: use "Player A 2-3 Player B"`);
+                    return;
+                }
+
+                const playerAName = m[1].trim();
+                const scoreA = Number(m[2]);
+                const scoreB = Number(m[3]);
+                const playerBName = m[4].trim();
+
+                if (scoreA < 0 || scoreB < 0) {
+                    errors.push(`Line ${index + 1}: scores cannot be negative.`);
+                    return;
+                }
+                if (normalizePlayerName(playerAName) === normalizePlayerName(playerBName)) {
+                    errors.push(`Line ${index + 1}: both sides cannot be the same player.`);
+                    return;
+                }
+
+                // Read the CURRENT UID directly from the Firestore players table.
+                const playerA = findFirestorePlayerByName(playerAName);
+                const playerB = findFirestorePlayerByName(playerBName);
+
+                const userA = playerA ? {
+                    uid: playerA.userId || playerA.uid || playerA.id,
+                    name: playerA.name
+                } : null;
+                const userB = playerB ? {
+                    uid: playerB.userId || playerB.uid || playerB.id,
+                    name: playerB.name
+                } : null;
+
+                if (!userA || !userA.uid) errors.push(`Line ${index + 1}: "${playerAName}" was not found in Firestore players.`);
+                if (!userB || !userB.uid) errors.push(`Line ${index + 1}: "${playerBName}" was not found in Firestore players.`);
+                if (!userA || !userA.uid || !userB || !userB.uid) continue;
+
+                results.push({
+                    playerAName: userA.name || playerAName,
+                    playerAUid: userA.uid,
+                    playerBName: userB.name || playerBName,
+                    playerBUid: userB.uid,
+                    scoreA,
+                    scoreB
+                });
+            }
+
+            // A 6v6 submission is exactly 6 individual player matchups.
+            if (results.length !== 6) {
+                errors.push(`A 6v6 submission must contain exactly 6 valid match lines. Current: ${results.length}.`);
+            }
+
+            const ids = results.flatMap(r => [r.playerAUid, r.playerBUid]);
+            if (new Set(ids).size !== ids.length) {
+                errors.push('Each player must appear only once in a 6v6 submission (12 unique players).');
+            }
+
+            return { results, errors };
+        }
+
+        function buildDomesticDelta(results, motmUid) {
+            const delta = {};
+
+            const ensure = (uid, name) => {
+                if (!delta[uid]) {
+                    delta[uid] = {
+                        uid, name, mp: 0, w: 0, d: 0, l: 0,
+                        gf: 0, ga: 0, motm: 0
+                    };
+                }
+                return delta[uid];
+            };
+
+            results.forEach(r => {
+                const a = ensure(r.playerAUid, r.playerAName);
+                const b = ensure(r.playerBUid, r.playerBName);
+
+                a.mp++; b.mp++;
+                a.gf += r.scoreA; a.ga += r.scoreB;
+                b.gf += r.scoreB; b.ga += r.scoreA;
+
+                if (r.scoreA > r.scoreB) {
+                    a.w++; b.l++;
+                } else if (r.scoreA < r.scoreB) {
+                    a.l++; b.w++;
+                } else {
+                    a.d++; b.d++;
+                }
+            });
+
+            if (motmUid && delta[motmUid]) delta[motmUid].motm = 1;
+
+            return Object.values(delta);
+        }
+
+        function calculateDomesticWithDelta(existing, delta) {
+            const s = existing || {};
+            return {
+                mp: (Number(s.mp) || 0) + delta.mp,
+                w: (Number(s.w) || 0) + delta.w,
+                d: (Number(s.d) || 0) + delta.d,
+                l: (Number(s.l) || 0) + delta.l,
+                gf: (Number(s.gf) || 0) + delta.gf,
+                ga: (Number(s.ga) || 0) + delta.ga,
+                motm: (Number(s.motm) || 0) + delta.motm,
+                pts: ((Number(s.w) || 0) + delta.w) * 3 + ((Number(s.d) || 0) + delta.d)
+            };
+        }
+
+        window.updateAdminMotmDropdown = function () {
+            const select = document.getElementById('adminMotmPlayer');
+            if (!select) return;
+
+            const current = select.value;
+            const players = window.mockPlayers.map(p => ({ uid: p.userId || p.id, name: p.name }));
+
+            const unique = [];
+            const seen = new Set();
+            players.forEach(p => {
+                if (!p?.uid || seen.has(p.uid)) return;
+                seen.add(p.uid);
+                unique.push(p);
+            });
+
+            select.innerHTML = '<option value="">No MOTM</option>' +
+                unique.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+                    .map(p => `<option value="${p.uid}">${p.name || 'Unknown Player'}</option>`).join('');
+
+            if (unique.some(p => p.uid === current)) select.value = current;
+        };
+
+        window.previewAdminScoreSubmission = async function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+
+            const preview = document.getElementById('adminScorePreview');
+            preview.style.display = 'block';
+
+            try {
+                await window.refreshCanonicalPlayerUidMap();
+            } catch (uidError) {
+                console.error('UID reconciliation failed:', uidError);
+                preview.innerHTML = `<div style="color:var(--primary-red);font-size:12px;">Could not verify player account UIDs. Please try again.</div>`;
+                return;
+            }
+
+            const text = document.getElementById('adminScoreText').value.trim();
+            const motmUid = document.getElementById('adminMotmPlayer').value || '';
+            const parsed = await parseSixVsSixScoreText(text);
+
+            if (parsed.errors.length) {
+                preview.innerHTML = `<div style="color:var(--primary-red); font-size:12px; line-height:1.6;">${parsed.errors.map(e => `• ${e}`).join('<br>')}</div>`;
+                return;
+            }
+
+            const delta = buildDomesticDelta(parsed.results, motmUid);
+            preview.innerHTML = `
+                        <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
+                            ✓ 6 matchups / 12 unique players validated.
+                        </div>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
+                            ${delta.map(d => `
+                                <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
+                                    <strong>${d.name}</strong>
+                                    <span style="display:block; color:var(--text-muted);">
+                                        MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
+                                    </span>
+                                </div>`).join('')}
+                        </div>
+                        <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
+                                <i class="fa-solid fa-database"></i> Submit Official Domestic Result
+                            </button>
+                            <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
+                                <i class="fa-solid fa-pen"></i> Edit Player Scores
+                            </button>
+                        </div>`;
+
+            window.adminScoreDraft = parsed.results;
+            window.adminScoreDraftMotm = motmUid;
+        };
+
+        window.submitAdminScoreSubmission = async function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+
+            try {
+                await window.refreshCanonicalPlayerUidMap();
+            } catch (uidError) {
+                console.error('UID reconciliation failed:', uidError);
+                alert('Could not verify player account UIDs. Score was not submitted.');
+                return;
+            }
+
+            const text = document.getElementById('adminScoreText').value.trim();
+            const motmUid = document.getElementById('adminMotmPlayer').value || '';
+            const parsed = await parseSixVsSixScoreText(text);
+            if (parsed.errors.length) {
+                alert(parsed.errors.join('\\n'));
+                return;
+            }
+
+            const submissionId = 'score_' + Date.now();
+
+            try {
+                // IMPORTANT: applySubmissionDelta validates ALL 12 users first and
+                // updates them in one Firestore batch. Nothing is partially updated.
+                await window.applySubmissionDelta(parsed.results, motmUid, +1);
+
+                // Only save the official submission after all 12 ranking updates succeed.
+                await setDoc(doc(firestoreDb, 'adminScoreSubmissions', submissionId), {
+                    id: submissionId,
+                    format: '6v6',
+                    submittedAt: new Date().toISOString(),
+                    submittedBy: window.currentLoggedUser?.name || 'Admin',
+                    motmUid,
+                    matches: parsed.results.map(m => ({
+                        ...m,
+                        playerAUid: findUserForPlayerName(m.playerAName)?.uid || m.playerAUid,
+                        playerBUid: findUserForPlayerName(m.playerBName)?.uid || m.playerBUid
+                    }))
+                });
+
+                document.getElementById('adminScoreText').value = '';
+                document.getElementById('adminMotmPlayer').value = '';
+                document.getElementById('adminScorePreview').style.display = 'none';
+                alert('6v6 result submitted. All 12 players have been updated in Domestic Ranking.');
+            } catch (error) {
+                console.error('6v6 submission failed:', error);
+                alert(error?.message || 'Score submission failed. No ranking data was changed.');
+            }
+        };
+
+        window.openAdminScoreEditorFromDraft = function () {
+            if (!window.adminScoreDraft.length) {
+                alert('Preview a valid 6v6 score first.');
+                return;
+            }
+            window.adminScoreSubmissionId = null;
+            window.openAdminScoreEditor(window.adminScoreDraft, window.adminScoreDraftMotm || '');
+        };
+
+        window.openAdminScoreEditor = function (matches, motmUid, submissionId = null) {
+            window.adminScoreDraft = JSON.parse(JSON.stringify(matches || []));
+            window.adminScoreDraftMotm = motmUid || '';
+            window.adminScoreSubmissionId = submissionId;
+
+            const container = document.getElementById('adminScoreEditorList');
+            container.innerHTML = window.adminScoreDraft.map((m, i) => `
+                        <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
+                                <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
+                                <span style="font-weight:700;">-</span>
+                                <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
+                                <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
+                            </div>
+                        </div>`).join('');
+
+            const players = window.mockPlayers.map(p => ({ uid: p.userId || p.id, name: p.name }));
+
+            document.querySelectorAll('#adminScoreEditorList [data-score-row]').forEach((row, i) => {
+                const a = row.querySelector('.score-player-a');
+                const b = row.querySelector('.score-player-b');
+                const opts = players.map(p => `<option value="${p.uid}">${p.name || 'Unknown Player'}</option>`).join('');
+                a.innerHTML = opts; b.innerHTML = opts;
+                a.value = window.adminScoreDraft[i].playerAUid;
+                b.value = window.adminScoreDraft[i].playerBUid;
+            });
+
+            document.getElementById('adminScoreEditorModal').style.display = 'flex';
+        };
+
+        window.saveAdminScoreEdits = async function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+
+            const rows = [...document.querySelectorAll('#adminScoreEditorList [data-score-row]')];
+            if (rows.length !== 6) { alert('6v6 must contain exactly 6 matchups.'); return; }
+
+            const matches = rows.map(row => {
+                const aUid = row.querySelector('.score-player-a').value;
+                const bUid = row.querySelector('.score-player-b').value;
+                const a = window.mockPlayers.find(p => (p.userId || p.id) === aUid) || window.mockUsers.find(u => u.uid === aUid);
+                const b = window.mockPlayers.find(p => (p.userId || p.id) === bUid) || window.mockUsers.find(u => u.uid === bUid);
+                return {
+                    playerAUid: aUid,
+                    playerAName: a?.name || '',
+                    scoreA: Number(row.querySelector('.score-a').value),
+                    playerBUid: bUid,
+                    playerBName: b?.name || '',
+                    scoreB: Number(row.querySelector('.score-b').value)
+                };
+            });
+
+            const ids = matches.flatMap(m => [m.playerAUid, m.playerBUid]);
+            if (new Set(ids).size !== 12) { alert('All 12 players in a 6v6 submission must be unique.'); return; }
+            if (matches.some(m => !Number.isFinite(m.scoreA) || !Number.isFinite(m.scoreB) || m.scoreA < 0 || m.scoreB < 0)) {
+                alert('Scores must be zero or greater.');
+                return;
+            }
+
+            const motmUid = window.adminScoreDraftMotm || '';
+            const oldMatches = window.adminScoreDraft || [];
+
+            // If editing an existing submission, first reverse its previous contribution.
+            if (window.adminScoreSubmissionId) {
+                const oldSubmission = window.adminScoreSubmissions.find(x => x.id === window.adminScoreSubmissionId);
+                if (oldSubmission) await window.applySubmissionDelta(oldSubmission.matches, oldSubmission.motmUid || '', -1);
+            }
+
+            await window.applySubmissionDelta(matches, motmUid, +1);
+
+            if (window.adminScoreSubmissionId) {
+                await updateDoc(doc(firestoreDb, 'adminScoreSubmissions', window.adminScoreSubmissionId), {
+                    matches, motmUid, updatedAt: new Date().toISOString()
+                });
+            } else {
+                const id = 'score_' + Date.now();
+                await setDoc(doc(firestoreDb, 'adminScoreSubmissions', id), {
+                    id, format: '6v6', submittedAt: new Date().toISOString(),
+                    submittedBy: window.currentLoggedUser?.name || 'Admin',
+                    motmUid, matches
+                });
+            }
+
+            window.closeModal('adminScoreEditorModal');
+            alert('Score saved. Domestic Ranking has been recalculated from the edited result.');
+        };
+
+        window.applySubmissionDelta = async function (matches, motmUid, multiplier) {
+            // Normalize both new and previously-saved submissions to the canonical
+            // Firebase Auth UID before touching Domestic Ranking. This also repairs
+            // old submissions that stored a stale players.userId.
+            try {
+                await window.refreshCanonicalPlayerUidMap();
+            } catch (uidError) {
+                throw new Error('Could not reconcile player UIDs with Firebase users. Ranking was not changed.');
+            }
+
+            const normalizedMatches = (matches || []).map(m => {
+                const a = findUserForPlayerName(m.playerAName);
+                const b = findUserForPlayerName(m.playerBName);
+                return {
+                    ...m,
+                    playerAUid: a?.uid || m.playerAUid,
+                    playerAName: a?.name || m.playerAName,
+                    playerBUid: b?.uid || m.playerBUid,
+                    playerBName: b?.name || m.playerBName
+                };
+            });
+
+            const deltaRows = buildDomesticDelta(normalizedMatches, motmUid);
+
+            if (!deltaRows.length) {
+                throw new Error('No valid players were found in this 6v6 submission.');
+            }
+
+            // ---------------------------------------------------------------
+            // STEP 1: READ + VALIDATE EVERY USER BEFORE WRITING ANYTHING.
+            // The old code used "if (!snap.exists()) continue", which silently
+            // skipped a player and caused 11/12 players to update.
+            // ---------------------------------------------------------------
+            const userSnapshots = [];
+            const missingPlayers = [];
+
+            for (const d of deltaRows) {
+                if (!d.uid) {
+                    missingPlayers.push(`${d.name || 'Unknown Player'} (missing UID)`);
+                    continue;
+                }
+
+                const userRef = doc(firestoreDb, 'users', d.uid);
+                const snap = await getDoc(userRef);
+
+                if (!snap.exists()) {
+                    missingPlayers.push(`${d.name || 'Unknown Player'} [UID: ${d.uid}]`);
+                } else {
+                    userSnapshots.push({ d, userRef, snap });
+                }
+            }
+
+            // Never allow a partial 6v6 update. If even ONE user document is
+            // missing/wrong, stop before writing any of the 12 players.
+            if (missingPlayers.length) {
+                throw new Error(
+                    'Ranking update stopped. The following player user document(s) were not found:\n\n' +
+                    missingPlayers.map((name, i) => `${i + 1}. ${name}`).join('\n') +
+                    '\n\nCheck that players/{playerId}.userId matches the Firebase Auth UID and that users/{UID} exists.'
+                );
+            }
+
+            if (userSnapshots.length !== deltaRows.length) {
+                throw new Error('Could not validate all players. No ranking data was changed.');
+            }
+
+            // ---------------------------------------------------------------
+            // STEP 2: PREPARE ALL 12 NEW STAT OBJECTS.
+            // ---------------------------------------------------------------
+            const updates = userSnapshots.map(({ d, userRef, snap }) => {
+                const current = snap.data().domestic || {};
+                const next = {
+                    mp: Math.max(0, (Number(current.mp) || 0) + multiplier * d.mp),
+                    w: Math.max(0, (Number(current.w) || 0) + multiplier * d.w),
+                    d: Math.max(0, (Number(current.d) || 0) + multiplier * d.d),
+                    l: Math.max(0, (Number(current.l) || 0) + multiplier * d.l),
+                    gf: Math.max(0, (Number(current.gf) || 0) + multiplier * d.gf),
+                    ga: Math.max(0, (Number(current.ga) || 0) + multiplier * d.ga),
+                    motm: Math.max(0, (Number(current.motm) || 0) + multiplier * d.motm)
+                };
+
+                next.pts = (next.w * 3) + next.d;
+                return { userRef, next };
+            });
+
+            // ---------------------------------------------------------------
+            // STEP 3: WRITE ALL PLAYERS IN ONE FIRESTORE BATCH.
+            // If validation passed, all 12 updates are committed together.
+            // ---------------------------------------------------------------
+            const batch = writeBatch(firestoreDb);
+            updates.forEach(({ userRef, next }) => {
+                batch.update(userRef, { domestic: next });
+            });
+
+            await batch.commit();
+        };
+
+        window.renderAdminScoreSubmissionHistory = function () {
+            const existing = document.getElementById('adminScoreSubmissionHistory');
+            if (!existing) return;
+            existing.innerHTML = '';
+            const list = [...(window.adminScoreSubmissions || [])].sort((a, b) =>
+                String(b.submittedAt || '').localeCompare(String(a.submittedAt || ''))
+            );
+
+            if (!list.length) {
+                existing.innerHTML = `<p style="font-size:11px;color:var(--text-muted);">No submitted 6v6 results yet.</p>`;
+                return;
+            }
+
+            list.forEach(s => {
+                existing.innerHTML += `
+                            <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
+                                <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
+                                    <strong style="font-size:12px;color:#fff;">6v6 • ${s.matches?.length || 0} matchups</strong>
+                                    <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                </div>
+                                <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
+                            </div>`;
+            });
+        };
+
+        window.openAdminScoreEditorFromHistory = function (submissionId) {
+            const s = (window.adminScoreSubmissions || []).find(x => x.id === submissionId);
+            if (!s) return;
+            window.openAdminScoreEditor(s.matches, s.motmUid || '', submissionId);
+        };
+
         window.renderAdminManagersBalance = function () {
             let container = document.getElementById('adminManagersBalanceContainer'); container.innerHTML = '';
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="text-align:left;">
-                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                </div>
-                                <div style="display:flex; gap:6px;">
-                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                </div>
-                            </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="text-align:left;">
+                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                        </div>
+                                        <div style="display:flex; gap:6px;">
+                                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                        </div>
+                                    </div>`;
             });
         };
 
@@ -2134,7 +2837,7 @@
             if (!activeMgr) { alert("Manager details not found!"); return; }
 
             let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
-            if (currentSquadSize >= 8) { alert("Squad limit reached! Maximum 8 players allowed."); return; }
+            if (currentSquadSize >= 11) { alert("Squad limit reached! Maximum 11 players allowed."); return; }
 
             try {
                 await updateDoc(doc(firestoreDb, 'managers', activeMgr.id), {
@@ -2176,13 +2879,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info" style="text-align: left;">
-                                        <h4>${p.name}</h4>
-                                        <p style="color:var(--accent-gold)">Signed Player</p>
-                                    </div>
-                                </div>`;
+                                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info" style="text-align: left;">
+                                                <h4>${p.name}</h4>
+                                                <p style="color:var(--accent-gold)">Signed Player</p>
+                                            </div>
+                                        </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -2209,27 +2912,49 @@
                 container.innerHTML = `<p style="font-size:12px; color:var(--text-muted)">No transferred players in your squad yet.</p>`;
                 return;
             }
-            squad.forEach(p => {
+            const type = Number(document.getElementById('squadTypeDropdown').value || 5);
+            squad.forEach((p, index) => {
                 container.innerHTML += `
-                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                <input type="checkbox" value="${p.id}" checked>
-                                <span style="font-size:14px;">${p.name}</span>
-                            </div>`;
+                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
+                                        <input type="checkbox" value="${p.id}" ${index < type ? 'checked' : ''}>
+                                        <span style="font-size:14px;">${p.name}</span>
+                                    </div>`;
             });
         };
 
         window.finalizeSquadSubmit = async function () {
             let type = document.getElementById('squadTypeDropdown').value;
+            let selected = [...document.querySelectorAll('#submitSquadList input[type="checkbox"]:checked')].map(x => x.value);
+
+            if (selected.length !== Number(type)) {
+                alert(`Please select exactly ${type} players for a ${type}-man squad.`);
+                return;
+            }
+            if (selected.length > 11) {
+                alert('A squad cannot contain more than 11 players.');
+                return;
+            }
+
             let mgr = window.mockManagers.find(m =>
                 m.id === `m_${window.currentLoggedUser.id}` ||
                 m.userId === window.currentLoggedUser.id ||
                 m.name === window.currentLoggedUser.name
             );
-            if (mgr) {
-                await setDoc(doc(firestoreDb, 'settings', 'submittedSquads'), {
-                    [mgr.club]: true
-                }, { merge: true });
-            }
+            if (!mgr) return;
+
+            await setDoc(doc(firestoreDb, 'settings', 'submittedSquads'), {
+                [mgr.club]: true
+            }, { merge: true });
+
+            // Keep the exact submitted player IDs so the fixture generator can use the manager's selected squad.
+            await setDoc(doc(firestoreDb, 'settings', 'squadSubmissions'), {
+                [mgr.club]: {
+                    format: Number(type),
+                    playerIds: selected,
+                    submittedAt: new Date().toISOString()
+                }
+            }, { merge: true });
+
             alert(`Your ${type}-man Squad has been submitted successfully!`);
             window.closeModal('submitSquadModal');
         };
@@ -2244,16 +2969,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                                    </div>
-                                </div>
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                            </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                            </div>
+                                        </div>
+                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                    </div>`;
             });
         };
 
@@ -2274,15 +2999,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                            <div class="manager-mini-card">
-                                <img src="${m.avatar}" alt="${m.name}">
-                                <div class="player-mini-info">
-                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                    <p style="color: var(--text-light);">${m.club}</p>
-                                    <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/8</p>
-                                </div>
-                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                            </div>`;
+                                    <div class="manager-mini-card">
+                                        <img src="${m.avatar}" alt="${m.name}">
+                                        <div class="player-mini-info">
+                                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                            <p style="color: var(--text-light);">${m.club}</p>
+                                            <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/11</p>
+                                        </div>
+                                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                    </div>`;
             });
         };
 
@@ -2297,8 +3022,8 @@
             }
 
             let currentSquadSize = window.mockPlayers.filter(p => p.isSigned && p.signedClub === activeMgr.club).length;
-            if (currentSquadSize >= 8) {
-                alert("Squad limit reached! Maximum 8 players allowed.");
+            if (currentSquadSize >= 11) {
+                alert("Squad limit reached! Maximum 11 players allowed.");
                 return;
             }
 
@@ -2384,13 +3109,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                <div style="text-align:left;">
-                                    <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                </div>
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                            </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                        <div style="text-align:left;">
+                                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                        </div>
+                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                    </div>`;
             });
         };
 
@@ -2445,41 +3170,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                    <div style="text-align:left;">
-                                        <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
-                                    </div>
-                                </div>
-                                ${adminAction}
-                            </div>`;
+                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                            </div>
+                                        </div>
+                                        ${adminAction}
+                                    </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                <div class="player-mini-card">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                </div>`;
+                                        <div class="player-mini-card">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info">
+                                                <h4>${p.name}</h4>
+                                                <p>${p.device}</p>
+                                            </div>
+                                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                        </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                    <img src="${p.avatar}" alt="${p.name}">
-                                    <div class="player-mini-info">
-                                        <h4>${p.name}</h4>
-                                        <p>${p.device}</p>
-                                    </div>
-                                    ${actionBtn}
-                                </div>`;
+                                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                            <img src="${p.avatar}" alt="${p.name}">
+                                            <div class="player-mini-info">
+                                                <h4>${p.name}</h4>
+                                                <p>${p.device}</p>
+                                            </div>
+                                            ${actionBtn}
+                                        </div>`;
                 }
             });
         };
