@@ -869,6 +869,31 @@
             -webkit-appearance: none;
         }
 
+            /* Universal async-button waiting state */
+            button.btn-waiting {
+                opacity: 0.78;
+                cursor: wait !important;
+                pointer-events: none;
+            }
+
+                button.btn-waiting .button-wait-spinner {
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    margin-right: 6px;
+                    border: 2px solid rgba(255,255,255,.35);
+                    border-top-color: currentColor;
+                    border-radius: 50%;
+                    vertical-align: -2px;
+                    animation: buttonSpin .7s linear infinite;
+                }
+
+        @keyframes buttonSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @media (max-width: 768px) {
             .modal-overlay {
                 backdrop-filter: none;
@@ -1029,10 +1054,6 @@
                 <select id="selectTeam2" class="form-input"></select>
                 <label>Match Date:</label>
                 <input type="date" id="fxDate" class="form-input">
-                <label>Activity Time Slot:</label>
-                <input type="text" id="fxActivity" class="form-input" placeholder="e.g. 10:00 PM - 11:00 PM">
-                <label>Deadline Time:</label>
-                <input type="text" id="fxDeadline" class="form-input" placeholder="e.g. 11:30 PM">
                 <label>Match Admin Name:</label>
                 <input type="text" id="fxAdminName" class="form-input" placeholder="e.g. Admin Zawad">
             </div>
@@ -1062,11 +1083,9 @@
                 </div>
                 <div class="fx-meta-info">
                     <div><strong>Date:</strong> <span id="fxDispDate">---</span></div>
-                    <div><strong>Slot:</strong> <span id="fxDispSlot">---</span></div>
-                    <div><strong>Deadline:</strong> <span id="fxDispDeadline">---</span></div>
                     <div><strong>Admin:</strong> <span id="fxDispAdmin">---</span></div>
                 </div>
-                <div class="fx-matchups-list" id="fxMatchupsContainer"></div>
+                <div id="fxMatchupsContainer"></div>
                 <div style="font-size:10px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">
                     Official Fixture | East Bengal eFootball Club
                 </div>
@@ -1305,16 +1324,15 @@
 
     <!-- SUBMIT SQUAD MODAL -->
     <div class="modal-overlay" id="submitSquadModal">
-        <div class="modal-body">
-            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold);">SUBMIT TOURNAMENT SQUAD</h3>
-            <label style="font-size:11px; color:var(--text-muted); display:block; text-align:left;">Select Squad Format:</label>
-            <select id="squadTypeDropdown" class="form-input" onchange="loadSquadPlayersForSubmission()">
-                <option value="5">5-man Squad</option>
-                <option value="6">6-man Squad</option>
-            </select>
-            <div id="submitSquadList" style="text-align:left; margin-bottom:12px; max-height:160px; overflow-y:auto;"></div>
-            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="finalizeSquadSubmit()">Submit Final Squad</button>
+        <div class="modal-body" style="max-width:560px;">
+            <h3 style="font-family:'Teko'; font-size:24px; color:var(--accent-gold);">SUBMIT MATCH SQUADS</h3>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px; text-align:left;">
+                Each deadline has its own <strong style="color:#fff;">2-player lineup</strong>.
+                The selected players will be saved exactly against that deadline and the Admin Fixture Generator will use the same lineup.
+            </p>
+            <div id="submitSquadDeadlineSections"></div>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn-gold-sm" onclick="finalizeSquadSubmit()"><i class="fa-solid fa-paper-plane"></i> Save All 3 Deadlines</button>
                 <button class="btn-danger-sm" onclick="closeModal('submitSquadModal')">Cancel</button>
             </div>
         </div>
@@ -1398,6 +1416,7 @@
         window.mockPlayers = [];
         window.mockCoinRequests = [];
         window.submittedSquads = {};
+        window.squadSubmissions = {};
         window.generatedFixturesArchive = [];
         window.generatedMatchupsList = [];
         window.adminScoreSubmissions = [];
@@ -1445,6 +1464,12 @@
 
             onSnapshot(doc(firestoreDb, 'settings', 'submittedSquads'), (docSnap) => {
                 window.submittedSquads = docSnap.exists() ? docSnap.data() : {};
+                window.scheduleRenderAllData();
+            });
+
+            onSnapshot(doc(firestoreDb, 'settings', 'squadSubmissions'), (docSnap) => {
+                window.squadSubmissions = docSnap.exists() ? docSnap.data() : {};
+                window.refreshFixtureSquadsPreview();
             });
 
             onSnapshot(doc(firestoreDb, 'settings', 'transferWindow'), (docSnap) => {
@@ -1460,6 +1485,62 @@
                 }
             });
         }
+
+        // Universal button waiting state.
+        // It intercepts existing inline onclick handlers, runs them once, and keeps
+        // the button in a "Waiting..." state until an async Firestore/image action finishes.
+        window.runButtonAction = async function (button, actionCode) {
+            if (!button || button.dataset.waiting === '1') return;
+            const original = button.innerHTML;
+            button.dataset.waiting = '1';
+            button.classList.add('btn-waiting');
+            button.disabled = true;
+            const labelSource = (button.innerText || '').toLowerCase();
+            let waitingText = 'Waiting...';
+            if (labelSource.includes('sign in')) waitingText = 'Signing in...';
+            else if (labelSource.includes('generate')) waitingText = 'Generating...';
+            else if (labelSource.includes('submit')) waitingText = 'Submitting...';
+            else if (labelSource.includes('download')) waitingText = 'Downloading...';
+            else if (labelSource.includes('save')) waitingText = 'Saving...';
+            else if (labelSource.includes('verify')) waitingText = 'Verifying...';
+            else if (labelSource.includes('approve')) waitingText = 'Approving...';
+            else if (labelSource.includes('purchase')) waitingText = 'Processing...';
+            else if (labelSource.includes('confirm')) waitingText = 'Confirming...';
+            else if (labelSource.includes('copy')) waitingText = 'Copying...';
+            button.innerHTML = `<span class="button-wait-spinner"></span> ${waitingText}`;
+            try {
+                const result = Function(`"use strict"; return (async function(){ ${actionCode} })();`).call(button);
+                return await Promise.resolve(result);
+            } catch (err) {
+                console.error('Button action error:', err);
+                throw err;
+            } finally {
+                button.innerHTML = original;
+                button.disabled = false;
+                button.classList.remove('btn-waiting');
+                delete button.dataset.waiting;
+            }
+        };
+
+        document.addEventListener('click', function (event) {
+            const button = event.target.closest('button[onclick]');
+            if (!button || button.dataset.loadingManaged === '1') return;
+
+            const code = button.getAttribute('onclick') || '';
+            if (!code || code.trim() === '#' || code.trim().startsWith('return false')) return;
+
+            // Let close/cancel buttons remain instant; all action buttons get Waiting...
+            const isInstant = /closeModal\(|logoutAdmin\(|leaveRole\(|toggleTransferWindow\(/.test(code) && !/(async|await|setDoc|updateDoc|deleteDoc|download|generate|submit|approve|confirm|save|verify)/i.test(code);
+            if (isInstant) return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            button.dataset.loadingManaged = '1';
+
+            window.runButtonAction(button, code).finally(() => {
+                delete button.dataset.loadingManaged;
+            });
+        }, true);
 
         document.addEventListener("DOMContentLoaded", () => {
             listenToDatabase();
@@ -1820,63 +1901,156 @@
             document.getElementById('fixtureCreatorModal').style.display = 'flex';
         };
 
+        window.getDeadlineKey = function (value) {
+            const raw = String(value || '').trim();
+            if (raw.includes('10:50')) return '10:50';
+            if (raw.includes('11:50')) return '11:50';
+            if (raw.includes('12:50')) return '12:50';
+            return raw || '10:50';
+        };
+
+        window.getSubmittedPlayersForDeadline = function (club, deadline) {
+            const entry = window.squadSubmissions?.[club];
+            const key = window.getDeadlineKey(deadline);
+            const ids = entry?.deadlines?.[key]?.playerIds || [];
+            return ids.map(id => window.mockPlayers.find(p => p.id === id)).filter(Boolean);
+        };
+
+        window.refreshFixtureSquadsPreview = function () {
+            const club1 = document.getElementById('selectTeam1')?.value;
+            const club2 = document.getElementById('selectTeam2')?.value;
+            const container = document.getElementById('fxMatchupsContainer');
+            if (!club1 || !club2 || !container) return;
+
+            container.innerHTML = '';
+            window.generatedMatchupsList = [];
+
+            window.squadDeadlineConfig.forEach((d) => {
+                const deadline = d.key;
+                const pList1 = window.getSubmittedPlayersForDeadline(club1, deadline);
+                const pList2 = window.getSubmittedPlayersForDeadline(club2, deadline);
+                const sub1 = window.squadSubmissions?.[club1]?.deadlines?.[deadline];
+                const sub2 = window.squadSubmissions?.[club2]?.deadlines?.[deadline];
+
+                const section = document.createElement('div');
+                section.style.cssText = 'margin-bottom:10px; padding:9px; border:1px solid var(--border-color); border-radius:7px; background:#090a0c;';
+
+                const title = document.createElement('div');
+                title.style.cssText = 'font-family:Teko,sans-serif;font-size:19px;color:var(--accent-gold);margin-bottom:6px;';
+                title.innerText = `DEADLINE ${deadline}  •  PRIORITY ${d.priority}`;
+                section.appendChild(title);
+
+                if (!sub1 || !sub2) {
+                    const missing = !sub1 && !sub2 ? `${club1} & ${club2}` : (!sub1 ? club1 : club2);
+                    const msg = document.createElement('div');
+                    msg.className = 'no-squad-alert';
+                    msg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Squad not submitted by: ${missing}`;
+                    section.appendChild(msg);
+                    container.appendChild(section);
+                    return;
+                }
+
+                for (let i = 0; i < 2; i++) {
+                    const playerA = pList1[i] || { name: 'TBD', avatar: window.createSvgAvatar('A') };
+                    const playerB = pList2[i] || { name: 'TBD', avatar: window.createSvgAvatar('B') };
+
+                    window.generatedMatchupsList.push({
+                        a: playerA.name,
+                        b: playerB.name,
+                        deadline,
+                        team1: club1,
+                        team2: club2
+                    });
+
+                    const row = document.createElement('div');
+                    row.className = 'fx-matchup-row';
+                    row.innerHTML = `
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                            </div>
+                            <span style="font-weight:700;color:var(--accent-gold);">VS</span>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span>${playerB.name}</span><img src="${playerB.avatar}">
+                            </div>`;
+                    section.appendChild(row);
+                }
+
+                container.appendChild(section);
+            });
+        };
+
         window.generateFixtureCard = async function () {
             if (!window.isAdminLoggedIn) { alert("Admin Access Required!"); return; }
-            let club1 = document.getElementById('selectTeam1').value;
-            let club2 = document.getElementById('selectTeam2').value;
+
+            const club1 = document.getElementById('selectTeam1').value;
+            const club2 = document.getElementById('selectTeam2').value;
             if (club1 === club2) { alert("Please select two different teams!"); return; }
 
-            let m1 = window.mockManagers.find(m => m.club === club1);
-            let m2 = window.mockManagers.find(m => m.club === club2);
+            const m1 = window.mockManagers.find(m => m.club === club1);
+            const m2 = window.mockManagers.find(m => m.club === club2);
+            if (!m1 || !m2) { alert("Manager data not found!"); return; }
 
             document.getElementById('fxT1Img').src = m1.avatar;
             document.getElementById('fxT1Name').innerText = m1.club;
             document.getElementById('fxT2Img').src = m2.avatar;
             document.getElementById('fxT2Name').innerText = m2.club;
-
             document.getElementById('fxDispDate').innerText = document.getElementById('fxDate').value || "TBA";
-            document.getElementById('fxDispSlot').innerText = document.getElementById('fxActivity').value || "TBA";
-            document.getElementById('fxDispDeadline').innerText = document.getElementById('fxDeadline').value || "TBA";
             document.getElementById('fxDispAdmin').innerText = document.getElementById('fxAdminName').value || "Admin";
 
-            let hasSubmitted1 = window.submittedSquads[club1] || false;
-            let hasSubmitted2 = window.submittedSquads[club2] || false;
-            let container = document.getElementById('fxMatchupsContainer');
-            container.innerHTML = '';
-            window.generatedMatchupsList = [];
+            // One Generate click creates the complete fixture:
+            // 10:50 -> 2 players, 11:50 -> 2 players, 12:50 -> 2 players.
+            window.refreshFixtureSquadsPreview();
 
-            if (!hasSubmitted1 || !hasSubmitted2) {
-                let unsubmittedTeam = !hasSubmitted1 && !hasSubmitted2 ? `${club1} & ${club2}` : (!hasSubmitted1 ? club1 : club2);
-                container.innerHTML = `<div class="no-squad-alert"><i class="fa-solid fa-triangle-exclamation"></i> Manager (${unsubmittedTeam}) did not submit squad</div>`;
-            } else {
-                let pList1 = window.mockPlayers.filter(p => p.isSigned && p.signedClub === club1);
-                let pList2 = window.mockPlayers.filter(p => p.isSigned && p.signedClub === club2);
-                let maxLen = Math.max(pList1.length, pList2.length);
+            const deadlines = {};
+            const allMatchups = [];
+            let missing = [];
 
-                for (let i = 0; i < maxLen; i++) {
-                    let playerA = pList1[i] || { name: "TBD", avatar: window.createSvgAvatar("A") };
-                    let playerB = pList2[i] || { name: "TBD", avatar: window.createSvgAvatar("B") };
-                    window.generatedMatchupsList.push({ a: playerA.name, b: playerB.name });
-                    container.innerHTML += `
-                                        <div class="fx-matchup-row">
-                                            <div style="display:flex; align-items:center; gap:6px;">
-                                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                                            </div>
-                                            <span style="font-weight:700; color:var(--accent-gold);">VS</span>
-                                            <div style="display:flex; align-items:center; gap:6px;">
-                                                <span>${playerB.name}</span><img src="${playerB.avatar}">
-                                            </div>
-                                        </div>`;
+            window.squadDeadlineConfig.forEach((d) => {
+                const deadline = d.key;
+                const sub1 = window.squadSubmissions?.[club1]?.deadlines?.[deadline];
+                const sub2 = window.squadSubmissions?.[club2]?.deadlines?.[deadline];
+                const pList1 = window.getSubmittedPlayersForDeadline(club1, deadline);
+                const pList2 = window.getSubmittedPlayersForDeadline(club2, deadline);
+
+                if (!sub1 || !sub2) {
+                    missing.push(deadline);
                 }
-            }
 
-            let fxId = "fx_" + Date.now();
+                const matchups = [];
+                for (let i = 0; i < 2; i++) {
+                    const a = pList1[i] || { name: "TBD" };
+                    const b = pList2[i] || { name: "TBD" };
+                    matchups.push({ a: a.name, b: b.name });
+                    if (sub1 && sub2) {
+                        allMatchups.push({ deadline, a: a.name, b: b.name });
+                    }
+                }
+
+                deadlines[deadline] = {
+                    priorityWindow: d.priority,
+                    team1PlayerIds: sub1?.playerIds || [],
+                    team2PlayerIds: sub2?.playerIds || [],
+                    matchups,
+                    submittedByTeam1: !!sub1,
+                    submittedByTeam2: !!sub2
+                };
+            });
+
+            const fxId = "fx_" + Date.now();
             await setDoc(doc(firestoreDb, 'fixtures', fxId), {
                 id: fxId,
                 t1: club1,
                 t2: club2,
-                date: document.getElementById('fxDate').value || "TBA"
+                date: document.getElementById('fxDate').value || "TBA",
+                admin: document.getElementById('fxAdminName').value || "Admin",
+                deadlines,
+                matchups: allMatchups,
+                createdAt: new Date().toISOString()
             });
+
+            if (missing.length) {
+                console.warn("Some deadline squads are missing:", missing);
+            }
 
             window.closeModal('fixtureCreatorModal');
             document.getElementById('fixtureDisplayModal').style.display = 'flex';
@@ -1892,11 +2066,12 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                                    <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                        <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                        <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                        <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                                    </div>`;
+                                        <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                            <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                            <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                            <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                            <p style="font-size:10px; color:var(--cyan-glow);">${(fx.matchups || []).length} player matchups saved • 3 deadlines</p>
+                                        </div>`;
             });
         };
 
@@ -1972,15 +2147,15 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                                    <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                                        👉 Press & Hold on image or click 'Download Now' 👈
-                                    </p>
-                                    <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                                    <div style="display:flex; gap:10px; margin-top:15px;">
-                                        <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                                        <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                                    </div>
-                                `;
+                                        <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                                            👉 Press & Hold on image or click 'Download Now' 👈
+                                        </p>
+                                        <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                                        <div style="display:flex; gap:10px; margin-top:15px;">
+                                            <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                                            <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                                        </div>
+                                    `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2055,7 +2230,7 @@
 
             let text = `🏆 EBFC PRESENTS BID TOURNAMENT SEASON 1 🏆\n\n`;
             text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n📅 Date: ${d}\n⏰ Activity Time: ${slot}\n⏳ Deadline: ${dl}\n👤 Match Admin: ${adm}\n\n`;
-            text += `--- PLAYER MATCHUPS ---\n`;
+            text += `--- PLAYER MATCHUPS (${dl} DEADLINE) ---\n`;
             window.generatedMatchupsList.forEach((m, idx) => { text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`; });
             text += `\n📊 MATCH RESULT:\n${t1} (${s1}) - ${t2} (${s2})\n`;
 
@@ -2355,26 +2530,26 @@
 
             const delta = buildDomesticDelta(parsed.results, motmUid);
             preview.innerHTML = `
-                        <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
-                            ✓ 6 matchups / 12 unique players validated.
-                        </div>
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
-                            ${delta.map(d => `
-                                <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
-                                    <strong>${d.name}</strong>
-                                    <span style="display:block; color:var(--text-muted);">
-                                        MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
-                                    </span>
-                                </div>`).join('')}
-                        </div>
-                        <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
-                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
-                                <i class="fa-solid fa-database"></i> Submit Official Domestic Result
-                            </button>
-                            <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
-                                <i class="fa-solid fa-pen"></i> Edit Player Scores
-                            </button>
-                        </div>`;
+                            <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
+                                ✓ 6 matchups / 12 unique players validated.
+                            </div>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
+                                ${delta.map(d => `
+                                    <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
+                                        <strong>${d.name}</strong>
+                                        <span style="display:block; color:var(--text-muted);">
+                                            MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
+                                        </span>
+                                    </div>`).join('')}
+                            </div>
+                            <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
+                                    <i class="fa-solid fa-database"></i> Submit Official Domestic Result
+                                </button>
+                                <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
+                                    <i class="fa-solid fa-pen"></i> Edit Player Scores
+                                </button>
+                            </div>`;
 
             window.adminScoreDraft = parsed.results;
             window.adminScoreDraftMotm = motmUid;
@@ -2446,15 +2621,15 @@
 
             const container = document.getElementById('adminScoreEditorList');
             container.innerHTML = window.adminScoreDraft.map((m, i) => `
-                        <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
-                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                                <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
-                                <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
-                                <span style="font-weight:700;">-</span>
-                                <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
-                                <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
-                            </div>
-                        </div>`).join('');
+                            <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
+                                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                    <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
+                                    <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
+                                    <span style="font-weight:700;">-</span>
+                                    <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
+                                    <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
+                                </div>
+                            </div>`).join('');
 
             const players = window.mockPlayers.map(p => ({ uid: p.userId || p.id, name: p.name }));
 
@@ -2638,13 +2813,13 @@
 
             list.forEach(s => {
                 existing.innerHTML += `
-                            <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
-                                <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-                                    <strong style="font-size:12px;color:#fff;">6v6 • ${s.matches?.length || 0} matchups</strong>
-                                    <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                </div>
-                                <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
-                            </div>`;
+                                <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
+                                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
+                                        <strong style="font-size:12px;color:#fff;">6v6 • ${s.matches?.length || 0} matchups</strong>
+                                        <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                    </div>
+                                    <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
+                                </div>`;
             });
         };
 
@@ -2659,20 +2834,21 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                            <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                        </div>
-                                        <div style="display:flex; gap:6px;">
-                                            <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                            <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                        </div>
-                                    </div>`;
+                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                            </div>
+                                            <div style="display:flex; gap:6px;">
+                                                <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                                <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                            </div>
+                                        </div>`;
             });
         };
 
-        window.handleManagerSignInStart = function () {
+        window.handleManagerSignInStart = async function () {
+            await new Promise(resolve => requestAnimationFrame(resolve));
             if (!window.requireLoggedUser()) return;
 
             let mgr = window.mockManagers.find(m =>
@@ -2729,7 +2905,8 @@
             window.triggerBoomEffects();
         };
 
-        window.handlePlayerSignIn = function () {
+        window.handlePlayerSignIn = async function () {
+            await new Promise(resolve => requestAnimationFrame(resolve));
             if (!window.requireLoggedUser()) return;
 
             let existingPlayer = window.mockPlayers.find(p =>
@@ -2879,17 +3056,23 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                        <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info" style="text-align: left;">
-                                                <h4>${p.name}</h4>
-                                                <p style="color:var(--accent-gold)">Signed Player</p>
-                                            </div>
-                                        </div>`;
+                                            <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                                <img src="${p.avatar}" alt="${p.name}">
+                                                <div class="player-mini-info" style="text-align: left;">
+                                                    <h4>${p.name}</h4>
+                                                    <p style="color:var(--accent-gold)">Signed Player</p>
+                                                </div>
+                                            </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
         };
+
+        window.squadDeadlineConfig = [
+            { key: '10:50', priority: '10:40-10:50' },
+            { key: '11:50', priority: '11:40-11:50' },
+            { key: '12:50', priority: '12:40-12:50' }
+        ];
 
         window.openSubmitSquadModal = function () {
             window.loadSquadPlayersForSubmission();
@@ -2897,65 +3080,127 @@
         };
 
         window.loadSquadPlayersForSubmission = function () {
-            let container = document.getElementById('submitSquadList');
+            const container = document.getElementById('submitSquadDeadlineSections');
+            if (!container) return;
             container.innerHTML = '';
 
-            let mgr = window.mockManagers.find(m =>
-                m.id === `m_${window.currentLoggedUser.id}` ||
-                m.userId === window.currentLoggedUser.id ||
-                m.name === window.currentLoggedUser.name
+            const mgr = window.mockManagers.find(m =>
+                m.id === `m_${window.currentLoggedUser?.id}` ||
+                m.userId === window.currentLoggedUser?.id ||
+                m.name === window.currentLoggedUser?.name
             );
-            if (!mgr) return;
-
-            let squad = window.mockPlayers.filter(p => p.signedClub === mgr.club);
-            if (squad.length === 0) {
-                container.innerHTML = `<p style="font-size:12px; color:var(--text-muted)">No transferred players in your squad yet.</p>`;
+            if (!mgr) {
+                container.innerHTML = `<p style="font-size:12px;color:var(--primary-red);">Manager details not found.</p>`;
                 return;
             }
-            const type = Number(document.getElementById('squadTypeDropdown').value || 5);
-            squad.forEach((p, index) => {
+
+            const squad = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club);
+            if (squad.length < 6) {
+                container.innerHTML = `<p style="font-size:12px;color:var(--primary-red);">
+                        You need at least 6 signed players to submit all 3 deadline lineups (2 players per deadline).
+                    </p>`;
+                return;
+            }
+
+            const existing = window.squadSubmissions?.[mgr.club]?.deadlines || {};
+
+            window.squadDeadlineConfig.forEach((d, deadlineIndex) => {
+                const savedIds = existing[d.key]?.playerIds || [];
+                const rows = squad.map(p => `
+                        <label style="display:flex;align-items:center;gap:9px;margin-bottom:6px;background:#090a0c;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;">
+                            <input type="checkbox" class="deadline-player-checkbox" data-deadline="${d.key}" value="${p.id}" ${savedIds.includes(p.id) ? 'checked' : ''}>
+                            <img src="${p.avatar}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--primary-red);">
+                            <span style="font-size:13px;">${p.name}</span>
+                        </label>`).join('');
+
                 container.innerHTML += `
-                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; background:#090a0c; padding:8px; border-radius:6px;">
-                                        <input type="checkbox" value="${p.id}" ${index < type ? 'checked' : ''}>
-                                        <span style="font-size:14px;">${p.name}</span>
-                                    </div>`;
+                        <div style="background:#090a0c;border:1px solid var(--accent-gold);border-radius:8px;padding:10px;margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px;">
+                                <strong style="color:var(--accent-gold);font-family:'Teko';font-size:20px;">DEADLINE ${d.key}</strong>
+                                <span style="font-size:10px;color:var(--cyan-glow);">PRIORITY ${d.priority}</span>
+                            </div>
+                            <div id="deadlineCount_${deadlineIndex}" style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">0/2 selected</div>
+                            <div style="max-height:145px;overflow-y:auto;">${rows}</div>
+                        </div>`;
+            });
+
+            container.querySelectorAll('.deadline-player-checkbox').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const key = this.dataset.deadline;
+                    const checked = [...container.querySelectorAll(`.deadline-player-checkbox[data-deadline="${key}"]:checked`)];
+                    if (checked.length > 2) {
+                        this.checked = false;
+                        alert(`Only 2 players can be assigned to the ${key} deadline.`);
+                    }
+                    window.updateDeadlineSelectionCounts();
+                });
+            });
+            window.updateDeadlineSelectionCounts();
+        };
+
+        window.updateDeadlineSelectionCounts = function () {
+            const container = document.getElementById('submitSquadDeadlineSections');
+            if (!container) return;
+            window.squadDeadlineConfig.forEach((d, i) => {
+                const count = container.querySelectorAll(`.deadline-player-checkbox[data-deadline="${d.key}"]:checked`).length;
+                const el = document.getElementById(`deadlineCount_${i}`);
+                if (el) {
+                    el.innerText = `${count}/2 selected`;
+                    el.style.color = count === 2 ? 'var(--accent-green)' : 'var(--text-muted)';
+                }
             });
         };
 
         window.finalizeSquadSubmit = async function () {
-            let type = document.getElementById('squadTypeDropdown').value;
-            let selected = [...document.querySelectorAll('#submitSquadList input[type="checkbox"]:checked')].map(x => x.value);
+            if (!window.requireLoggedUser()) return;
 
-            if (selected.length !== Number(type)) {
-                alert(`Please select exactly ${type} players for a ${type}-man squad.`);
-                return;
-            }
-            if (selected.length > 11) {
-                alert('A squad cannot contain more than 11 players.');
-                return;
-            }
-
-            let mgr = window.mockManagers.find(m =>
+            const mgr = window.mockManagers.find(m =>
                 m.id === `m_${window.currentLoggedUser.id}` ||
                 m.userId === window.currentLoggedUser.id ||
                 m.name === window.currentLoggedUser.name
             );
-            if (!mgr) return;
+            if (!mgr) {
+                alert("Manager details not found.");
+                return;
+            }
+
+            const deadlines = {};
+            const allSelectedIds = [];
+            for (const d of window.squadDeadlineConfig) {
+                const selected = [...document.querySelectorAll(`.deadline-player-checkbox[data-deadline="${d.key}"]:checked`)].map(x => x.value);
+                if (selected.length !== 2) {
+                    alert(`Please select exactly 2 players for deadline ${d.key}.`);
+                    return;
+                }
+                deadlines[d.key] = {
+                    playerIds: selected,
+                    format: 2,
+                    priorityWindow: d.priority,
+                    submittedAt: new Date().toISOString()
+                };
+                allSelectedIds.push(...selected);
+            }
+
+            // The tournament squad contains 6 players total: 2 players per deadline.
+            // A player cannot be assigned to more than one deadline.
+            if (new Set(allSelectedIds).size !== 6) {
+                alert('Please select 6 different players in total: 2 players for each deadline. A player cannot be assigned to multiple deadlines.');
+                return;
+            }
 
             await setDoc(doc(firestoreDb, 'settings', 'submittedSquads'), {
                 [mgr.club]: true
             }, { merge: true });
 
-            // Keep the exact submitted player IDs so the fixture generator can use the manager's selected squad.
             await setDoc(doc(firestoreDb, 'settings', 'squadSubmissions'), {
                 [mgr.club]: {
-                    format: Number(type),
-                    playerIds: selected,
-                    submittedAt: new Date().toISOString()
+                    format: 2,
+                    deadlines,
+                    updatedAt: new Date().toISOString()
                 }
             }, { merge: true });
 
-            alert(`Your ${type}-man Squad has been submitted successfully!`);
+            alert("All 3 deadline squads saved successfully!");
             window.closeModal('submitSquadModal');
         };
 
@@ -2969,16 +3214,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                            <div style="display:flex; align-items:center; gap:8px;">
+                                                <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                    </div>`;
+                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                        </div>`;
             });
         };
 
@@ -2999,15 +3244,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                                    <div class="manager-mini-card">
-                                        <img src="${m.avatar}" alt="${m.name}">
-                                        <div class="player-mini-info">
-                                            <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                            <p style="color: var(--text-light);">${m.club}</p>
-                                            <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/11</p>
-                                        </div>
-                                        <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                    </div>`;
+                                        <div class="manager-mini-card">
+                                            <img src="${m.avatar}" alt="${m.name}">
+                                            <div class="player-mini-info">
+                                                <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                                <p style="color: var(--text-light);">${m.club}</p>
+                                                <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/11</p>
+                                            </div>
+                                            <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                        </div>`;
             });
         };
 
@@ -3109,13 +3354,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                        <div style="text-align:left;">
-                                            <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                        </div>
-                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                    </div>`;
+                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                            <div style="text-align:left;">
+                                                <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                            </div>
+                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                        </div>`;
             });
         };
 
@@ -3170,41 +3415,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                                <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                            <div style="display:flex; align-items:center; gap:8px;">
+                                                <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                    <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        ${adminAction}
-                                    </div>`;
+                                            ${adminAction}
+                                        </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                        <div class="player-mini-card">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info">
-                                                <h4>${p.name}</h4>
-                                                <p>${p.device}</p>
-                                            </div>
-                                            <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                        </div>`;
+                                            <div class="player-mini-card">
+                                                <img src="${p.avatar}" alt="${p.name}">
+                                                <div class="player-mini-info">
+                                                    <h4>${p.name}</h4>
+                                                    <p>${p.device}</p>
+                                                </div>
+                                                <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                            </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                        <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                            <img src="${p.avatar}" alt="${p.name}">
-                                            <div class="player-mini-info">
-                                                <h4>${p.name}</h4>
-                                                <p>${p.device}</p>
-                                            </div>
-                                            ${actionBtn}
-                                        </div>`;
+                                            <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                                <img src="${p.avatar}" alt="${p.name}">
+                                                <div class="player-mini-info">
+                                                    <h4>${p.name}</h4>
+                                                    <p>${p.device}</p>
+                                                </div>
+                                                ${actionBtn}
+                                            </div>`;
                 }
             });
         };
