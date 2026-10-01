@@ -923,15 +923,15 @@
     <div class="container">
         <!-- AUTH SELECTION BUTTONS -->
         <div class="auth-controls">
-            <button class="btn-auth" id="btnPlayerLogin" onclick="handlePlayerSignIn()"><i class="fa-solid fa-user"></i> Sign In As Player</button>
-            <button class="btn-auth" id="btnManagerLogin" onclick="handleManagerSignInStart()"><i class="fa-solid fa-user-tie"></i> Sign In As Manager</button>
+            <button class="btn-auth" id="btnPlayerLogin" data-direct-loading="1" onclick="handlePlayerSignIn(this)"><i class="fa-solid fa-user"></i> Sign In As Player</button>
+            <button class="btn-auth" id="btnManagerLogin" data-direct-loading="1" onclick="handleManagerSignInStart(this)"><i class="fa-solid fa-user-tie"></i> Sign In As Manager</button>
         </div>
 
         <!-- ADMIN PANEL SECTION -->
         <div id="adminPanelSection" style="display: none; background: var(--bg-card); border: 1px solid var(--primary-red); border-radius: 10px; padding: 15px; margin-bottom: 25px;">
             <div class="section-title" style="color: var(--primary-red); margin-bottom: 10px;">
                 <span><i class="fa-solid fa-shield-halved"></i> Admin Portal</span>
-                <button class="btn-danger-sm" onclick="logoutAdmin()">Logout Admin</button>
+                <button class="btn-danger-sm" data-direct-loading="1" onclick="logoutAdmin(this)">Logout Admin</button>
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
@@ -1013,7 +1013,7 @@
                     <button class="btn-gold-sm" style="background:var(--accent-green); color:#000;" onclick="openBuyCoinsModal()"><i class="fa-solid fa-coins"></i> Purchase EBFC Coins</button>
                     <button class="btn-squad-sm" onclick="openSquadModal()"><i class="fa-solid fa-users-rectangle"></i> My Squad</button>
                     <button class="btn-gold-sm" onclick="openSubmitSquadModal()"><i class="fa-solid fa-paper-plane"></i> Submit Squad</button>
-                    <button class="btn-danger-sm" onclick="leaveRole()"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
+                    <button class="btn-danger-sm" data-direct-loading="1" onclick="leaveRole(this)"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
                 </div>
             </div>
         </div>
@@ -1138,7 +1138,7 @@
             <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Enter Authorized Admin Access Code / Key</p>
             <input type="password" id="adminPasswordInput" class="form-input" placeholder="Enter Admin Password">
             <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-gold-sm" onclick="verifyCaptainAccess()">Verify Authorized Access</button>
+                <button class="btn-gold-sm" data-direct-loading="1" onclick="verifyCaptainAccess(this)">Verify Authorized Access</button>
                 <button class="btn-danger-sm" onclick="closeModal('adminLoginModal')">Cancel</button>
             </div>
         </div>
@@ -1486,6 +1486,31 @@
             });
         }
 
+        // Direct loading lifecycle for critical auth/session buttons.
+        // The label is changed synchronously, then we yield one animation frame so
+        // the browser can paint the loading state before any heavier work starts.
+        window.beginDirectButtonLoading = function (button, loadingText) {
+            if (!button || button.dataset.directWaiting === '1') return null;
+            const original = button.innerHTML;
+            button.dataset.directWaiting = '1';
+            button.disabled = true;
+            button.classList.add('btn-waiting');
+            button.innerHTML = `<span class="button-wait-spinner"></span> ${loadingText}`;
+            return async function restore() {
+                // Keep very fast actions visibly in the loading state briefly so
+                // the user can clearly see that the click registered.
+                await new Promise(resolve => setTimeout(resolve, 250));
+                button.innerHTML = original;
+                button.disabled = false;
+                button.classList.remove('btn-waiting');
+                delete button.dataset.directWaiting;
+            };
+        };
+
+        window.nextPaint = function () {
+            return new Promise(resolve => requestAnimationFrame(() => resolve()));
+        };
+
         // Universal button waiting state.
         // It intercepts existing inline onclick handlers, runs them once, and keeps
         // the button in a "Waiting..." state until an async Firestore/image action finishes.
@@ -1538,7 +1563,7 @@
 
         document.addEventListener('click', function (event) {
             const button = event.target.closest('button[onclick]');
-            if (!button || button.dataset.loadingManaged === '1') return;
+            if (!button || button.dataset.loadingManaged === '1' || button.dataset.directLoading === '1') return;
 
             const code = button.getAttribute('onclick') || '';
             if (!code || code.trim() === '#' || code.trim().startsWith('return false')) return;
@@ -1822,16 +1847,22 @@
             document.getElementById('adminLoginModal').style.display = 'flex';
         };
 
-        window.verifyCaptainAccess = async function () {
-            const pwdInput = document.getElementById('adminPasswordInput').value.trim();
-            if (pwdInput === "ebfc24nov24" || pwdInput === "1234") {
-                window.isAdminLoggedIn = true;
-                document.getElementById('adminPanelSection').style.display = 'block';
-                window.closeModal('adminLoginModal');
-                await Promise.resolve(window.renderAllData());
-                alert("Admin Security Verified!");
-            } else {
-                alert("Access Denied!");
+        window.verifyCaptainAccess = async function (button) {
+            const restore = window.beginDirectButtonLoading(button, 'Verifying...');
+            try {
+                await window.nextPaint();
+                const pwdInput = document.getElementById('adminPasswordInput').value.trim();
+                if (pwdInput === "ebfc24nov24" || pwdInput === "1234") {
+                    window.isAdminLoggedIn = true;
+                    document.getElementById('adminPanelSection').style.display = 'block';
+                    window.closeModal('adminLoginModal');
+                    await Promise.resolve(window.renderAllData());
+                    alert("Admin Security Verified!");
+                } else {
+                    alert("Access Denied!");
+                }
+            } finally {
+                if (restore) await restore();
             }
         };
 
@@ -1880,11 +1911,17 @@
             }
         };
 
-        window.logoutAdmin = async function () {
-            window.isAdminLoggedIn = false;
-            document.getElementById('adminPanelSection').style.display = 'none';
-            await Promise.resolve(window.renderAllData());
-            alert("Admin Logged Out!");
+        window.logoutAdmin = async function (button) {
+            const restore = window.beginDirectButtonLoading(button, 'Logging out...');
+            try {
+                await window.nextPaint();
+                window.isAdminLoggedIn = false;
+                document.getElementById('adminPanelSection').style.display = 'none';
+                window.renderAllData();
+                alert("Admin Logged Out!");
+            } finally {
+                if (restore) await restore();
+            }
         };
 
         window.makePlayerFreeAgent = async function (playerId) {
@@ -1979,13 +2016,13 @@
                     const row = document.createElement('div');
                     row.className = 'fx-matchup-row';
                     row.innerHTML = `
-                            <div style="display:flex;align-items:center;gap:6px;">
-                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                            </div>
-                            <span style="font-weight:700;color:var(--accent-gold);">VS</span>
-                            <div style="display:flex;align-items:center;gap:6px;">
-                                <span>${playerB.name}</span><img src="${playerB.avatar}">
-                            </div>`;
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                </div>
+                                <span style="font-weight:700;color:var(--accent-gold);">VS</span>
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                </div>`;
                     section.appendChild(row);
                 }
 
@@ -2080,12 +2117,12 @@
             }
             window.generatedFixturesArchive.forEach((fx, i) => {
                 container.innerHTML += `
-                                        <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
-                                            <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
-                                            <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
-                                            <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
-                                            <p style="font-size:10px; color:var(--cyan-glow);">${(fx.matchups || []).length} player matchups saved • 3 deadlines</p>
-                                        </div>`;
+                                            <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:6px; text-align:left;">
+                                                <span style="font-size:10px; color:var(--accent-gold); font-weight:700;">MATCH ${i + 1}</span>
+                                                <h4 style="font-size:15px; color:#fff;">${fx.t1} VS ${fx.t2}</h4>
+                                                <p style="font-size:11px; color:var(--text-muted);">Date: ${fx.date}</p>
+                                                <p style="font-size:10px; color:var(--cyan-glow);">${(fx.matchups || []).length} player matchups saved • 3 deadlines</p>
+                                            </div>`;
             });
         };
 
@@ -2161,15 +2198,15 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                                        <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                                            👉 Press & Hold on image or click 'Download Now' 👈
-                                        </p>
-                                        <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                                        <div style="display:flex; gap:10px; margin-top:15px;">
-                                            <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                                            <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                                        </div>
-                                    `;
+                                            <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                                                👉 Press & Hold on image or click 'Download Now' 👈
+                                            </p>
+                                            <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                                            <div style="display:flex; gap:10px; margin-top:15px;">
+                                                <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                                                <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                                            </div>
+                                        `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2544,26 +2581,26 @@
 
             const delta = buildDomesticDelta(parsed.results, motmUid);
             preview.innerHTML = `
-                            <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
-                                ✓ 6 matchups / 12 unique players validated.
-                            </div>
-                            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
-                                ${delta.map(d => `
-                                    <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
-                                        <strong>${d.name}</strong>
-                                        <span style="display:block; color:var(--text-muted);">
-                                            MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
-                                        </span>
-                                    </div>`).join('')}
-                            </div>
-                            <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
-                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
-                                    <i class="fa-solid fa-database"></i> Submit Official Domestic Result
-                                </button>
-                                <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
-                                    <i class="fa-solid fa-pen"></i> Edit Player Scores
-                                </button>
-                            </div>`;
+                                <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
+                                    ✓ 6 matchups / 12 unique players validated.
+                                </div>
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
+                                    ${delta.map(d => `
+                                        <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
+                                            <strong>${d.name}</strong>
+                                            <span style="display:block; color:var(--text-muted);">
+                                                MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
+                                            </span>
+                                        </div>`).join('')}
+                                </div>
+                                <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+                                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
+                                        <i class="fa-solid fa-database"></i> Submit Official Domestic Result
+                                    </button>
+                                    <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
+                                        <i class="fa-solid fa-pen"></i> Edit Player Scores
+                                    </button>
+                                </div>`;
 
             window.adminScoreDraft = parsed.results;
             window.adminScoreDraftMotm = motmUid;
@@ -2635,15 +2672,15 @@
 
             const container = document.getElementById('adminScoreEditorList');
             container.innerHTML = window.adminScoreDraft.map((m, i) => `
-                            <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
-                                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                                    <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
-                                    <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
-                                    <span style="font-weight:700;">-</span>
-                                    <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
-                                    <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
-                                </div>
-                            </div>`).join('');
+                                <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
+                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                        <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
+                                        <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
+                                        <span style="font-weight:700;">-</span>
+                                        <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
+                                        <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
+                                    </div>
+                                </div>`).join('');
 
             const players = window.mockPlayers.map(p => ({ uid: p.userId || p.id, name: p.name }));
 
@@ -2827,13 +2864,13 @@
 
             list.forEach(s => {
                 existing.innerHTML += `
-                                <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
-                                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-                                        <strong style="font-size:12px;color:#fff;">6v6 • ${s.matches?.length || 0} matchups</strong>
-                                        <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                    </div>
-                                    <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
-                                </div>`;
+                                    <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
+                                        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
+                                            <strong style="font-size:12px;color:#fff;">6v6 • ${s.matches?.length || 0} matchups</strong>
+                                            <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                        </div>
+                                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
+                                    </div>`;
             });
         };
 
@@ -2848,48 +2885,53 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                            </div>
-                                            <div style="display:flex; gap:6px;">
-                                                <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                                <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                            </div>
-                                        </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                    <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                                </div>
+                                                <div style="display:flex; gap:6px;">
+                                                    <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                                    <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                                </div>
+                                            </div>`;
             });
         };
 
-        window.handleManagerSignInStart = async function () {
-            await new Promise(resolve => requestAnimationFrame(resolve));
-            if (!window.requireLoggedUser()) return;
+        window.handleManagerSignInStart = async function (button) {
+            const restore = window.beginDirectButtonLoading(button, 'Signing in...');
+            try {
+                await window.nextPaint();
+                if (!window.requireLoggedUser()) return;
 
-            let mgr = window.mockManagers.find(m =>
-                m.id === `m_${window.currentLoggedUser.id}` ||
-                m.userId === window.currentLoggedUser.id ||
-                m.name === window.currentLoggedUser.name
-            );
+                let mgr = window.mockManagers.find(m =>
+                    m.id === `m_${window.currentLoggedUser.id}` ||
+                    m.userId === window.currentLoggedUser.id ||
+                    m.name === window.currentLoggedUser.name
+                );
 
-            if (mgr) {
-                if (mgr.status === 'approved') {
-                    window.currentUserRole = 'manager';
-                    document.getElementById('mAvatar').src = mgr.avatar || window.currentLoggedUser.avatar;
-                    document.getElementById('mName').innerText = mgr.name || window.currentLoggedUser.name;
-                    document.getElementById('mClubName').innerText = mgr.club;
-                    if (!window.isAdminLoggedIn) document.getElementById('managerHeroSection').style.display = 'block';
-                    document.getElementById('mainPlayersDirectorySection').style.display = 'none';
-                    window.renderAllData();
-                    alert("Welcome back, Manager!");
-                    return;
-                } else if (mgr.status === 'pending') {
-                    alert("Your manager application is currently pending admin approval.");
-                    return;
+                if (mgr) {
+                    if (mgr.status === 'approved') {
+                        window.currentUserRole = 'manager';
+                        document.getElementById('mAvatar').src = mgr.avatar || window.currentLoggedUser.avatar;
+                        document.getElementById('mName').innerText = mgr.name || window.currentLoggedUser.name;
+                        document.getElementById('mClubName').innerText = mgr.club;
+                        if (!window.isAdminLoggedIn) document.getElementById('managerHeroSection').style.display = 'block';
+                        document.getElementById('mainPlayersDirectorySection').style.display = 'none';
+                        window.renderAllData();
+                        alert("Welcome back, Manager!");
+                        return;
+                    } else if (mgr.status === 'pending') {
+                        alert("Your manager application is currently pending admin approval.");
+                        return;
+                    }
                 }
-            }
 
-            window.syncCurrentUserIntoCards();
-            document.getElementById('squadNameModal').style.display = 'flex';
+                window.syncCurrentUserIntoCards();
+                document.getElementById('squadNameModal').style.display = 'flex';
+            } finally {
+                if (restore) await restore();
+            }
         };
 
         window.proceedToTrxIdModal = function () {
@@ -2919,34 +2961,39 @@
             window.triggerBoomEffects();
         };
 
-        window.handlePlayerSignIn = async function () {
-            await new Promise(resolve => requestAnimationFrame(resolve));
-            if (!window.requireLoggedUser()) return;
+        window.handlePlayerSignIn = async function (button) {
+            const restore = window.beginDirectButtonLoading(button, 'Signing in...');
+            try {
+                await window.nextPaint();
+                if (!window.requireLoggedUser()) return;
 
-            let existingPlayer = window.mockPlayers.find(p =>
-                p.id === `p_${window.currentLoggedUser.id}` ||
-                p.userId === window.currentLoggedUser.id ||
-                p.name === window.currentLoggedUser.name
-            );
+                let existingPlayer = window.mockPlayers.find(p =>
+                    p.id === `p_${window.currentLoggedUser.id}` ||
+                    p.userId === window.currentLoggedUser.id ||
+                    p.name === window.currentLoggedUser.name
+                );
 
-            if (existingPlayer) {
-                alert("Already Signed In as Player!");
-                window.currentUserRole = 'player';
-                const leaveBtn = document.getElementById('leavePlayerBtn');
-                if (leaveBtn) leaveBtn.style.display = 'inline-block';
-                return;
+                if (existingPlayer) {
+                    alert("Already Signed In as Player!");
+                    window.currentUserRole = 'player';
+                    const leaveBtn = document.getElementById('leavePlayerBtn');
+                    if (leaveBtn) leaveBtn.style.display = 'inline-block';
+                    return;
+                }
+
+                window.cardPreviewUser = { ...window.currentLoggedUser };
+                window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
+                document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
+
+                window.isPlayerCardDownloaded = false;
+                document.getElementById('btnConfirmPlayerCard').disabled = true;
+                document.getElementById('playerNoticeText').style.display = 'block';
+
+                document.getElementById('playerCardModal').style.display = 'flex';
+                window.triggerBoomEffects();
+            } finally {
+                if (restore) await restore();
             }
-
-            window.cardPreviewUser = { ...window.currentLoggedUser };
-            window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
-            document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
-
-            window.isPlayerCardDownloaded = false;
-            document.getElementById('btnConfirmPlayerCard').disabled = true;
-            document.getElementById('playerNoticeText').style.display = 'block';
-
-            document.getElementById('playerCardModal').style.display = 'flex';
-            window.triggerBoomEffects();
         };
 
         window.confirmManagerSignIn = async function () {
@@ -3070,13 +3117,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                            <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info" style="text-align: left;">
-                                                    <h4>${p.name}</h4>
-                                                    <p style="color:var(--accent-gold)">Signed Player</p>
-                                                </div>
-                                            </div>`;
+                                                <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info" style="text-align: left;">
+                                                        <h4>${p.name}</h4>
+                                                        <p style="color:var(--accent-gold)">Signed Player</p>
+                                                    </div>
+                                                </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -3111,8 +3158,8 @@
             const squad = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club);
             if (squad.length < 6) {
                 container.innerHTML = `<p style="font-size:12px;color:var(--primary-red);">
-                        You need at least 6 signed players to submit all 3 deadline lineups (2 players per deadline).
-                    </p>`;
+                            You need at least 6 signed players to submit all 3 deadline lineups (2 players per deadline).
+                        </p>`;
                 return;
             }
 
@@ -3121,21 +3168,21 @@
             window.squadDeadlineConfig.forEach((d, deadlineIndex) => {
                 const savedIds = existing[d.key]?.playerIds || [];
                 const rows = squad.map(p => `
-                        <label style="display:flex;align-items:center;gap:9px;margin-bottom:6px;background:#090a0c;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;">
-                            <input type="checkbox" class="deadline-player-checkbox" data-deadline="${d.key}" value="${p.id}" ${savedIds.includes(p.id) ? 'checked' : ''}>
-                            <img src="${p.avatar}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--primary-red);">
-                            <span style="font-size:13px;">${p.name}</span>
-                        </label>`).join('');
+                            <label style="display:flex;align-items:center;gap:9px;margin-bottom:6px;background:#090a0c;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;">
+                                <input type="checkbox" class="deadline-player-checkbox" data-deadline="${d.key}" value="${p.id}" ${savedIds.includes(p.id) ? 'checked' : ''}>
+                                <img src="${p.avatar}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--primary-red);">
+                                <span style="font-size:13px;">${p.name}</span>
+                            </label>`).join('');
 
                 container.innerHTML += `
-                        <div style="background:#090a0c;border:1px solid var(--accent-gold);border-radius:8px;padding:10px;margin-bottom:10px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px;">
-                                <strong style="color:var(--accent-gold);font-family:'Teko';font-size:20px;">DEADLINE ${d.key}</strong>
-                                <span style="font-size:10px;color:var(--cyan-glow);">PRIORITY ${d.priority}</span>
-                            </div>
-                            <div id="deadlineCount_${deadlineIndex}" style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">0/2 selected</div>
-                            <div style="max-height:145px;overflow-y:auto;">${rows}</div>
-                        </div>`;
+                            <div style="background:#090a0c;border:1px solid var(--accent-gold);border-radius:8px;padding:10px;margin-bottom:10px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px;">
+                                    <strong style="color:var(--accent-gold);font-family:'Teko';font-size:20px;">DEADLINE ${d.key}</strong>
+                                    <span style="font-size:10px;color:var(--cyan-glow);">PRIORITY ${d.priority}</span>
+                                </div>
+                                <div id="deadlineCount_${deadlineIndex}" style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">0/2 selected</div>
+                                <div style="max-height:145px;overflow-y:auto;">${rows}</div>
+                            </div>`;
             });
 
             container.querySelectorAll('.deadline-player-checkbox').forEach(cb => {
@@ -3228,16 +3275,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                <div style="text-align:left;">
-                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                        </div>`;
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
@@ -3258,15 +3305,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                                        <div class="manager-mini-card">
-                                            <img src="${m.avatar}" alt="${m.name}">
-                                            <div class="player-mini-info">
-                                                <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                                <p style="color: var(--text-light);">${m.club}</p>
-                                                <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/11</p>
-                                            </div>
-                                            <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                        </div>`;
+                                            <div class="manager-mini-card">
+                                                <img src="${m.avatar}" alt="${m.name}">
+                                                <div class="player-mini-info">
+                                                    <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                                    <p style="color: var(--text-light);">${m.club}</p>
+                                                    <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/11</p>
+                                                </div>
+                                                <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                            </div>`;
             });
         };
 
@@ -3368,13 +3415,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                            <div style="text-align:left;">
-                                                <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                            </div>
-                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                        </div>`;
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                                <div style="text-align:left;">
+                                                    <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                                </div>
+                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                            </div>`;
             });
         };
 
@@ -3429,52 +3476,59 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                <div style="text-align:left;">
-                                                    <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                                    <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                            <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                    <div style="text-align:left;">
+                                                        <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                        <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            ${adminAction}
-                                        </div>`;
+                                                ${adminAction}
+                                            </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                            <div class="player-mini-card">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info">
-                                                    <h4>${p.name}</h4>
-                                                    <p>${p.device}</p>
-                                                </div>
-                                                <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                            </div>`;
+                                                <div class="player-mini-card">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                                </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                            <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                                <img src="${p.avatar}" alt="${p.name}">
-                                                <div class="player-mini-info">
-                                                    <h4>${p.name}</h4>
-                                                    <p>${p.device}</p>
-                                                </div>
-                                                ${actionBtn}
-                                            </div>`;
+                                                <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                                    <img src="${p.avatar}" alt="${p.name}">
+                                                    <div class="player-mini-info">
+                                                        <h4>${p.name}</h4>
+                                                        <p>${p.device}</p>
+                                                    </div>
+                                                    ${actionBtn}
+                                                </div>`;
                 }
             });
         };
 
-        window.leaveRole = async function () {
-            window.currentUserRole = null;
-            document.getElementById('managerHeroSection').style.display = 'none';
-            document.getElementById('mainPlayersDirectorySection').style.display = 'block';
-            document.getElementById('leavePlayerBtn').style.display = 'none';
-            await Promise.resolve(window.renderAllData());
-            alert("Left active session.");
+        window.leaveRole = async function (button) {
+            const restore = window.beginDirectButtonLoading(button, 'Leaving...');
+            try {
+                await window.nextPaint();
+                window.currentUserRole = null;
+                document.getElementById('managerHeroSection').style.display = 'none';
+                document.getElementById('mainPlayersDirectorySection').style.display = 'block';
+                const leavePlayerBtn = document.getElementById('leavePlayerBtn');
+                if (leavePlayerBtn) leavePlayerBtn.style.display = 'none';
+                await Promise.resolve(window.renderAllData());
+                alert("Left active session.");
+            } finally {
+                if (restore) await restore();
+            }
         };
 
         window.closeModal = function (modalId) { document.getElementById(modalId).style.display = 'none'; };
