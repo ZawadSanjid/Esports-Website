@@ -2284,49 +2284,46 @@
         };
 
         window.convertFixtureToText = function () {
-            const getText = (id, fallback = 'TBA') => {
-                const el = document.getElementById(id);
-                return el ? (el.innerText || el.textContent || fallback).trim() : fallback;
-            };
-
-            const t1 = getText('fxT1Name', 'Team 1');
-            const t2 = getText('fxT2Name', 'Team 2');
-            const d = getText('fxDispDate', 'TBA');
-            const adm = getText('fxDispAdmin', 'Admin');
-            const s1 = document.getElementById('scoreTeam1')?.value ?? '0';
-            const s2 = document.getElementById('scoreTeam2')?.value ?? '0';
+            const t1 = document.getElementById('fxT1Name')?.innerText || 'TBA';
+            const t2 = document.getElementById('fxT2Name')?.innerText || 'TBA';
+            const d = document.getElementById('fxDispDate')?.innerText || 'TBA';
+            const adm = document.getElementById('fxDispAdmin')?.innerText || 'Admin';
+            const s1 = document.getElementById('scoreTeam1')?.value || '0';
+            const s2 = document.getElementById('scoreTeam2')?.value || '0';
 
             let text = `🏆 EBFC PRESENTS BID TOURNAMENT SEASON 1 🏆\n\n`;
-            text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n`;
-            text += `📅 Date: ${d}\n`;
-            text += `👤 Match Admin: ${adm}\n\n`;
+            text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n📅 Date: ${d}\n👤 Match Admin: ${adm}\n\n`;
 
-            const grouped = {};
-            (window.generatedMatchupsList || []).forEach((m) => {
-                const deadline = m.deadline || 'MATCH';
-                if (!grouped[deadline]) grouped[deadline] = [];
-                grouped[deadline].push(m);
-            });
+            const config = Array.isArray(window.squadDeadlineConfig) ? window.squadDeadlineConfig : [];
+            config.forEach((cfg) => {
+                const deadline = cfg.key;
+                const priority = cfg.priority || 'N/A';
+                const matches = (window.generatedMatchupsList || []).filter(m => m.deadline === deadline);
 
-            Object.keys(grouped).forEach((deadline) => {
-                text += `--- PLAYER MATCHUPS (${deadline} DEADLINE) ---\n`;
-                grouped[deadline].forEach((m, idx) => {
-                    text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`;
-                });
+                text += `━━━━━━━━━━━━━━━━━━━━\n`;
+                text += `⏳ DEADLINE: ${deadline}\n`;
+                text += `⭐ PRIORITY TIME: ${priority}\n`;
+                text += `--- PLAYER MATCHUPS ---\n`;
+
+                if (matches.length) {
+                    matches.forEach((m, idx) => {
+                        text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`;
+                    });
+                } else {
+                    text += `No matchup data\n`;
+                }
                 text += `\n`;
             });
 
             text += `📊 MATCH RESULT:\n${t1} (${s1}) - ${t2} (${s2})\n`;
 
             const textarea = document.getElementById('fixtureTextarea');
-            const modal = document.getElementById('fixtureTextModal');
-            if (!textarea || !modal) {
-                alert('Fixture text window is unavailable. Please regenerate the fixture.');
+            if (!textarea) {
+                alert('Fixture text area not found.');
                 return;
             }
-
             textarea.value = text;
-            modal.style.display = 'flex';
+            document.getElementById('fixtureTextModal').style.display = 'flex';
         };
 
         window.copyFixtureText = function () {
