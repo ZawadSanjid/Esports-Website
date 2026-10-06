@@ -1,0 +1,509 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EBFC BID Tournament — Season 1 | Rules</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080808;
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 25px 15px 50px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            margin: auto;
+        }
+
+        /* HEADER */
+        .rules-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .rules-header .icon {
+                width: 65px;
+                height: 65px;
+                margin: 0 auto 15px;
+                border-radius: 50%;
+                background: #e53935;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                box-shadow: 0 0 25px rgba(229, 57, 53, 0.35);
+            }
+
+            .rules-header h1 {
+                font-size: 28px;
+                font-weight: 800;
+                text-transform: uppercase;
+                margin-bottom: 8px;
+            }
+
+            .rules-header p {
+                color: #aaa;
+                font-size: 14px;
+            }
+
+        /* RULE CARD */
+        .rule-card {
+            background: #111;
+            border: 1px solid #292929;
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .rule-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff4747;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+            .rule-title i {
+                font-size: 17px;
+            }
+
+        .rule-card p {
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .rule-card ul {
+            padding-left: 22px;
+        }
+
+        .rule-card li {
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+            .rule-card li::marker {
+                color: #ff3b3b;
+            }
+
+        /* DEADLINE */
+        .deadline {
+            background: #181818;
+            border: 1px solid #303030;
+            border-radius: 12px;
+            padding: 17px;
+            margin-bottom: 12px;
+        }
+
+            .deadline:last-child {
+                margin-bottom: 0;
+            }
+
+            .deadline h3 {
+                color: #fff;
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+
+            .deadline p {
+                margin: 4px 0;
+                font-size: 13px;
+                color: #bbb;
+            }
+
+            .deadline strong {
+                color: #fff;
+            }
+
+        /* WARNING / IMPORTANT */
+        .important {
+            border-left: 4px solid #e53935;
+            background: rgba(229, 57, 53, 0.08);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+            .important p {
+                margin: 0;
+            }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .roar {
+            color: #ff3b3b;
+            font-weight: 800;
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        /* BACK BUTTON */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 18px;
+            margin-bottom: 25px;
+            border-radius: 9px;
+            border: 1px solid #333;
+            background: #171717;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+            .back-btn:hover {
+                background: #e53935;
+                border-color: #e53935;
+            }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 10px 40px;
+            }
+
+            .rules-header h1 {
+                font-size: 22px;
+            }
+
+            .rule-card {
+                padding: 18px;
+                border-radius: 12px;
+            }
+
+            .rule-title {
+                font-size: 16px;
+            }
+
+            .rule-card p,
+            .rule-card li {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- BACK BUTTON -->
+        <a href="tournament-hub.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back To Tournament
+        </a>
+
+        <!-- HEADER -->
+        <div class="rules-header">
+
+            <div class="icon">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+
+            <h1>EBFC BID Tournament — Season 1</h1>
+
+            <p>Official Tournament Rules & Instructions</p>
+
+        </div>
+
+
+        <!-- REGISTERED PLAYERS -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-users"></i>
+                BID REGISTERED PLAYERS — OFFICIAL INSTRUCTIONS
+            </div>
+
+            <p>
+                বিডে রেজিস্ট্রেশনের মাধ্যমে প্রত্যেক খেলোয়াড় Tournament চলাকালীন নিজের দায়িত্ব ও অঙ্গীকারের বিষয়ে সম্মত হয়েছেন।
+
+                যে Manager/Bidder আপনাকে কঠিন bidding competition-এর মাধ্যমে নিজের দলে অন্তর্ভুক্ত করবেন, Tournament চলাকালীন তার দলের প্রতি আপনাকে সম্পূর্ণভাবে দায়িত্বশীল ও সহযোগিতাপূর্ণ থাকতে হবে।
+
+                আপনার Gameplay, Performance, Discipline এবং Availability-এর মাধ্যমে নিজের Manager-কে সর্বোচ্চ সহযোগিতা করতে হবে। 🐯⚽
+            </p>
+
+        </div>
+
+
+        <!-- MATCH RULES -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-futbol"></i>
+                MATCH RULES
+            </div>
+
+            <p>
+
+                • EBeFC BiD Tournament-এর সকল ম্যাচ COBEG Rules অনুযায়ী পরিচালিত হবে।
+
+                • প্রত্যেক Player তার Manager/Team Captain-এর কাছ থেকে Tournament-এর সকল প্রযোজ্য Rules জেনে নেওয়ার জন্য নিজে দায়িত্বশীল।
+
+                • Official Match Rules-এর ঊর্ধ্বে কোনো Player, Manager বা Team থাকবে না।
+            </p>
+
+        </div>
+
+
+        <!-- MATCH DEADLINES -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-clock"></i>
+                MATCH DEADLINES
+            </div>
+
+
+            <div class="deadline">
+
+                <h3>
+                    First Deadline — 10:50 PM
+                </h3>
+
+                <p>
+                    <strong>Priority Time:</strong>
+                    10:40 PM – 10:50 PM
+                </p>
+
+                <p>
+                    <strong>Player Slot:</strong>
+                    3 Players
+                </p>
+
+            </div>
+
+
+            <div class="deadline">
+
+                <h3>
+                    Mid Deadline — 11:50 PM
+                </h3>
+
+                <p>
+                    <strong>Priority Time:</strong>
+                    11:40 PM – 11:50 PM
+                </p>
+
+                <p>
+                    <strong>Player Slot:</strong>
+                    2 Players
+                </p>
+
+            </div>
+
+
+            <div class="deadline">
+
+                <h3>
+                    Last Deadline — 12:50 AM
+                </h3>
+
+                <p>
+                    <strong>Priority Time:</strong>
+                    12:40 AM – 12:50 AM
+                </p>
+
+                <p>
+                    <strong>Player Slot:</strong>
+                    2 Players
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- AVAILABILITY -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-user-check"></i>
+                AVAILABILITY
+            </div>
+
+            <p>
+                দলে অন্তর্ভুক্ত হওয়ার পর প্রত্যেক Player-কে নিজের Manager-কে তার নিয়মিত Availability Time জানিয়ে দিতে হবে।
+
+                যাতে Manager প্রয়োজন অনুযায়ী Match Schedule করতে পারেন এবং Deadline-এর মধ্যে ম্যাচ সম্পন্ন করা সম্ভব হয়।
+            </p>
+
+        </div>
+
+
+        <!-- CLUB DUTY -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                OFFICIAL CLUB DUTY — PRIORITY BASIS
+            </div>
+
+            <p>
+                BiD Tournament চলাকালীন East Bengal eFootball Club-এর Official Community Matches স্বাভাবিকভাবেই চলমান থাকবে।
+
+                তাই কোনো Player-এর BiD Match Deadline এবং Club Official Match-এর সময় পরস্পরের সঙ্গে সংঘর্ষ হলে—
+
+            </p>
+
+            <div class="important">
+                <p>
+
+                    ➡️ Player/ ম্যানেজার/ দলের সাথে সংশ্লিষ্ট যে কেউ -কে অবশ্যই আগে Match Group/Bid Group-এ Admin-কে বিষয়টি জানাতে হবে।
+                    <br>
+                    ➡️ Club-এর Official Duty-কে Priority দেওয়ার ক্ষেত্রে Admin প্রয়োজন অনুযায়ী সংশ্লিষ্ট Player-এর BiD Match Deadline Extend করার অনুমতি দিতে পারবেন।
+                    <br>
+                    ➡️ Admin কর্তৃক অনুমোদিত Deadline Extension-এর ক্ষেত্রে সংশ্লিষ্ট Opponent/Manager-কে সেই সিদ্ধান্ত মেনে নিতে হবে।
+
+                </p>
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- EXTENDED DEADLINE -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-hourglass-half"></i>
+                EXTENDED DEADLINE & BONUS SUB
+            </div>
+                    <p>যদি কোনো Player-এর Club Official Match-এর কারণে Deadline Extend করা হয় এবং Bid-এর Opponent নির্ধারিত Extended Time-এ ম্যাচ খেলতে অপারগতা প্রকাশ করে, তাহলে— <p/>
+
+            <br>
+            <ul>
+                <li>
+                    Deadline সর্বোচ্চ <strong> ১২–১৫ ঘণ্টা </strong>
+                    পর্যন্ত বৃদ্ধি করা যেতে পারে।
+                </li>
+
+                <li>
+                    ponent Manager কে একটি <strong>Bonus Sub</strong> ব্যবহারের সুযোগ দেওয়া যেতে পারে।
+
+                </li>
+
+                <li>
+                    বে Bonus Sub অনুমোদনের সম্পূর্ণ এখতিয়ার শুধুমাত্র <strong>Admin</strong> এর থাকবে।
+                    Admin উভয় পক্ষের Official Match Situation এবং BiD Match Situation বিবেচনা করে চূড়ান্ত সিদ্ধান্ত জানাবেন।
+
+                    
+                </li>
+            </ul>
+
+        </div>
+
+
+        <!-- SUBSTITUTION & SWAP -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-right-left"></i>
+                SUBSTITUTION & SWAP RULE
+            </div>
+
+            <ul>
+                <li>
+                    প্রত্যেক দল Tournament চলাকালীন সর্বোচ্চ:
+
+                    🔄 <strong>৩টি Substitute</strong>
+                    🔁 <strong>২টি Swap</strong>
+                    ব্যবহার করতে পারবে।
+
+
+                </li>
+
+                <li>
+                    🚨 Emergency Sub/Swap:
+                    প্রয়োজনে সর্বোচ্চ <strong>১টি Emergency Sub/Swap</strong> করা যাবে।
+
+                </li>
+
+                <li>
+                    Emergency Sub/Swap কোনো অতিরিক্ত Sub/Swap হিসেবে গণ্য হবে না।
+                </li>
+
+               
+            </ul>
+
+        </div>
+
+
+        <!-- FINAL REMINDER -->
+        <div class="rule-card">
+
+            <div class="rule-title">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                FINAL PLAYER DUTY REMINDER
+            </div>
+
+            <p>
+                Respect the Rules.<br>
+                Respect Your Manager.<br>
+                Respect Your Team.<br>
+                Be Available.<br>
+                Play Fair.<br>
+                Give Your Best.
+            </p>
+
+            <div class="important">
+                <p>
+                    Failure to follow the official instructions may result in
+                    administrative action according to the tournament rules.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <div class="footer">
+
+            <p>
+                EBFC BID Tournament — Season 1
+            </p>
+
+            <div class="roar">
+                WE ROAR TO HUNT. 🐯
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
