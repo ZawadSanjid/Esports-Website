@@ -1,42 +1,380 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EBFC MOTM Card Maker</title>
-<style>
-:root{--gold:#f5c451;--red:#e50914}*{box-sizing:border-box}body{margin:0;padding:20px;background:#090b11;color:#fff;font-family:Arial,sans-serif}.wrap{max-width:1100px;margin:auto}header{text-align:center;margin-bottom:22px}header small{color:var(--gold);letter-spacing:4px;font-weight:bold}h1{margin:8px 0;font-size:clamp(28px,5vw,44px);font-style:italic}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:22px;align-items:start}.form{padding:18px;background:#151923;border:1px solid #343b49;border-radius:14px}.form h2{color:var(--gold);margin:0}label{display:block;margin:14px 0 6px;font-size:12px;font-weight:bold;color:#d7dbe3}input{width:100%;padding:11px;border:1px solid #394151;border-radius:7px;background:#080b10;color:white;font:inherit}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.goals-row{display:grid;grid-template-columns:1fr 78px 35px;gap:6px;margin:8px 0}.goals-row input{min-width:0}.btn{width:100%;padding:12px;border:0;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:9px}.add{background:#303746;color:white}.download{background:var(--gold);color:#111;margin-top:16px}.reset{background:transparent;border:1px solid #505969;color:white}.hint,.note{font-size:11px;color:#a6adba;line-height:1.5}.preview-label{color:#a6adba;font-size:12px;letter-spacing:2px;margin:0 0 9px}.card{width:100%;max-width:650px;margin:auto;aspect-ratio:4/5;position:relative;overflow:hidden;border:3px solid #d9a934;background:linear-gradient(145deg,#202b3d,#080a10 58%,#390b12);padding:4%;box-shadow:0 15px 40px #0008}.card:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(125deg,transparent 0 30px,#fff08 31px 33px);pointer-events:none}.top,.foot{position:relative;display:flex;justify-content:space-between;gap:8px;align-items:center}.brand{font-size:clamp(13px,2vw,20px);font-weight:1000;letter-spacing:2px}.brand span,.season,.subtitle,.title em,.stat b{color:var(--gold)}.season{font-size:clamp(8px,1.2vw,12px);font-weight:bold;letter-spacing:2px}.subtitle{text-align:center;position:relative;margin-top:3%;font-weight:900;letter-spacing:4px;font-size:clamp(10px,1.5vw,15px)}.title{text-align:center;position:relative;margin:1% 0 0;font-size:clamp(28px,5.4vw,58px);font-style:italic;font-weight:1000;line-height:.94}.title em{font-style:normal}.photo{position:relative;width:58%;height:38%;margin:3% auto 0;background:linear-gradient(#f5c45130,#e5091420);border-radius:48% 48% 5% 5%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}.photo img{width:100%;height:100%;object-fit:contain;object-position:center bottom;display:none}.placeholder{position:absolute;text-align:center;color:#ffffff80;font-weight:bold}.name{position:relative;text-align:center;font-size:clamp(20px,4vw,42px);font-weight:1000;font-style:italic;overflow-wrap:anywhere;text-shadow:2px 3px #000}.rule{position:relative;background:var(--gold);height:3px;width:55%;margin:6px auto}.stats{position:relative;display:grid;grid-template-columns:1fr;gap:10px;margin:3% 20%}.stat{text-align:center;background:#080b10d9;border:1px solid #f5c45188;padding:2%}.stat b{display:block;font-size:clamp(23px,4vw,43px)}.stat span{font-size:clamp(8px,1.2vw,12px);font-weight:bold;letter-spacing:2px}.summary{position:relative;background:#ffffff0b;border-left:3px solid var(--red);padding:2% 3%;font-size:clamp(10px,1.6vw,15px);line-height:1.5;overflow-wrap:anywhere}.summary strong{display:block;color:var(--gold);font-size:clamp(8px,1.2vw,12px);letter-spacing:2px;margin-bottom:4px}.foot{position:absolute;bottom:0;left:0;right:0;padding:3% 4%;background:#05070beF;border-top:1px solid #f5c45188}.foot strong{font-size:clamp(8px,1.4vw,14px)}.foot span{color:var(--gold);font-size:clamp(8px,1.1vw,11px);text-align:right}@media(max-width:760px){body{padding:12px}.layout{grid-template-columns:1fr}.card{max-width:520px}.form{order:1}.preview{order:0}}
-</style></head><body><div class="wrap">
-<header><small>EAST BENGAL eFOOTBALL CLUB</small><h1>MOTM CARD MAKER</h1><div class="hint">Add player details, upload a photo, and download the card.</div></header>
-<div class="layout"><section class="form"><h2>Player Details</h2>
-<label for="playerName">PLAYER NAME *</label><input id="playerName" maxlength="45" placeholder="Enter player name">
-<label for="photoInput">PLAYER IMAGE *</label><input id="photoInput" type="file" accept="image/*"><p class="hint">Photo stays in this browser. It is not uploaded to a server.</p>
-<label for="goals">TOTAL GOALS</label><input id="goals" type="number" min="0" max="99" value="0">
-<label>GOALS AGAINST WHICH OPPONENT?</label><div id="goalRows"><div class="goals-row"><input class="opp" placeholder="Opponent / player name" maxlength="40"><input class="oppgoals" type="number" min="0" max="99" value="0" aria-label="Goals scored"><button class="remove" type="button" style="background:#49212a;color:white;border:0;border-radius:6px" onclick="removeRow(this)">×</button></div></div>
-<button class="btn add" type="button" onclick="addRow()">+ ADD OPPONENT</button>
-<label for="matchName">MATCH / TOURNAMENT</label><input id="matchName" maxlength="55" placeholder="EBFC BID TOURNAMENT S1">
-<label for="tagline">CARD SUBTITLE</label><input id="tagline" maxlength="45" value="MAN OF THE MATCH">
-<button class="btn download" type="button" onclick="downloadCard()">DOWNLOAD MOTM CARD (PNG)</button><button class="btn reset" type="button" onclick="resetForm()">RESET FORM</button>
-<p class="note">This is a standalone card maker. It does not submit data to the tournament database. Download the card and send it to the admin/upload it separately.</p></section>
-<section class="preview"><p class="preview-label">LIVE PREVIEW · 4:5 CARD</p><div class="card" id="card">
-<div class="top"><div class="brand">EB<span>FC</span></div><div class="season">OFFICIAL MATCH CARD</div></div>
-<div class="subtitle" id="subOut">MAN OF THE MATCH</div><div class="title">MAN OF THE<br>MATCH</div>
-<div class="photo"><div class="placeholder" id="placeholder">UPLOAD PLAYER IMAGE</div><img id="playerImg" alt="Player photo"></div>
-<div class="name" id="nameOut">PLAYER NAME</div><div class="rule"></div>
-<div class="stats"><div class="stat"><b id="goalsOut">0</b><span>GOALS</span></div></div>
-<div class="summary"><strong>GOALS BY OPPONENT</strong><div id="summaryOut">Add opponent names and goals in the form.</div></div>
-<div class="foot"><strong id="matchOut">EBFC BID TOURNAMENT S1</strong><span>OFFICIAL FIXTURE<br>EBFC</span></div>
-</div></section></div></div>
-<script>
-const $=id=>document.getElementById(id);let photoData=null;
-function addRow(name='',goals='0'){const r=document.createElement('div');r.className='goals-row';r.innerHTML='<input class="opp" placeholder="Opponent / player name" maxlength="40"><input class="oppgoals" type="number" min="0" max="99" value="0" aria-label="Goals scored"><button class="remove" type="button" style="background:#49212a;color:white;border:0;border-radius:6px">×</button>';r.querySelector('.opp').value=name;r.querySelector('.oppgoals').value=goals;r.querySelector('.remove').onclick=()=>removeRow(r.querySelector('.remove'));r.querySelectorAll('input').forEach(x=>x.addEventListener('input',update));$('goalRows').appendChild(r);update()}
-function removeRow(btn){const rows=$('goalRows').querySelectorAll('.goals-row');if(rows.length===1){btn.closest('.goals-row').querySelector('.opp').value='';btn.closest('.goals-row').querySelector('.oppgoals').value=0}else btn.closest('.goals-row').remove();update()}
-function getGoals(){return [...$('goalRows').querySelectorAll('.goals-row')].map(r=>{let n=r.querySelector('.opp').value.trim(),g=Math.max(0,Number(r.querySelector('.oppgoals').value)||0);return n?`${n}: ${g} goal${g===1?'':'s'}`:''}).filter(Boolean)}
-function update(){$('nameOut').textContent=$('playerName').value.trim()||'PLAYER NAME';$('goalsOut').textContent=Math.max(0,Number($('goals').value)||0);$('subOut').textContent=$('tagline').value.trim()||'MAN OF THE MATCH';$('matchOut').textContent=$('matchName').value.trim()||'EBFC BID TOURNAMENT S1';$('summaryOut').textContent=getGoals().join(' • ')||'Add opponent names and goals in the form.'}
-$('photoInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Choose an image file.');return}const reader=new FileReader();reader.onload=()=>{photoData=reader.result;$('playerImg').src=photoData;$('playerImg').style.display='block';$('placeholder').style.display='none'};reader.readAsDataURL(f)});
-['playerName','goals','matchName','tagline'].forEach(id=>$(id).addEventListener('input',update));$('goalRows').querySelectorAll('input').forEach(x=>x.addEventListener('input',update));
-function resetForm(){if(!confirm('Clear all current details?'))return;$('playerName').value='';$('photoInput').value='';$('goals').value=0;$('matchName').value='';$('tagline').value='MAN OF THE MATCH';$('goalRows').innerHTML='';photoData=null;$('playerImg').removeAttribute('src');$('playerImg').style.display='none';$('placeholder').style.display='block';addRow();update()}
-async function downloadCard(){if(!$('playerName').value.trim()){alert('Enter the player name first.');return}if(!photoData){alert('Upload the player image first.');return}const c=document.createElement('canvas'),ctx=c.getContext('2d');c.width=1000;c.height=1250;const W=1000,H=1250;let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#202b3d');g.addColorStop(.58,'#080a10');g.addColorStop(1,'#390b12');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#d9a934';ctx.lineWidth=5;ctx.strokeRect(12,12,W-24,H-24);ctx.fillStyle='#f5c451';ctx.font='bold 25px Arial';ctx.fillText('EAST BENGAL eFOOTBALL CLUB',55,65);ctx.textAlign='right';ctx.fillStyle='white';ctx.font='bold 19px Arial';ctx.fillText('OFFICIAL MATCH CARD',W-55,65);ctx.textAlign='center';ctx.fillStyle='#f5c451';ctx.font='bold 26px Arial';ctx.fillText(($('tagline').value.trim()||'MAN OF THE MATCH').toUpperCase().slice(0,42),W/2,120);ctx.fillStyle='white';ctx.font='italic bold 76px Arial';ctx.fillText('MAN OF THE',W/2,195);ctx.fillStyle='#f5c451';ctx.font='italic bold 88px Arial';ctx.fillText('MATCH',W/2,270);
-const img=new Image();await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=photoData});let box={x:250,y:300,w:500,h:410},s=Math.min(box.w/img.width,box.h/img.height),iw=img.width*s,ih=img.height*s;ctx.fillStyle='#f5c45122';ctx.fillRect(box.x,box.y,box.w,box.h);ctx.drawImage(img,box.x+(box.w-iw)/2,box.y+box.h-ih,iw,ih);
-ctx.fillStyle='white';ctx.font='italic bold 54px Arial';let name=$('playerName').value.trim();while(ctx.measureText(name).width>900){ctx.font='italic bold '+(parseInt(ctx.font.match(/\d+/)[0])-2)+'px Arial'}ctx.fillText(name,W/2,765);ctx.fillStyle='#d9a934';ctx.fillRect(280,785,440,4);
-[[355,'GOALS',$('goals').value||'0']].forEach(([x,label,val])=>{ctx.fillStyle='#080b10';ctx.fillRect(x,820,290,100);ctx.strokeStyle='#f5c45188';ctx.strokeRect(x,820,290,100);ctx.fillStyle='#f5c451';ctx.font='bold 46px Arial';ctx.fillText(String(val),x+145,865);ctx.fillStyle='white';ctx.font='bold 18px Arial';ctx.fillText(label,x+145,897)});
-ctx.textAlign='left';ctx.fillStyle='#f5c451';ctx.font='bold 20px Arial';ctx.fillText('GOALS BY OPPONENT',65,965);ctx.fillStyle='white';ctx.font='22px Arial';let y=1003;let lines=getGoals();(lines.length?lines:['No opponent details entered']).slice(0,4).forEach(t=>{ctx.fillText(t.slice(0,75),65,y);y+=31});ctx.fillStyle='#05070b';ctx.fillRect(20,1160,960,70);ctx.strokeStyle='#d9a934';ctx.beginPath();ctx.moveTo(20,1160);ctx.lineTo(980,1160);ctx.stroke();ctx.fillStyle='white';ctx.font='bold 18px Arial';ctx.textAlign='left';ctx.fillText(($('matchName').value.trim()||'EBFC BID TOURNAMENT S1').slice(0,45),55,1202);ctx.textAlign='right';ctx.fillStyle='#f5c451';ctx.font='bold 15px Arial';ctx.fillText('OFFICIAL FIXTURE | EBFC',945,1202);const a=document.createElement('a');a.download='EBFC-MOTM-'+name.replace(/[^a-z0-9]+/gi,'-')+'.png';a.href=c.toDataURL('image/png');a.click()}
-update();
-</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>EBFC MOTM Card Maker</title>
+    <style>
+        :root {
+            --gold: #f5c451;
+            --red: #e50914
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #090b11;
+            color: #fff;
+            font-family: Arial,sans-serif
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: auto
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 22px
+        }
+
+            header small {
+                color: var(--gold);
+                letter-spacing: 4px;
+                font-weight: bold
+            }
+
+        h1 {
+            margin: 8px 0;
+            font-size: clamp(28px,5vw,44px);
+            font-style: italic
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 340px minmax(0,1fr);
+            gap: 22px;
+            align-items: start
+        }
+
+        .form {
+            padding: 18px;
+            background: #151923;
+            border: 1px solid #343b49;
+            border-radius: 14px
+        }
+
+            .form h2 {
+                color: var(--gold);
+                margin: 0
+            }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #d7dbe3
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #394151;
+            border-radius: 7px;
+            background: #080b10;
+            color: white;
+            font: inherit
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .goals-row {
+            display: grid;
+            grid-template-columns: 1fr 78px 35px;
+            gap: 6px;
+            margin: 8px 0
+        }
+
+            .goals-row input {
+                min-width: 0
+            }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 9px
+        }
+
+        .add {
+            background: #303746;
+            color: white
+        }
+
+        .download {
+            background: var(--gold);
+            color: #111;
+            margin-top: 16px
+        }
+
+        .reset {
+            background: transparent;
+            border: 1px solid #505969;
+            color: white
+        }
+
+        .hint, .note {
+            font-size: 11px;
+            color: #a6adba;
+            line-height: 1.5
+        }
+
+        .preview-label {
+            color: #a6adba;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin: 0 0 9px
+        }
+
+        .card {
+            width: 100%;
+            max-width: 650px;
+            margin: auto;
+            aspect-ratio: 4/5;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #d9a934;
+            background: linear-gradient(145deg,#202b3d,#080a10 58%,#390b12);
+            padding: 4%;
+            box-shadow: 0 15px 40px #0008
+        }
+
+            .card:before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient(125deg,transparent 0 30px,#fff08 31px 33px);
+                pointer-events: none
+            }
+
+        .top, .foot {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            align-items: center
+        }
+
+        .brand {
+            font-size: clamp(13px,2vw,20px);
+            font-weight: 1000;
+            letter-spacing: 2px
+        }
+
+            .brand span, .season, .title em, .stat b {
+                color: var(--gold)
+            }
+
+        .season {
+            font-size: clamp(8px,1.2vw,12px);
+            font-weight: bold;
+            letter-spacing: 2px
+        }
+
+        .title {
+            text-align: center;
+            position: relative;
+            margin: 1% 0 0;
+            font-size: clamp(28px,5.4vw,58px);
+            font-style: italic;
+            font-weight: 1000;
+            line-height: .94
+        }
+
+            .title em {
+                font-style: normal
+            }
+
+        .photo {
+            position: relative;
+            width: 58%;
+            height: 38%;
+            margin: 3% auto 0;
+            background: linear-gradient(#f5c45130,#e5091420);
+            border-radius: 48% 48% 5% 5%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden
+        }
+
+            .photo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center bottom;
+                display: none
+            }
+
+        .placeholder {
+            position: absolute;
+            text-align: center;
+            color: #ffffff80;
+            font-weight: bold
+        }
+
+        .name {
+            position: relative;
+            text-align: center;
+            font-size: clamp(20px,4vw,42px);
+            font-weight: 1000;
+            font-style: italic;
+            overflow-wrap: anywhere;
+            text-shadow: 2px 3px #000
+        }
+
+        .rule {
+            position: relative;
+            background: var(--gold);
+            height: 3px;
+            width: 55%;
+            margin: 6px auto
+        }
+
+        .stats {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 3% 20%
+        }
+
+        .stat {
+            text-align: center;
+            background: #080b10d9;
+            border: 1px solid #f5c45188;
+            padding: 2%
+        }
+
+            .stat b {
+                display: block;
+                font-size: clamp(23px,4vw,43px)
+            }
+
+            .stat span {
+                font-size: clamp(8px,1.2vw,12px);
+                font-weight: bold;
+                letter-spacing: 2px
+            }
+
+        .summary {
+            position: relative;
+            background: #ffffff0b;
+            border-left: 3px solid var(--red);
+            padding: 2% 3%;
+            font-size: clamp(10px,1.6vw,15px);
+            line-height: 1.5;
+            overflow-wrap: anywhere
+        }
+
+            .summary strong {
+                display: block;
+                color: var(--gold);
+                font-size: clamp(8px,1.2vw,12px);
+                letter-spacing: 2px;
+                margin-bottom: 4px
+            }
+
+        .foot {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3% 4%;
+            background: #05070beF;
+            border-top: 1px solid #f5c45188
+        }
+
+            .foot strong {
+                font-size: clamp(8px,1.4vw,14px)
+            }
+
+            .foot span {
+                color: var(--gold);
+                font-size: clamp(8px,1.1vw,11px);
+                text-align: right
+            }
+
+        @media(max-width:760px) {
+            body {
+                padding: 12px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .card {
+                max-width: 520px
+            }
+
+            .form {
+                order: 1
+            }
+
+            .preview {
+                order: 0
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header><small>EAST BENGAL eFOOTBALL CLUB</small><h1>MOTM CARD MAKER</h1><div class="hint">Add player details, upload a photo, and download the card.</div></header>
+        <div class="layout">
+            <section class="form">
+                <h2>Player Details</h2>
+                <label for="playerName">PLAYER NAME *</label><input id="playerName" maxlength="45" placeholder="Enter player name">
+                <label for="photoInput">PLAYER IMAGE *</label><input id="photoInput" type="file" accept="image/*"><p class="hint">Photo stays in this browser. It is not uploaded to a server.</p>
+                <label for="goals">TOTAL GOALS</label><input id="goals" type="number" min="0" max="99" value="0">
+                <label>GOALS AGAINST WHICH OPPONENT?</label><div id="goalRows"><div class="goals-row"><input class="opp" placeholder="Opponent / player name" maxlength="40"><input class="oppgoals" type="number" min="0" max="99" value="0" aria-label="Goals scored"><button class="remove" type="button" style="background:#49212a;color:white;border:0;border-radius:6px" onclick="removeRow(this)">×</button></div></div>
+                <button class="btn add" type="button" onclick="addRow()">+ ADD OPPONENT</button>
+                <label for="matchName">MATCH / TOURNAMENT</label><input id="matchName" maxlength="55" placeholder="EBFC BID TOURNAMENT S1">
+                <button class="btn download" type="button" onclick="downloadCard()">DOWNLOAD MOTM CARD (PNG)</button><button class="btn reset" type="button" onclick="resetForm()">RESET FORM</button>
+                <p class="note">This is a standalone card maker. It does not submit data to the tournament database. Download the card and send it to the admin/upload it separately.</p>
+            </section>
+            <section class="preview">
+                <p class="preview-label">LIVE PREVIEW · 4:5 CARD</p><div class="card" id="card">
+                    <div class="top"><div class="brand">EB<span>FC</span></div><div class="season">OFFICIAL MATCH CARD</div></div>
+                    <div class="title">MAN OF THE<br>MATCH</div>
+                    <div class="photo"><div class="placeholder" id="placeholder">UPLOAD PLAYER IMAGE</div><img id="playerImg" alt="Player photo"></div>
+                    <div class="name" id="nameOut">PLAYER NAME</div><div class="rule"></div>
+                    <div class="stats"><div class="stat"><b id="goalsOut">0</b><span>GOALS</span></div></div>
+                    <div class="summary"><strong>GOALS BY OPPONENT</strong><div id="summaryOut">Add opponent names and goals in the form.</div></div>
+                    <div class="foot"><strong id="matchOut">EBFC BID TOURNAMENT S1</strong><span>EBEFC.VERCEL.APP<br></span></div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+        const $ = id => document.getElementById(id); let photoData = null;
+        function addRow(name = '', goals = '0') { const r = document.createElement('div'); r.className = 'goals-row'; r.innerHTML = '<input class="opp" placeholder="Opponent / player name" maxlength="40"><input class="oppgoals" type="number" min="0" max="99" value="0" aria-label="Goals scored"><button class="remove" type="button" style="background:#49212a;color:white;border:0;border-radius:6px">×</button>'; r.querySelector('.opp').value = name; r.querySelector('.oppgoals').value = goals; r.querySelector('.remove').onclick = () => removeRow(r.querySelector('.remove')); r.querySelectorAll('input').forEach(x => x.addEventListener('input', update)); $('goalRows').appendChild(r); update() }
+        function removeRow(btn) { const rows = $('goalRows').querySelectorAll('.goals-row'); if (rows.length === 1) { btn.closest('.goals-row').querySelector('.opp').value = ''; btn.closest('.goals-row').querySelector('.oppgoals').value = 0 } else btn.closest('.goals-row').remove(); update() }
+        function getGoals() { return [...$('goalRows').querySelectorAll('.goals-row')].map(r => { let n = r.querySelector('.opp').value.trim(), g = Math.max(0, Number(r.querySelector('.oppgoals').value) || 0); return n ? `${n}: ${g} goal${g === 1 ? '' : 's'}` : '' }).filter(Boolean) }
+        function update() { $('nameOut').textContent = $('playerName').value.trim() || 'PLAYER NAME'; $('goalsOut').textContent = Math.max(0, Number($('goals').value) || 0); $('matchOut').textContent = $('matchName').value.trim() || 'EBFC BID TOURNAMENT S1'; $('summaryOut').textContent = getGoals().join(' • ') || 'Add opponent names and goals in the form.' }
+        $('photoInput').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; if (!f.type.startsWith('image/')) { alert('Choose an image file.'); return } const reader = new FileReader(); reader.onload = () => { photoData = reader.result; $('playerImg').src = photoData; $('playerImg').style.display = 'block'; $('placeholder').style.display = 'none' }; reader.readAsDataURL(f) });
+        ['playerName', 'goals', 'matchName'].forEach(id => $(id).addEventListener('input', update)); $('goalRows').querySelectorAll('input').forEach(x => x.addEventListener('input', update));
+        function resetForm() { if (!confirm('Clear all current details?')) return; $('playerName').value = ''; $('photoInput').value = ''; $('goals').value = 0; $('matchName').value = ''; $('goalRows').innerHTML = ''; photoData = null; $('playerImg').removeAttribute('src'); $('playerImg').style.display = 'none'; $('placeholder').style.display = 'block'; addRow(); update() }
+        async function downloadCard() {
+            if (!$('playerName').value.trim()) { alert('Enter the player name first.'); return } if (!photoData) { alert('Upload the player image first.'); return } const c = document.createElement('canvas'), ctx = c.getContext('2d'); c.width = 1000; c.height = 1250; const W = 1000, H = 1250; let g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#202b3d'); g.addColorStop(.58, '#080a10'); g.addColorStop(1, '#390b12'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.strokeStyle = '#d9a934'; ctx.lineWidth = 5; ctx.strokeRect(12, 12, W - 24, H - 24); ctx.fillStyle = '#f5c451'; ctx.font = 'bold 25px Arial'; ctx.fillText('EAST BENGAL eFOOTBALL CLUB', 55, 65); ctx.textAlign = 'right'; ctx.fillStyle = 'white'; ctx.font = 'bold 19px Arial'; ctx.fillText('OFFICIAL MATCH CARD', W - 55, 65); ctx.textAlign = 'center'; ctx.fillStyle = '#f5c451'; ctx.font = 'bold 26px Arial'; ctx.fillStyle = 'white'; ctx.font = 'italic bold 76px Arial'; ctx.fillText('MAN OF THE', W / 2, 195); ctx.fillStyle = '#f5c451'; ctx.font = 'italic bold 88px Arial'; ctx.fillText('MATCH', W / 2, 270);
+            const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = photoData }); let box = { x: 250, y: 300, w: 500, h: 410 }, s = Math.min(box.w / img.width, box.h / img.height), iw = img.width * s, ih = img.height * s; ctx.fillStyle = '#f5c45122'; ctx.fillRect(box.x, box.y, box.w, box.h); ctx.drawImage(img, box.x + (box.w - iw) / 2, box.y + box.h - ih, iw, ih);
+            ctx.fillStyle = 'white'; ctx.font = 'italic bold 54px Arial'; let name = $('playerName').value.trim(); while (ctx.measureText(name).width > 900) { ctx.font = 'italic bold ' + (parseInt(ctx.font.match(/\d+/)[0]) - 2) + 'px Arial' } ctx.fillText(name, W / 2, 765); ctx.fillStyle = '#d9a934'; ctx.fillRect(280, 785, 440, 4);
+            [[355, 'GOALS', $('goals').value || '0']].forEach(([x, label, val]) => { ctx.fillStyle = '#080b10'; ctx.fillRect(x, 820, 290, 100); ctx.strokeStyle = '#f5c45188'; ctx.strokeRect(x, 820, 290, 100); ctx.fillStyle = '#f5c451'; ctx.font = 'bold 46px Arial'; ctx.fillText(String(val), x + 145, 865); ctx.fillStyle = 'white'; ctx.font = 'bold 18px Arial'; ctx.fillText(label, x + 145, 897) });
+            ctx.textAlign = 'left'; ctx.fillStyle = '#f5c451'; ctx.font = 'bold 20px Arial'; ctx.fillText('GOALS BY OPPONENT', 65, 965); ctx.fillStyle = 'white'; ctx.font = '22px Arial'; let y = 1003; let lines = getGoals(); (lines.length ? lines : ['No opponent details entered']).slice(0, 4).forEach(t => { ctx.fillText(t.slice(0, 75), 65, y); y += 31 }); ctx.fillStyle = '#05070b'; ctx.fillRect(20, 1160, 960, 70); ctx.strokeStyle = '#d9a934'; ctx.beginPath(); ctx.moveTo(20, 1160); ctx.lineTo(980, 1160); ctx.stroke(); ctx.fillStyle = 'white'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'left'; ctx.fillText(($('matchName').value.trim() || 'EBFC BID TOURNAMENT S1').slice(0, 45), 55, 1202); ctx.textAlign = 'right'; ctx.fillStyle = '#f5c451'; ctx.font = 'bold 15px Arial'; ctx.fillText('EBEFC.VEERCEL | EBFC', 945, 1202); const a = document.createElement('a'); a.download = 'EBFC-MOTM-' + name.replace(/[^a-z0-9]+/gi, '-') + '.png'; a.href = c.toDataURL('image/png'); a.click()
+        }
+        update();
+    </script>
+</body>
+</html>
