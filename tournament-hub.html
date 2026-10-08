@@ -186,6 +186,37 @@
                 background: #c62828 !important;
             }
 
+        .btn-motm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            background: linear-gradient(135deg, #f5c451, #d99a22) !important;
+            color: #111 !important;
+            border: 1px solid #f5c451 !important;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 800;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none !important;
+            text-transform: uppercase;
+            box-sizing: border-box;
+        }
+
+            .btn-motm:hover {
+                filter: brightness(1.08);
+            }
+
+        @media (max-width: 600px) {
+            .header-btn-group .btn-motm {
+                min-width: 150px !important;
+                padding: 11px 15px !important;
+                text-align: center;
+                white-space: nowrap;
+            }
+        }
+
         .btn-gold-sm {
             background: var(--accent-gold);
             color: #000;
@@ -996,6 +1027,9 @@
             <button class="btn-rules" onclick="window.location.href='rules.html'">
                 <i class="fa-solid fa-book-open"></i> Tournament Rules
             </button>
+            <a class="btn-motm" href="ebfc-motm-card-maker.html" aria-label="Open Man of the Match card maker">
+                <i class="fa-solid fa-award"></i> MOTM Card
+            </a>
         </div>
     </div>
 
@@ -1051,7 +1085,29 @@
             <div id="adminPlayersContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
 
 
-       
+            <div style="font-family: 'Teko'; font-size: 20px; color: var(--accent-gold); margin: 18px 0 8px; border-bottom: 1px solid var(--border-color);">
+                <i class="fa-solid fa-ranking-star"></i> Domestic Score Submission (7v7)
+            </div>
+            <div style="background:#090a0c; border:1px solid var(--border-color); padding:12px; border-radius:8px; margin-bottom:15px;">
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">
+                    Enter one player matchup per line. Example: <strong style="color:#fff;">Arifur Rahman 2-3 Hilan AM</strong>.
+                    The system finds both players by name and updates their Domestic Ranking automatically.
+                </p>
+                <textarea id="adminScoreText" class="form-input" style="height:150px; font-family:monospace; margin-bottom:8px;"
+                          placeholder="Arifur Rahman 2-3 Hilan AM&#10;Player 3 1-1 Player 4&#10;Player 5 3-0 Player 6"></textarea>
+
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <label style="font-size:11px; color:var(--text-muted);">MOTM:</label>
+                    <select id="adminMotmPlayer" class="form-input" style="width:auto; min-width:220px; margin:0;">
+                        <option value="">No MOTM</option>
+                    </select>
+                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="previewAdminScoreSubmission()">
+                        <i class="fa-solid fa-eye"></i> Preview / Submit
+                    </button>
+                </div>
+
+                <div id="adminScorePreview" style="display:none; margin-top:12px;"></div>
+            </div>
 
             <div style="font-family: 'Teko'; font-size: 18px; color: var(--text-light); margin: 12px 0 8px; border-bottom: 1px solid var(--border-color);">Submitted Score History</div>
             <div id="adminScoreSubmissionHistory" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;"></div>
