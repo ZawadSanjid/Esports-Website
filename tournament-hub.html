@@ -61,15 +61,14 @@
                 object-fit: cover;
             }
         @media (max-width: 600px) {
-    .header-btn-group button,
-    .header-btn-group a {
-        min-width: 150px !important;
-        padding: 11px 15px !important;
-        text-align: center;
-        white-space: nowrap;
-    }
-}
-
+            .header-btn-group button,
+            .header-btn-group a {
+                min-width: 150px !important;
+                padding: 11px 15px !important;
+                text-align: center;
+                white-space: nowrap;
+            }
+        }
         .hub-header {
             text-align: center;
             padding: 25px 15px;
@@ -2314,7 +2313,7 @@
             const s2 = document.getElementById('scoreTeam2')?.value || '0';
 
             let text = `🏆 EBFC PRESENTS BID TOURNAMENT SEASON 1 🏆\n\n`;
-            text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n📅 Date: ${d}\n👤 Match Admin: ${adm}\n\n`;
+            text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n\n📅 Date: ${d}\n\n👤 Match Admin: ${adm}\n\n`;
 
             const config = Array.isArray(window.squadDeadlineConfig) ? window.squadDeadlineConfig : [];
             config.forEach((cfg) => {
@@ -2324,12 +2323,12 @@
 
                 text += `━━━━━━━━━━━━━━━━━━━━\n`;
                 text += `⏳ DEADLINE: ${deadline}\n`;
-                text += `⭐ PRIORITY TIME: ${priority}\n`;
+                text += `⭐ PRIORITY TIME: ${priority}\n\n`;
                 text += `--- PLAYER MATCHUPS ---\n`;
 
                 if (matches.length) {
                     matches.forEach((m, idx) => {
-                        text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n`;
+                        text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n\n`;
                     });
                 } else {
                     text += `No matchup data\n`;
@@ -2341,7 +2340,6 @@
             text += `\nPlayer info link: https://ebefc.vercel.app/players.html\n\n`;
             text += `Match Rules: https://cobegbd.com/rules/\n\n`;
             text += `Tournament Rules: https://ebefc.vercel.app/rules.html\n`;
-            
 
             const textarea = document.getElementById('fixtureTextarea');
             if (!textarea) {
