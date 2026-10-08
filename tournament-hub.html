@@ -2313,7 +2313,7 @@
             const s2 = document.getElementById('scoreTeam2')?.value || '0';
 
             let text = `🏆 EBFC PRESENTS BID TOURNAMENT SEASON 1 🏆\n\n`;
-            text += `⚽ MATCH FIXTURE: ${t1} VS ${t2}\n\n📅 Date: ${d}\n\n👤 Match Admin: ${adm}\n\n`;
+            text += `⚽ MATCH FIXTURE: ${t1} 🆚 ${t2}\n\n📅 Date: ${d}\n\n👤 Match Admin: ${adm}\n\n`;
 
             const config = Array.isArray(window.squadDeadlineConfig) ? window.squadDeadlineConfig : [];
             config.forEach((cfg) => {
@@ -2328,7 +2328,7 @@
 
                 if (matches.length) {
                     matches.forEach((m, idx) => {
-                        text += `Match ${idx + 1}: ${m.a} VS ${m.b}\n\n`;
+                        text += `Match ${idx + 1}: ${m.a} 🆚 ${m.b}\n\n`;
                     });
                 } else {
                     text += `No matchup data\n`;
