@@ -60,6 +60,7 @@
                 image-rendering: -webkit-optimize-contrast;
                 object-fit: cover;
             }
+
         @media (max-width: 600px) {
             .header-btn-group button,
             .header-btn-group a {
@@ -69,6 +70,7 @@
                 white-space: nowrap;
             }
         }
+
         .hub-header {
             text-align: center;
             padding: 25px 15px;
@@ -173,6 +175,7 @@
                 background: var(--primary-red);
                 color: #fff;
             }
+
         .btn-rules {
             background: #e53935 !important;
             color: #fff !important;
@@ -911,6 +914,62 @@
             }
         }
 
+        /* ================= NEW: FIXTURE SCORE + FIXTURE MOTM ================= */
+        .fixture-score-summary {
+            margin-top: 10px;
+            padding: 9px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(255,183,3,.12), rgba(229,9,20,.08));
+            border: 1px solid rgba(255,183,3,.35);
+        }
+
+            .fixture-score-summary .team-score {
+                font-family: 'Teko', sans-serif;
+                font-size: 22px;
+                line-height: 1;
+            }
+
+            .fixture-score-summary .motm-name {
+                color: #ffd54a;
+                font-weight: 800;
+                text-shadow: 0 0 8px rgba(255,183,3,.45);
+            }
+
+        .fixture-score-edit-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 55vh;
+            overflow: auto;
+            text-align: left;
+        }
+
+        .fixture-score-edit-row {
+            background: #090a0c;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 7px;
+        }
+
+            .fixture-score-edit-row .names {
+                font-size: 11px;
+                color: #fff;
+                margin-bottom: 5px;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .fixture-score-edit-row input {
+                margin: 0;
+                width: 72px;
+                text-align: center;
+            }
+
+        .freeze-locked {
+            opacity: .7;
+        }
+
         @media (max-width: 768px) {
             .modal-overlay {
                 backdrop-filter: none;
@@ -968,6 +1027,14 @@
                         <span class="slider"></span>
                     </label>
                     <span id="transferWindowStatusText" style="font-size: 12px; font-weight: 700; color: var(--accent-green);">ON</span>
+                </div>
+                <div class="switch-container" id="profileEditFreezeControl">
+                    <span style="font-size:12px;font-weight:700;color:var(--accent-gold);">Player Profile Edit:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="profileEditToggle" disabled>
+                        <span class="slider"></span>
+                    </label>
+                    <span id="profileEditStatusText" style="font-size:12px;font-weight:700;color:var(--primary-red);">LOCKED</span>
                 </div>
             </div>
 
@@ -1095,11 +1162,13 @@
                     <div class="fx-team-box">
                         <img id="fxT1Img" src="" alt="">
                         <h4 id="fxT1Name">Team 1</h4>
+                        <div id="fxScoreTeam1" style="font-family:'Teko',sans-serif;font-size:30px;font-weight:800;color:var(--accent-gold);line-height:1;">0</div>
                     </div>
                     <div style="font-family:'Teko'; font-size:28px; color:var(--primary-red); font-weight:700;">VS</div>
                     <div class="fx-team-box">
                         <img id="fxT2Img" src="" alt="">
                         <h4 id="fxT2Name">Team 2</h4>
+                        <div id="fxScoreTeam2" style="font-family:'Teko',sans-serif;font-size:30px;font-weight:800;color:var(--accent-gold);line-height:1;">0</div>
                     </div>
                 </div>
                 <div class="fx-meta-info">
@@ -1107,6 +1176,7 @@
                     <div><strong>Admin:</strong> <span id="fxDispAdmin">---</span></div>
                 </div>
                 <div id="fxMatchupsContainer"></div>
+                <div id="fxMotmDisplay" style="margin-top:12px;text-align:center;font-family:'Teko',sans-serif;font-size:20px;font-weight:700;color:#fff;line-height:1.1;">MAN OF THE MATCH: <span id="fxMotmName" style="color:#ffd54a;text-shadow:0 0 8px rgba(255,183,3,.45);">—</span></div>
                 <div style="font-size:10px; color:var(--accent-gold); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">
                     Official Fixture | East Bengal eFootball Club
                 </div>
@@ -1115,13 +1185,15 @@
             <div style="background:#090a0c; border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:12px; text-align:left;">
                 <div style="font-size:12px; color:var(--accent-gold); font-weight:700; margin-bottom:6px;"><i class="fa-solid fa-trophy"></i> Match Scorekeeper</div>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <input type="number" id="scoreTeam1" class="form-input" style="margin:0;" placeholder="T1 Score" value="0">
+                    <input type="number" id="scoreTeam1" class="form-input" style="margin:0;" placeholder="T1 Score" value="0" readonly>
                     <span style="font-weight:700;">-</span>
-                    <input type="number" id="scoreTeam2" class="form-input" style="margin:0;" placeholder="T2 Score" value="0">
+                    <input type="number" id="scoreTeam2" class="form-input" style="margin:0;" placeholder="T2 Score" value="0" readonly>
                 </div>
             </div>
 
             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap:wrap;">
+                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="openFixtureScoreSubmitModal()"><i class="fa-solid fa-futbol"></i> Submit Scores</button>
+                <button class="btn-squad-sm" onclick="openFixtureScoreEditor()"><i class="fa-solid fa-pen"></i> Edit Scores</button>
                 <button class="btn-gold-sm" onclick="downloadFixtureImage()"><i class="fa-solid fa-download"></i> Download Image</button>
                 <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="convertFixtureToText()"><i class="fa-solid fa-file-lines"></i> Convert To Text</button>
                 <button class="btn-danger-sm" onclick="closeModal('fixtureDisplayModal')">Close</button>
@@ -1369,6 +1441,45 @@
     </div>
 
 
+    <!-- FIXTURE SCORE TEXT SUBMISSION MODAL -->
+    <div class="modal-overlay" id="fixtureScoreSubmitModal">
+        <div class="modal-body" style="max-width:700px;">
+            <h3 style="font-family:'Teko';font-size:25px;color:var(--accent-gold);">SUBMIT FIXTURE SCORES</h3>
+            <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+                Paste the generated fixture text with player scores. The 7 matchups are detected automatically, player scores are placed on the card, and the overall team result is calculated from the 7 individual matchups.
+            </p>
+            <textarea id="fixtureScoreText" class="form-input" style="height:240px;font-family:monospace;font-size:11px;" placeholder="Match 1: Player A (3) VS (1) Player B
+Match 2: Player C 2 VS 3 Player D
+..."></textarea>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;">
+                <label style="font-size:11px;color:var(--text-muted);">MOTM:</label>
+                <select id="fixtureMotmPlayer" class="form-input" style="width:auto;min-width:220px;margin:0;"><option value="">No MOTM</option></select>
+            </div>
+            <div id="fixtureScoreParsePreview" style="display:none;margin-top:10px;"></div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
+                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="previewFixtureScoreText()"><i class="fa-solid fa-eye"></i> Preview Scores</button>
+                <button class="btn-gold-sm" onclick="submitFixtureScores()"><i class="fa-solid fa-database"></i> Submit Scores</button>
+                <button class="btn-danger-sm" onclick="closeModal('fixtureScoreSubmitModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIXTURE SCORE EDITOR MODAL -->
+    <div class="modal-overlay" id="fixtureScoreEditorModal">
+        <div class="modal-body" style="max-width:700px;">
+            <h3 style="font-family:'Teko';font-size:25px;color:var(--accent-gold);">EDIT FIXTURE PLAYER SCORES</h3>
+            <div id="fixtureScoreEditorList" class="fixture-score-edit-grid"></div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;">
+                <label style="font-size:11px;color:var(--text-muted);">MOTM:</label>
+                <select id="fixtureEditorMotmPlayer" class="form-input" style="width:auto;min-width:220px;margin:0;"><option value="">No MOTM</option></select>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="saveFixtureScoreEdits()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                <button class="btn-danger-sm" onclick="closeModal('fixtureScoreEditorModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ADMIN SCORE EDITOR MODAL -->
     <div class="modal-overlay" id="adminScoreEditorModal">
         <div class="modal-body" style="max-width:700px;">
@@ -1445,6 +1556,12 @@
         window.mockUsers = [];
         window.adminScoreDraft = [];
         window.adminScoreSubmissionId = null;
+        window.currentGeneratedFixtureId = null;
+        window.currentFixtureScoreState = [];
+        window.currentFixtureScoreSubmissionId = null;
+        window.currentFixtureMotmUid = '';
+        window.profileEditAllowed = true;
+        window.profileEditFreezeTimer = null;
         window.renderScheduled = false;
 
         window.currentLoggedUser = null;
@@ -1506,6 +1623,17 @@
                     }
                 }
             });
+            onSnapshot(doc(firestoreDb, 'settings', 'profileEditWindow'), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data() || {};
+                    window.profileEditAllowed = data.status !== false;
+                    window.updateProfileEditFreezeUI();
+                } else {
+                    window.profileEditAllowed = !window.isProfileEditFreezeTime();
+                    window.updateProfileEditFreezeUI();
+                }
+            });
+            window.startProfileEditFreezeClock();
         }
 
         // Direct loading lifecycle for critical auth/session buttons.
@@ -2043,6 +2171,8 @@
                     window.generatedMatchupsList.push({
                         a: playerA.name,
                         b: playerB.name,
+                        playerAUid: playerA.userId || playerA.uid || playerA.id,
+                        playerBUid: playerB.userId || playerB.uid || playerB.id,
                         deadline,
                         team1: club1,
                         team2: club2
@@ -2051,18 +2181,213 @@
                     const row = document.createElement('div');
                     row.className = 'fx-matchup-row';
                     row.innerHTML = `
-                                            <div style="display:flex;align-items:center;gap:6px;">
-                                                <img src="${playerA.avatar}"><span>${playerA.name}</span>
-                                            </div>
-                                            <span style="font-weight:700;color:var(--accent-gold);">VS</span>
-                                            <div style="display:flex;align-items:center;gap:6px;">
-                                                <span>${playerB.name}</span><img src="${playerB.avatar}">
-                                            </div>`;
+                                                    <div style="display:flex;align-items:center;gap:6px;">
+                                                        <img src="${playerA.avatar}"><span>${playerA.name}</span>
+                                                    </div>
+                                                    <span style="font-weight:700;color:var(--accent-gold);">VS</span>
+                                                    <div style="display:flex;align-items:center;gap:6px;">
+                                                        <span>${playerB.name}</span><img src="${playerB.avatar}">
+                                                    </div>`;
                     section.appendChild(row);
                 }
 
                 container.appendChild(section);
             });
+        };
+
+        window.isProfileEditFreezeTime = function () {
+            // Bangladesh time (UTC+6), 19:00 through 01:30.
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            return minutes >= (19 * 60) || minutes < (1 * 60 + 30);
+        };
+
+        window.updateProfileEditFreezeUI = function () {
+            const lockedBySchedule = window.isProfileEditFreezeTime();
+            const allowed = !lockedBySchedule;
+            const toggle = document.getElementById('profileEditToggle');
+            const status = document.getElementById('profileEditStatusText');
+            if (toggle) { toggle.checked = allowed; toggle.disabled = true; }
+            if (status) {
+                status.innerText = allowed ? 'OPEN' : 'LOCKED';
+                status.style.color = allowed ? 'var(--accent-green)' : 'var(--primary-red)';
+            }
+        };
+
+        window.startProfileEditFreezeClock = function () {
+            window.updateProfileEditFreezeUI();
+            if (window.profileEditFreezeTimer) clearInterval(window.profileEditFreezeTimer);
+            window.profileEditFreezeTimer = setInterval(async () => {
+                const shouldAllow = !window.isProfileEditFreezeTime();
+                if (window.profileEditAllowed !== shouldAllow) {
+                    window.profileEditAllowed = shouldAllow;
+                    window.updateProfileEditFreezeUI();
+                    if (window.isAdminLoggedIn) {
+                        try { await setDoc(doc(firestoreDb, 'settings', 'profileEditWindow'), { status: shouldAllow, updatedAt: new Date().toISOString(), source: 'automatic-bd-time' }, { merge: true }); } catch (e) { console.warn('Profile edit schedule sync failed', e); }
+                    }
+                } else window.updateProfileEditFreezeUI();
+            }, 10000);
+        };
+
+        window.getFixtureTeamScores = function (matches) {
+            let s1 = 0, s2 = 0;
+            (matches || []).forEach(m => {
+                if (Number(m.scoreA) > Number(m.scoreB)) s1++;
+                else if (Number(m.scoreA) < Number(m.scoreB)) s2++;
+            });
+            return { s1, s2 };
+        };
+
+        window.updateFixtureCardScores = function () {
+            const matches = window.currentFixtureScoreState || [];
+            const { s1, s2 } = window.getFixtureTeamScores(matches);
+            const a = document.getElementById('fxScoreTeam1');
+            const b = document.getElementById('fxScoreTeam2');
+            if (a) a.innerText = s1;
+            if (b) b.innerText = s2;
+            const legacyA = document.getElementById('scoreTeam1');
+            const legacyB = document.getElementById('scoreTeam2');
+            if (legacyA) legacyA.value = s1;
+            if (legacyB) legacyB.value = s2;
+            const motm = window.currentFixtureMotmUid ? (window.mockPlayers.find(p => (p.userId || p.id) === window.currentFixtureMotmUid) || window.mockUsers.find(u => u.uid === window.currentFixtureMotmUid)) : null;
+            const md = document.getElementById('fxMotmDisplay');
+            if (md) md.innerHTML = motm ? `MAN OF THE MATCH: <span class="motm-name">${motm.name}</span>` : 'MAN OF THE MATCH: —';
+            const rows = document.querySelectorAll('#fxMatchupsContainer .fx-matchup-row');
+            matches.forEach((m, i) => {
+                const row = rows[i]; if (!row) return;
+                row.setAttribute('data-scored', '1');
+                const spans = row.querySelectorAll('span');
+                if (spans.length >= 3) {
+                    spans[0].innerHTML = `${m.playerAName} <strong style="color:var(--accent-gold)">(${m.scoreA})</strong>`;
+                    spans[1].innerText = 'VS';
+                    spans[2].innerHTML = `<strong style="color:var(--accent-gold)">(${m.scoreB})</strong> ${m.playerBName}`;
+                } else row.innerHTML = `<div>${m.playerAName} <strong>(${m.scoreA})</strong></div><span style="font-weight:700;color:var(--accent-gold);">VS</span><div><strong>(${m.scoreB})</strong> ${m.playerBName}</div>`;
+                if (window.currentFixtureMotmUid && (m.playerAUid === window.currentFixtureMotmUid || m.playerBUid === window.currentFixtureMotmUid)) row.style.borderColor = '#ffb703';
+            });
+        };
+
+        window.populateFixtureMotmSelect = function (id, current = '') {
+            const el = document.getElementById(id); if (!el) return;
+            const opts = (window.mockPlayers || []).map(p => ({ uid: p.userId || p.id, name: p.name })).filter(x => x.uid);
+            el.innerHTML = '<option value="">No MOTM</option>' + opts.sort((a, b) => String(a.name).localeCompare(String(b.name))).map(p => `<option value="${p.uid}">${p.name}</option>`).join('');
+            if (current) el.value = current;
+        };
+
+        window.openFixtureScoreSubmitModal = function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+            const matches = window.generatedMatchupsList || [];
+            if (matches.length !== 7) { alert('Generate a complete 7v7 fixture first.'); return; }
+            window.populateFixtureMotmSelect('fixtureMotmPlayer', window.currentFixtureMotmUid || '');
+            const text = document.getElementById('fixtureScoreText');
+            if (!text.value.trim()) {
+                text.value = matches.map((m, i) => `Match ${i + 1}: ${m.a} 0 VS 0 ${m.b}`).join('\n');
+            }
+            document.getElementById('fixtureScoreSubmitModal').style.display = 'flex';
+        };
+
+        window.parseFixtureScoreText = async function (text) {
+            const lines = String(text || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+            const scoreLines = lines.filter(x => /^match\s*\d+\s*:/i.test(x));
+            const results = []; const errors = [];
+            const playersSnap = await getDocs(collection(firestoreDb, 'players'));
+            const players = playersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            const findP = name => players.find(p => normalizePlayerName(p.name) === normalizePlayerName(name));
+            for (const line of scoreLines) {
+                let m = line.match(/^Match\s*\d+\s*:\s*(.*?)\s*(?:\((\d+)\)|\b(\d+)\b)\s*(?:VS|🆚)\s*(?:\((\d+)\)|\b(\d+)\b)\s*(.*?)\s*$/i);
+                if (!m) { errors.push(`Could not read: ${line}`); continue; }
+                let aName = (m[1] || '').replace(/👑/g, '').trim();
+                const sa = Number(m[2] ?? m[3]); const sb = Number(m[4] ?? m[5]);
+                let bName = (m[6] || '').replace(/👑/g, '').trim();
+                const pa = findP(aName), pb = findP(bName);
+                if (!pa) errors.push(`Player not found: ${aName}`);
+                if (!pb) errors.push(`Player not found: ${bName}`);
+                if (!pa || !pb) continue;
+                const auid = pa.userId || pa.uid || pa.id, buid = pb.userId || pb.uid || pb.id;
+                if (!auid || !buid) { errors.push(`UID missing for ${aName} or ${bName}`); continue; }
+                results.push({ playerAName: pa.name, playerAUid: auid, scoreA: sa, playerBName: pb.name, playerBUid: buid, scoreB: sb });
+            }
+            if (results.length !== 7) errors.push(`Exactly 7 Match lines are required. Found ${results.length}.`);
+            const ids = results.flatMap(x => [x.playerAUid, x.playerBUid]);
+            if (new Set(ids).size !== ids.length) errors.push('All 14 players must be unique.');
+            return { results, errors };
+        };
+
+        window.previewFixtureScoreText = async function () {
+            const box = document.getElementById('fixtureScoreParsePreview');
+            box.style.display = 'block'; box.innerHTML = '<span style="color:var(--text-muted)">Checking scores...</span>';
+            try {
+                const parsed = await window.parseFixtureScoreText(document.getElementById('fixtureScoreText').value);
+                if (parsed.errors.length) { box.innerHTML = `<div style="color:var(--primary-red);font-size:11px;line-height:1.6">${parsed.errors.map(x => `• ${x}`).join('<br>')}</div>`; return; }
+                const team = window.getFixtureTeamScores(parsed.results);
+                box.innerHTML = `<div style="color:var(--accent-green);font-size:12px;font-weight:700">✓ 7 player matchups valid • ${team.s1}-${team.s2} overall team result</div>`;
+                window.fixtureScorePreview = parsed.results;
+            } catch (e) { box.innerHTML = `<div style="color:var(--primary-red)">${e.message || e}</div>`; }
+        };
+
+        window.submitFixtureScores = async function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+            const parsed = await window.parseFixtureScoreText(document.getElementById('fixtureScoreText').value);
+            if (parsed.errors.length) { alert(parsed.errors.join('\n')); return; }
+            const motmUid = document.getElementById('fixtureMotmPlayer').value || '';
+            const { s1, s2 } = window.getFixtureTeamScores(parsed.results);
+            try {
+                const normalized = parsed.results.map(m => ({ ...m }));
+                const oldId = window.currentFixtureScoreSubmissionId;
+                let submissionId = window.makeScoreSubmissionKey(normalized, motmUid);
+                if (oldId) {
+                    const old = window.adminScoreSubmissions.find(x => x.id === oldId || x.id === window.currentFixtureScoreSubmissionId);
+                    if (old) {
+                        await window.applySubmissionDelta(old.matches, old.motmUid || '', -1);
+                        await window.applySubmissionDelta(normalized, motmUid, +1);
+                        await updateDoc(doc(firestoreDb, 'adminScoreSubmissions', old.id), { matches: normalized, motmUid, updatedAt: new Date().toISOString() });
+                        submissionId = old.id;
+                    }
+                } else {
+                    const result = await window.applyNewScoreSubmissionOnce(normalized, motmUid, submissionId);
+                    if (!result.alreadySubmitted) { /* newly applied */ }
+                    else {
+                        const existing = window.adminScoreSubmissions.find(x => x.id === submissionId);
+                        if (existing) submissionId = existing.id;
+                    }
+                }
+                window.currentFixtureScoreSubmissionId = submissionId;
+                window.currentFixtureScoreState = normalized;
+                window.currentFixtureMotmUid = motmUid;
+                window.updateFixtureCardScores();
+                if (window.currentGeneratedFixtureId) {
+                    await updateDoc(doc(firestoreDb, 'fixtures', window.currentGeneratedFixtureId), { scoreMatches: normalized, teamScore1: s1, teamScore2: s2, motmUid, scoreSubmissionId: submissionId, scoreUpdatedAt: new Date().toISOString() });
+                }
+                document.getElementById('fixtureScoreSubmitModal').style.display = 'none';
+                alert('Fixture scores submitted successfully. All 14 players were updated and the card now shows the scores.');
+            } catch (e) { console.error(e); alert(e.message || 'Score submission failed. No ranking data was changed.'); }
+        };
+
+        window.openFixtureScoreEditor = function () {
+            if (!window.isAdminLoggedIn) { alert('Admin Access Required!'); return; }
+            const matches = window.currentFixtureScoreState || [];
+            if (matches.length !== 7) { alert('No submitted fixture scores to edit yet.'); return; }
+            const c = document.getElementById('fixtureScoreEditorList');
+            c.innerHTML = matches.map((m, i) => `<div class="fixture-score-edit-row" data-i="${i}"><div class="names"><span>${m.playerAName}</span><span>${m.playerBName}</span></div><div style="display:flex;justify-content:center;align-items:center;gap:8px"><input class="form-input fes-a" type="number" min="0" value="${m.scoreA}"><b>-</b><input class="form-input fes-b" type="number" min="0" value="${m.scoreB}"></div></div>`).join('');
+            window.populateFixtureMotmSelect('fixtureEditorMotmPlayer', window.currentFixtureMotmUid || '');
+            document.getElementById('fixtureScoreEditorModal').style.display = 'flex';
+        };
+
+        window.saveFixtureScoreEdits = async function () {
+            const old = window.currentFixtureScoreState || []; if (old.length !== 7) { alert('No fixture score found.'); return; }
+            const rows = [...document.querySelectorAll('#fixtureScoreEditorList .fixture-score-edit-row')];
+            const matches = old.map((m, i) => ({ ...m, scoreA: Number(rows[i].querySelector('.fes-a').value), scoreB: Number(rows[i].querySelector('.fes-b').value) }));
+            if (matches.some(m => !Number.isFinite(m.scoreA) || !Number.isFinite(m.scoreB) || m.scoreA < 0 || m.scoreB < 0)) { alert('Scores must be zero or greater.'); return; }
+            const motmUid = document.getElementById('fixtureEditorMotmPlayer').value || '';
+            try {
+                if (window.currentFixtureScoreSubmissionId) {
+                    const sub = window.adminScoreSubmissions.find(x => x.id === window.currentFixtureScoreSubmissionId);
+                    if (sub) { await window.applySubmissionDelta(sub.matches, sub.motmUid || '', -1); await window.applySubmissionDelta(matches, motmUid, +1); await updateDoc(doc(firestoreDb, 'adminScoreSubmissions', sub.id), { matches, motmUid, updatedAt: new Date().toISOString() }); }
+                } else { const id = window.makeScoreSubmissionKey(matches, motmUid); await window.applyNewScoreSubmissionOnce(matches, motmUid, id); window.currentFixtureScoreSubmissionId = id; }
+                window.currentFixtureScoreState = matches; window.currentFixtureMotmUid = motmUid; window.updateFixtureCardScores();
+                const { s1, s2 } = window.getFixtureTeamScores(matches);
+                if (window.currentGeneratedFixtureId) await updateDoc(doc(firestoreDb, 'fixtures', window.currentGeneratedFixtureId), { scoreMatches: matches, teamScore1: s1, teamScore2: s2, motmUid, scoreSubmissionId: window.currentFixtureScoreSubmissionId, scoreUpdatedAt: new Date().toISOString() });
+                closeModal('fixtureScoreEditorModal'); alert('Fixture player scores updated successfully.');
+            } catch (e) { console.error(e); alert(e.message || 'Could not update fixture scores.'); }
         };
 
         window.generateFixtureCard = async function () {
@@ -2123,6 +2448,14 @@
             });
 
             const fxId = "fx_" + Date.now();
+            window.currentGeneratedFixtureId = fxId;
+            window.currentFixtureScoreState = [];
+            window.currentFixtureScoreSubmissionId = null;
+            window.currentFixtureMotmUid = '';
+            document.getElementById('fxScoreTeam1').innerText = '0';
+            document.getElementById('fxScoreTeam2').innerText = '0';
+            const motmDisplay = document.getElementById('fxMotmDisplay');
+            if (motmDisplay) motmDisplay.innerText = 'MAN OF THE MATCH: —';
             await setDoc(doc(firestoreDb, 'fixtures', fxId), {
                 id: fxId,
                 t1: club1,
@@ -2131,6 +2464,11 @@
                 admin: document.getElementById('fxAdminName').value || "Admin",
                 deadlines,
                 matchups: allMatchups,
+                scoreMatches: [],
+                teamScore1: 0,
+                teamScore2: 0,
+                motmUid: '',
+                scoreSubmissionId: null,
                 createdAt: new Date().toISOString()
             });
 
@@ -2233,15 +2571,15 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'image-preview-overlay';
                 overlay.innerHTML = `
-                                                        <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
-                                                            👉 Press & Hold on image or click 'Download Now' 👈
-                                                        </p>
-                                                        <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
-                                                        <div style="display:flex; gap:10px; margin-top:15px;">
-                                                            <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
-                                                            <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
-                                                        </div>
-                                                    `;
+                                                                <p style="color:#ffb703; font-weight:700; font-size:14px; margin-bottom:10px; text-align:center;">
+                                                                    👉 Press & Hold on image or click 'Download Now' 👈
+                                                                </p>
+                                                                <img src="${dataUrl}" style="width: auto; height: auto; max-width:90%; max-height:65vh; object-fit: contain; border-radius:10px; border:2px solid #ffb703; box-shadow:0 0 20px rgba(255,183,3,0.4);">
+                                                                <div style="display:flex; gap:10px; margin-top:15px;">
+                                                                    <button type="button" class="btn-gold-sm download-now-btn" style="padding:8px 20px; font-size:14px; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Download Now</button>
+                                                                    <button type="button" class="btn-danger-sm close-preview-btn" style="padding:8px 20px; font-size:14px;">Close Preview</button>
+                                                                </div>
+                                                            `;
 
                 const downloadButton = overlay.querySelector('.download-now-btn');
                 const closeButton = overlay.querySelector('.close-preview-btn');
@@ -2328,7 +2666,8 @@
 
                 if (matches.length) {
                     matches.forEach((m, idx) => {
-                        text += `Match ${idx + 1}: ${m.a} 🆚 ${m.b}\n\n`;
+                        const scored = (window.currentFixtureScoreState || []).find(x => normalizePlayerName(x.playerAName) === normalizePlayerName(m.a) && normalizePlayerName(x.playerBName) === normalizePlayerName(m.b));
+                        text += scored ? `Match ${idx + 1}: ${scored.playerAName} (${scored.scoreA}) VS (${scored.scoreB}) ${scored.playerBName}\n\n` : `Match ${idx + 1}: ${m.a} 🆚 ${m.b}\n\n`;
                     });
                 } else {
                     text += `No matchup data\n`;
@@ -2336,7 +2675,10 @@
                 text += `\n`;
             });
 
-            text += `📊 MATCH RESULT:\n${t1} (${s1}) - ${t2} (${s2})\n`;
+            const fxTeams = window.getFixtureTeamScores(window.currentFixtureScoreState || []);
+            const outS1 = (window.currentFixtureScoreState || []).length === 7 ? fxTeams.s1 : s1;
+            const outS2 = (window.currentFixtureScoreState || []).length === 7 ? fxTeams.s2 : s2;
+            text += `📊 MATCH RESULT:\n${t1} (${outS1}) - (${outS2}) ${t2}\n`;
             text += `\nPlayer info link: https://ebefc.vercel.app/players.html\n\n`;
             text += `Match Rules: https://cobegbd.com/rules/\n\n`;
             text += `Tournament Rules: https://ebefc.vercel.app/rules.html\n`;
@@ -2642,26 +2984,26 @@
 
             const delta = buildDomesticDelta(parsed.results, motmUid);
             preview.innerHTML = `
-                                            <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
-                                                ✓ 7 matchups / 14 unique players validated.
-                                            </div>
-                                            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
-                                                ${delta.map(d => `
-                                                    <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
-                                                        <strong>${d.name}</strong>
-                                                        <span style="display:block; color:var(--text-muted);">
-                                                            MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
-                                                        </span>
-                                                    </div>`).join('')}
-                                            </div>
-                                            <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
-                                                <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
-                                                    <i class="fa-solid fa-database"></i> Submit Official Domestic Result
-                                                </button>
-                                                <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
-                                                    <i class="fa-solid fa-pen"></i> Edit Player Scores
-                                                </button>
-                                            </div>`;
+                                                    <div style="font-size:12px; color:var(--accent-green); font-weight:700; margin-bottom:8px;">
+                                                        ✓ 7 matchups / 14 unique players validated.
+                                                    </div>
+                                                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:6px;">
+                                                        ${delta.map(d => `
+                                                            <div style="background:#12151e; border:1px solid var(--border-color); border-radius:6px; padding:7px; font-size:11px;">
+                                                                <strong>${d.name}</strong>
+                                                                <span style="display:block; color:var(--text-muted);">
+                                                                    MP +1 | W +${d.w} | D +${d.d} | L +${d.l} | GF +${d.gf} | GA +${d.ga} | GD ${d.gf - d.ga >= 0 ? '+' : ''}${d.gf - d.ga}${d.motm ? ' | MOTM +1' : ''}
+                                                                </span>
+                                                            </div>`).join('')}
+                                                    </div>
+                                                    <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+                                                        <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="submitAdminScoreSubmission()">
+                                                            <i class="fa-solid fa-database"></i> Submit Official Domestic Result
+                                                        </button>
+                                                        <button class="btn-squad-sm" onclick="openAdminScoreEditorFromDraft()">
+                                                            <i class="fa-solid fa-pen"></i> Edit Player Scores
+                                                        </button>
+                                                    </div>`;
 
             window.adminScoreDraft = parsed.results;
             window.adminScoreDraftMotm = motmUid;
@@ -2820,15 +3162,15 @@
 
             const container = document.getElementById('adminScoreEditorList');
             container.innerHTML = window.adminScoreDraft.map((m, i) => `
-                                            <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
-                                                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                                                    <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
-                                                    <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
-                                                    <span style="font-weight:700;">-</span>
-                                                    <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
-                                                    <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
-                                                </div>
-                                            </div>`).join('');
+                                                    <div data-score-row="${i}" style="background:#090a0c; border:1px solid var(--border-color); padding:8px; border-radius:6px;">
+                                                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                                            <select class="form-input score-player-a" style="flex:1; min-width:150px; margin:0;"></select>
+                                                            <input class="form-input score-a" type="number" min="0" value="${m.scoreA}" style="width:70px; margin:0;">
+                                                            <span style="font-weight:700;">-</span>
+                                                            <input class="form-input score-b" type="number" min="0" value="${m.scoreB}" style="width:70px; margin:0;">
+                                                            <select class="form-input score-player-b" style="flex:1; min-width:150px; margin:0;"></select>
+                                                        </div>
+                                                    </div>`).join('');
 
             const players = window.mockPlayers.map(p => ({ uid: p.userId || p.id, name: p.name }));
 
@@ -3012,13 +3354,13 @@
 
             list.forEach(s => {
                 existing.innerHTML += `
-                                                <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
-                                                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
-                                                        <strong style="font-size:12px;color:#fff;">7v7 • ${s.matches?.length || 0} matchups</strong>
-                                                        <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                                    </div>
-                                                    <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
-                                                </div>`;
+                                                        <div style="background:#090a0c;border:1px solid var(--border-color);padding:8px;border-radius:6px;text-align:left;">
+                                                            <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;">
+                                                                <strong style="font-size:12px;color:#fff;">7v7 • ${s.matches?.length || 0} matchups</strong>
+                                                                <button class="btn-squad-sm" onclick="openAdminScoreEditorFromHistory('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                                            </div>
+                                                            <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${s.submittedBy || 'Admin'} • ${s.submittedAt || ''}</div>
+                                                        </div>`;
             });
         };
 
@@ -3033,16 +3375,16 @@
             let approved = window.mockManagers.filter(m => m.status === 'approved');
             approved.forEach(m => {
                 container.innerHTML += `
-                                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                                            <div style="text-align:left;">
-                                                                <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                                <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
-                                                            </div>
-                                                            <div style="display:flex; gap:6px;">
-                                                                <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
-                                                                <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
-                                                            </div>
-                                                        </div>`;
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                                    <div style="text-align:left;">
+                                                                        <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                                        <p style="font-size:11px; color:var(--cyan-glow);">Balance: ${m.balance}M Coins</p>
+                                                                    </div>
+                                                                    <div style="display:flex; gap:6px;">
+                                                                        <button class="btn-gold-sm" onclick="editManagerBalance('${m.id}')"><i class="fa-solid fa-pen"></i> Balance</button>
+                                                                        <button class="btn-danger-sm" onclick="eliminateClub('${m.club}')"><i class="fa-solid fa-trash"></i> Eliminate</button>
+                                                                    </div>
+                                                                </div>`;
             });
         };
 
@@ -3297,13 +3639,13 @@
             } else {
                 squad.forEach(p => {
                     container.innerHTML += `
-                                                            <div class="player-mini-card" style="border-color: var(--accent-gold)">
-                                                                <img src="${p.avatar}" alt="${p.name}">
-                                                                <div class="player-mini-info" style="text-align: left;">
-                                                                    <h4>${p.name}</h4>
-                                                                    <p style="color:var(--accent-gold)">Signed Player</p>
-                                                                </div>
-                                                            </div>`;
+                                                                    <div class="player-mini-card" style="border-color: var(--accent-gold)">
+                                                                        <img src="${p.avatar}" alt="${p.name}">
+                                                                        <div class="player-mini-info" style="text-align: left;">
+                                                                            <h4>${p.name}</h4>
+                                                                            <p style="color:var(--accent-gold)">Signed Player</p>
+                                                                        </div>
+                                                                    </div>`;
                 });
             }
             document.getElementById('squadModal').style.display = 'flex';
@@ -3338,8 +3680,8 @@
             const squad = window.mockPlayers.filter(p => p.isSigned && p.signedClub === mgr.club);
             if (squad.length < 6) {
                 container.innerHTML = `<p style="font-size:12px;color:var(--primary-red);">
-                                        You need at least 7 signed players to submit the complete 7v7 lineup (3 players at 10:50, then 2 players at each later deadline).
-                                    </p>`;
+                                                You need at least 7 signed players to submit the complete 7v7 lineup (3 players at 10:50, then 2 players at each later deadline).
+                                            </p>`;
                 return;
             }
 
@@ -3348,21 +3690,21 @@
             window.squadDeadlineConfig.forEach((d, deadlineIndex) => {
                 const savedIds = existing[d.key]?.playerIds || [];
                 const rows = squad.map(p => `
-                                        <label style="display:flex;align-items:center;gap:9px;margin-bottom:6px;background:#090a0c;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;">
-                                            <input type="checkbox" class="deadline-player-checkbox" data-deadline="${d.key}" value="${p.id}" ${savedIds.includes(p.id) ? 'checked' : ''}>
-                                            <img src="${p.avatar}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--primary-red);">
-                                            <span style="font-size:13px;">${p.name}</span>
-                                        </label>`).join('');
+                                                <label style="display:flex;align-items:center;gap:9px;margin-bottom:6px;background:#090a0c;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;">
+                                                    <input type="checkbox" class="deadline-player-checkbox" data-deadline="${d.key}" value="${p.id}" ${savedIds.includes(p.id) ? 'checked' : ''}>
+                                                    <img src="${p.avatar}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--primary-red);">
+                                                    <span style="font-size:13px;">${p.name}</span>
+                                                </label>`).join('');
 
                 container.innerHTML += `
-                                        <div style="background:#090a0c;border:1px solid var(--accent-gold);border-radius:8px;padding:10px;margin-bottom:10px;">
-                                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px;">
-                                                <strong style="color:var(--accent-gold);font-family:'Teko';font-size:20px;">DEADLINE ${d.key}</strong>
-                                                <span style="font-size:10px;color:var(--cyan-glow);">PRIORITY ${d.priority}</span>
-                                            </div>
-                                            <div id="deadlineCount_${deadlineIndex}" style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">0/${d.players} selected</div>
-                                            <div style="max-height:145px;overflow-y:auto;">${rows}</div>
-                                        </div>`;
+                                                <div style="background:#090a0c;border:1px solid var(--accent-gold);border-radius:8px;padding:10px;margin-bottom:10px;">
+                                                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px;">
+                                                        <strong style="color:var(--accent-gold);font-family:'Teko';font-size:20px;">DEADLINE ${d.key}</strong>
+                                                        <span style="font-size:10px;color:var(--cyan-glow);">PRIORITY ${d.priority}</span>
+                                                    </div>
+                                                    <div id="deadlineCount_${deadlineIndex}" style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">0/${d.players} selected</div>
+                                                    <div style="max-height:145px;overflow-y:auto;">${rows}</div>
+                                                </div>`;
             });
 
             container.querySelectorAll('.deadline-player-checkbox').forEach(cb => {
@@ -3459,16 +3801,16 @@
             }
             pending.forEach((m) => {
                 container.innerHTML += `
-                                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                                <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                                <div style="text-align:left;">
-                                                                    <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
-                                                                    <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
-                                                                </div>
-                                                            </div>
-                                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
-                                                        </div>`;
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                                    <div style="display:flex; align-items:center; gap:8px;">
+                                                                        <img src="${m.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                                        <div style="text-align:left;">
+                                                                            <h4 style="font-size:13px; color:#fff;">${m.name} (${m.club})</h4>
+                                                                            <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${m.trxId}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveManager('${m.id}')">Approve</button>
+                                                                </div>`;
             });
         };
 
@@ -3489,15 +3831,15 @@
             approved.forEach((m) => {
                 let squadCount = window.mockPlayers.filter(p => p.isSigned && p.signedClub === m.club).length;
                 container.innerHTML += `
-                                                        <div class="manager-mini-card">
-                                                            <img src="${m.avatar}" alt="${m.name}">
-                                                            <div class="player-mini-info">
-                                                                <h4 style="color: var(--accent-gold);">${m.name}</h4>
-                                                                <p style="color: var(--text-light);">${m.club}</p>
-                                                                <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/15</p>
-                                                            </div>
-                                                            <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
-                                                        </div>`;
+                                                                <div class="manager-mini-card">
+                                                                    <img src="${m.avatar}" alt="${m.name}">
+                                                                    <div class="player-mini-info">
+                                                                        <h4 style="color: var(--accent-gold);">${m.name}</h4>
+                                                                        <p style="color: var(--text-light);">${m.club}</p>
+                                                                        <p style="color: var(--cyan-glow); font-size: 10px;">Balance: ${m.balance}M | Squad: ${squadCount}/15</p>
+                                                                    </div>
+                                                                    <button class="btn-squad-sm" onclick="openSquadModalByClub('${m.club}')"><i class="fa-solid fa-users"></i> Squad</button>
+                                                                </div>`;
             });
         };
 
@@ -3599,13 +3941,13 @@
             if (window.mockCoinRequests.length === 0) { container.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No pending coin requests.</p>`; return; }
             window.mockCoinRequests.forEach(r => {
                 container.innerHTML += `
-                                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
-                                                            <div style="text-align:left;">
-                                                                <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
-                                                                <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
-                                                            </div>
-                                                            <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
-                                                        </div>`;
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+                                                                    <div style="text-align:left;">
+                                                                        <h4 style="font-size:13px; color:#fff;">${r.managerName} - ${r.coins}M Coins</h4>
+                                                                        <p style="font-size:10px; color:var(--accent-gold);">TrxID: ${r.trxId}</p>
+                                                                    </div>
+                                                                    <button class="btn-gold-sm" style="background:#2ec4b6;" onclick="approveCoinRequest('${r.id}')">Approve</button>
+                                                                </div>`;
             });
         };
 
@@ -3660,41 +4002,41 @@
                     : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Available Free Agent</span>`;
 
                 adminContainer.innerHTML += `
-                                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-                                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                                <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                                                <div style="text-align:left;">
-                                                                    <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
-                                                                    <p style="font-size:10px;">Status: ${statusInfo}</p>
-                                                                </div>
-                                                            </div>
-                                                            ${adminAction}
-                                                        </div>`;
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; background:#090a0c; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
+                                                                    <div style="display:flex; align-items:center; gap:8px;">
+                                                                        <img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                                                        <div style="text-align:left;">
+                                                                            <h4 style="font-size:13px; color:#fff;">${p.name}</h4>
+                                                                            <p style="font-size:10px;">Status: ${statusInfo}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    ${adminAction}
+                                                                </div>`;
 
                 if (!p.isSigned) {
                     mainContainer.innerHTML += `
-                                                            <div class="player-mini-card">
-                                                                <img src="${p.avatar}" alt="${p.name}">
-                                                                <div class="player-mini-info">
-                                                                    <h4>${p.name}</h4>
-                                                                    <p>${p.device}</p>
-                                                                </div>
-                                                                <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
-                                                            </div>`;
+                                                                    <div class="player-mini-card">
+                                                                        <img src="${p.avatar}" alt="${p.name}">
+                                                                        <div class="player-mini-info">
+                                                                            <h4>${p.name}</h4>
+                                                                            <p>${p.device}</p>
+                                                                        </div>
+                                                                        <span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>
+                                                                    </div>`;
 
                     let actionBtn = (window.currentUserRole === 'manager')
                         ? `<button class="btn-card-transfer" onclick="openTransferModal('${p.id}')"><i class="fa-solid fa-right-left"></i> Transfer</button>`
                         : `<span style="font-size:11px; color:var(--accent-green); font-weight:700;">Free Agent</span>`;
 
                     transferContainer.innerHTML += `
-                                                            <div class="player-mini-card" style="border-color:var(--cyan-glow)">
-                                                                <img src="${p.avatar}" alt="${p.name}">
-                                                                <div class="player-mini-info">
-                                                                    <h4>${p.name}</h4>
-                                                                    <p>${p.device}</p>
-                                                                </div>
-                                                                ${actionBtn}
-                                                            </div>`;
+                                                                    <div class="player-mini-card" style="border-color:var(--cyan-glow)">
+                                                                        <img src="${p.avatar}" alt="${p.name}">
+                                                                        <div class="player-mini-info">
+                                                                            <h4>${p.name}</h4>
+                                                                            <p>${p.device}</p>
+                                                                        </div>
+                                                                        ${actionBtn}
+                                                                    </div>`;
                 }
             });
         };
