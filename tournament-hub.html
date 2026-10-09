@@ -2275,29 +2275,89 @@ Match 2: Player C 2 VS 3 Player D
         window.updateFixtureCardScores = function () {
             const matches = window.currentFixtureScoreState || [];
             const { s1, s2 } = window.getFixtureTeamScores(matches);
-            const a = document.getElementById('fxScoreTeam1');
-            const b = document.getElementById('fxScoreTeam2');
-            if (a) a.innerText = s1;
-            if (b) b.innerText = s2;
+
+            const score1 = document.getElementById('fxScoreTeam1');
+            const score2 = document.getElementById('fxScoreTeam2');
+            if (score1) score1.innerText = s1;
+            if (score2) score2.innerText = s2;
+
             const legacyA = document.getElementById('scoreTeam1');
             const legacyB = document.getElementById('scoreTeam2');
             if (legacyA) legacyA.value = s1;
             if (legacyB) legacyB.value = s2;
-            const motm = window.currentFixtureMotmUid ? (window.mockPlayers.find(p => (p.userId || p.id) === window.currentFixtureMotmUid) || window.mockUsers.find(u => u.uid === window.currentFixtureMotmUid)) : null;
-            const md = document.getElementById('fxMotmDisplay');
-            if (md) md.innerHTML = motm ? `MAN OF THE MATCH: <span class="motm-name">${motm.name}</span>` : 'MAN OF THE MATCH: —';
-            const rows = document.querySelectorAll('#fxMatchupsContainer .fx-matchup-row');
-            matches.forEach((m, i) => {
-                const row = rows[i]; if (!row) return;
+
+            const players = window.mockPlayers || [];
+            const normalize = value => String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const findPlayer = (uid, name) => {
+                // Prefer stable account/player IDs; use the exact normalized name only as fallback.
+                let player = uid
+                    ? players.find(p => [p.userId, p.uid, p.id].some(id => id && String(id) === String(uid)))
+                    : null;
+                if (!player && name) {
+                    player = players.find(p => normalize(p.name) === normalize(name));
+                }
+                return player || null;
+            };
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[ch]));
+            const fallbackAvatar = letter => window.createSvgAvatar(letter);
+
+            const motmUid = window.currentFixtureMotmUid || '';
+            const motmPlayer = motmUid
+                ? (players.find(p => [p.userId, p.uid, p.id].some(id => id && String(id) === String(motmUid)))
+                    || (window.mockUsers || []).find(u => String(u.uid || u.id || '') === String(motmUid)))
+                : null;
+            const motmDisplay = document.getElementById('fxMotmDisplay');
+            if (motmDisplay) {
+                motmDisplay.innerHTML = motmPlayer
+                    ? `MAN OF THE MATCH: <span class="motm-name">${escapeHtml(motmPlayer.name)}</span>`
+                    : 'MAN OF THE MATCH: —';
+            }
+
+            // Rebuild each matchup row from the submitted score record. The old code
+            // only changed text spans, leaving the pre-submit squad avatars in place;
+            // if score text named different players, those old images appeared beside
+            // the newly submitted names.
+            const container = document.getElementById('fxMatchupsContainer');
+            if (!container || !matches.length) return;
+
+            const rows = [...container.querySelectorAll('.fx-matchup-row')];
+            matches.forEach((match, index) => {
+                let row = rows[index];
+                if (!row) {
+                    row = document.createElement('div');
+                    row.className = 'fx-matchup-row';
+                    container.appendChild(row);
+                }
+
+                const playerA = findPlayer(match.playerAUid, match.playerAName);
+                const playerB = findPlayer(match.playerBUid, match.playerBName);
+                const avatarA = playerA?.avatar || playerA?.photoURL || playerA?.photoUrl || fallbackAvatar('A');
+                const avatarB = playerB?.avatar || playerB?.photoURL || playerB?.photoUrl || fallbackAvatar('B');
+                const nameA = escapeHtml(match.playerAName);
+                const nameB = escapeHtml(match.playerBName);
+                const scoreA = Number(match.scoreA) || 0;
+                const scoreB = Number(match.scoreB) || 0;
+
+                row.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+                        <img src="${escapeHtml(avatarA)}" alt="${nameA}" style="width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                        <span>${nameA} <strong style="color:var(--accent-gold)">(${scoreA})</strong></span>
+                    </div>
+                    <span style="font-weight:700;color:var(--accent-gold);">VS</span>
+                    <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+                        <span><strong style="color:var(--accent-gold)">(${scoreB})</strong> ${nameB}</span>
+                        <img src="${escapeHtml(avatarB)}" alt="${nameB}" style="width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                    </div>`;
                 row.setAttribute('data-scored', '1');
-                const spans = row.querySelectorAll('span');
-                if (spans.length >= 3) {
-                    spans[0].innerHTML = `${m.playerAName} <strong style="color:var(--accent-gold)">(${m.scoreA})</strong>`;
-                    spans[1].innerText = 'VS';
-                    spans[2].innerHTML = `<strong style="color:var(--accent-gold)">(${m.scoreB})</strong> ${m.playerBName}`;
-                } else row.innerHTML = `<div>${m.playerAName} <strong>(${m.scoreA})</strong></div><span style="font-weight:700;color:var(--accent-gold);">VS</span><div><strong>(${m.scoreB})</strong> ${m.playerBName}</div>`;
-                if (window.currentFixtureMotmUid && (m.playerAUid === window.currentFixtureMotmUid || m.playerBUid === window.currentFixtureMotmUid)) row.style.borderColor = '#ffb703';
+                row.style.borderColor = motmUid && [match.playerAUid, match.playerBUid].some(uid => uid && String(uid) === String(motmUid))
+                    ? '#ffb703'
+                    : 'var(--border-color)';
             });
+
+            // Remove stale rows if a previous fixture had more matchups.
+            rows.slice(matches.length).forEach(row => row.remove());
         };
 
         window.populateFixtureMotmSelect = function (id, current = '') {
