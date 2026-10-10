@@ -624,6 +624,14 @@
                         <div class="modal-meta-item"><i class="fa-solid fa-gamepad"></i> Game ID: <strong id="mGameId">---</strong></div>
                         <div class="modal-meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong id="mDevice">---</strong></div>
                         <div class="modal-meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="mFbLink" href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent-gold);">View Profile</a></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-phone"></i> Mobile: <strong id="mPhone">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-envelope"></i> Email: <strong id="mEmail">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-droplet"></i> Blood Group: <strong id="mBloodGroup">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-clock"></i> Slot: <strong id="mActivity">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-network-wired"></i> VPN: <strong id="mVpn">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-cake-candles"></i> DOB: <strong id="mDob">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-briefcase"></i> Job: <strong id="mJob">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-solid fa-location-dot"></i> Address: <strong id="mAddress">---</strong></div>
                     </div>
                     <button type="button" id="downloadPlayerImageBtn" class="download-player-image" onclick="downloadPlayerImage()"><i class="fa-solid fa-download"></i> Download Player Image</button>
                 </div>
@@ -790,6 +798,15 @@
             document.getElementById('mRole').innerText = (player.role || 'PLAYER').toUpperCase();
             document.getElementById('mGameId').innerText = player.gameId || 'N/A';
             document.getElementById('mDevice').innerText = player.device || 'N/A';
+            // These personal details are visible only inside the captain-only information section.
+            document.getElementById('mPhone').innerText = player.phone || 'N/A';
+            document.getElementById('mEmail').innerText = player.email || 'N/A';
+            document.getElementById('mBloodGroup').innerText = player.bloodGroup || 'N/A';
+            document.getElementById('mActivity').innerText = player.activityTime || 'N/A';
+            document.getElementById('mVpn').innerText = player.vpn || 'No';
+            document.getElementById('mDob').innerText = player.dob || 'N/A';
+            document.getElementById('mJob').innerText = player.occupation || 'N/A';
+            document.getElementById('mAddress').innerText = player.address || 'N/A';
             const fbLink = document.getElementById('mFbLink');
             const fbUrl = player.fbLink || '';
             fbLink.href = fbUrl || '#';
@@ -866,7 +883,7 @@
         }
 
         async function downloadPlayerImage() {
-            if (currentUserRole !== 'captain' || !currentModalPlayer) {
+            if (String(currentUserRole || '').toLowerCase() !== 'captain' || !currentModalPlayer) {
                 alert('Only captains can download player images.');
                 return;
             }
