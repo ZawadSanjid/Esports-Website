@@ -373,6 +373,9 @@
                 color: var(--primary-red);
             }
 
+        .download-player-image { display:none; margin-top:12px; padding:9px 14px; border:0; border-radius:6px; background:var(--primary-red); color:#fff; font-weight:700; cursor:pointer; }
+        .download-player-image:hover { background:var(--primary-red-hover); }
+
         /* MODAL PROFILE HERO */
         .modal-hero {
             display: flex;
@@ -613,41 +616,29 @@
             <i class="fa-solid fa-xmark close-modal" onclick="closePlayerModal()"></i>
 
             <div class="modal-hero">
-                <img id="mAvatar" src="Image/player1.webp" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                <img id="mAvatar" src="Image/player1.webp" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="Player image">
                 <div class="modal-hero-info">
                     <h2 id="mName">Player Name</h2>
                     <div style="font-size: 13px; color: var(--accent-gold); font-weight: 700; text-transform: uppercase;" id="mRole">PLAYER</div>
-
-                    <div class="modal-meta-grid">
+                    <div class="modal-meta-grid" id="captainOnlyPlayerInfo">
                         <div class="modal-meta-item"><i class="fa-solid fa-gamepad"></i> Game ID: <strong id="mGameId">---</strong></div>
-                        <!-- CAPTAIN/ADMIN RESTRICTED CONTACT DETAILS -->
-                        <div class="modal-meta-item"><i class="fa-solid fa-phone"></i> Mobile: <strong id="mPhone">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-envelope"></i> Email: <strong id="mEmail">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="mFbLink" href="#" target="_blank" style="color:var(--accent-gold);">View Profile</a></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-droplet"></i> Blood Group: <strong id="mBloodGroup">N/A</strong></div>
                         <div class="modal-meta-item"><i class="fa-solid fa-mobile-screen-button"></i> Device: <strong id="mDevice">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-clock"></i> Slot: <strong id="mActivity">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-network-wired"></i> VPN: <strong id="mVpn">No</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-cake-candles"></i> DOB: <strong id="mDob">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-briefcase"></i> Job: <strong id="mJob">---</strong></div>
-                        <div class="modal-meta-item"><i class="fa-solid fa-location-dot"></i> Address: <strong id="mAddress">---</strong></div>
+                        <div class="modal-meta-item"><i class="fa-brands fa-facebook"></i> FB: <a id="mFbLink" href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent-gold);">View Profile</a></div>
                     </div>
+                    <button type="button" id="downloadPlayerImageBtn" class="download-player-image" onclick="downloadPlayerImage()"><i class="fa-solid fa-download"></i> Download Player Image</button>
                 </div>
             </div>
 
-            <!-- OFFICIAL STATS -->
+            <!-- Statistics, history and achievements remain visible to captains -->
             <div class="modal-stat-header" style="color: var(--primary-red);"><i class="fa-solid fa-trophy"></i> Official Statistics</div>
             <div class="stats-grid-compact" id="modalOffStats"></div>
 
-            <!-- DOMESTIC STATS -->
             <div class="modal-stat-header" style="color: var(--accent-gold);"><i class="fa-solid fa-shield-halved"></i> Domestic Statistics</div>
             <div class="stats-grid-compact" id="modalDomStats"></div>
 
-            <!-- TARGET COMMUNITIES PERFORMANCE BREAKDOWN -->
             <div class="modal-stat-header" style="color: #20bf6b;"><i class="fa-solid fa-users-viewfinder"></i> Target Communities Performance Breakdown</div>
             <div class="modal-community-grid" id="modalCommStats"></div>
 
-            <!-- HISTORY & ACHIEVEMENTS -->
             <div class="modal-two-column">
                 <div class="modal-list-box">
                     <h4 style="color: var(--primary-red);"><i class="fa-solid fa-award"></i> Tournament History</h4>
@@ -665,6 +656,7 @@
     <script>
         let cachedPlayersList = [];
         let currentUserRole = 'player';
+        let currentModalPlayer = null;
 
         const communitiesList = [
             { code: 'efob', name: 'EFOB' },
@@ -683,6 +675,7 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             auth.onAuthStateChanged(async (user) => {
+                currentUserRole = 'player';
                 if (user) {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists) {
@@ -783,87 +776,76 @@
             });
         }
 
-        // OPEN DETAILED PLAYER PROFILE MODAL
+        // Only captains can open player details or download player images.
         function openPlayerModal(uid) {
             const player = cachedPlayersList.find(p => p.uid === uid || p.id === uid);
             if (!player) return;
-
+            // Everyone can open the profile and view stats; only captains see restricted info/download.
+            const isCaptain = String(currentUserRole || '').toLowerCase() === 'captain';
+            currentModalPlayer = player;
+            document.getElementById('captainOnlyPlayerInfo').style.display = isCaptain ? 'grid' : 'none';
+            document.getElementById('downloadPlayerImageBtn').style.display = isCaptain ? 'inline-block' : 'none';
             document.getElementById('mAvatar').src = player.avatar || 'Image/player1.webp';
             document.getElementById('mName').innerText = player.name || 'Unknown Player';
             document.getElementById('mRole').innerText = (player.role || 'PLAYER').toUpperCase();
             document.getElementById('mGameId').innerText = player.gameId || 'N/A';
-
-            // RESTRICT MOBILE & GMAIL TO CAPTAIN AND ADMIN ONLY
-            if (currentUserRole === 'admin' || currentUserRole === 'captain') {
-                document.getElementById('mPhone').innerText = player.phone || 'N/A';
-                document.getElementById('mEmail').innerText = player.email || 'N/A';
-            } else {
-                document.getElementById('mPhone').innerText = '--- (Captain/Admin Only)';
-                document.getElementById('mEmail').innerText = '--- (Captain/Admin Only)';
-            }
-
-            document.getElementById('mFbLink').href = player.fbLink || '#';
-            document.getElementById('mBloodGroup').innerText = player.bloodGroup || 'N/A';
             document.getElementById('mDevice').innerText = player.device || 'N/A';
-            document.getElementById('mActivity').innerText = player.activityTime || 'N/A';
-            document.getElementById('mVpn').innerText = player.vpn || 'No';
-            document.getElementById('mDob').innerText = player.dob || 'N/A';
-            document.getElementById('mJob').innerText = player.occupation || 'N/A';
-            document.getElementById('mAddress').innerText = player.address || 'N/A';
-
+            const fbLink = document.getElementById('mFbLink');
+            const fbUrl = player.fbLink || '';
+            fbLink.href = fbUrl || '#';
+            fbLink.style.pointerEvents = fbUrl ? 'auto' : 'none';
+            fbLink.style.opacity = fbUrl ? '1' : '0.6';
+            fbLink.innerText = fbUrl ? 'View Profile' : 'Not provided';
             // OFFICIAL STATS
             const off = player.official || {};
             document.getElementById('modalOffStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-                `;
+                <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp || 0}</div><div class="lbl">MP</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w || 0}</div><div class="lbl">W</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d || 0}</div><div class="lbl">D</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l || 0}</div><div class="lbl">L</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts || 0}</div><div class="lbl">PTS</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>`;
 
             // DOMESTIC STATS
             const dom = player.domestic || {};
             document.getElementById('modalDomStats').innerHTML = `
-                    <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
-                    <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>
-                `;
+                <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp || 0}</div><div class="lbl">MP</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w || 0}</div><div class="lbl">W</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d || 0}</div><div class="lbl">D</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l || 0}</div><div class="lbl">L</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts || 0}</div><div class="lbl">PTS</div></div>
+                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate || '0.0'}%</div><div class="lbl">Win%</div></div>`;
 
-            // TARGET COMMUNITIES STATS BREAKDOWN
+            // COMMUNITY STATS
             const commData = player.communities || {};
             let commHtml = '';
             communitiesList.forEach(c => {
-                const cStats = commData[c.code] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
+                const cStats = commData[c.code] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: '0.0' };
                 commHtml += `
-                        <div class="modal-comm-card">
-                            <h5>${c.name} <span style="font-size:13px; color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h5>
-                            <div class="modal-comm-stats">
-                                <div class="modal-comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
-                                <div class="modal-comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
-                                <div class="modal-comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
-                                <div class="modal-comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
-                                <div class="modal-comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
-                                <div class="modal-comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
-                                <div class="modal-comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
-                                <div class="modal-comm-stat-item" style="color:var(--accent-green); grid-column: span 2;">Win%<strong>${cStats.winRate || "0.0"}%</strong></div>
-                            </div>
+                    <div class="modal-comm-card">
+                        <h5>${c.name} <span style="font-size:13px;color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h5>
+                        <div class="modal-comm-stats">
+                            <div class="modal-comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
+                            <div class="modal-comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
+                            <div class="modal-comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
+                            <div class="modal-comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
+                            <div class="modal-comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
+                            <div class="modal-comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
+                            <div class="modal-comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
+                            <div class="modal-comm-stat-item" style="color:var(--accent-green);grid-column:span 2;">Win%<strong>${cStats.winRate || '0.0'}%</strong></div>
                         </div>
-                    `;
+                    </div>`;
             });
             document.getElementById('modalCommStats').innerHTML = commHtml;
 
-            // HISTORY
+            // TOURNAMENT HISTORY
             const historyList = player.tournamentHistoryList || [];
             let histHtml = '';
-            if (historyList.length === 0) {
-                histHtml = `<div style="font-size:12px; color:var(--text-muted);">No history recorded.</div>`;
+            if (!historyList.length) {
+                histHtml = '<div style="font-size:12px;color:var(--text-muted);">No history recorded.</div>';
             } else {
                 historyList.forEach(h => {
-                    histHtml += `<div class="modal-list-item"><div><strong>${h.title}</strong><br><small style="color:var(--text-muted)">${h.subtitle}</small></div><span style="color:var(--accent-gold); font-weight:700">${h.tag}</span></div>`;
+                    histHtml += `<div class="modal-list-item"><div><strong>${h.title || ''}</strong><br><small style="color:var(--text-muted)">${h.subtitle || ''}</small></div><span style="color:var(--accent-gold);font-weight:700">${h.tag || ''}</span></div>`;
                 });
             }
             document.getElementById('modalHistoryList').innerHTML = histHtml;
@@ -871,11 +853,11 @@
             // ACHIEVEMENTS
             const achList = player.achievementsList || [];
             let achHtml = '';
-            if (achList.length === 0) {
-                achHtml = `<div style="font-size:12px; color:var(--text-muted);">No achievements unlocked.</div>`;
+            if (!achList.length) {
+                achHtml = '<div style="font-size:12px;color:var(--text-muted);">No achievements unlocked.</div>';
             } else {
                 achList.forEach(a => {
-                    achHtml += `<div class="modal-list-item"><div><strong>${a.title}</strong><br><small style="color:var(--text-muted)">${a.desc}</small></div></div>`;
+                    achHtml += `<div class="modal-list-item"><div><strong>${a.title || ''}</strong><br><small style="color:var(--text-muted)">${a.desc || ''}</small></div></div>`;
                 });
             }
             document.getElementById('modalAchList').innerHTML = achHtml;
@@ -883,8 +865,34 @@
             document.getElementById('playerViewModal').style.display = 'flex';
         }
 
+        async function downloadPlayerImage() {
+            if (currentUserRole !== 'captain' || !currentModalPlayer) {
+                alert('Only captains can download player images.');
+                return;
+            }
+            const imageUrl = currentModalPlayer.avatar || 'Image/player1.webp';
+            const filename = `${(currentModalPlayer.name || 'player').trim().replace(/[^a-z0-9-_]+/gi, '_')}.jpg`;
+            try {
+                const response = await fetch(imageUrl);
+                if (!response.ok) throw new Error('Image download failed');
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                // Cross-origin hosts may block direct download; open the image as fallback.
+                window.open(imageUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
         function closePlayerModal() {
             document.getElementById('playerViewModal').style.display = 'none';
+            currentModalPlayer = null;
         }
 
         // REAL-TIME SEARCH FILTER FUNCTION
