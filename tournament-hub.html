@@ -3687,21 +3687,7 @@ Match 2: Player C 2 VS 3 Player D
             const restore = window.beginDirectButtonLoading(button, 'Signing in...');
             try {
                 await window.nextPaint();
-
-                // Use Firebase's actual session as the source of truth. The profile
-                // object may not have finished loading yet when this button is clicked.
-                const firebaseUser = auth.currentUser;
-                if (!firebaseUser) {
-                    alert("Please Sign In to your account first!");
-                    return;
-                }
-
-                // Refresh the app's local profile from the active Firebase session.
-                await window.loadCurrentFirebaseUser(firebaseUser);
-                if (!window.currentLoggedUser || !window.currentLoggedUser.id) {
-                    alert("Your account is signed in, but your profile could not be loaded. Please refresh the page and try again.");
-                    return;
-                }
+                if (!window.requireLoggedUser()) return;
 
                 let existingPlayer = window.mockPlayers.find(p =>
                     p.id === `p_${window.currentLoggedUser.id}` ||
@@ -3709,13 +3695,13 @@ Match 2: Player C 2 VS 3 Player D
                     p.name === window.currentLoggedUser.name
                 );
 
-                // If this account already has a player entry, still open the player
-                // card modal. Previously this branch returned early, so the card never
-                // appeared for users who were already listed in mockPlayers.
                 if (existingPlayer) {
                     window.currentUserRole = 'player';
                     const leaveBtn = document.getElementById('leavePlayerBtn');
                     if (leaveBtn) leaveBtn.style.display = 'inline-block';
+                    if (restore) await restore();
+                    alert("Already Signed In as Player!");
+                    return;
                 }
 
                 window.cardPreviewUser = { ...window.currentLoggedUser };
