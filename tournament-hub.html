@@ -1784,13 +1784,30 @@ Match 2: Player C 2 VS 3 Player D
             });
         }, true);
 
+        // Resolve only after Firebase has restored the browser's saved login session
+        // and the matching user profile has been loaded into the tournament hub.
+        let resolveInitialAuthState;
+        window.authStateReady = new Promise((resolve) => {
+            resolveInitialAuthState = resolve;
+        });
+        let initialAuthStateResolved = false;
+
         document.addEventListener("DOMContentLoaded", () => {
             listenToDatabase();
             window.setupAllCardImages();
             window.updateAuthButtonStates();
 
             onAuthStateChanged(auth, async (firebaseUser) => {
-                await window.loadCurrentFirebaseUser(firebaseUser);
+                try {
+                    await window.loadCurrentFirebaseUser(firebaseUser);
+                } catch (error) {
+                    console.error("Unable to restore Firebase session:", error);
+                } finally {
+                    if (!initialAuthStateResolved) {
+                        initialAuthStateResolved = true;
+                        resolveInitialAuthState(firebaseUser || null);
+                    }
+                }
             });
         });
 
@@ -3688,15 +3705,16 @@ Match 2: Player C 2 VS 3 Player D
             try {
                 await window.nextPaint();
 
-                // Use Firebase's actual session as the source of truth. The profile
-                // object may not have finished loading yet when this button is clicked.
+                // Wait for Firebase to finish restoring the account session from the
+                // previous login page before checking whether the user is signed in.
+                await window.authStateReady;
                 const firebaseUser = auth.currentUser;
                 if (!firebaseUser) {
                     alert("Please Sign In to your account first!");
                     return;
                 }
 
-                // Refresh the app's local profile from the active Firebase session.
+                // Load the signed-in account's profile before opening its player card.
                 await window.loadCurrentFirebaseUser(firebaseUser);
                 if (!window.currentLoggedUser || !window.currentLoggedUser.id) {
                     alert("Your account is signed in, but your profile could not be loaded. Please refresh the page and try again.");
@@ -3709,13 +3727,13 @@ Match 2: Player C 2 VS 3 Player D
                     p.name === window.currentLoggedUser.name
                 );
 
+                // If this account already has a player entry, still open the player
+                // card modal. Previously this branch returned early, so the card never
+                // appeared for users who were already listed in mockPlayers.
                 if (existingPlayer) {
                     window.currentUserRole = 'player';
                     const leaveBtn = document.getElementById('leavePlayerBtn');
                     if (leaveBtn) leaveBtn.style.display = 'inline-block';
-                    if (restore) await restore();
-                    alert("Already Signed In as Player!");
-                    return;
                 }
 
                 window.cardPreviewUser = { ...window.currentLoggedUser };
