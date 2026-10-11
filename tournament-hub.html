@@ -1789,12 +1789,14 @@ Match 2: Player C 2 VS 3 Player D
             window.setupAllCardImages();
             window.updateAuthButtonStates();
 
-            // Wait for Firebase to restore the existing login and load its profile.
-            // This prevents a quick click from seeing currentLoggedUser as null.
+            // Keep a promise for Firebase's initial session restore so clicks cannot
+            // race ahead of the first auth callback/profile load.
             window.authStateReady = new Promise((resolve) => {
                 onAuthStateChanged(auth, async (firebaseUser) => {
                     try {
                         await window.loadCurrentFirebaseUser(firebaseUser);
+                    } catch (error) {
+                        console.error("Initial Firebase profile load failed:", error);
                     } finally {
                         resolve(firebaseUser || null);
                     }
@@ -3696,12 +3698,12 @@ Match 2: Player C 2 VS 3 Player D
             try {
                 await window.nextPaint();
 
-                // Firebase may already be signed in while the users/{uid} profile
-                // is still loading. Wait for that initial auth/profile check.
-                if (window.authStateReady) {
-                    await window.authStateReady;
+                // Wait for Firebase to restore the saved login, then refresh the
+                // profile from auth.currentUser if the global user is still empty.
+                if (window.authStateReady) await window.authStateReady;
+                if ((!window.currentLoggedUser || !window.currentLoggedUser.id) && auth.currentUser) {
+                    await window.loadCurrentFirebaseUser(auth.currentUser);
                 }
-
                 if (!window.requireLoggedUser()) return;
 
                 let existingPlayer = window.mockPlayers.find(p =>
@@ -3772,6 +3774,10 @@ Match 2: Player C 2 VS 3 Player D
                 return;
             }
 
+            if (window.authStateReady) await window.authStateReady;
+            if ((!window.currentLoggedUser || !window.currentLoggedUser.id) && auth.currentUser) {
+                await window.loadCurrentFirebaseUser(auth.currentUser);
+            }
             if (!window.requireLoggedUser()) return;
             const user = window.cardPreviewUser || window.currentLoggedUser;
             const pId = "p_" + (user.id || Date.now());
