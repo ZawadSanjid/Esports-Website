@@ -669,6 +669,21 @@
                 max-width: 100%;
             }
 
+        /* AUTOMATIC PLAYER PROFILE FREEZE: Bangladesh 7:00 PM - 1:30 AM */
+        .profile-freeze-notice {
+            display:none;
+            margin:0 0 18px;
+            padding:10px 12px;
+            border:1px solid var(--primary-red);
+            border-radius:8px;
+            background:rgba(229,9,20,.12);
+            color:#fff;
+            text-align:center;
+            font-size:12px;
+            font-weight:700;
+        }
+        .profile-edit-locked { opacity:.55 !important; cursor:not-allowed !important; pointer-events:none !important; }
+
         /* RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .player-hero-card {
@@ -729,6 +744,9 @@
     </nav>
 
     <div class="dashboard-container">
+        <div id="profileFreezeNotice" class="profile-freeze-notice">
+            <i class="fa-solid fa-lock"></i> PLAYER PROFILE EDITING IS TEMPORARILY LOCKED — 7:00 PM TO 1:30 AM (BD TIME)
+        </div>
 
         <div class="player-hero-card">
             <div class="player-avatar-box">
@@ -762,7 +780,7 @@
                     <div class="number" id="displayDomesticRank">#--</div>
                 </div>
                 <!-- EDIT PROFILE BUTTON -->
-                <button onclick="openEditModal()" class="btn-gold-sm"><i class="fa-solid fa-pen-to-square"></i> Edit Info</button>
+                <button id="editProfileButton" onclick="openEditModal()" class="btn-gold-sm"><i class="fa-solid fa-pen-to-square"></i> Edit Info</button>
             </div>
         </div>
 
@@ -996,6 +1014,36 @@
         let currentUserData = null;
         let updatedPhotoBase64 = null;
         let cropper = null;
+        let profileEditAllowed = true;
+        let profileFreezeTimer = null;
+
+        function isBangladeshProfileFreezeTime() {
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            return minutes >= (19 * 60) || minutes < (1 * 60 + 30);
+        }
+
+        function updateProfileEditLockUI() {
+            const locked = isBangladeshProfileFreezeTime();
+            const btn = document.getElementById('editProfileButton');
+            const notice = document.getElementById('profileFreezeNotice');
+            if (btn) {
+                btn.disabled = locked;
+                btn.classList.toggle('profile-edit-locked', locked);
+                btn.title = locked ? 'Profile editing is locked from 7:00 PM to 1:30 AM Bangladesh time.' : 'Edit profile';
+            }
+            if (notice) notice.style.display = locked ? 'block' : 'none';
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) saveBtn.disabled = locked;
+            const photo = document.getElementById('edit-player-photo');
+            if (photo) photo.disabled = locked;
+        }
+
+        function startProfileFreezeClock() {
+            updateProfileEditLockUI();
+            if (profileFreezeTimer) clearInterval(profileFreezeTimer);
+            profileFreezeTimer = setInterval(updateProfileEditLockUI, 10000);
+        }
 
         // FIXED COMMUNITY CODES MATCHED WITH CAPTAIN & ADMIN PORTAL
         const communitiesList = [
@@ -1018,6 +1066,17 @@
             if (user) {
                 currentUserId = user.uid;
                 listenToFirestoreProfile(currentUserId);
+                startProfileFreezeClock();
+                db.collection('settings').doc('profileEditWindow').onSnapshot(snap => {
+                    if (snap.exists) {
+                        const data = snap.data() || {};
+                        profileEditAllowed = data.status !== false;
+                        updateProfileEditLockUI();
+                    } else {
+                        profileEditAllowed = true;
+                        updateProfileEditLockUI();
+                    }
+                }, err => console.warn('Profile edit lock listener error:', err));
             } else {
                 window.location.href = "login.html";
             }
@@ -1029,6 +1088,7 @@
             });
         }
 
+        // Realtime Firestore Listener
         function listenToFirestoreProfile(uid) {
             db.collection('users').onSnapshot(snapshot => {
                 let allPlayers = [];
@@ -1144,20 +1204,20 @@
                 const cStats = commData[c.code] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
 
                 container.innerHTML += `
-                                <div class="comm-card">
-                                    <h4>${c.name} <span style="font-size:14px; color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h4>
-                                    <div class="comm-stats-list">
-                                        <div class="comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
-                                        <div class="comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
-                                        <div class="comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
-                                        <div class="comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
-                                        <div class="comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
-                                        <div class="comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
-                                        <div class="comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
-                                        <div class="comm-stat-item" style="color:var(--accent-green); grid-column: span 2;">Win%<strong>${cStats.winRate || "0.0"}%</strong></div>
-                                    </div>
+                            <div class="comm-card">
+                                <h4>${c.name} <span style="font-size:14px; color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h4>
+                                <div class="comm-stats-list">
+                                    <div class="comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
+                                    <div class="comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
+                                    <div class="comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
+                                    <div class="comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
+                                    <div class="comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
+                                    <div class="comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
+                                    <div class="comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
+                                    <div class="comm-stat-item" style="color:var(--accent-green); grid-column: span 2;">Win%<strong>${cStats.winRate || "0.0"}%</strong></div>
                                 </div>
-                            `;
+                            </div>
+                        `;
             });
         }
 
@@ -1179,13 +1239,13 @@
                 else if (tag === '3RD PLACE') badgeClass = 'status-3rd';
 
                 container.innerHTML += `
-                                <li class="history-item">
-                                    <div>
-                                        <div class="t-name">${item.title}</div>
-                                        <div class="t-date">${item.subtitle}</div>
-                                    </div>
-                                    <span class="badge-status ${badgeClass}">${item.tag}</span>
-                                </li>`;
+                            <li class="history-item">
+                                <div>
+                                    <div class="t-name">${item.title}</div>
+                                    <div class="t-date">${item.subtitle}</div>
+                                </div>
+                                <span class="badge-status ${badgeClass}">${item.tag}</span>
+                            </li>`;
             });
         }
 
@@ -1205,13 +1265,13 @@
                 else if (item.icon === 'medal') iconClass = 'fa-medal';
 
                 container.innerHTML += `
-                                <li class="achievement-item">
-                                    <div class="achievement-icon"><i class="fa-solid ${iconClass}"></i></div>
-                                    <div class="achievement-info">
-                                        <h4>${item.title}</h4>
-                                        <p>${item.desc}</p>
-                                    </div>
-                                </li>`;
+                            <li class="achievement-item">
+                                <div class="achievement-icon"><i class="fa-solid ${iconClass}"></i></div>
+                                <div class="achievement-info">
+                                    <h4>${item.title}</h4>
+                                    <p>${item.desc}</p>
+                                </div>
+                            </li>`;
             });
         }
 
@@ -1258,6 +1318,11 @@
 
         // OPEN MODAL & PREFILL ALL INPUTS
         function openEditModal() {
+            if (isBangladeshProfileFreezeTime()) {
+                updateProfileEditLockUI();
+                alert("Profile editing is locked from 7:00 PM to 1:30 AM (Bangladesh time). Please try again after 1:30 AM.");
+                return;
+            }
             if (!currentUserData) return;
 
             document.getElementById('editName').value = currentUserData.name || '';
@@ -1288,6 +1353,12 @@
             e.preventDefault();
 
             if (!currentUserId) return;
+
+            if (isBangladeshProfileFreezeTime()) {
+                updateProfileEditLockUI();
+                alert("Profile editing is locked from 7:00 PM to 1:30 AM (Bangladesh time). No database changes were made.");
+                return;
+            }
 
             const phoneInput = document.getElementById('editPhone').value.trim();
             if (phoneInput.length !== 11) {
@@ -1325,6 +1396,7 @@
                 alert("Error updating profile: " + error.message);
             } finally {
                 saveBtn.disabled = false;
+                updateProfileEditLockUI();
             }
         });
     </script>
