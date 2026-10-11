@@ -1789,18 +1789,8 @@ Match 2: Player C 2 VS 3 Player D
             window.setupAllCardImages();
             window.updateAuthButtonStates();
 
-            // Keep a promise for Firebase's initial session restore so clicks cannot
-            // race ahead of the first auth callback/profile load.
-            window.authStateReady = new Promise((resolve) => {
-                onAuthStateChanged(auth, async (firebaseUser) => {
-                    try {
-                        await window.loadCurrentFirebaseUser(firebaseUser);
-                    } catch (error) {
-                        console.error("Initial Firebase profile load failed:", error);
-                    } finally {
-                        resolve(firebaseUser || null);
-                    }
-                });
+            onAuthStateChanged(auth, async (firebaseUser) => {
+                await window.loadCurrentFirebaseUser(firebaseUser);
             });
         });
 
@@ -3698,13 +3688,20 @@ Match 2: Player C 2 VS 3 Player D
             try {
                 await window.nextPaint();
 
-                // Wait for Firebase to restore the saved login, then refresh the
-                // profile from auth.currentUser if the global user is still empty.
-                if (window.authStateReady) await window.authStateReady;
-                if ((!window.currentLoggedUser || !window.currentLoggedUser.id) && auth.currentUser) {
-                    await window.loadCurrentFirebaseUser(auth.currentUser);
+                // Use Firebase's actual session as the source of truth. The profile
+                // object may not have finished loading yet when this button is clicked.
+                const firebaseUser = auth.currentUser;
+                if (!firebaseUser) {
+                    alert("Please Sign In to your account first!");
+                    return;
                 }
-                if (!window.requireLoggedUser()) return;
+
+                // Refresh the app's local profile from the active Firebase session.
+                await window.loadCurrentFirebaseUser(firebaseUser);
+                if (!window.currentLoggedUser || !window.currentLoggedUser.id) {
+                    alert("Your account is signed in, but your profile could not be loaded. Please refresh the page and try again.");
+                    return;
+                }
 
                 let existingPlayer = window.mockPlayers.find(p =>
                     p.id === `p_${window.currentLoggedUser.id}` ||
@@ -3774,10 +3771,6 @@ Match 2: Player C 2 VS 3 Player D
                 return;
             }
 
-            if (window.authStateReady) await window.authStateReady;
-            if ((!window.currentLoggedUser || !window.currentLoggedUser.id) && auth.currentUser) {
-                await window.loadCurrentFirebaseUser(auth.currentUser);
-            }
             if (!window.requireLoggedUser()) return;
             const user = window.cardPreviewUser || window.currentLoggedUser;
             const pId = "p_" + (user.id || Date.now());
