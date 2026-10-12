@@ -1789,8 +1789,23 @@ Match 2: Player C 2 VS 3 Player D
             window.setupAllCardImages();
             window.updateAuthButtonStates();
 
-            onAuthStateChanged(auth, async (firebaseUser) => {
-                await window.loadCurrentFirebaseUser(firebaseUser);
+            // Track the Firebase session and expose a promise that resolves only
+            // after the first auth callback has finished loading the user's profile.
+            window.firebaseAuthReady = new Promise((resolve) => {
+                let firstAuthCallback = true;
+                onAuthStateChanged(auth, async (firebaseUser) => {
+                    window.firebaseAuthUser = firebaseUser || null;
+                    try {
+                        await window.loadCurrentFirebaseUser(firebaseUser);
+                    } catch (error) {
+                        console.error("Could not load authenticated profile:", error);
+                    } finally {
+                        if (firstAuthCallback) {
+                            firstAuthCallback = false;
+                            resolve(firebaseUser || null);
+                        }
+                    }
+                });
             });
         });
 
@@ -3688,30 +3703,30 @@ Match 2: Player C 2 VS 3 Player D
             try {
                 await window.nextPaint();
 
-                // Use Firebase's live authenticated user as the source of truth.
-                // The auth-state listener may still be loading the Firestore profile
-                // when this button is clicked, so refresh it before opening the card.
-                const firebaseUser = auth.currentUser;
-                if (!firebaseUser) {
-                    window.currentLoggedUser = null;
-                    window.cardPreviewUser = null;
-                    window.updateAuthButtonStates();
-                    alert("Please Sign In to your account first!");
-                    return;
+                // Wait until Firebase restores the existing session and the auth
+                // listener has loaded this account into currentLoggedUser.
+                if (window.firebaseAuthReady) {
+                    await window.firebaseAuthReady;
                 }
 
-                await window.loadCurrentFirebaseUser(firebaseUser);
+                // Keep the original working card flow: use the authenticated
+                // profile loaded by loadCurrentFirebaseUser(), not a guest preview.
+                const firebaseUser = auth.currentUser || window.firebaseAuthUser || null;
+                if (firebaseUser) {
+                    await window.loadCurrentFirebaseUser(firebaseUser);
+                }
 
-                if (!window.currentLoggedUser || !window.currentLoggedUser.uid) {
-                    alert("Your player profile is still loading. Please try again.");
+                if (!window.currentLoggedUser || !window.currentLoggedUser.id ||
+                    String(window.currentLoggedUser.id).startsWith('guest_')) {
+                    alert("Please Sign In to your account first!");
                     return;
                 }
 
                 const user = window.currentLoggedUser;
                 const existingPlayer = window.mockPlayers.find(p =>
-                    p.userId === user.uid ||
-                    p.uid === user.uid ||
-                    p.id === `p_${user.uid}` ||
+                    p.id === `p_${user.id}` ||
+                    p.userId === user.id ||
+                    p.uid === user.id ||
                     (p.name && user.name && p.name.trim().toLowerCase() === user.name.trim().toLowerCase())
                 );
 
@@ -3719,15 +3734,16 @@ Match 2: Player C 2 VS 3 Player D
                     window.currentUserRole = 'player';
                     const leaveBtn = document.getElementById('leavePlayerBtn');
                     if (leaveBtn) leaveBtn.style.display = 'inline-block';
+                    if (restore) await restore();
                     alert("Already Signed In as Player!");
                     return;
                 }
 
-                // Always populate the card from the freshly loaded signed-in account,
-                // not from a guest/random preview or a hard-coded fallback name.
+                // Same as the old working logic: card name and avatar come from
+                // currentLoggedUser, which was populated from the signed-in profile.
                 window.cardPreviewUser = { ...user };
-                window.setCardBackgroundImage('playerEntryCardToCapture', user.avatar);
-                document.getElementById('pecPlayerName').innerText = user.name;
+                window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
+                document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
 
                 window.isPlayerCardDownloaded = false;
                 document.getElementById('btnConfirmPlayerCard').disabled = true;
@@ -3737,7 +3753,7 @@ Match 2: Player C 2 VS 3 Player D
                 window.triggerBoomEffects();
             } catch (error) {
                 console.error("Player sign-in card error:", error);
-                alert("Could not load your player card. Please try again.");
+                alert("Could not load your signed-in profile. Please try again.");
             } finally {
                 if (restore && button && button.dataset.directWaiting === '1') await restore();
             }
