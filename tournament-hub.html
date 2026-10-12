@@ -3745,6 +3745,22 @@ Match 2: Player C 2 VS 3 Player D
                 }
 
                 const user = loadedUser;
+
+                // Ensure the card-action controls use the freshly detected Firebase session.
+                // The auth listener may have updated button states before handlePlayerSignIn
+                // finished rebuilding currentLoggedUser, so refresh them here as well.
+                window.currentLoggedUser = { ...user };
+                if (typeof window.updateAuthButtonStates === 'function') {
+                    window.updateAuthButtonStates();
+                }
+                const downloadPlayerButton = document.getElementById('btnDownloadPlayerCard');
+                if (downloadPlayerButton) downloadPlayerButton.disabled = false;
+                const playerNoticeAfterAuth = document.getElementById('playerNoticeText');
+                if (playerNoticeAfterAuth) {
+                    playerNoticeAfterAuth.style.display = 'block';
+                    playerNoticeAfterAuth.innerText = "* Please click 'Download' first to enable 'Confirm' button.";
+                }
+
                 const existingPlayer = (window.mockPlayers || []).find(p =>
                     p.userId === user.id || p.uid === user.id || p.id === `p_${user.id}` ||
                     (p.name && user.name && p.name.trim().toLowerCase() === user.name.trim().toLowerCase())
@@ -3766,7 +3782,10 @@ Match 2: Player C 2 VS 3 Player D
                 const confirmButton = document.getElementById('btnConfirmPlayerCard');
                 if (confirmButton) confirmButton.disabled = true;
                 const notice = document.getElementById('playerNoticeText');
-                if (notice) notice.style.display = 'block';
+                if (notice) {
+                    notice.style.display = 'block';
+                    notice.innerText = "* Please click 'Download' first to enable 'Confirm' button.";
+                }
 
                 const modal = document.getElementById('playerCardModal');
                 if (modal) modal.style.display = 'flex';
