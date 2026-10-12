@@ -3703,30 +3703,50 @@ Match 2: Player C 2 VS 3 Player D
             try {
                 await window.nextPaint();
 
-                // Wait until Firebase restores the existing session and the auth
-                // listener has loaded this account into currentLoggedUser.
+                // Wait for Firebase's first auth callback, but do not depend on
+                // Firestore/UI rendering side-effects to recognize a signed-in user.
                 if (window.firebaseAuthReady) {
-                    await window.firebaseAuthReady;
+                    try { await window.firebaseAuthReady; } catch (e) { console.warn('Auth readiness check:', e); }
                 }
 
-                // Keep the original working card flow: use the authenticated
-                // profile loaded by loadCurrentFirebaseUser(), not a guest preview.
-                const firebaseUser = auth.currentUser || window.firebaseAuthUser || null;
+                const firebaseUser = (typeof auth !== 'undefined' && auth.currentUser) || window.firebaseAuthUser || null;
+                let loadedUser = window.currentLoggedUser && !String(window.currentLoggedUser.id || '').startsWith('guest_')
+                    ? { ...window.currentLoggedUser }
+                    : null;
+
+                // Prefer the profile already loaded by the original auth listener.
+                // If it is not ready, build a usable profile from the live Firebase
+                // session and optionally enrich it from users/{uid}.
                 if (firebaseUser) {
-                    await window.loadCurrentFirebaseUser(firebaseUser);
+                    let profile = {};
+                    try {
+                        const userSnap = await getDoc(doc(firestoreDb, 'users', firebaseUser.uid));
+                        if (userSnap && userSnap.exists()) profile = userSnap.data() || {};
+                    } catch (profileError) {
+                        console.warn('Firestore profile lookup failed; using Firebase account data:', profileError);
+                    }
+
+                    loadedUser = {
+                        ...(loadedUser || {}),
+                        id: firebaseUser.uid,
+                        uid: firebaseUser.uid,
+                        name: String(profile.name || (loadedUser && loadedUser.name) || firebaseUser.displayName || firebaseUser.email || 'Player').trim(),
+                        avatar: profile.avatar || (loadedUser && loadedUser.avatar) || firebaseUser.photoURL || window.createSvgAvatar('P'),
+                        device: profile.device || (loadedUser && loadedUser.device) || '',
+                        role: profile.role || (loadedUser && loadedUser.role) || 'player'
+                    };
+                    window.firebaseAuthUser = firebaseUser;
+                    window.currentLoggedUser = loadedUser;
                 }
 
-                if (!window.currentLoggedUser || !window.currentLoggedUser.id ||
-                    String(window.currentLoggedUser.id).startsWith('guest_')) {
-                    alert("Please Sign In to your account first!");
+                if (!loadedUser || !loadedUser.id) {
+                    alert('Could not detect your signed-in account. Please refresh the page and try again.');
                     return;
                 }
 
-                const user = window.currentLoggedUser;
-                const existingPlayer = window.mockPlayers.find(p =>
-                    p.id === `p_${user.id}` ||
-                    p.userId === user.id ||
-                    p.uid === user.id ||
+                const user = loadedUser;
+                const existingPlayer = (window.mockPlayers || []).find(p =>
+                    p.userId === user.id || p.uid === user.id || p.id === `p_${user.id}` ||
                     (p.name && user.name && p.name.trim().toLowerCase() === user.name.trim().toLowerCase())
                 );
 
@@ -3734,26 +3754,26 @@ Match 2: Player C 2 VS 3 Player D
                     window.currentUserRole = 'player';
                     const leaveBtn = document.getElementById('leavePlayerBtn');
                     if (leaveBtn) leaveBtn.style.display = 'inline-block';
-                    if (restore) await restore();
-                    alert("Already Signed In as Player!");
-                    return;
+                    // Do not stop here: still show the signed-in account's card.
                 }
 
-                // Same as the old working logic: card name and avatar come from
-                // currentLoggedUser, which was populated from the signed-in profile.
                 window.cardPreviewUser = { ...user };
-                window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
-                document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
+                window.setCardBackgroundImage('playerEntryCardToCapture', user.avatar || window.createSvgAvatar(user.name || 'P'));
+                const nameElement = document.getElementById('pecPlayerName');
+                if (nameElement) nameElement.innerText = user.name || 'Player';
 
                 window.isPlayerCardDownloaded = false;
-                document.getElementById('btnConfirmPlayerCard').disabled = true;
-                document.getElementById('playerNoticeText').style.display = 'block';
+                const confirmButton = document.getElementById('btnConfirmPlayerCard');
+                if (confirmButton) confirmButton.disabled = true;
+                const notice = document.getElementById('playerNoticeText');
+                if (notice) notice.style.display = 'block';
 
-                document.getElementById('playerCardModal').style.display = 'flex';
-                window.triggerBoomEffects();
+                const modal = document.getElementById('playerCardModal');
+                if (modal) modal.style.display = 'flex';
+                if (typeof window.triggerBoomEffects === 'function') window.triggerBoomEffects();
             } catch (error) {
-                console.error("Player sign-in card error:", error);
-                alert("Could not load your signed-in profile. Please try again.");
+                console.error('Player sign-in card error:', error);
+                alert('Could not load your signed-in profile. Please try again.');
             } finally {
                 if (restore && button && button.dataset.directWaiting === '1') await restore();
             }
