@@ -3687,26 +3687,47 @@ Match 2: Player C 2 VS 3 Player D
             const restore = window.beginDirectButtonLoading(button, 'Signing in...');
             try {
                 await window.nextPaint();
-                if (!window.requireLoggedUser()) return;
 
-                let existingPlayer = window.mockPlayers.find(p =>
-                    p.id === `p_${window.currentLoggedUser.id}` ||
-                    p.userId === window.currentLoggedUser.id ||
-                    p.name === window.currentLoggedUser.name
+                // Use Firebase's live authenticated user as the source of truth.
+                // The auth-state listener may still be loading the Firestore profile
+                // when this button is clicked, so refresh it before opening the card.
+                const firebaseUser = auth.currentUser;
+                if (!firebaseUser) {
+                    window.currentLoggedUser = null;
+                    window.cardPreviewUser = null;
+                    window.updateAuthButtonStates();
+                    alert("Please Sign In to your account first!");
+                    return;
+                }
+
+                await window.loadCurrentFirebaseUser(firebaseUser);
+
+                if (!window.currentLoggedUser || !window.currentLoggedUser.uid) {
+                    alert("Your player profile is still loading. Please try again.");
+                    return;
+                }
+
+                const user = window.currentLoggedUser;
+                const existingPlayer = window.mockPlayers.find(p =>
+                    p.userId === user.uid ||
+                    p.uid === user.uid ||
+                    p.id === `p_${user.uid}` ||
+                    (p.name && user.name && p.name.trim().toLowerCase() === user.name.trim().toLowerCase())
                 );
 
                 if (existingPlayer) {
                     window.currentUserRole = 'player';
                     const leaveBtn = document.getElementById('leavePlayerBtn');
                     if (leaveBtn) leaveBtn.style.display = 'inline-block';
-                    if (restore) await restore();
                     alert("Already Signed In as Player!");
                     return;
                 }
 
-                window.cardPreviewUser = { ...window.currentLoggedUser };
-                window.setCardBackgroundImage('playerEntryCardToCapture', window.cardPreviewUser.avatar);
-                document.getElementById('pecPlayerName').innerText = window.cardPreviewUser.name;
+                // Always populate the card from the freshly loaded signed-in account,
+                // not from a guest/random preview or a hard-coded fallback name.
+                window.cardPreviewUser = { ...user };
+                window.setCardBackgroundImage('playerEntryCardToCapture', user.avatar);
+                document.getElementById('pecPlayerName').innerText = user.name;
 
                 window.isPlayerCardDownloaded = false;
                 document.getElementById('btnConfirmPlayerCard').disabled = true;
@@ -3714,7 +3735,9 @@ Match 2: Player C 2 VS 3 Player D
 
                 document.getElementById('playerCardModal').style.display = 'flex';
                 window.triggerBoomEffects();
-                if (restore) await restore();
+            } catch (error) {
+                console.error("Player sign-in card error:", error);
+                alert("Could not load your player card. Please try again.");
             } finally {
                 if (restore && button && button.dataset.directWaiting === '1') await restore();
             }
