@@ -1381,27 +1381,34 @@
             }
         }
 
-        // 📧 CUSTOM BIRTHDAY EMAIL SENDER VIA EMAILJS
-        function sendCustomBirthdayEmail(userEmail, userName) {
-            const todayKey = `bday_email_${userEmail}_${new Date().toISOString().slice(0, 10)}`;
+      
+// 📧 CUSTOM BIRTHDAY EMAIL SENDER VIA EMAILJS
+function sendCustomBirthdayEmail(userEmail, userName) {
+    const todayKey = `bday_email_${userEmail}_${new Date().toISOString().slice(0, 10)}`;
 
-            if (localStorage.getItem(todayKey)) {
-                return;
-            }
+    // Eki dine ekbar-er besi jeno email na jay
+    if (localStorage.getItem(todayKey)) {
+        console.log("Email already sent today for:", userEmail);
+        return; 
+    }
 
-            const templateParams = {
-                to_email: userEmail,
-                to_name: userName
-            };
+    // EmailJS Template Image onujayi exact variable names:
+    const templateParams = {
+        email: userEmail,       // EmailJS "To Email" field: {{email}}
+        name: userName,        // Subject Line: {{name}}
+        to_name: userName,     // Body Text: {{to_name}}
+        TO_NAME: userName      // Title Heading: {{TO_NAME}}
+    };
 
-            emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
-                .then(function (response) {
-                    console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
-                    localStorage.setItem(todayKey, "true");
-                }, function (error) {
-                    console.error('❌ Birthday Email Sending Failed:', error);
-                });
-        }
+    // Active EmailJS API Call
+    emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
+        .then(function(response) {
+            console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
+            localStorage.setItem(todayKey, "true"); // Flag set so it won't resend today
+        }, function(error) {
+            console.error('❌ Birthday Email Sending Failed:', error);
+        });
+}
 
         checkAndRenderBirthdays();
 
