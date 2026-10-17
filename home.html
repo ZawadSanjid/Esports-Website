@@ -12,12 +12,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Swiper CSS for Slideshow -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- EmailJS SDK for Custom Email Sending without Firebase -->
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function () {
-            // EmailJS Public Key 初始化
-            emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS Public Key
+            emailjs.init("4wsC8EE9px6H5YITI"); // Public Key
         })();
     </script>
 
@@ -183,7 +182,6 @@
                 object-fit: cover;
             }
 
-        /* 3-DOT TOGGLE BUTTON (HIDDEN IN LAPTOP/DESKTOP) */
         .mobile-toggle-btn {
             display: none;
             background: var(--bg-card);
@@ -1003,7 +1001,7 @@
         </div>
     </section>
 
-    <!-- 🎂 BIRTHDAY CELEBRATION SECTION (ADDED ABOVE COMMUNITY CAPTAINS) 🎂 -->
+    <!-- 🎂 BIRTHDAY CELEBRATION SECTION 🎂 -->
     <section class="birthday-section" id="birthdaySection">
         <div class="section-header">
             <span class="section-subtitle" style="color: var(--accent-gold);"><i class="fa-solid fa-cake-candles"></i> Celebrations</span>
@@ -1012,7 +1010,6 @@
 
         <div class="swiper birthdaySwiper">
             <div class="swiper-wrapper" id="birthdayWrapper">
-                <!-- Dynamically Populated from Firestore -->
                 <div class="swiper-slide">
                     <p style="text-align:center; color: var(--text-muted);">Checking Today's Birthdays...</p>
                 </div>
@@ -1172,7 +1169,6 @@
         let playersSwiperInstance = null;
         let birthdaySwiperInstance = null;
 
-        // MOBILE 3-DOT TOGGLE SCRIPT
         function toggleMobileMenu() {
             const navLinks = document.getElementById('navLinksList');
             const toggleIcon = document.getElementById('toggleIcon');
@@ -1188,7 +1184,6 @@
             }
         }
 
-        // CLOSE MOBILE MENU ON OUTSIDE CLICK
         document.addEventListener('click', function (e) {
             const navLinks = document.getElementById('navLinksList');
             const toggleBtn = document.getElementById('menuToggleBtn');
@@ -1206,23 +1201,22 @@
                     if (doc.exists) {
                         const userData = doc.data();
                         navAuthArea.innerHTML = `
-                                <a href="player-profile.html" class="user-profile-circle" title="Go to Dashboard">
-                                    <img src="${userData.avatar || 'Image/player1.webp'}" onerror="this.src='Image/player1.webp';" alt="${userData.name}">
-                                </a>
-                            `;
+                                    <a href="player-profile.html" class="user-profile-circle" title="Go to Dashboard">
+                                        <img src="${userData.avatar || 'Image/player1.webp'}" onerror="this.src='Image/player1.webp';" alt="${userData.name}">
+                                    </a>
+                                `;
                     }
                 } catch (error) {
                     console.error("Error fetching user data: ", error);
                 }
             } else {
                 navAuthArea.innerHTML = `
-                        <a href="register.html" class="btn-main">Register</a>
-                        <a href="login.html" class="btn-main">Login</a>
-                    `;
+                            <a href="register.html" class="btn-main">Register</a>
+                            <a href="login.html" class="btn-main">Login</a>
+                        `;
             }
         });
 
-        // 🔥 REALTIME AUTOMATIC RANKING FETCH FOR FEATURED PLAYERS SLIDER 🔥
         db.collection('users').onSnapshot(snapshot => {
             let playersList = [];
             snapshot.forEach(doc => {
@@ -1261,32 +1255,32 @@
                 let ovrRating = Math.min(99, 80 + Math.floor(player.pts / 3));
 
                 wrapper.innerHTML += `
-                        <div class="swiper-slide">
-                            <div class="player-card">
-                                <div class="player-img-wrapper">
-                                    <span class="rating-badge">${ovrRating} OVR</span>
-                                    <img src="${player.avatar}" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="${player.name}">
-                                </div>
-                                <div class="player-info">
-                                    <div class="player-gamertag">${player.name}</div>
-                                    <div class="player-realname">${player.club}</div>
-                                    <div class="player-match-details">
-                                        <div class="match-detail-title">
-                                            <span>Career Performance</span>
-                                            <span style="color: var(--accent-gold);">Rank #${index + 1}</span>
-                                        </div>
-                                        <div class="stats-grid-mini">
-                                            <div class="stat-box"><div class="val">${player.mp}</div><div class="lbl">Matches</div></div>
-                                            <div class="stat-box"><div class="val" style="color: #4caf50;">${player.w}</div><div class="lbl">Wins</div></div>
-                                            <div class="stat-box"><div class="val" style="color: #f44336;">${player.l}</div><div class="lbl">Losses</div></div>
-                                            <div class="stat-box"><div class="val">${player.gf}</div><div class="lbl">Goals</div></div>
-                                            <div class="stat-box"><div class="val">${player.gd > 0 ? '+' + player.gd : player.gd}</div><div class="lbl">GD</div></div>
-                                            <div class="stat-box"><div class="val" style="color: var(--accent-gold);">${player.winRate}%</div><div class="lbl">Win Rate</div></div>
+                            <div class="swiper-slide">
+                                <div class="player-card">
+                                    <div class="player-img-wrapper">
+                                        <span class="rating-badge">${ovrRating} OVR</span>
+                                        <img src="${player.avatar}" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="${player.name}">
+                                    </div>
+                                    <div class="player-info">
+                                        <div class="player-gamertag">${player.name}</div>
+                                        <div class="player-realname">${player.club}</div>
+                                        <div class="player-match-details">
+                                            <div class="match-detail-title">
+                                                <span>Career Performance</span>
+                                                <span style="color: var(--accent-gold);">Rank #${index + 1}</span>
+                                            </div>
+                                            <div class="stats-grid-mini">
+                                                <div class="stat-box"><div class="val">${player.mp}</div><div class="lbl">Matches</div></div>
+                                                <div class="stat-box"><div class="val" style="color: #4caf50;">${player.w}</div><div class="lbl">Wins</div></div>
+                                                <div class="stat-box"><div class="val" style="color: #f44336;">${player.l}</div><div class="lbl">Losses</div></div>
+                                                <div class="stat-box"><div class="val">${player.gf}</div><div class="lbl">Goals</div></div>
+                                                <div class="stat-box"><div class="val">${player.gd > 0 ? '+' + player.gd : player.gd}</div><div class="lbl">GD</div></div>
+                                                <div class="stat-box"><div class="val" style="color: var(--accent-gold);">${player.winRate}%</div><div class="lbl">Win Rate</div></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>`;
+                            </div>`;
             });
 
             if (playersSwiperInstance) playersSwiperInstance.destroy();
@@ -1301,7 +1295,7 @@
             });
         });
 
-        // 🎂 BIRTHDAY RETRIEVAL FROM FIRESTORE & AUTOMATIC CUSTOM EMAIL SENDER 🎂
+        // 🎂 BIRTHDAY RETRIEVAL & EMAIL SENDER 🎂
         async function checkAndRenderBirthdays() {
             const birthdayWrapper = document.getElementById('birthdayWrapper');
             const today = new Date();
@@ -1315,9 +1309,8 @@
 
                 snapshot.forEach(doc => {
                     let data = doc.data();
-                    let dob = data.dob || data.birthdate || ''; // Supported fields: dob or birthdate
+                    let dob = data.dob || data.birthdate || '';
 
-                    // Check if date contains MM-DD or YYYY-MM-DD pattern
                     if (dob) {
                         let isBirthday = false;
                         if (dob.endsWith(todayStr) || dob.includes(todayStr) || dob.startsWith(`${currentDay}-${currentMonth}`)) {
@@ -1340,40 +1333,38 @@
 
                 if (birthdayUsers.length === 0) {
                     birthdayWrapper.innerHTML = `
-                            <div class="swiper-slide">
-                                <div class="birthday-card" style="padding: 40px; border-color: var(--border-color); box-shadow: none;">
-                                    <i class="fa-solid fa-cake-candles" style="font-size: 40px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                                    <h3 style="color: var(--text-muted); font-family: 'Teko', sans-serif; font-size: 28px;">NO BIRTHDAYS TODAY</h3>
-                                    <p style="color: var(--text-muted); font-size: 14px;">None of our community members are celebrating their birthday today. Check back tomorrow!</p>
-                                </div>
-                            </div>`;
+                                <div class="swiper-slide">
+                                    <div class="birthday-card" style="padding: 40px; border-color: var(--border-color); box-shadow: none;">
+                                        <i class="fa-solid fa-cake-candles" style="font-size: 40px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                                        <h3 style="color: var(--text-muted); font-family: 'Teko', sans-serif; font-size: 28px;">NO BIRTHDAYS TODAY</h3>
+                                        <p style="color: var(--text-muted); font-size: 14px;">None of our community members are celebrating their birthday today. Check back tomorrow!</p>
+                                    </div>
+                                </div>`;
                 } else {
                     birthdayUsers.forEach(user => {
                         birthdayWrapper.innerHTML += `
-                                <div class="swiper-slide">
-                                    <div class="birthday-card">
-                                        <span class="birthday-banner-badge">HAPPY BIRTHDAY!</span>
-                                        <div class="birthday-img-wrapper">
-                                            <img src="${user.avatar}" onerror="this.src='Image/player1.webp';" alt="${user.name}">
-                                        </div>
-                                        <div class="birthday-info">
-                                            <div class="birthday-name">${user.name}</div>
-                                            <div class="birthday-club"><i class="fa-solid fa-shield-halved"></i> ${user.club}</div>
-                                            <div class="birthday-wish-text">
-                                                "Wishing you a glorious birthday filled with victory, high scores, and endless success inside and outside the pitch! 🎂🎮🔥"
+                                    <div class="swiper-slide">
+                                        <div class="birthday-card">
+                                            <span class="birthday-banner-badge">HAPPY BIRTHDAY!</span>
+                                            <div class="birthday-img-wrapper">
+                                                <img src="${user.avatar}" onerror="this.src='Image/player1.webp';" alt="${user.name}">
+                                            </div>
+                                            <div class="birthday-info">
+                                                <div class="birthday-name">${user.name}</div>
+                                                <div class="birthday-club"><i class="fa-solid fa-shield-halved"></i> ${user.club}</div>
+                                                <div class="birthday-wish-text">
+                                                    "Wishing you a glorious birthday filled with victory, high scores, and endless success inside and outside the pitch! 🎂🎮🔥"
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>`;
+                                    </div>`;
 
-                        // 📧 Trigger Custom Birthday Wish Email without Firebase backend (Once per day)
                         if (user.email) {
                             sendCustomBirthdayEmail(user.email, user.name);
                         }
                     });
                 }
 
-                // Initialize Birthday Swiper
                 if (birthdaySwiperInstance) birthdaySwiperInstance.destroy();
                 birthdaySwiperInstance = new Swiper(".birthdaySwiper", {
                     slidesPerView: 1,
@@ -1390,56 +1381,30 @@
             }
         }
 
-        // CUSTOM EMAIL SENDING FUNCTION VIA CLIENT API (Sender: eastbengalefootballclub@gmail.com)
+        // 📧 CUSTOM BIRTHDAY EMAIL SENDER VIA EMAILJS
         function sendCustomBirthdayEmail(userEmail, userName) {
             const todayKey = `bday_email_${userEmail}_${new Date().toISOString().slice(0, 10)}`;
+
             if (localStorage.getItem(todayKey)) {
-                return; // Prevents sending multiple emails on page refresh on the same day
+                return;
             }
 
-            // Beautiful HTML Email Body
-            const emailTemplateParams = {
-                from_email: "eastbengalefootballclub@gmail.com",
-                from_name: "East Bengal eFootball Club (EBFC)",
+            const templateParams = {
                 to_email: userEmail,
-                to_name: userName,
-                subject: `🎉 Happy Birthday, ${userName}! 🎂 Wishes from EBFC Family`,
-                message_html: `
-                        <div style="background-color: #0a0a0c; color: #ffffff; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; border-radius: 12px; max-width: 600px; margin: auto; border: 2px solid #ffb703;">
-                            <img src="https://ebfc-portal.web.app/Image/image1.jpg.jpg" alt="EBFC Logo" style="width: 70px; height: 70px; border-radius: 8px; margin-bottom: 20px;">
-                            <h1 style="color: #ffb703; font-size: 32px; text-transform: uppercase; margin-bottom: 10px;">Happy Birthday, ${userName}! 🎂🎉</h1>
-                            <p style="color: #e50914; font-size: 18px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">East Bengal eFootball Club Official</p>
-
-                            <div style="background-color: #121318; padding: 25px; border-radius: 10px; margin: 25px 0; border-left: 4px solid #e50914; text-align: left;">
-                                <p style="font-size: 16px; line-height: 1.6; color: #d1d5db;">Dear <strong>${userName}</strong>,</p>
-                                <p style="font-size: 16px; line-height: 1.6; color: #d1d5db;">On behalf of the entire <strong>East Bengal eFootball Club (EBFC)</strong> family, management, and community, we wish you a fantastic Birthday!</p>
-                                <p style="font-size: 16px; line-height: 1.6; color: #d1d5db;">May this new year of your life bring you unstoppable momentum, top-tier rankings, flawless victories on the virtual pitch, and eternal happiness in life!</p>
-                                <p style="font-size: 16px; line-height: 1.6; color: #ffb703; font-weight: bold; margin-top: 15px;">Keep dominating the game and shining bright! ⚽🎮🔥</p>
-                            </div>
-
-                            <a href="https://ebfc-portal.web.app" style="background-color: #e50914; color: #ffffff; padding: 12px 28px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block; text-transform: uppercase; margin-top: 10px;">Visit EBFC Portal</a>
-
-                            <div style="margin-top: 35px; border-top: 1px solid #22242d; padding-top: 20px; font-size: 12px; color: #9a9caf;">
-                                <p>© 2026 East Bengal eFootball Club. All rights reserved.</p>
-                                <p>Sent with ❤️ from East Bengal eFootball Club Management.</p>
-                            </div>
-                        </div>
-                    `
+                to_name: userName
             };
 
-            // Call EmailJS to send email directly from client side
-            /*
-               আপনার EmailJS ড্যাশবোর্ড থেকে Service ID ও Template ID বসিয়ে ইমেইল সার্ভিস অ্যাক্টিভ করতে পারবেন:
-               emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailTemplateParams)
-            */
-            console.log(`[Custom Birthday Email Initiated] To: ${userEmail} From: eastbengalefootballclub@gmail.com`);
-            localStorage.setItem(todayKey, "true");
+            emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
+                .then(function (response) {
+                    console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
+                    localStorage.setItem(todayKey, "true");
+                }, function (error) {
+                    console.error('❌ Birthday Email Sending Failed:', error);
+                });
         }
 
-        // Run Birthday Check on Load
         checkAndRenderBirthdays();
 
-        // Initialize Static Swipers
         new Swiper(".adminSwiper", {
             slidesPerView: 1,
             spaceBetween: 30,
