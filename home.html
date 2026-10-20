@@ -1395,33 +1395,41 @@
         }
 
 
-// 📧 CUSTOM BIRTHDAY EMAIL SENDER VIA EMAILJS
-function sendCustomBirthdayEmail(userEmail, userName) {
-    const todayKey = `bday_email_${userEmail}_${new Date().toISOString().slice(0, 10)}`;
+        function sendCustomBirthdayEmail(userEmail, userName) {
+            const today = new Date();
+            // Local Timezone (YYYY-MM-DD) format
+            const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            const todayKey = `bday_email_${userEmail}_${localDateStr}`;
 
-    // Eki dine ekbar-er besi jeno email na jay
-    if (localStorage.getItem(todayKey)) {
-        console.log("Email already sent today for:", userEmail);
-        return;
-    }
+            // 1. Aajke ei user-e email geche kina check kora
+            if (localStorage.getItem(todayKey)) {
+                console.log("Birthday email already sent/processing today for:", userEmail);
+                return;
+            }
 
-    // EmailJS Template Image onujayi exact variable names:
-    const templateParams = {
-        email: userEmail,       // EmailJS "To Email" field: {{email}}
-        name: userName,        // Subject Line: {{name}}
-        to_name: userName,     // Body Text: {{to_name}}
-        TO_NAME: userName      // Title Heading: {{TO_NAME}}
-    };
+            // 2. CRITICAL FIX: EmailJS API request-er AGAEI Synchronously Flag set kora
+            // Jeno Snapshot re-trigger ba duplicate loops ek sathe bypass na korte pare
+            localStorage.setItem(todayKey, "processing");
 
-    // Active EmailJS API Call
-    emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
-        .then(function(response) {
-            console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
-            localStorage.setItem(todayKey, "true"); // Flag set so it won't resend today
-        }, function(error) {
-            console.error('❌ Birthday Email Sending Failed:', error);
-        });
-}
+            // EmailJS Template Image onujayi exact variable names:
+            const templateParams = {
+                email: userEmail,       // EmailJS "To Email" field: {{email}}
+                name: userName,        // Subject Line: {{name}}
+                to_name: userName,     // Body Text: {{to_name}}
+                TO_NAME: userName      // Title Heading: {{TO_NAME}}
+            };
+
+            // Active EmailJS API Call
+            emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
+                .then(function (response) {
+                    console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
+                    localStorage.setItem(todayKey, "sent"); // Flag update to "sent"
+                }, function (error) {
+                    console.error('❌ Birthday Email Sending Failed:', error);
+                    // Kono karone email fail korle key remove kore dewajate pore abar try kore
+                    localStorage.removeItem(todayKey);
+                });
+        }
 
         checkAndRenderBirthdays();
 
