@@ -1373,7 +1373,8 @@
                                     </div>`;
 
                         if (user.email) {
-                            sendCustomBirthdayEmail(user.email, user.name);
+                            // 📌 FIX HERE: Passed user.id as 1st argument
+                            sendCustomBirthdayEmail(user.id, user.email, user.name);
                         }
                     });
                 }
@@ -1395,40 +1396,54 @@
         }
 
 
-        function sendCustomBirthdayEmail(userEmail, userName) {
+        // 📧 CENTRAL DATABASE TRACKING BIRTHDAY EMAIL SENDER
+        async function sendCustomBirthdayEmail(userDocId, userEmail, userName) {
             const today = new Date();
             // Local Timezone (YYYY-MM-DD) format
             const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const todayKey = `bday_email_${userEmail}_${localDateStr}`;
 
-            // 1. Aajke ei user-e email geche kina check kora
-            if (localStorage.getItem(todayKey)) {
-                console.log("Birthday email already sent/processing today for:", userEmail);
-                return;
+            try {
+                // 1. Database theke user-er record fetch kora
+                const userRef = db.collection('users').doc(userDocId);
+                const userSnap = await userRef.get();
+
+                if (userSnap.exists) {
+                    const userData = userSnap.data();
+
+                    // 2. Database-e aajker tarikh-e email geche kina check kora (Central Check for All Users)
+                    if (userData.lastBirthdayEmailSentDate === localDateStr) {
+                        console.log("Central DB Check: Birthday email already sent today for:", userEmail);
+                        return;
+                    }
+
+                    // 3. Race condition / Duplicate hit atkanor jonno instantly DB-te Lock set kora
+                    await userRef.update({
+                        lastBirthdayEmailSentDate: localDateStr
+                    });
+
+                    // EmailJS Template Parameters
+                    const templateParams = {
+                        email: userEmail,
+                        name: userName,
+                        to_name: userName,
+                        TO_NAME: userName
+                    };
+
+                    // Active EmailJS API Call
+                    emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
+                        .then(function (response) {
+                            console.log('✅ Birthday Email Successfully Sent via Central DB!', response.status, response.text);
+                        }, function (error) {
+                            console.error('❌ Birthday Email Sending Failed:', error);
+                            // Mail fail korle database status clear kore dewa jeno pore abar try korte pare
+                            userRef.update({
+                                lastBirthdayEmailSentDate: ""
+                            });
+                        });
+                }
+            } catch (error) {
+                console.error("Error checking/updating central birthday email status:", error);
             }
-
-            // 2. CRITICAL FIX: EmailJS API request-er AGAEI Synchronously Flag set kora
-            // Jeno Snapshot re-trigger ba duplicate loops ek sathe bypass na korte pare
-            localStorage.setItem(todayKey, "processing");
-
-            // EmailJS Template Image onujayi exact variable names:
-            const templateParams = {
-                email: userEmail,       // EmailJS "To Email" field: {{email}}
-                name: userName,        // Subject Line: {{name}}
-                to_name: userName,     // Body Text: {{to_name}}
-                TO_NAME: userName      // Title Heading: {{TO_NAME}}
-            };
-
-            // Active EmailJS API Call
-            emailjs.send('service_2fc2j2k', 'template_bbm8fii', templateParams)
-                .then(function (response) {
-                    console.log('✅ Birthday Email Successfully Sent!', response.status, response.text);
-                    localStorage.setItem(todayKey, "sent"); // Flag update to "sent"
-                }, function (error) {
-                    console.error('❌ Birthday Email Sending Failed:', error);
-                    // Kono karone email fail korle key remove kore dewajate pore abar try kore
-                    localStorage.removeItem(todayKey);
-                });
         }
 
         checkAndRenderBirthdays();
