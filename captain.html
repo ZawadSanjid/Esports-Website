@@ -264,6 +264,85 @@
             gap: 12px;
         }
 
+        /* Fixed match text box: remains visible while the page scrolls */
+        .match-text-panel {
+            position: fixed;
+            right: 18px;
+            top: 105px;
+            width: min(350px, calc(100vw - 36px));
+            z-index: 1100;
+            background: #121318;
+            border: 1px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.65);
+        }
+
+            .match-text-panel.is-minimized {
+                width: min(220px, calc(100vw - 36px));
+                padding-bottom: 10px;
+            }
+
+                .match-text-panel.is-minimized #matchTextPanelContent {
+                    display: none;
+                }
+
+            .match-text-panel .panel-heading {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                margin-bottom: 8px;
+                color: var(--accent-gold);
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 14px;
+            }
+
+        #matchTextBox {
+            width: 100%;
+            min-height: 190px;
+            max-height: 42vh;
+            resize: vertical;
+            background: #090a0c;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            outline: none;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+            #matchTextBox:focus {
+                border-color: var(--accent-gold);
+            }
+
+        .match-text-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+            .match-text-actions button {
+                flex: 1;
+                border: 0;
+                border-radius: 5px;
+                padding: 8px 10px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+        #clearMatchTextBtn {
+            background: var(--primary-red);
+            color: #fff;
+        }
+
+        #copyMatchTextBtn {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 padding: 12px 4%;
@@ -309,6 +388,24 @@
                     grid-column: span 2;
                 }
 
+            .match-text-panel {
+                top: auto;
+                right: 10px;
+                bottom: 10px;
+                width: min(300px, calc(100vw - 20px));
+                padding: 9px;
+            }
+
+            #matchTextBox {
+                min-height: 90px;
+                max-height: 22vh;
+                font-size: 12px;
+            }
+
+            .match-text-panel .panel-heading {
+                font-size: 12px;
+            }
+
             .submission-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -353,6 +450,31 @@
         </div>
     </nav>
 
+    <aside class="match-text-panel" aria-label="Match text paste box">
+        <div class="panel-heading">
+            <span><i class="fa-solid fa-clipboard"></i> Match Text Box</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11px;color:var(--text-muted);font-weight:500;">Fixed</span>
+                <button type="button" id="toggleMatchTextBtn" onclick="toggleMatchTextPanel()"
+                        aria-expanded="true" title="Minimize text box"
+                        style="background:transparent;border:1px solid var(--border-color);color:#fff;border-radius:4px;padding:3px 7px;cursor:pointer;">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div id="matchTextPanelContent">
+            <textarea id="matchTextBox" placeholder="Paste complete match text here..."></textarea>
+            <div class="match-text-actions">
+                <button type="button" id="clearMatchTextBtn" onclick="clearMatchText()">
+                    <i class="fa-solid fa-trash"></i> Clear
+                </button>
+                <button type="button" id="copyMatchTextBtn" onclick="copyMatchText()">
+                    <i class="fa-solid fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </aside>
+
     <div class="container">
         <div class="page-header">
             <h1>Captain Squad Score Portal</h1>
@@ -381,6 +503,7 @@
                             <option value="befc">BEFC</option>
                             <option value="efcob">EFCOB</option>
                             <option value="ttsbd">TTSBD</option>
+                            <option value="ttsbd_academy">TTSBD (Academy)</option>
                             <option value="gkec">GKEC</option>
                         </select>
                     </div>
@@ -478,6 +601,38 @@
     </div>
 
     <script>
+        function toggleMatchTextPanel() {
+            const panel = document.querySelector('.match-text-panel');
+            const button = document.getElementById('toggleMatchTextBtn');
+            const minimized = panel.classList.toggle('is-minimized');
+            button.innerHTML = minimized
+                ? '<i class="fa-solid fa-expand"></i>'
+                : '<i class="fa-solid fa-minus"></i>';
+            button.title = minimized ? 'Expand text box' : 'Minimize text box';
+            button.setAttribute('aria-expanded', String(!minimized));
+        }
+
+        function clearMatchText() {
+            document.getElementById('matchTextBox').value = '';
+        }
+
+        async function copyMatchText() {
+            const box = document.getElementById('matchTextBox');
+            if (!box.value.trim()) {
+                alert('There is no match text to copy.');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(box.value);
+                alert('Match text copied.');
+            } catch (err) {
+                box.focus();
+                box.select();
+                document.execCommand('copy');
+                alert('Match text copied.');
+            }
+        }
+
         let cachedPlayers = [];
         let currentCaptainUid = null;
         let currentCaptainName = "Captain";
@@ -594,33 +749,32 @@
             for (let i = 0; i < count; i++) {
                 let optionsHtml = '<option value="">-- Select Player --</option>';
                 cachedPlayers.forEach((p, idx) => {
-                    let selected = (idx % cachedPlayers.length) === (i % cachedPlayers.length) ? 'selected' : '';
-                    optionsHtml += `<option value="${p.uid}" ${selected}>${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
+                    optionsHtml += `<option value="${p.uid}">${p.name || 'Player'} (${p.club || 'EBFC'})</option>`;
                 });
 
                 container.innerHTML += `
-                        <div class="squad-slot-card">
-                            <div class="form-group" style="margin:0;">
-                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                <input type="text" id="squad_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'squad')" style="margin-bottom: 5px;">
-                                <select id="squad_select_${i}" class="form-control squad-player-id" required>${optionsHtml}</select>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GF (Goals)</label>
-                                <input type="number" class="form-control squad-player-gf" min="0" value="0" required>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GA (Against)</label>
-                                <input type="number" class="form-control squad-player-ga" min="0" value="0" required>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>MOTM / POTM?</label>
-                                <select class="form-control squad-player-motm">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                        </div>`;
+                                <div class="squad-slot-card">
+                                    <div class="form-group" style="margin:0;">
+                                        <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                        <input type="text" id="squad_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'squad')" style="margin-bottom: 5px;">
+                                        <select id="squad_select_${i}" class="form-control squad-player-id" required>${optionsHtml}</select>
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>GF (Goals)</label>
+                                        <input type="number" class="form-control squad-player-gf" min="0" placeholder="Leave blank to skip">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>GA (Against)</label>
+                                        <input type="number" class="form-control squad-player-ga" min="0" placeholder="Leave blank to skip">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>MOTM / POTM?</label>
+                                        <select class="form-control squad-player-motm">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>`;
             }
         }
 
@@ -636,28 +790,28 @@
                 });
 
                 container.innerHTML += `
-                        <div class="squad-slot-card">
-                            <div class="form-group" style="margin:0;">
-                                <label><span class="slot-num">#${i + 1}</span> Select Player</label>
-                                <input type="text" id="dom_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'dom')" style="margin-bottom: 5px;">
-                                <select id="dom_select_${i}" class="form-control dom-player-id">${optionsHtml}</select>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GF (Goals)</label>
-                                <input type="number" class="form-control dom-gf" min="0" value="0">
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>GA (Against)</label>
-                                <input type="number" class="form-control dom-ga" min="0" value="0">
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>MOTM / POTM?</label>
-                                <select class="form-control dom-motm">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                        </div>`;
+                                <div class="squad-slot-card">
+                                    <div class="form-group" style="margin:0;">
+                                        <label><span class="slot-num">#${i + 1}</span> Select Player</label>
+                                        <input type="text" id="dom_search_${i}" class="form-control" placeholder="Search player..." oninput="filterPlayerDropdown(${i}, 'dom')" style="margin-bottom: 5px;">
+                                        <select id="dom_select_${i}" class="form-control dom-player-id">${optionsHtml}</select>
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>GF (Goals)</label>
+                                        <input type="number" class="form-control dom-gf" min="0" value="0">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>GA (Against)</label>
+                                        <input type="number" class="form-control dom-ga" min="0" value="0">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>MOTM / POTM?</label>
+                                        <select class="form-control dom-motm">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>`;
             }
         }
 
@@ -674,8 +828,27 @@
                 const players = [];
                 if (!isAutoWin) {
                     const ps = document.querySelectorAll('.squad-player-id'), gf = document.querySelectorAll('.squad-player-gf'), ga = document.querySelectorAll('.squad-player-ga'), motm = document.querySelectorAll('.squad-player-motm');
-                    ps.forEach((node, i) => { const id = node.value, p = cachedPlayers.find(x => x.uid === id); if (!p) throw new Error(`Player #${i + 1} is not selected.`); players.push({ playerId: id, playerName: p.name || 'Unknown Player', gf: parseInt(gf[i].value) || 0, ga: parseInt(ga[i].value) || 0, awardMotm: motm[i].value === 'yes' }) });
-                    if (!players.length) throw new Error('At least one player is required.');
+                    ps.forEach((node, i) => {
+                        const id = node.value;
+                        const gfText = gf[i].value.trim();
+                        const gaText = ga[i].value.trim();
+
+                        // No player selected, or both score fields blank = skip this slot.
+                        if (!id || (gfText === '' && gaText === '')) return;
+
+                        const p = cachedPlayers.find(x => x.uid === id);
+                        if (!p) throw new Error(`Player #${i + 1} could not be found.`);
+
+                        // An explicitly entered 0 is valid; a single blank field is treated as 0.
+                        players.push({
+                            playerId: id,
+                            playerName: p.name || 'Unknown Player',
+                            gf: gfText === '' ? 0 : Number(gfText),
+                            ga: gaText === '' ? 0 : Number(gaText),
+                            awardMotm: motm[i].value === 'yes'
+                        });
+                    });
+                    if (!players.length) throw new Error('Enter a score for at least one selected player. Slots with both GF and GA blank will be skipped.');
                 }
 
                 await db.collection('pending_squad_submissions').add({
