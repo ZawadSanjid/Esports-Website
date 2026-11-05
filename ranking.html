@@ -704,9 +704,13 @@
                         return;
                     }
 
-                    currentUserRole = (
-                        userDoc.exists && userDoc.data().role === 'admin'
-                    ) ? 'admin' : 'player';
+                    const roleValue = userDoc.exists ? userDoc.data().role : '';
+                    const roles = String(roleValue || '')
+                        .split(',')
+                        .map(role => role.trim().toLowerCase())
+                        .filter(Boolean);
+
+                    currentUserRole = roles.includes('admin') ? 'admin' : 'player';
 
                 } catch (error) {
                     console.error("Could not verify admin role:", error);
@@ -1033,7 +1037,13 @@
                     return;
                 }
 
-                if (!adminDoc.exists || adminDoc.data().role !== 'admin') {
+                const roleValue = adminDoc.exists ? adminDoc.data().role : '';
+                const roles = String(roleValue || '')
+                    .split(',')
+                    .map(role => role.trim().toLowerCase())
+                    .filter(Boolean);
+
+                if (!roles.includes('admin')) {
                     currentUserRole = 'player';
                     checkAdminForReset();
                     alert("Access Denied! Only Admin can reset Monthly POTM Ranking.");
