@@ -939,8 +939,8 @@
                 let statB = getPlayerTabStats(b, currentTab);
 
                 if (currentTab === 'potm') {
-                    if (statB.motm !== statA.motm) return statB.motm - statA.motm;
                     if (statB.pts !== statA.pts) return statB.pts - statA.pts;
+                    if (statB.motm !== statA.motm) return statB.motm - statA.motm;
                     if (parseFloat(statB.winRate) !== parseFloat(statA.winRate)) return parseFloat(statB.winRate) - parseFloat(statA.winRate);
                     if (statB.gd !== statA.gd) return statB.gd - statA.gd;
                     return statB.w - statA.w;
