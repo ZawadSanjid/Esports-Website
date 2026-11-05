@@ -592,7 +592,7 @@
         <!-- ACTION BAR: RESET & SEARCH -->
         <div class="action-bar">
             <div>
-                <button id="resetPotmBtn" class="btn-reset-potm"style="display: none;"onclick="resetPotmRanking()">
+                <button id="resetPotmBtn" class="btn-reset-potm" style="display: none;" onclick="resetPotmRanking()">
                     <i class="fa-solid fa-rotate-left"></i> Reset Monthly POTM Stats
                 </button>
             </div>
@@ -676,22 +676,43 @@
             { code: 'efcob', name: 'EFCOB' },
             { code: 'ttsbd', name: 'TTSBD' },
             { code: 'gkec', name: 'GKEC' },
-            { code: 'ttsbd_academy', name: 'TTSBD (Academy)'}
+            { code: 'ttsbd_academy', name: 'TTSBD (Academy)' }
         ];
 
         document.addEventListener("DOMContentLoaded", function () {
+            // Fail closed: everyone is treated as a player until Firestore confirms admin.
+            currentUserRole = 'player';
+            checkAdminForReset();
+
             auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        currentUserRole = userDoc.data().role || 'player';
-                    }
-                } else {
-                    const localAdmin = JSON.parse(localStorage.getItem('ebfc_user'));
-                    if (localAdmin && localAdmin.role === 'admin') {
-                        currentUserRole = 'admin';
-                    }
+                // Hide immediately whenever auth state changes; re-enable only after
+                // the signed-in account's Firestore role has been verified.
+                currentUserRole = 'player';
+                checkAdminForReset();
+
+                if (!user) {
+                    return; // Never trust localStorage for admin permissions.
                 }
+
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+
+                    // Ignore a late response if the account changed while loading.
+                    if (!auth.currentUser || auth.currentUser.uid !== user.uid) {
+                        currentUserRole = 'player';
+                        checkAdminForReset();
+                        return;
+                    }
+
+                    currentUserRole = (
+                        userDoc.exists && userDoc.data().role === 'admin'
+                    ) ? 'admin' : 'player';
+
+                } catch (error) {
+                    console.error("Could not verify admin role:", error);
+                    currentUserRole = 'player';
+                }
+
                 checkAdminForReset();
             });
 
@@ -723,31 +744,31 @@
             document.getElementById('mRole').innerText = (player.role || 'PLAYER').toUpperCase();
             document.getElementById('mGameId').innerText = player.gameId || 'N/A';
 
-            
+
 
             document.getElementById('mFbLink').href = player.fbLink || '#';
-            
+
             // OFFICIAL STATS
             const off = calculatePlayerStats(player.official);
             document.getElementById('modalOffStats').innerHTML = `
-                            <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp}</div><div class="lbl">MP</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w}</div><div class="lbl">W</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d}</div><div class="lbl">D</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l}</div><div class="lbl">L</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts}</div><div class="lbl">PTS</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate}%</div><div class="lbl">Win%</div></div>
-                        `;
+                                <div class="stat-box-mini"><div class="val" style="color:#fff">${off.mp}</div><div class="lbl">MP</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${off.w}</div><div class="lbl">W</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.d}</div><div class="lbl">D</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${off.l}</div><div class="lbl">L</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${off.pts}</div><div class="lbl">PTS</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${off.winRate}%</div><div class="lbl">Win%</div></div>
+                            `;
 
             // DOMESTIC STATS
             const dom = calculatePlayerStats(player.domestic);
             document.getElementById('modalDomStats').innerHTML = `
-                            <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp}</div><div class="lbl">MP</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w}</div><div class="lbl">W</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d}</div><div class="lbl">D</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l}</div><div class="lbl">L</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts}</div><div class="lbl">PTS</div></div>
-                            <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate}%</div><div class="lbl">Win%</div></div>
-                        `;
+                                <div class="stat-box-mini"><div class="val" style="color:#fff">${dom.mp}</div><div class="lbl">MP</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--badge-win)">${dom.w}</div><div class="lbl">W</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.d}</div><div class="lbl">D</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--badge-loss)">${dom.l}</div><div class="lbl">L</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-gold)">${dom.pts}</div><div class="lbl">PTS</div></div>
+                                <div class="stat-box-mini"><div class="val" style="color:var(--accent-green)">${dom.winRate}%</div><div class="lbl">Win%</div></div>
+                            `;
 
             // TARGET COMMUNITIES STATS BREAKDOWN
             const commData = player.communities || {};
@@ -755,20 +776,20 @@
             communitiesList.forEach(c => {
                 const cStats = commData[c.code] || { mp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, auto: 0, pts: 0, winRate: "0.0" };
                 commHtml += `
-                                <div class="modal-comm-card">
-                                    <h5>${c.name} <span style="font-size:13px; color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h5>
-                                    <div class="modal-comm-stats">
-                                        <div class="modal-comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
-                                        <div class="modal-comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
-                                        <div class="modal-comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
-                                        <div class="modal-comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
-                                        <div class="modal-comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
-                                        <div class="modal-comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
-                                        <div class="modal-comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
-                                        <div class="modal-comm-stat-item" style="color:var(--accent-green); grid-column: span 2;">Win%<strong>${cStats.winRate || "0.0"}%</strong></div>
+                                    <div class="modal-comm-card">
+                                        <h5>${c.name} <span style="font-size:13px; color:var(--accent-gold);">${cStats.pts || 0} PTS</span></h5>
+                                        <div class="modal-comm-stats">
+                                            <div class="modal-comm-stat-item">MP<strong>${cStats.mp || 0}</strong></div>
+                                            <div class="modal-comm-stat-item" style="color:var(--badge-win)">W<strong>${cStats.w || 0}</strong></div>
+                                            <div class="modal-comm-stat-item" style="color:var(--accent-gold)">D<strong>${cStats.d || 0}</strong></div>
+                                            <div class="modal-comm-stat-item" style="color:var(--badge-loss)">L<strong>${cStats.l || 0}</strong></div>
+                                            <div class="modal-comm-stat-item">GF<strong>${cStats.gf || 0}</strong></div>
+                                            <div class="modal-comm-stat-item">GA<strong>${cStats.ga || 0}</strong></div>
+                                            <div class="modal-comm-stat-item" style="color:var(--accent-gold)">Auto<strong>${cStats.auto || 0}</strong></div>
+                                            <div class="modal-comm-stat-item" style="color:var(--accent-green); grid-column: span 2;">Win%<strong>${cStats.winRate || "0.0"}%</strong></div>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
             });
             document.getElementById('modalCommStats').innerHTML = commHtml;
 
@@ -804,16 +825,16 @@
         }
 
         function checkAdminForReset() {
-    const resetBtn = document.getElementById('resetPotmBtn');
+            const resetBtn = document.getElementById('resetPotmBtn');
+            if (!resetBtn) return;
 
-    if (!resetBtn) return;
+            // Must have a live Firebase Auth session AND verified Firestore admin role.
+            const isVerifiedAdmin =
+                !!auth.currentUser && currentUserRole === 'admin';
 
-    if (currentUserRole === 'admin' && currentTab === 'potm') {
-        resetBtn.style.display = 'inline-block';
-    } else {
-        resetBtn.style.display = 'none';
-    }
-}
+            resetBtn.style.display =
+                (isVerifiedAdmin && currentTab === 'potm') ? 'inline-block' : 'none';
+        }
         function switchTab(tab, event) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -853,18 +874,18 @@
             // COMMUNITY TAB LOGIC READS DIRECTLY FROM 'communities' COLLECTION
             if (currentTab === 'community') {
                 header.innerHTML = `
-                                <tr>
-                                    <th>#</th>
-                                    <th style="text-align: left;">Community Name</th>
-                                    <th>MP</th>
-                                    <th>W</th>
-                                    <th>D</th>
-                                    <th>L</th>
-                                    <th>Auto Win</th>
-                                    <th>Win %</th>
-                                    <th>Points</th>
-                                </tr>
-                            `;
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="text-align: left;">Community Name</th>
+                                        <th>MP</th>
+                                        <th>W</th>
+                                        <th>D</th>
+                                        <th>L</th>
+                                        <th>Auto Win</th>
+                                        <th>Win %</th>
+                                        <th>Points</th>
+                                    </tr>
+                                `;
 
                 let commData = communitiesList.map((c) => {
                     let cCode = c.code.toLowerCase();
@@ -892,18 +913,18 @@
                     let rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
 
                     tbody.innerHTML += `
-                                    <tr>
-                                        <td><span class="rank-badge ${rankClass}">${rank}</span></td>
-                                        <td style="text-align: left; font-weight: 700; color: var(--text-light);">${item.name}</td>
-                                        <td>${item.mp}</td>
-                                        <td style="color: var(--accent-green);">${item.w}</td>
-                                        <td style="color: var(--accent-gold);">${item.d}</td>
-                                        <td style="color: var(--primary-red);">${item.l}</td>
-                                        <td style="color: #00bcd4;">${item.auto}</td>
-                                        <td>${item.winRate}%</td>
-                                        <td class="pts-col">${item.pts}</td>
-                                    </tr>
-                                `;
+                                        <tr>
+                                            <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+                                            <td style="text-align: left; font-weight: 700; color: var(--text-light);">${item.name}</td>
+                                            <td>${item.mp}</td>
+                                            <td style="color: var(--accent-green);">${item.w}</td>
+                                            <td style="color: var(--accent-gold);">${item.d}</td>
+                                            <td style="color: var(--primary-red);">${item.l}</td>
+                                            <td style="color: #00bcd4;">${item.auto}</td>
+                                            <td>${item.winRate}%</td>
+                                            <td class="pts-col">${item.pts}</td>
+                                        </tr>
+                                    `;
                 });
 
                 filterTable();
@@ -912,22 +933,22 @@
 
             // DEFAULT PLAYER RANKINGS HEADERS
             header.innerHTML = `
-                            <tr>
-                                <th>Rank</th>
-                                <th style="text-align: left;">Player</th>
-                                <th>Club</th>
-                                <th>MP</th>
-                                <th>W</th>
-                                <th>D</th>
-                                <th>L</th>
-                                <th>GF</th>
-                                <th>GA</th>
-                                <th>GD</th>
-                                <th>Win %</th>
-                                <th>Points</th>
-                                <th>MOTM</th>
-                            </tr>
-                        `;
+                                <tr>
+                                    <th>Rank</th>
+                                    <th style="text-align: left;">Player</th>
+                                    <th>Club</th>
+                                    <th>MP</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GF</th>
+                                    <th>GA</th>
+                                    <th>GD</th>
+                                    <th>Win %</th>
+                                    <th>Points</th>
+                                    <th>MOTM</th>
+                                </tr>
+                            `;
 
             if (cachedPlayers.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-muted);">No players found in database.</td></tr>`;
@@ -964,72 +985,92 @@
                 let avatarUrl = p.avatar || 'Image/player1.webp';
 
                 tbody.innerHTML += `
-                                <tr class="clickable-row" onclick="openPlayerModal('${p.uid}')" title="Click to view details of ${p.name || 'Player'}">
-                                    <td><span class="rank-badge ${rankClass}">${rank}</span></td>
-                                    <td>
-                                        <div class="player-cell">
-                                            <img src="${avatarUrl}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
-                                            <div><div style="font-weight: 700; color: var(--text-light);">${p.name || 'Unknown Player'}</div></div>
-                                        </div>
-                                    </td>
-                                    <td>${p.club || 'EBFC'}</td>
-                                    <td>${stat.mp}</td>
-                                    <td style="color: var(--accent-green);">${stat.w}</td>
-                                    <td style="color: var(--accent-gold);">${stat.d}</td>
-                                    <td style="color: var(--primary-red);">${stat.l}</td>
-                                    <td>${stat.gf}</td>
-                                    <td>${stat.ga}</td>
-                                    <td class="gd-col">${stat.gd > 0 ? '+' + stat.gd : stat.gd}</td>
-                                    <td>${stat.winRate}%</td>
-                                    <td class="pts-col">${stat.pts}</td>
-                                    <td style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${stat.motm}</td>
-                                </tr>`;
+                                    <tr class="clickable-row" onclick="openPlayerModal('${p.uid}')" title="Click to view details of ${p.name || 'Player'}">
+                                        <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+                                        <td>
+                                            <div class="player-cell">
+                                                <img src="${avatarUrl}" onerror="this.onerror=null; this.src='Image/player1.webp';" alt="">
+                                                <div><div style="font-weight: 700; color: var(--text-light);">${p.name || 'Unknown Player'}</div></div>
+                                            </div>
+                                        </td>
+                                        <td>${p.club || 'EBFC'}</td>
+                                        <td>${stat.mp}</td>
+                                        <td style="color: var(--accent-green);">${stat.w}</td>
+                                        <td style="color: var(--accent-gold);">${stat.d}</td>
+                                        <td style="color: var(--primary-red);">${stat.l}</td>
+                                        <td>${stat.gf}</td>
+                                        <td>${stat.ga}</td>
+                                        <td class="gd-col">${stat.gd > 0 ? '+' + stat.gd : stat.gd}</td>
+                                        <td>${stat.winRate}%</td>
+                                        <td class="pts-col">${stat.pts}</td>
+                                        <td style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${stat.motm}</td>
+                                    </tr>`;
             });
 
             filterTable();
         }
 
-async function resetPotmRanking() {
+        async function resetPotmRanking() {
+            // Always hide/deny unless the currently authenticated UID is confirmed
+            // as admin directly from Firestore at the moment of the action.
+            const user = auth.currentUser;
 
-    // ADMIN ACCESS CHECK
-    if (currentUserRole !== 'admin') {
-        alert("Access Denied! Only Admin can reset Monthly POTM Ranking.");
-        return;
-    }
+            if (!user) {
+                currentUserRole = 'player';
+                checkAdminForReset();
+                alert("Access Denied! Please sign in with an Admin account.");
+                return;
+            }
 
-    // CURRENT TAB CHECK
-    if (currentTab !== 'potm') {
-        alert("Please open the POTM Ranking tab first.");
-        return;
-    }
+            try {
+                const adminDoc = await db.collection('users').doc(user.uid).get();
 
-    // CONFIRMATION
-    const confirmed = confirm(
-        "Are you sure you want to Reset Monthly POTM Ranking?\n\nOfficial and Domestic stats will remain safe!"
-    );
+                // Ensure the same account is still signed in after the async read.
+                if (!auth.currentUser || auth.currentUser.uid !== user.uid) {
+                    currentUserRole = 'player';
+                    checkAdminForReset();
+                    alert("Access Denied! Please sign in again.");
+                    return;
+                }
 
-    if (!confirmed) return;
+                if (!adminDoc.exists || adminDoc.data().role !== 'admin') {
+                    currentUserRole = 'player';
+                    checkAdminForReset();
+                    alert("Access Denied! Only Admin can reset Monthly POTM Ranking.");
+                    return;
+                }
 
-    try {
-        const batch = db.batch();
+                currentUserRole = 'admin';
+                checkAdminForReset();
 
-        cachedPlayers.forEach(p => {
-            const userRef = db.collection('users').doc(p.uid);
+                if (currentTab !== 'potm') {
+                    alert("Please open the POTM Ranking tab first.");
+                    return;
+                }
 
-            batch.update(userRef, {
-                potm: calculatePlayerStats(null)
-            });
-        });
+                const confirmed = confirm(
+                    "Are you sure you want to Reset Monthly POTM Ranking?\\n\\nOfficial and Domestic stats will remain safe!"
+                );
+                if (!confirmed) return;
 
-        await batch.commit();
+                const batch = db.batch();
 
-        alert("Monthly POTM Ranking has been reset successfully!");
+                cachedPlayers.forEach(p => {
+                    const userRef = db.collection('users').doc(p.uid);
+                    batch.update(userRef, {
+                        potm: calculatePlayerStats(null)
+                    });
+                });
 
-    } catch (err) {
-        console.error("POTM Reset Error:", err);
-        alert("Failed to reset POTM stats in Firestore database.");
-    }
-}
+                await batch.commit();
+                alert("Monthly POTM Ranking has been reset successfully!");
+
+            } catch (err) {
+                console.error("POTM Reset Error:", err);
+                alert("Failed to verify Admin access or reset POTM stats in Firestore.");
+            }
+        }
+
         function filterTable() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let rows = document.querySelectorAll('#rankingTableBody tr');
