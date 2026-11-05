@@ -805,7 +805,7 @@
 
         function checkAdminForReset() {
             const resetBtn = document.getElementById('resetPotmBtn');
-            if ((currentUserRole === 'admin' || currentUserRole === 'captain') && currentTab === 'potm') {
+            if (currentUserRole === 'admin' && currentTab === 'potm') {
                 resetBtn.style.display = 'inline-block';
             } else {
                 resetBtn.style.display = 'none';
