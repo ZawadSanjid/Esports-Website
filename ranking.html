@@ -592,7 +592,7 @@
         <!-- ACTION BAR: RESET & SEARCH -->
         <div class="action-bar">
             <div>
-                <button id="resetPotmBtn" class="btn-reset-potm" onclick="resetPotmRanking()">
+                <button id="resetPotmBtn" class="btn-reset-potm"style="display: none;"onclick="resetPotmRanking()">
                     <i class="fa-solid fa-rotate-left"></i> Reset Monthly POTM Stats
                 </button>
             </div>
@@ -804,14 +804,16 @@
         }
 
         function checkAdminForReset() {
-            const resetBtn = document.getElementById('resetPotmBtn');
-            if (currentUserRole === 'admin' && currentTab === 'potm') {
-                resetBtn.style.display = 'inline-block';
-            } else {
-                resetBtn.style.display = 'none';
-            }
-        }
+    const resetBtn = document.getElementById('resetPotmBtn');
 
+    if (!resetBtn) return;
+
+    if (currentUserRole === 'admin' && currentTab === 'potm') {
+        resetBtn.style.display = 'inline-block';
+    } else {
+        resetBtn.style.display = 'none';
+    }
+}
         function switchTab(tab, event) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -987,25 +989,47 @@
             filterTable();
         }
 
-        async function resetPotmRanking() {
-            if (confirm("Are you sure you want to Reset Monthly POTM Ranking in Firebase Database? Official and Domestic stats will remain safe!")) {
-                try {
-                    const batch = db.batch();
-                    cachedPlayers.forEach(p => {
-                        const userRef = db.collection('users').doc(p.uid);
-                        batch.update(userRef, {
-                            potm: calculatePlayerStats(null)
-                        });
-                    });
-                    await batch.commit();
-                    alert("Monthly POTM Ranking has been reset successfully in Database!");
-                } catch (err) {
-                    console.error(err);
-                    alert("Failed to reset POTM stats in Firestore database.");
-                }
-            }
-        }
+async function resetPotmRanking() {
 
+    // ADMIN ACCESS CHECK
+    if (currentUserRole !== 'admin') {
+        alert("Access Denied! Only Admin can reset Monthly POTM Ranking.");
+        return;
+    }
+
+    // CURRENT TAB CHECK
+    if (currentTab !== 'potm') {
+        alert("Please open the POTM Ranking tab first.");
+        return;
+    }
+
+    // CONFIRMATION
+    const confirmed = confirm(
+        "Are you sure you want to Reset Monthly POTM Ranking?\n\nOfficial and Domestic stats will remain safe!"
+    );
+
+    if (!confirmed) return;
+
+    try {
+        const batch = db.batch();
+
+        cachedPlayers.forEach(p => {
+            const userRef = db.collection('users').doc(p.uid);
+
+            batch.update(userRef, {
+                potm: calculatePlayerStats(null)
+            });
+        });
+
+        await batch.commit();
+
+        alert("Monthly POTM Ranking has been reset successfully!");
+
+    } catch (err) {
+        console.error("POTM Reset Error:", err);
+        alert("Failed to reset POTM stats in Firestore database.");
+    }
+}
         function filterTable() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let rows = document.querySelectorAll('#rankingTableBody tr');
