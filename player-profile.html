@@ -1059,7 +1059,7 @@
             { code: 'efcob', name: 'EFCOB' },
             { code: 'ttsbd', name: 'TTSBD' },
             { code: 'gkec', name: 'GKEC' },
-            { code: 'ttsbd_academy', name: 'TTSBD (Academy)'}
+            { code: 'ttsbd_academy', name: 'TTSBD (Academy)' }
         ];
 
         // AUTHENTICATION CHECK & REALTIME LISTEN FROM FIRESTORE
@@ -1349,7 +1349,7 @@
             document.getElementById('editProfileModal').style.display = 'none';
         }
 
-        // SAVE ALL UPDATED PROFILE FIELDS TO FIRESTORE DATABASE
+        // SAVE PROFILE + CHECK DUPLICATE GAME ID BEFORE UPDATING FIRESTORE
         document.getElementById('editProfileForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -1368,13 +1368,22 @@
                 return;
             }
 
+            const newGameId = document.getElementById('editGameId').value.trim();
+            if (!newGameId) {
+                alert("অনুগ্রহ করে eFootball Game ID প্রদান করুন।");
+                document.getElementById('editGameId').focus();
+                return;
+            }
+
             const saveBtn = document.getElementById('saveBtn');
+            const originalButtonHTML = saveBtn.innerHTML;
             saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking Game ID...';
 
             const updatedFields = {
                 name: document.getElementById('editName').value.trim(),
                 phone: phoneInput,
-                gameId: document.getElementById('editGameId').value.trim(),
+                gameId: newGameId,
                 fbLink: document.getElementById('editFbLink').value.trim(),
                 bloodGroup: document.getElementById('editBloodGroup').value,
                 device: document.getElementById('editDevice').value.trim(),
@@ -1387,6 +1396,47 @@
             };
 
             try {
+                // Compare trimmed, case-insensitive IDs across all user profiles.
+                // Exclude the currently signed-in user's own document.
+                const normalizedNewGameId = newGameId.toLowerCase();
+                const usersSnapshot = await db.collection('users').get();
+
+                const duplicatePlayers = [];
+                usersSnapshot.forEach(doc => {
+                    if (doc.id === currentUserId) return;
+
+                    const playerData = doc.data() || {};
+                    const existingGameId = String(playerData.gameId || '').trim();
+
+                    if (
+                        existingGameId &&
+                        existingGameId.toLowerCase() === normalizedNewGameId
+                    ) {
+                        duplicatePlayers.push({
+                            name: playerData.name || 'Unknown Player',
+                            gameId: existingGameId
+                        });
+                    }
+                });
+
+                if (duplicatePlayers.length > 0) {
+                    const matchedNames = [...new Set(duplicatePlayers.map(player => player.name))];
+                    const duplicateMessage = matchedNames
+                        .map((name, index) => `${index + 1}. ${name}`)
+                        .join('\n');
+
+                    alert(
+                        `DUPLICATE GAME ID DETECTED!\n\n` +
+                        `এই Game ID (${newGameId}) ইতোমধ্যে নিচের Player-এর নামে রয়েছে:\n\n` +
+                        `${duplicateMessage}\n\n` +
+                        `অনুগ্রহ করে একটি আলাদা Game ID ব্যবহার করুন। আপনার Profile Save করা হয়নি।`
+                    );
+
+                    document.getElementById('editGameId').focus();
+                    return;
+                }
+
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Profile...';
                 await db.collection('users').doc(currentUserId).update(updatedFields);
 
                 closeEditModal();
@@ -1396,6 +1446,7 @@
                 console.error("Firestore update error: ", error);
                 alert("Error updating profile: " + error.message);
             } finally {
+                saveBtn.innerHTML = originalButtonHTML;
                 saveBtn.disabled = false;
                 updateProfileEditLockUI();
             }
