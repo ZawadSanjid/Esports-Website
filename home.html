@@ -301,25 +301,37 @@
                 box-shadow: 0 10px 25px rgba(229, 9, 20, 0.25);
             }
 
+        /* Featured Pro Players: 350px square portraits, responsively scaled to card width */
         .player-img-wrapper {
             position: relative;
             width: 100%;
-            height: 260px;
+            min-height: 290px;
             overflow: hidden;
-            background: #181a20;
+            background: radial-gradient(circle at center, #242631 0%, #14151b 75%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-            .player-img-wrapper img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: grayscale(20%);
-                transition: 0.3s ease;
-            }
+        .player-img-wrapper img {
+            width: 350px;
+            max-width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            flex-shrink: 1;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 183, 3, 0.35);
+            filter: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
         .player-card:hover .player-img-wrapper img {
-            filter: grayscale(0%);
-            transform: scale(1.05);
+            filter: none;
+            transform: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 16px rgba(255, 183, 3, 0.2);
         }
 
         .rating-badge {
@@ -890,7 +902,7 @@
             <li><a href="home.html" class="active">Home</a></li>
             <li><a href="players.html">Players</a></li>
             <li><a href="ranking.html">Rankings</a></li>
-            <li><a href="#">Tournament-Hub</a></li>
+            <li><a href="tournament-hub.html">Tournament-Hub</a></li>
             <li><a href="tournament.html">Tournaments</a></li>
             <li><a href="#">About Us</a></li>
         </ul>
@@ -1158,7 +1170,7 @@
                 <li><a href="home.html" class="footer-btn">Home</a></li>
                 <li><a href="players.html" class="footer-btn">Players</a></li>
                 <li><a href="ranking.html" class="footer-btn">Rankings</a></li>
-                <li><a href="#" class="footer-btn">Tournament-Hub</a></li>
+                <li><a href="tournament-hub.html" class="footer-btn">Tournament-Hub</a></li>
                 <li><a href="tournament.html" class="footer-btn">Tournaments</a></li>
                 <li><a href="#" class="footer-btn">About Us</a></li>
             </ul>
@@ -1255,7 +1267,7 @@
                 return b.gd - a.gd;
             });
 
-            let topPlayers = playersList.slice(0, 6);
+            let topPlayers = playersList.slice(0, 10);
             let wrapper = document.getElementById('featuredPlayersWrapper');
             wrapper.innerHTML = '';
 
