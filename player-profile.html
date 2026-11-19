@@ -744,9 +744,9 @@
     </nav>
 
     <div class="dashboard-container">
-        <div id="profileFreezeNotice" class="profile-freeze-notice">
+       <!-- <div id="profileFreezeNotice" class="profile-freeze-notice">
             <i class="fa-solid fa-lock"></i> PLAYER PROFILE EDITING IS TEMPORARILY LOCKED — 7:00 PM TO 1:30 AM (BD TIME)
-        </div>
+        </div> -->
 
         <div class="player-hero-card">
             <div class="player-avatar-box">
@@ -1018,9 +1018,10 @@
         let profileFreezeTimer = null;
 
         function isBangladeshProfileFreezeTime() {
-            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
+            /*const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
             const minutes = now.getHours() * 60 + now.getMinutes();
-            return minutes >= (19 * 60) || minutes < (1 * 60 + 30);
+            return minutes >= (19 * 60) || minutes < (1 * 60 + 30);*/
+            return false;
         }
 
         function updateProfileEditLockUI() {
