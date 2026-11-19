@@ -1021,7 +1021,7 @@
             /*const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
             const minutes = now.getHours() * 60 + now.getMinutes();
             return minutes >= (19 * 60) || minutes < (1 * 60 + 30);
-        }
+        }*/
 
         function updateProfileEditLockUI() {
             const locked = isBangladeshProfileFreezeTime();
@@ -1043,7 +1043,7 @@
             updateProfileEditLockUI();
             if (profileFreezeTimer) clearInterval(profileFreezeTimer);
             profileFreezeTimer = setInterval(updateProfileEditLockUI, 10000);
-        }*/
+        }
 
         // FIXED COMMUNITY CODES MATCHED WITH CAPTAIN & ADMIN PORTAL
         const communitiesList = [
