@@ -1017,7 +1017,7 @@
         let profileEditAllowed = true;
         let profileFreezeTimer = null;
 
-        //function isBangladeshProfileFreezeTime() {
+        function isBangladeshProfileFreezeTime() {
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }));
             const minutes = now.getHours() * 60 + now.getMinutes();
             return minutes >= (19 * 60) || minutes < (1 * 60 + 30);
