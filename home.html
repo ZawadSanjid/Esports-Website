@@ -334,18 +334,7 @@
             box-shadow: 0 0 16px rgba(255, 183, 3, 0.2);
         }
 
-        .rating-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--primary-red);
-            color: #fff;
-            font-family: 'Teko', sans-serif;
-            font-size: 22px;
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-weight: 700;
-        }
+       
 
         .player-info {
             padding: 20px;
@@ -1277,13 +1266,13 @@
             }
 
             topPlayers.forEach((player, index) => {
-                let ovrRating = Math.min(99, 80 + Math.floor(player.pts / 3));
+                
 
                 wrapper.innerHTML += `
                             <div class="swiper-slide">
                                 <div class="player-card">
                                     <div class="player-img-wrapper">
-                                        <span class="rating-badge">${ovrRating} OVR</span>
+                                        
                                         <img src="${player.avatar}" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=600'" alt="${player.name}">
                                     </div>
                                     <div class="player-info">
